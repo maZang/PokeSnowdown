@@ -4,7 +4,8 @@
 \BOOKMARK [1][-]{section.1.3}{Narrative Description}{chapter.1}% 4
 \BOOKMARK [0][-]{chapter.2}{Architecture}{}% 5
 \BOOKMARK [0][-]{chapter.3}{System Design}{}% 6
-\BOOKMARK [0][-]{chapter.4}{Module Design}{}% 7
-\BOOKMARK [0][-]{chapter.5}{Data}{}% 8
-\BOOKMARK [0][-]{chapter.6}{External Dependencies}{}% 9
-\BOOKMARK [0][-]{chapter.7}{Testing Plan}{}% 10
+\BOOKMARK [1][-]{section.3.1}{Important Modules}{chapter.3}% 7
+\BOOKMARK [0][-]{chapter.4}{Module Design}{}% 8
+\BOOKMARK [0][-]{chapter.5}{Data}{}% 9
+\BOOKMARK [0][-]{chapter.6}{External Dependencies}{}% 10
+\BOOKMARK [0][-]{chapter.7}{Testing Plan}{}% 11

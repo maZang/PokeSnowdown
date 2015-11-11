@@ -77,11 +77,16 @@ We hope to have the following implemented in our completed project:
 \section{Narrative Description}
 	This game will be an upgraded version of Pok\'emon Showdown, suitable and to the scale for a small console video game. It will have the main aspects of Pok\'emon Showdown including random battles between two players, as well as premade team battles between two players and a fully functional Pok\'emon team editor. However, it will also include single player capabilities, such as random battling or premade battling against an AI. The AI must be able to battle effectively and use advanced Pok\'emon techniques in the battle. In addition to this, there will be a Tournament mode which is essentially a story mode. The player has to play against several bots before proceeding to the final boss. This means that bots should have different levels of intelligence in order for this game mode to be challenging. 
 \chapter{Architecture}
-	We are aiming to produce a client-server architecture. The game server will keep track of the current game state, make sure all the rules of Pok\'emon are followed, update the GUI, etc... while the client (the players) send messages to the server to retrieve information as well as request to perform certain game actions. However, we will most likely also have a database that the game server requests information from. The C\&C diagram is shown below. 
+	We are aiming to produce a client-server architecture. The game server will keep track of the current game state, make sure all the rules of Pok\'emon are followed, update the GUI, etc... while the client (the players) send messages to the server to retrieve information as well as request to perform certain game actions. There will be at most three clients (the GUI that displays the current state of the game, and the other two clients are the players). When the game is launched, it waits until it establishes a connection with the GUI through a different port allowing multiple people to watch instances of their own GUI. Then it spawns a thread while waiting for either two players (either real players or AI to connect). It initializes the players and then starts the game. The C\&C diagram is shown below. 
 	
 	\includegraphics{C&C.png}
 
 \chapter{System Design}
+\section{Important Modules}
+
+\begin{enumerate}
+	\item Game.ml
+\end{enumerate}
 \chapter{Module Design}
 \chapter{Data}
 \chapter{External Dependencies}
