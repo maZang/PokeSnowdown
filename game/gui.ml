@@ -4,13 +4,13 @@ open Async.Std
 let screen_width = 642
 let screen_height= 480
 
+let locale = GtkMain.Main.init () 
+
 let current_screen = ref Info.MainMenu 
 
 let quit engine () = 
-	if Ivar.is_empty (!engine) then 
-		(Main.quit; Ivar.fill !engine Info.Quit)
-	else 
-		() 
+	Ivar.fill !engine Info.Quit
+
 (* Make all the menu items for the game loading screen *)
 let make_menu ~file1 ~file2?packing () = 
 	let hbox = GPack.hbox ~homogeneous:true ?packing () in 
@@ -38,25 +38,56 @@ let make_menu ~file1 ~file2?packing () =
 	hbox, vbox2, button1, button2, button3, vbox4, button4,
 		button5, button6, vbox3, button7
 
-let load_1p_menu engine menu_holder buffer menu1 menu2 buffer_add() = 
-	menu_holder#remove buffer#coerce;
-	menu_holder#remove menu1#coerce;
-	menu_holder#add menu2#coerce;
-	buffer#add buffer_add#coerce;
-	menu_holder#add buffer#coerce;
-	current_screen := Menu1P
+let load_not_main_menu engine menu_holder menu1 menu2 buffer_area 
+	back_button() = 
+	if Ivar.is_empty (!engine) then 
+		(menu_holder#remove buffer_area#coerce;
+		menu_holder#remove menu1#coerce;
+		menu_holder#add menu2#coerce;
+		buffer_area#add back_button#coerce;
+		menu_holder#add buffer_area#coerce;
+		current_screen := Menu1P;
+		Ivar.fill !engine Info.Menu1P)
+	else
+		() 
+
+let load_main_menu engine menu_holder main_menu menu1 buffer_area
+	back_button () = 
+	if Ivar.is_empty (!engine) then 
+		(menu_holder#remove buffer_area#coerce;
+		menu_holder#remove menu1#coerce;
+		menu_holder#add main_menu#coerce;
+		buffer_area#remove back_button#coerce;
+		menu_holder#add buffer_area#coerce;
+		current_screen := MainMenu;
+		Ivar.fill !engine Info.MainMenu)
+	else
+		() 
+
+let go_back engine (menu_holder, main_menu, one_player, two_player, no_player,
+		one_player_menu, random_1p, preset_1p, touranment, buffer_area,
+		back_button) () = 
+	if !current_screen = Info.Menu1P then 
+		load_main_menu engine menu_holder main_menu one_player_menu
+			buffer_area back_button ()
+
 
 (* The main gui *)
 let main_gui engine () = 
 	let window = GWindow.window ~width: screen_width ~height: screen_height
 		~title: "Pokemon Snowdown" ~resizable:false () in 
-	let menu_holder, main_menu, one_player, two_player, no_player, 
-		one_player_menu, random_1p, preset_1p, tournament,
-		buffer_area, back_button = make_menu 
+	(* menu = menu_holder, main_menu, one_player, two_player, no_player,
+		one_player_menu, random_1p, preset_1p, touranment, buffer_area,
+		back_button *)
+	let menu = make_menu 
 		~file1:"./gui_pics/bg1.png" ~file2:"./gui_pics/bg2.png" 
 		~packing:(window#add) () in 
-	one_player#connect#clicked ~callback:(load_1p_menu engine menu_holder 
-		buffer_area main_menu one_player_menu back_button);
+	let menu_holder, main_menu, one_player, two_player, no_player,
+		one_player_menu, random_1p, preset_1p, touranment, buffer_area,
+		back_button = menu in 
+	one_player#connect#clicked ~callback:(load_not_main_menu engine menu_holder 
+		main_menu one_player_menu buffer_area back_button);
+	back_button#connect#clicked ~callback:(go_back engine menu);
 	window#connect#destroy 	~callback: (quit engine);
 	window#show ();
-	Main.main ()
+	let thread = GtkThread.start () in () 
