@@ -1,6 +1,6 @@
 (* 
 COMPILE WITH:
-ocamlfind ocamlc -g -thread -package lablgtk2 -package async -linkpkg info.mli game.mli gui.ml game.ml  -o game
+ocamlfind ocamlc -g -thread -package lablgtk2 -package async -linkpkg info.mli data_loader.mli gui.mli battle_controller.mli game.mli gui.ml game.ml  -o game
 *)
 
 open Async.Std 
@@ -8,10 +8,6 @@ open Info
 
 let current_state = ref (Ivar.create ())
 let number_loops = ref 0 
-
-let handle_preprocessing gs = failwith "TODO"
-
-let handle_action g2 cmd1 cmd2 = failwith "TODO"
 
 let quit thread_list = 
 	let _ = List.map Thread.kill thread_list in ignore (exit 0)
@@ -37,8 +33,8 @@ let main () =
 		wait_for_command (); 
 		upon (Ivar.read !current_state) (fun state ->
 			match state with 
-			| MainMenu -> current_state := Ivar.create ()
-			| Menu1P -> current_state := Ivar.create ()
+			| MainMenu -> give_gui_permission ()
+			| Menu1P -> give_gui_permission () 
 			| Quit -> quit [gui_thread; scheduler_thread]
 		); wait_for_empty (); game_loop () 
 	in game_loop () 

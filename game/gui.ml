@@ -1,4 +1,3 @@
-open GMain
 open Async.Std 
 
 let screen_width = 642
@@ -46,7 +45,7 @@ let load_not_main_menu engine menu_holder menu1 menu2 buffer_area
 		menu_holder#add menu2#coerce;
 		buffer_area#add back_button#coerce;
 		menu_holder#add buffer_area#coerce;
-		current_screen := Menu1P;
+		current_screen := Info.Menu1P;
 		Ivar.fill !engine Info.Menu1P)
 	else
 		() 
@@ -59,7 +58,7 @@ let load_main_menu engine menu_holder main_menu menu1 buffer_area
 		menu_holder#add main_menu#coerce;
 		buffer_area#remove back_button#coerce;
 		menu_holder#add buffer_area#coerce;
-		current_screen := MainMenu;
+		current_screen := Info.MainMenu;
 		Ivar.fill !engine Info.MainMenu)
 	else
 		() 
