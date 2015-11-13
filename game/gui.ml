@@ -1,4 +1,3 @@
-open GMain 
 open Async.Std 
 
 let screen_width = 642
