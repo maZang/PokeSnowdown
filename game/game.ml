@@ -25,11 +25,12 @@ let wait_for_empty () =
 	done
 
 let main () =
+	Printf.printf "Starting game\n%!";
 	let scheduler_thread = Thread.create Scheduler.go () in
 	let gui_thread = Thread.create (Gui.main_gui current_state) () in
 	let rec game_loop () =
 		incr number_loops;
-	  	Print.printf "Number game loops: %d\n%!" !number_loops;
+	  	Printf.printf "Number game loops: %d\n%!" !number_loops;
 		wait_for_command ();
 		upon (Ivar.read !current_state) (fun state ->
 			match state with
