@@ -1,5 +1,5 @@
 *.cmi
 *.cmo
 a.out
-*.DS_Store
+.DS_Store
 game
