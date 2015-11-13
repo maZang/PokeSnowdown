@@ -1,3 +1,4 @@
+open GMain 
 open Async.Std 
 
 let screen_width = 642
@@ -6,9 +7,6 @@ let screen_height= 480
 let locale = GtkMain.Main.init () 
 
 let current_screen = ref Info.MainMenu 
-
-let quit engine () = 
-	Ivar.fill !engine Info.Quit
 
 (* Make all the menu items for the game loading screen *)
 let make_menu ~file1 ~file2?packing () = 
@@ -87,6 +85,6 @@ let main_gui engine () =
 	one_player#connect#clicked ~callback:(load_not_main_menu engine menu_holder 
 		main_menu one_player_menu buffer_area back_button);
 	back_button#connect#clicked ~callback:(go_back engine menu);
-	window#connect#destroy 	~callback: (quit engine);
+	window#connect#destroy 	~callback: (Main.quit);
 	window#show ();
 	let thread = GtkThread.start () in () 

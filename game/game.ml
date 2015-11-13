@@ -20,7 +20,7 @@ let wait_for_command () =
 	done 
 
 let wait_for_empty () = 
-	while (Ivar.is_full !current_state)do 
+	while (Ivar.is_full !current_state) do 
 		()
 	done
 
