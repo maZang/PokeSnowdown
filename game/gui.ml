@@ -85,6 +85,5 @@ let main_gui engine () =
 	one_player#connect#clicked ~callback:(load_not_main_menu engine menu_holder 
 		main_menu one_player_menu buffer_area back_button);
 	back_button#connect#clicked ~callback:(go_back engine menu);
-	window#connect#destroy 	~callback: (Main.quit);
 	window#show ();
 	let thread = GtkThread.start () in () 
