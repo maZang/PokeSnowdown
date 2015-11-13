@@ -12,7 +12,6 @@
     linkcolor=blue,       % color of internal links
     citecolor=black,       % color of links to bibliography
     filecolor=black,        % color of file links
-    urlcolor=purple,        % color of external links
     linktoc=page            % only page is linked
 }%
 \def\myversion{1.0 }
@@ -25,7 +24,7 @@ Pok\'eSnowdown \\
 \vspace{2cm}
 \LARGE{Version \myversion\\}
 \vspace{2cm}
-Produced by Matthew Zang, Nicholas Cage, Chiraq Obama, 4Evar Young\\
+Produced by Matthew Zang, Nicholas Shieh, Chirag Bharadwaj, Young Chan Kim\\
 \vfill
 \rule{16cm}{5pt}
 }
@@ -72,7 +71,7 @@ We hope to have the following implemented in our completed project:
 				\end{enumerate}
 		\end{itemize}
 	\item We wish to provide a Pok\'emon team editor that allows a player to choose Pok\'emon and movesets. This team is saved and can be loaded up for future use. These teams will be used in the game modes described above.
-	\item We wish to integrate mustic into our game based upon the game mode as well as the current battle status.
+	\item We wish to integrate music into our game based upon the game mode as well as the current battle status.
 	\item We want to include an interactive story mode/dialogue that will describe the underlying storyline in our Tournament mode. 
 	\item We will have to include concurrency for two player battling, meaning that there will have to be a server to respond to player requests as well as the GUI. 
 \end{enumerate}
@@ -117,11 +116,12 @@ To hold all the Pok\'emon data we will most likely be using some implementation 
 
 %TODO See if you can expand
 \section{External Dependencies}
-
-We will be using \texttt{Lablgtk2} to create the GUI and \texttt{Yojson} to parse json files. 
+We will be using \texttt{Lablgtk2} to create the GUI and \texttt{Yojson} to parse json files. The json data
+will be collected from \url{http://pokeapi.co} using \texttt{Python}.
 
 %TODO Fill in testing plan 
 \section{Testing Plan}
+Our testing plan will mainly consist of debugging and verifying individual functions through a combination of black-box and white-box testing for each module, as well as regression tests to ensure any changes to some aspect of our program does not break an existing functionality that was previously verified. These test cases will be mostly randomized and automated, and testing will take place during and after the implementation process. Of course, once we are finished with the implementation and modular testing, we will also test the overall gameplay by playing the game many times and letting some of our friends outside of the the course to play the game to assure that the game can be played without issues and also receive useful feedback. If we have time, we may even formally verify the correctness of some of our functions. 
 
 % add other chapters and sections to suit
 \end{document}
