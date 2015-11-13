@@ -94,8 +94,8 @@ We hope to have the following implemented in our completed project:
 	\item \textbf{Gui}: The Gui is used to diplay the current state of the game. There are two main phases in the Gui, the menu screens and the battle scenes. The Gui will either communicate with the game controller when the menu screens are being displayed or communicate with the battle controller when a battle is occuring.
 	\item \textbf{Info}: The Info module contains all the data types that are needed/shared between the module. It essentially contains everything the other modules need to use to communicate with one another and helps in avoiding circular dependencies. All data types needed for the game will be declared here.
 	\item \textbf{BattleController}: This battle controller module is called by the game controller when a battle is taking place. During this time, the battle controller handles all the game mechanics and updates the Gui. The game controller waits for the battle to end before resuming control.
-	\item \textbf{DataLoader}: This module is involved in loading the data from the json files. For example, functions in this method will be called to convert a string containing the name of the Pok\'emon to something of type Pok\'emon (defined in the Info module).
-	
+	\item \textbf{DataLoader}: This module is involved in loading the data from the json files. For example, functions in this method will be called to convert a string containing the name of the Pok\'emon to some value of type Pok\'emon (defined in the Info module).
+	\item \textbf{AI}: This module will be involved in the artificial intelligence aspect of our game, where we will handle the bots playing the game automatically for the SkyNet Battles. For instance, this module should contain functions that will allow a bot to intelligently select moves to maximize damage to the opposing bot while minimizing its own damage and moves used. However, we did not create this \texttt{.mli} file yet for this submission, as it is difficult to design this aspect of our program at this stage of the project without knowing exactly how our game will be implemented. Thus, we will focus on this aspect after we have made significant progress on the game implementation.
 \end{enumerate}
 
 \subsection{Module Dependency Diagram}
@@ -104,20 +104,19 @@ We hope to have the following implemented in our completed project:
 \section{Data}
 %TODO Fill in internal data
 \subsection{Internal Data}
-We plan on having json files to represent all the Pok\'emon, moves, abilities, etc... Since json files aren't readily available online with all the Pok\'emon data, we plan to write Python scripts to fetch the data from databases and convert them to a json format. To load the data, we are most likely going to use the Yojson module, similar to how we used it in A2. 
+We plan on having json files to represent all the Pok\'emon, moves, abilities, etc... Since json files aren't readily available online with all the Pok\'emon data, we plan to write \texttt{Python} scripts to fetch the data from databases and convert them to a json format. To load the data, we are most likely going to use the \texttt{Yojson} module, similar to how we used it in A2. 
 
 %TODO Fill in communication
 \subsection{Communication}
-In order to let the GUI communicate with the Game without the use of a server, we came up with a method of communication through Ivar references. When Game initializes the GUI we will make Game pass in as an argument an Ivar reference. Game and GUI communicate by emptying and filling the Ivar. When Game is ready to handle another input, Game resets the Ivar by creating a new one. GUI then fills in the Ivar when it gets some input. Thus, Game and GUI can communicate without creating any circular dependency within modules. The Ivar is filled with some variable that is of type \texttt{game\_state} defined in the Info module. 
+In order to let the GUI communicate with the Game without the use of a server, we came up with a method of communication through Ivar references. When Game initializes the GUI, we will make Game pass in as an argument an Ivar reference. Game and GUI will communicate by emptying and filling the Ivar. When Game is ready to handle another input, Game will reset the Ivar by creating a new one. GUI will then fill in the Ivar upon receiving some input. Thus, Game and GUI will be able to communicate without creating any circular dependency among modules. The Ivar will be filled with some value that is of type \texttt{game\_state} defined in the Info module. 
 
 %TODO Fill in data structures
 \subsection{Data Structures}
-To hold all the Pok\'emon data we will most likely be using some implementation of a dictionary. We are thinking of using a HashMap or the infamous Two-Three trees.
+To hold all the Pok\'emon data we will most likely be using some implementation of a dictionary. We are thinking of using either a HashMap or the infamous Two-Three trees.
 
 %TODO See if you can expand
 \section{External Dependencies}
-We will be using \texttt{Lablgtk2} to create the GUI and \texttt{Yojson} to parse json files. The json data
-will primarily be collected from \url{https://github.com/veekun/pokedex/tree/master/pokedex/data/csv} using \texttt{Python}.
+We will be using \texttt{Lablgtk2} to create the GUI and \texttt{Yojson} to parse json files. The json data will primarily be collected from \url{https://github.com/veekun/pokedex/tree/master/pokedex/data/csv} using \texttt{Python}.
 
 %TODO Fill in testing plan 
 \section{Testing Plan}
