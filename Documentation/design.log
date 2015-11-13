@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  10 NOV 2015 22:17
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  12 NOV 2015 19:33
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -549,21 +549,21 @@ Package hyperref Info: Option `colorlinks' set `true' on input line 17.
 (./design.aux)
 \openout1 = `design.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Try loading font information for OT1+lmr on input line 35.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Try loading font information for OT1+lmr on input line 37.
  (/usr/local/texlive/2014/texmf-dist/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
@@ -640,7 +640,7 @@ File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
 )
 Package color Info: Driver file: pdftex.def on input line 137.
 )
-Package hyperref Info: Link coloring ON on input line 35.
+Package hyperref Info: Link coloring ON on input line 37.
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
@@ -650,9 +650,9 @@ Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
 \c@section@level=\count118
 )
-LaTeX Info: Redefining \ref on input line 35.
-LaTeX Info: Redefining \pageref on input line 35.
-LaTeX Info: Redefining \nameref on input line 35.
+LaTeX Info: Redefining \ref on input line 37.
+LaTeX Info: Redefining \pageref on input line 37.
+LaTeX Info: Redefining \nameref on input line 37.
 
 (./design.out) (./design.out)
 \@outlinefile=\write3
@@ -690,43 +690,43 @@ LaTeX Info: Redefining \nameref on input line 35.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-LaTeX Font Info:    Try loading font information for OT1+lmss on input line 38.
+LaTeX Font Info:    Try loading font information for OT1+lmss on input line 40.
 
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/lm/ot1lmss.fd
 File: ot1lmss.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-Overfull \hbox (32.72151pt too wide) in paragraph at lines 38--38
+Overfull \hbox (32.72151pt too wide) in paragraph at lines 40--40
 []  
  []
 
 
-Overfull \hbox (32.72151pt too wide) in paragraph at lines 38--38
+Overfull \hbox (32.72151pt too wide) in paragraph at lines 40--40
 [][]  
  []
 
-LaTeX Font Info:    Try loading font information for OML+lmm on input line 38.
+LaTeX Font Info:    Try loading font information for OML+lmm on input line 40.
 (/usr/local/texlive/2014/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 38.
+LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 40.
 
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMX+lmex on input line 38.
+LaTeX Font Info:    Try loading font information for OMX+lmex on input line 40.
 
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <14.4> on input line 38.
+(Font)              <14.4> on input line 40.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 38.
+(Font)              <10> on input line 40.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 38.
+(Font)              <7> on input line 40.
 
 
 LaTeX Warning: No \author given.
@@ -739,11 +739,11 @@ LaTeX Warning: No \author given.
 {/usr/local/texlive/2014/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 (./design.toc
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10.95> on input line 2.
+(Font)              <10.95> on input line 1.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 2.
+(Font)              <8> on input line 1.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 2.
+(Font)              <6> on input line 1.
 )
 \tf@toc=\write4
 \openout4 = `design.toc'.
@@ -752,85 +752,59 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 
 ] [3
 
-
 ]
-Chapter 1.
+LaTeX Font Info:    Try loading font information for OT1+lmtt on input line 50.
 
-Class scrreprt Warning: \float@addtolists detected!
-(scrreprt)              Implementation of \float@addtolist became
-(scrreprt)              deprecated in KOMA-Script v3.01 2008/11/14 and
-(scrreprt)              has been replaced by more several more flexible
-(scrreprt)              features of package `tocbasic`.
-(scrreprt)              Since Version 3.12 support for deprecated
-(scrreprt)              \float@addtolist interface has been
-(scrreprt)              restricted to only some of the KOMA-Script
-(scrreprt)              features and been removed from others.
-(scrreprt)              Loading of package `scrhack' may help to
-(scrreprt)              avoid this warning, if you are using a
-(scrreprt)              a package that still implements the
-(scrreprt)              deprecated \float@addtolist interface .
-
-LaTeX Font Info:    Try loading font information for OT1+lmtt on input line 47.
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/lm/ot1lmtt.fd
 File: ot1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMS+lmr on input line 56.
+LaTeX Font Info:    Try loading font information for OMS+lmr on input line 59.
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/lm/omslmr.fd
 File: omslmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `OMS/lmr/m/n' in size <10.95> not available
-(Font)              Font shape `OMS/lmsy/m/n' tried instead on input line 56.
- [4
-
-] [5]
-Chapter 2.
-<C&C.png, id=99, 504.88625pt x 349.305pt>
+(Font)              Font shape `OMS/lmsy/m/n' tried instead on input line 59.
+ [4]
+<C&C.png, id=109, 673.51625pt x 446.66875pt>
 File: C&C.png Graphic file (type png)
  <use C&C.png>
-Package pdftex.def Info: C&C.png used on input line 82.
-(pdftex.def)             Requested size: 504.885pt x 349.30414pt.
- [6
+Package pdftex.def Info: C&C.png used on input line 87.
+(pdftex.def)             Requested size: 505.13594pt x 335.00073pt.
+ [5 <./C&C.png>]
+<MDD.png, id=120, 494.84875pt x 481.8pt>
+File: MDD.png Graphic file (type png)
+ <use MDD.png>
+Package pdftex.def Info: MDD.png used on input line 102.
+(pdftex.def)             Requested size: 371.13565pt x 361.3491pt.
+ [6 <./MDD.png>]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 126.
+ [7]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 126.
 
- <./C&C.png>]
-Chapter 3.
-[7
+(./design.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 126.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 126.
 
-]
-Chapter 4.
-[8
 
-]
-Chapter 5.
-[9
+Package rerunfilecheck Warning: File `design.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
 
-]
-Chapter 6.
-[10
-
-]
-Chapter 7.
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 96.
-[11
-
-]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 96.
- (./design.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 96.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 96.
-Package rerunfilecheck Info: File `design.out' has not changed.
-(rerunfilecheck)             Checksum: 9DEAFD29A267D2441B8BE1786DE16CEB;585.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 96.
+Package rerunfilecheck Info: Checksums for `design.out':
+(rerunfilecheck)             Before: 7104E6E26D269612F886DC8BA07B304A;827
+(rerunfilecheck)             After:  6BDEEF3C4ABE1FE41957468D54C4568B;906.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 126.
  ) 
 Here is how much of TeX's memory you used:
- 8753 strings out of 493117
- 133888 string characters out of 6135433
- 271539 words of memory out of 5000000
- 12065 multiletter control sequences out of 15000+600000
- 45327 words of font info for 42 fonts, out of 8000000 for 9000
+ 8761 strings out of 493117
+ 134084 string characters out of 6135433
+ 272556 words of memory out of 5000000
+ 12069 multiletter control sequences out of 15000+600000
+ 48042 words of font info for 43 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 36i,7n,38p,836b,372s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 36i,7n,38p,888b,407s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2014/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/
 texlive/2014/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texlive/20
 14/texmf-dist/fonts/enc/dvips/lm/lm-rmtt.enc}</usr/local/texlive/2014/texmf-dis
@@ -838,10 +812,10 @@ t/fonts/type1/public/lm/lmbx10.pfb></usr/local/texlive/2014/texmf-dist/fonts/ty
 pe1/public/lm/lmr10.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/
 lm/lmssbx10.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/lm/lmsy1
 0.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/lm/lmtt10.pfb>
-Output written on design.pdf (11 pages, 143444 bytes).
+Output written on design.pdf (7 pages, 144329 bytes).
 PDF statistics:
- 162 PDF objects out of 1000 (max. 8388607)
- 140 compressed objects within 2 object streams
- 38 named destinations out of 1000 (max. 500000)
- 94 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 167 PDF objects out of 1000 (max. 8388607)
+ 147 compressed objects within 2 object streams
+ 41 named destinations out of 1000 (max. 500000)
+ 123 words of extra memory for PDF output out of 10000 (max. 10000000)
 

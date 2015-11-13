@@ -29,6 +29,8 @@ Produced by Matthew Zang, Nicholas Cage, Chiraq Obama, 4Evar Young\\
 \vfill
 \rule{16cm}{5pt}
 }
+\renewcommand\thesection{\arabic{section}}
+\renewcommand\thesubsection{\thesection.\arabic{subsection}}
 
 \date{}
 \usepackage{hyperref}
@@ -37,16 +39,17 @@ Produced by Matthew Zang, Nicholas Cage, Chiraq Obama, 4Evar Young\\
 \maketitle
 \tableofcontents
 \restoregeometry
-\chapter*{Update Log}
+\section{Update Log}
 
 This log will hold all the updates/git pushes to our game, showing our current progress/what needs to be completed, etc...
 
-\chapter{System Description}
-\section{Core Vision}
+\pagebreak 
+\section{System Description}
+\subsection{Core Vision}
 
 Our plan for A6 is to create a Pok\'emon Showdown spinoff using \texttt{OCaml} using key concepts presented in class (concurrency, mutability, functional programming) as well as integrating functions of \texttt{OCaml} not presented in class, including producing a suitable GUI and server to aid in development of the game. To set us apart from Pok\'emon Showdown, we are incorporating a single-player story mode in the form of a "Tournament mode", as well as allowing for full 1-Player, 2-Player, and No-Player functionality (by developing an intelligent bot that can fully play the game).
 
-\section{Key Features}
+\subsection{Key Features}
 We hope to have the following implemented in our completed project:
 \begin{enumerate}
 	\item A fully functional GUI that allows the players to see the current state of the game. The GUI will most likely show the Pok\'emon but the attack animations might be too complex to complete. 
@@ -74,23 +77,50 @@ We hope to have the following implemented in our completed project:
 	\item We will have to include concurrency for two player battling, meaning that there will have to be a server to respond to player requests as well as the GUI. 
 \end{enumerate}
 
-\section{Narrative Description}
+\subsection{Narrative Description}
 	This game will be an upgraded version of Pok\'emon Showdown, suitable and to the scale for a small console video game. It will have the main aspects of Pok\'emon Showdown including random battles between two players, as well as premade team battles between two players and a fully functional Pok\'emon team editor. However, it will also include single player capabilities, such as random battling or premade battling against an AI. The AI must be able to battle effectively and use advanced Pok\'emon techniques in the battle. In addition to this, there will be a Tournament mode which is essentially a story mode. The player has to play against several bots before proceeding to the final boss. This means that bots should have different levels of intelligence in order for this game mode to be challenging. 
-\chapter{Architecture}
-	We are aiming to produce a client-server architecture. The game server will keep track of the current game state, make sure all the rules of Pok\'emon are followed, update the GUI, etc... while the client (the players) send messages to the server to retrieve information as well as request to perform certain game actions. There will be at most three clients (the GUI that displays the current state of the game, and the other two clients are the players). When the game is launched, it waits until it establishes a connection with the GUI through a different port allowing multiple people to watch instances of their own GUI. Then it spawns a thread while waiting for either two players (either real players or AI to connect). It initializes the players and then starts the game. The C\&C diagram is shown below. 
+\section{Architecture}
+	We are aiming to produced a pipe and filter architecture. We were initially going to produce a client-server architecture with a game server keeping track of the current game state and updating the GUI will allowing clients (players) to send messages to the server to retrieve information and request actions; however, we realized that creating a server would make it hard to implement all the other features we wanted to implemented (since none of us knew what creating a server entailed). Instead of having a client-server architecture that allowed for two players to do concurrent battling, we realized that a pipelined architecture where each player would take turns choosing a move would work just as well. The input from the user will be passed along a pipeline and transforms the data into output. This is sufficient enough for the turn based Pok\'emon game. 
 	
-	\includegraphics{C&C.png}
+	However, in addition to the pipe and filter architecture (in relation to the game flow), we have some aspects of Shared Data Architecture. The Game and the GUI use the shared data architecture to communicate by reading and writing to the shared data. The C\&C diagram is provided below. The pipeline flow is shown from left to right, while the shared data architecture is shown extending downwards from Game Controller. 
+	
+	\includegraphics[scale=0.75]{C&C.png}
 
-\chapter{System Design}
-\section{Important Modules}
+\section{System Design}
+\subsection{Important Modules}
 
 \begin{enumerate}
-	\item Game.ml
+	\item \textbf{Game}: This is the game controller. It is mainly involved in handling the GUI and passing control to the battle controller when a battle occurs/is set up.
+	\item \textbf{Gui}: The Gui is used to diplay the current state of the game. There are two main phases in the Gui, the menu screens and the battle scenes. The Gui will either communicate with the game controller when the menu screens are being displayed or communicate with the battle controller when a battle is occuring.
+	\item \textbf{Info}: The Info module contains all the data types that are needed/shared between the module. It essentially contains everything the other modules need to use to communicate with one another and helps in avoiding circular dependencies. All data types needed for the game will be declared here.
+	\item \textbf{BattleController}: This battle controller module is called by the game controller when a battle is taking place. During this time, the battle controller handles all the game mechanics and updates the Gui. The game controller waits for the battle to end before resuming control.
+	\item \textbf{DataLoader}: This module is involved in loading the data from the json files. For example, functions in this method will be called to convert a string containing the name of the Pok\'emon to something of type Pok\'emon (defined in the Info module).
+	
 \end{enumerate}
-\chapter{Module Design}
-\chapter{Data}
-\chapter{External Dependencies}
-\chapter{Testing Plan}
+
+\subsection{Module Dependency Diagram}
+\includegraphics[scale=0.75]{MDD.png}
+
+\section{Data}
+%TODO Fill in internal data
+\subsection{Internal Data}
+We plan on having json files to represent all the Pok\'emon, moves, abilities, etc... Since json files aren't readily available online with all the Pok\'emon data, we wrote scripts to fetch the data from databases and convert them to a json format. To load the data, we are most likely going to use the Yojson module, similar to A3. 
+
+%TODO Fill in communication
+\subsection{Communication}
+In order to let the GUI communicate with the Game without the use of a server, we came up with a method of communication through Ivar references. When Game initializes the GUI we make Game pass in as an argument an Ivar reference. Game and GUI communicate by emptying and filling the Ivar. When Game is ready to handle another input, Game resets the Ivar by creating a new one. GUI then fills in the Ivar when it gets some input. Thus, Game and GUI can communicate without creating any circular dependency within modules. The Ivar is filled with some variable that is of type \texttt{game\_state} defined in the Info module. 
+
+%TODO Fill in data structures
+\subsection{Data Structures}
+To hold all the Pok\'emon data we will most likely be using some implementation of a dictionary. We are thinking of using a HashMap or the infamous Two-Three trees.
+
+%TODO See if you can expand
+\section{External Dependencies}
+
+We will be using \texttt{Lablgtk2} to create the GUI and \texttt{Yojson} to parse json files. 
+
+%TODO Fill in testing plan 
+\section{Testing Plan}
 
 % add other chapters and sections to suit
 \end{document}
