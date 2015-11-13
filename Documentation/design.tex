@@ -104,11 +104,11 @@ We hope to have the following implemented in our completed project:
 \section{Data}
 %TODO Fill in internal data
 \subsection{Internal Data}
-We plan on having json files to represent all the Pok\'emon, moves, abilities, etc... Since json files aren't readily available online with all the Pok\'emon data, we wrote scripts to fetch the data from databases and convert them to a json format. To load the data, we are most likely going to use the Yojson module, similar to A3. 
+We plan on having json files to represent all the Pok\'emon, moves, abilities, etc... Since json files aren't readily available online with all the Pok\'emon data, we plan to write Python scripts to fetch the data from databases and convert them to a json format. To load the data, we are most likely going to use the Yojson module, similar to how we used it in A2. 
 
 %TODO Fill in communication
 \subsection{Communication}
-In order to let the GUI communicate with the Game without the use of a server, we came up with a method of communication through Ivar references. When Game initializes the GUI we make Game pass in as an argument an Ivar reference. Game and GUI communicate by emptying and filling the Ivar. When Game is ready to handle another input, Game resets the Ivar by creating a new one. GUI then fills in the Ivar when it gets some input. Thus, Game and GUI can communicate without creating any circular dependency within modules. The Ivar is filled with some variable that is of type \texttt{game\_state} defined in the Info module. 
+In order to let the GUI communicate with the Game without the use of a server, we came up with a method of communication through Ivar references. When Game initializes the GUI we will make Game pass in as an argument an Ivar reference. Game and GUI communicate by emptying and filling the Ivar. When Game is ready to handle another input, Game resets the Ivar by creating a new one. GUI then fills in the Ivar when it gets some input. Thus, Game and GUI can communicate without creating any circular dependency within modules. The Ivar is filled with some variable that is of type \texttt{game\_state} defined in the Info module. 
 
 %TODO Fill in data structures
 \subsection{Data Structures}
@@ -117,11 +117,11 @@ To hold all the Pok\'emon data we will most likely be using some implementation 
 %TODO See if you can expand
 \section{External Dependencies}
 We will be using \texttt{Lablgtk2} to create the GUI and \texttt{Yojson} to parse json files. The json data
-will be collected from \url{http://pokeapi.co} using \texttt{Python}.
+will primarily be collected from \url{https://github.com/veekun/pokedex/tree/master/pokedex/data/csv} using \texttt{Python}.
 
 %TODO Fill in testing plan 
 \section{Testing Plan}
-Our testing plan will mainly consist of debugging and verifying individual functions through a combination of black-box and white-box testing for each module, as well as regression tests to ensure any changes to some aspect of our program does not break an existing functionality that was previously verified. These test cases will be mostly randomized and automated, and testing will take place during and after the implementation process. Of course, once we are finished with the implementation and modular testing, we will also test the overall gameplay by playing the game many times and letting some of our friends outside of the the course to play the game to assure that the game can be played without issues and also receive useful feedback. If we have time, we may even formally verify the correctness of some of our functions. 
+Our testing plan will mainly consist of debugging and verifying individual functions through a combination of black-box and white-box testing for each module, as well as regression tests to ensure any changes to some aspect of our program does not break an existing functionality that was previously verified. These test cases will be mostly randomized and automated, and testing will take place during and after the implementation process. Of course, once we are finished with the implementation and modular testing, we will also test the overall gameplay by playing the game many times and letting some of our friends outside of the course to play the game to assure that the game can be played without issues and also receive useful feedback. If we have time, we may even formally verify the correctness of some of our functions. 
 
 % add other chapters and sections to suit
 \end{document}
