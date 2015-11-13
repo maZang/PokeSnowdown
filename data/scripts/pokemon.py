@@ -142,12 +142,63 @@ def generate_pokemon_json ():
 		, "order", "is_default")
 	reader = csv.DictReader(csvfile, fieldnames) 
 	for row in reader:
+		if int(row["id"]) >= 10080 and int(row["id"]) <= 10085:
+			continue 
 		pokedict = {} 
 		pokedict["type"] = pokemon_type[row["id"]]
 		pokedict["ability"] = pokemon_ability[row["id"]]
 		pokedict["stats"] = pokemon_stat[row["id"]]
 		pokedict["moves"] = pokemon_move[row["id"]]
-		pokemon[row["identifier"]] = pokedict 
+		pokey = row["identifier"]
+		if pokey == "mime-jr":
+			pokey = "mimejr" 
+		if pokey == "ho-oh":
+			pokey = "hooh"
+		if pokey == "gourgeist-average":
+			pokey = "gourgeist"
+		if pokey == "darmanitan-standard":
+			pokey = "darmanitan"
+		if pokey == "meowstic-male":
+			pokey = "meowstic"
+		if pokey == "wormadam-plant":
+			pokey = "wormadam"
+		if pokey == "nidoran-m":
+			pokey = "nidoranm"
+		if pokey == "nidoran-f":
+			pokey = "nidoranf"
+		if pokey == "meloetta-aria":
+			pokey = "meloetta"
+		if pokey == "shaymin-land":
+			pokey = "shaymin"
+		if pokey == "tornadus-incarnate":
+			pokey = "tornadus"
+		if pokey == "basculin-blue-striped":
+			pokey = "basculin-bluestriped"
+		if pokey == "porygon-z":
+			pokey = "porygonz"
+		if pokey == "mr-mime":
+			pokey = "mrmime"
+		if pokey == "thundurus-incarnate":
+			pokey = "thundurus"
+		if pokey == "landorus-incarnate":
+			pokey = "landorus"
+		if pokey == "pumpkaboo-average":
+			pokey = "pumpkaboo"
+		if pokey == "floette-eternal":
+			pokey = "floette-eternalflower"
+		if pokey == "giratina-altered":
+			pokey = "giratina-origin"
+		if pokey == "deoxys-normal":
+			pokey = "deoxys"
+		if pokey == "aegislash-shield":
+			pokey = "aegislash"
+		if pokey == "basculin-red-striped":
+			pokey = "basculin"
+		if pokey == "keldeo-ordinary":
+			pokey = "keldeo"
+		if pokey == "meowstic-female":
+			pokey = "meowstic-f"
+		pokemon[pokey] = pokedict 
 	with open("../pokemon.json", "w") as outfile:
 		json.dump(pokemon, outfile)
 

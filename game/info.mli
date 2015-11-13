@@ -4,7 +4,9 @@ type game_state = MainMenu | Menu1P | Quit
 
 type battlemove = SwitchPoke of int | UseAttack of int 
 
-(* record of some type *)
+(* *)
+type move = string 
+
 type pokemon 
 
 (* variants containing all secondary effects of a given move *)
