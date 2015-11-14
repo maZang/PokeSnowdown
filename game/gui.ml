@@ -1,13 +1,13 @@
 open Async.Std
 
-let screen_width = 642
-let screen_height= 480
+let screen_width = 1024
+let screen_height= 768
 
 let locale = GtkMain.Main.init ()
 
 let current_screen = ref Info.MainMenu
 
-let make_battle_screen ~file ?packing () =
+let make_battle_screen ~file ?packing () = ()
 
 (* Make all the menu items for the game loading screen *)
 let make_menu ~file1 ~file2?packing () =
@@ -32,11 +32,11 @@ let make_menu ~file1 ~file2?packing () =
 		~packing:(vbox2#pack ~expand:true ~fill:true) ~show:false () in
 	let button7 = GButton.button ~label:"Back"
 		~packing:(vbox3#pack ~from:`END) () ~show:false in
-  hbox, vbox1, vbox2, vbox3, button1, button2, button3, button4,
-		button5, button6, button7
+  (hbox, vbox1, vbox2, vbox3, button1, button2, button3, button4,
+		button5, button6, button7)
 
 let load_not_main_menu engine button1 button2 button3 button4 button5 button6
-  back_button() =
+  back_button () =
 	if Ivar.is_empty (!engine) then
 		(List.iter (fun s -> s#misc#hide ())[button1; button2; button3];
     List.iter (fun s -> s#misc#show ()) [button4;button5;button6;
