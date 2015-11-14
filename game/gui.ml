@@ -7,6 +7,8 @@ let locale = GtkMain.Main.init ()
 
 let current_screen = ref Info.MainMenu
 
+let make_battle_screen ~file ?packing () =
+
 (* Make all the menu items for the game loading screen *)
 let make_menu ~file1 ~file2?packing () =
 	let hbox = GPack.hbox ~homogeneous:true ?packing () in
