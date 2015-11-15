@@ -10,7 +10,7 @@ let current_state = ref (Ivar.create ())
 let number_loops = ref 0
 
 let quit thread_lst =
-	let _ = List.map Thread.kill thread_lst in Thread.exit () 
+	let _ = List.map Thread.kill thread_lst in Thread.exit ()
 
 let give_gui_permission () = current_state := Ivar.create ()
 
@@ -36,6 +36,7 @@ let main () =
 			match state with
 			| MainMenu -> give_gui_permission ()
 			| Menu1P -> give_gui_permission ()
+      | Battle -> ()
 			| Quit -> Printf.printf "Quitting\n%!"; quit [gui_thread; scheduler_thread]
 		); wait_for_empty (); game_loop ()
 	in game_loop ()

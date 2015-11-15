@@ -1,13 +1,31 @@
 open Async.Std
 
-let screen_width = 800
+(*
+  Communication Details:
+
+*)
+
+
+let screen_width = 600
 let screen_height= 480
 
 let locale = GtkMain.Main.init ()
 
 let current_screen = ref Info.MainMenu
 
-let make_battle_screen ?packing () = ()
+let make_battle_screen ?packing () =
+  let battle = GPack.table ~rows:4 ~columns: 4 ?packing ~width:screen_width
+    ~height: (2 * screen_height / 3) ~show:false
+     () in
+  let text = GPack.hbox ?packing ~height: (1 * screen_height / 6) () in
+  let bg_img = GMisc.image ~file:"../data/backgrounds/bg-volcanocave.jpg"
+     () in
+  let poke1_img = GMisc.image ~file:"../data/back-sprites/gyarados.gif" () in
+  let poke2_img = GMisc.image ~file:"../data/sprites/aipom.gif" () in
+  battle#attach ~left:0 ~top:1 ~bottom:4 poke1_img#coerce;
+  battle#attach ~left:3 ~top:0 ~bottom:3 poke2_img#coerce;
+  battle#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH bg_img#coerce;
+  battle, text, bg_img
 
 (* Make all the menu items for the game loading screen *)
 let make_menu ?packing () =
@@ -36,6 +54,13 @@ let make_menu ?packing () =
   (vbox, hbox1, hbox2, button1, button2, button3, button4,
 		button5, button6, button7, img, img2)
 
+let load_battle_screen engine img battle text () =
+  if Ivar.is_empty (!engine) then
+    (img#misc#hide (); battle#misc#show (); text#misc#show ();
+    current_screen := Info.Battle; Ivar.fill !engine Info.Battle)
+  else
+    ()
+
 let load_not_main_menu engine button1 button2 button3 button4 button5 button6
   back_button img1 img2 () =
 	if Ivar.is_empty (!engine) then
@@ -57,12 +82,24 @@ let load_main_menu engine one_player two_player no_player button4 button5
 	else
 		()
 
+let load_main_menu_from_battle engine one_player two_player no_player button4 button5
+  button6 back_button main_menu_bg battle text () =
+  engine := Ivar.create ();
+  (List.iter (fun s -> s#misc#hide ()) [button4;button5;button6;
+    back_button];
+  List.iter (fun s -> s#misc#show ())[one_player; two_player; no_player];
+  battle#misc#hide (); text#misc#hide (); main_menu_bg#misc#show ();
+  current_screen := Info.MainMenu; Ivar.fill !engine Info.MainMenu)
+
 let go_back engine (menu_holder, main_menu, battle_scren, one_player,
     two_player, no_player, random_1p, preset_1p, touranment,
-    back_button, main_menu_bg, one_bg) () =
-	if !current_screen = Info.Menu1P then
+    back_button, main_menu_bg, one_bg) battle text bg_img () =
+	(if !current_screen = Info.Menu1P then
 		load_main_menu engine one_player two_player no_player random_1p preset_1p
-      touranment back_button main_menu_bg one_bg ()
+      touranment back_button main_menu_bg one_bg ());
+  (if !current_screen = Info.Battle then
+    load_main_menu_from_battle engine one_player two_player no_player random_1p preset_1p
+      touranment back_button main_menu_bg battle text ())
 
 
 (* The main gui *)
@@ -73,11 +110,14 @@ let main_gui engine () =
 		one_player_menu, random_1p, preset_1p, touranment, buffer_area,
 		back_button *)
 	let menu = make_menu ~packing:(window#add) () in
-	let menu_holder, main_menu, battle_screne, one_player,
+	let menu_holder, main_menu, battle_screen, one_player,
 		two_player, no_player, random_1p, preset_1p, touranment,
 		back_button, main_menu_bg, one_bg = menu in
+  let battle, text, bg_img = make_battle_screen ~packing:(battle_screen#add) () in
 	one_player#connect#clicked ~callback:(load_not_main_menu engine one_player
   two_player no_player random_1p preset_1p touranment back_button main_menu_bg
-  one_bg); back_button#connect#clicked ~callback:(go_back engine menu);
+  one_bg); back_button#connect#clicked ~callback:(go_back engine menu battle text
+  bg_img ); random_1p#connect#clicked ~callback:(load_battle_screen engine one_bg
+  battle text);
 	window#show ();
 	let thread = GtkThread.start () in ()

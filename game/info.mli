@@ -1,6 +1,6 @@
 (* Info contains all the data types needed for the handling of the game *)
 
-type game_state = MainMenu | Menu1P | Quit
+type game_state = MainMenu | Menu1P | Quit | Battle
 
 type battlemove = SwitchPoke of int | UseAttack of int
 
