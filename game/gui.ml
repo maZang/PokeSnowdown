@@ -1,6 +1,6 @@
 open Async.Std
 
-let screen_width = 1024
+let screen_width = 1026
 let screen_height= 768
 
 let locale = GtkMain.Main.init ()
@@ -10,29 +10,26 @@ let current_screen = ref Info.MainMenu
 let make_battle_screen ~file ?packing () = ()
 
 (* Make all the menu items for the game loading screen *)
-let make_menu ~file1 ~file2?packing () =
-	let hbox = GPack.hbox ~homogeneous:true ?packing () in
-	let vbox1 = GPack.vbox ~packing:(hbox#pack) () in
-	let vbox2 = GPack.vbox ~packing:(hbox#pack) () in
-	let vbox3 = GPack.vbox ~packing:(hbox#pack) () in
-	let _ = GMisc.image ~file:file1 ~packing:(vbox1#pack) () in
-	let _ = GMisc.image ~file:file2 ~height:460
-		~packing:(vbox3#pack ~expand:true) () in
+let make_menu ~file ?packing () =
+	let vbox = GPack.vbox ?packing () in
+	let hbox1 = GPack.hbox ~homogeneous:true ~packing:(vbox#pack) ~height:128 ()in
+	let hbox2 = GPack.hbox ~packing:(vbox#pack) () in
+	let _ = GMisc.image ~file:file ~packing:(hbox2#pack) () in
 	let button1 = GButton.button ~label:"1-Player"
-		~packing:(vbox2#pack ~expand:true ~fill:true) () in
+		~packing:(hbox1#pack ~expand:true ~fill:true) () in
 	let button2 = GButton.button ~label:"2-Player"
-		~packing:(vbox2#pack ~expand:true ~fill:true) () in
+		~packing:(hbox1#pack ~expand:true ~fill:true) () in
 	let button3 = GButton.button ~label:"No Player"
-		~packing:(vbox2#pack ~expand:true ~fill:true) ()  in
+		~packing:(hbox1#pack ~expand:true ~fill:true) ()  in
 	let button4 = GButton.button ~label:"Random Battle"
-		~packing:(vbox2#pack ~expand:true ~fill:true) ~show:false () in
+		~packing:(hbox1#pack ~expand:true ~fill:true) ~show:false () in
 	let button5 = GButton.button ~label:"Preset Battle"
-		~packing:(vbox2#pack ~expand:true ~fill:true) ~show:false () in
+		~packing:(hbox1#pack ~expand:true ~fill:true) ~show:false () in
 	let button6 = GButton.button ~label:"Tournament"
-		~packing:(vbox2#pack ~expand:true ~fill:true) ~show:false () in
+		~packing:(hbox1#pack ~expand:true ~fill:true) ~show:false () in
 	let button7 = GButton.button ~label:"Back"
-		~packing:(vbox3#pack ~from:`END) () ~show:false in
-  (hbox, vbox1, vbox2, vbox3, button1, button2, button3, button4,
+		~packing:(hbox1#pack ~from:`END) () ~show:false in
+  (vbox, hbox1, hbox2, button1, button2, button3, button4,
 		button5, button6, button7)
 
 let load_not_main_menu engine button1 button2 button3 button4 button5 button6
@@ -54,7 +51,7 @@ let load_main_menu engine one_player two_player no_player button4 button5
 	else
 		()
 
-let go_back engine (menu_holder, left_side, main_menu, right_side, one_player,
+let go_back engine (menu_holder, main_menu, battle_scren, one_player,
     two_player, no_player, random_1p, preset_1p, touranment,
     back_button) () =
 	if !current_screen = Info.Menu1P then
@@ -70,9 +67,8 @@ let main_gui engine () =
 		one_player_menu, random_1p, preset_1p, touranment, buffer_area,
 		back_button *)
 	let menu = make_menu
-		~file1:"./gui_pics/bg1.png" ~file2:"./gui_pics/bg2.png"
-		~packing:(window#add) () in
-	let menu_holder, left_side, main_menu, right_side, one_player,
+		~file:"./gui_pics/bg1.png" ~packing:(window#add) () in
+	let menu_holder, main_menu, battle_screne, one_player,
 		two_player, no_player, random_1p, preset_1p, touranment,
 		back_button = menu in
 	one_player#connect#clicked ~callback:(load_not_main_menu engine one_player
