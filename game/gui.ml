@@ -20,13 +20,16 @@ let make_battle_screen ?packing () =
   let text = GPack.hbox ?packing ~height: (1 * screen_height / 6) () in
   let bg_img = GMisc.image ~file:"../data/backgrounds/bg-volcanocave.jpg"
      () in
-  let poke1_img = GMisc.image ~file:"../data/back-sprites/gyarados.gif" () in
-  let poke2_img = GMisc.image ~file:"../data/sprites/aipom.gif" () in
+  let text_buffer = GEdit.entry ~width:600 ~height:80 ~text:"Chirag's Mom"
+    ~packing:(text#pack ~expand:true) ~editable:false () in
+  let poke1_img = GMisc.image ~file:"../data/back-sprites/charizard-mega-x.gif" () in
+  let poke2_img = GMisc.image ~file:"../data/sprites/blaziken-mega.gif" () in
   let move1 = GButton.button ~label:"Move1" ~show:false () in
   let move2 = GButton.button ~label:"Move2" ~show:false () in
   let move3 = GButton.button ~label:"Move3" ~show:false () in
   let move4 = GButton.button ~label:"Move4" ~show:false () in
   let switch = GButton.button ~label:"Switch" ~show: false() in
+  text_buffer#misc#modify_font (Pango.Font.from_string "arial,monospace condensed 10");
   battle#attach ~left:0 ~top:1 ~bottom:4 poke1_img#coerce;
   battle#attach ~left:3 ~top:0 ~bottom:3 poke2_img#coerce;
   battle#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH bg_img#coerce;
