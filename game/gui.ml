@@ -14,7 +14,8 @@ let make_menu ~file ?packing () =
 	let vbox = GPack.vbox ?packing () in
 	let hbox1 = GPack.hbox ~homogeneous:true ~packing:(vbox#pack) ~height:128 ()in
 	let hbox2 = GPack.hbox ~packing:(vbox#pack) () in
-	let _ = GMisc.image ~file:file ~packing:(hbox2#pack) () in
+	let _ = GMisc.image ~file:file ~packing:(hbox2#pack) ~height:640
+  ~width:1026 in
 	let button1 = GButton.button ~label:"1-Player"
 		~packing:(hbox1#pack ~expand:true ~fill:true) () in
 	let button2 = GButton.button ~label:"2-Player"
@@ -67,7 +68,7 @@ let main_gui engine () =
 		one_player_menu, random_1p, preset_1p, touranment, buffer_area,
 		back_button *)
 	let menu = make_menu
-		~file:"./gui_pics/bg1.png" ~packing:(window#add) () in
+		~file:"../PokémonGenerations.png" ~packing:(window#add) () in
 	let menu_holder, main_menu, battle_screne, one_player,
 		two_player, no_player, random_1p, preset_1p, touranment,
 		back_button = menu in
