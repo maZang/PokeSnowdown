@@ -10,7 +10,7 @@ let handle_preprocessing state = state
 let handle_action state action1 action2 = state
 
 let rec main_controller_random1p engine gui_ready =
-  Thread.delay 5.;
+  Thread.delay 2.;
   let battle = initialize_battle 0 0 in
   engine := Ivar.create (); Ivar.fill !engine battle;
   let rec main_loop () =
