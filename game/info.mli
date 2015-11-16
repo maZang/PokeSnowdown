@@ -1,7 +1,4 @@
 (* Info contains all the data types needed for the handling of the game *)
-
-type game_state = MainMenu | Menu1P | Quit | Battle
-
 type battlemove = SwitchPoke of int | UseAttack of int
 
 type target = SpecificPoke | SelectedPokeMeFirst | Ally | UsersField |
@@ -45,10 +42,15 @@ type pokemon_stat_modifier = {attack: stat_modifier; defense: stat_modifier;
     special_defense: stat_modifier; evasion: stat_modifier;
     accuracy: stat_modifier}
 
-type trainer_team = {current: pokemon; alive: pokemon list; dead: pokemon list}
-
-type battle_state = trainer_team * trainer_team * weather_terrain
+type trainer_team = int
+(*  {current: pokemon; alive: pokemon list; dead: pokemon list} *)
 
 (* As in competitive Pokemon, there will be no ties. If all Poke die in
 one turn, the one with the Poke standing the latest wins *)
 type outcome = WinnerP1 | WinnerP2
+
+type battle_mode = Random1p
+
+type battle_state = InGame of trainer_team * trainer_team * weather_terrain | Loading
+
+type game_state = MainMenu | Menu1P | Quit | Battle of battle_state
