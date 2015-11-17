@@ -1,23 +1,17 @@
 {
-  "alakazam": {
-    "element": [
-      "psychic"
-    ],
+  "unlocked": 6,
+  "pokemon": [
+  {
+    "name": "alakazam",
     "moves": [
       "psychic",
       "focus-blast",
       "shadow-ball",
       "encore"
     ],
-    "name": "alakazam",
-    "hp": "55",
-    "attack": "50",
-    "special-attack": "135",
-    "defense": "45",
-    "special-defense": "95",
-    "speed": "120",
     "ability": "magic-guard",
     "nature": "timid",
+    "item": "life orb",
     "evs": {
       "hp": "0",
       "attack": "0",
@@ -26,5 +20,105 @@
       "special-defense": "0",
       "speed": "252"
     }
-  }
+  },
+  {
+    "name": "azumarill",
+    "moves": [
+      "play-rough",
+      "waterfall",
+      "aqua-jet",
+      "knock-off"
+    ],
+    "ability": "huge-power",
+    "nature": "adamant",
+    "item": "choice band",
+    "evs": {
+      "hp": "172",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "84"
+    }
+  },
+  {
+    "name": "klefki",
+    "moves": [
+      "spikes",
+      "thunder-wave",
+      "toxic",
+      "foul-play"
+    ],
+    "ability": "prankster",
+    "nature": "careful",
+    "item": "leftovers",
+    "evs": {
+      "hp": "252",
+      "attack": "0",
+      "special-attack": "0",
+      "defense": "4",
+      "special-defense": "252",
+      "speed": "0"
+    }
+  },
+  {
+    "name": "charizard",
+    "moves": [
+      "dragon-dance",
+      "flare-blitz",
+      "dragon-claw",
+      "roost"
+    ],
+    "ability": "blaze",
+    "nature": "jolly",
+    "item": "charizarditex",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  {
+    "name": "sylveon",
+    "moves": [
+      "hyper-voice",
+      "psyshock",
+      "shadow-ball",
+      "baton-pass"
+    ],
+    "ability": "pixilate",
+    "nature": "modest",
+    "item": "choice specs",
+    "evs": {
+      "hp": "240",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "16"
+    }
+  },
+  {
+    "name": "serperior",
+    "moves": [
+      "leaf-storm",
+      "dragon-pulse",
+      "giga-drain",
+      "hidden-power"
+    ],
+    "ability": "contrary",
+    "nature": "timid",
+    "item": "life orb",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "4",
+      "speed": "252"
+    }
+  } ]
 }

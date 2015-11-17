@@ -18,7 +18,8 @@ type move = {name:string; priority: int; target: target; dmg_class: dmg_class;
     power:int; effect_chance: int; accuracy: int; element: element;
     description: string}
 
-type item = None | Leftovers
+type item = None | Leftovers | ChoiceBand | LifeOrb | CharizarditeX |
+            ChoiceSpecs
 
 (* variants containing all secondary effects of a given move *)
 type secondary_effects
@@ -35,11 +36,11 @@ type volatile_status =  Confusion | Curse | Embargo | Encore | Flinch | HealBloc
 
 type status = non_volatile_status * volatile_status list
 
-type nature = Adamant | Modest | Timid
+type nature = Adamant | Modest | Timid | Careful
 
 type pokemon = {element: element list; moves: move list; name: string;
   hp: int; attack: int; defense:int; special_defense:int; special_attack:int;
-  speed:int; ability:string; evs: evs; nature: nature}
+  speed:int; ability:string; evs: evs; nature: nature; item: item}
 
 type battle_poke = {pokeinfo: pokemon; curr_hp:int ref; curr_status: status ref
   curr_item: item ref}
