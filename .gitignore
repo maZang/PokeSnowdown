@@ -1,5 +1,7 @@
-*.cmi
-*.cmo
-a.out
+*
+!/**/
+!*.*
 .DS_Store
-game
+a.out
+*.cmo
+*.cmi
