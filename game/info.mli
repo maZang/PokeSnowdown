@@ -11,6 +11,11 @@ type element = Fire | Water | Grass | Rock | Ground | Fairy | Dark | Electric |
   Ghost | Steel | Normal | Bug | Flying | Psychic | Ice | Dragon | Fighting |
   Poison
 
+type flag = Contact | Charge | Protect | Recharge | Reflectable | Snatch |
+            Mirror | Punch | Sound | Gravity | Defrost | Distance | Heal |
+            Authentic | Powder | Bite | Pulse | Ballistics | Mental |
+            NonSkyBattle
+
 type evs = {attack:int; defense:int; special_attack: int; special_defense: int;
             hp:int; speed:int}
 
@@ -38,8 +43,8 @@ type status = non_volatile_status * volatile_status list
 
 type nature = Adamant | Modest | Timid | Careful
 
-type pokemon = {name: string; element: element list; move1: string; move2: string;
-  move3: string; move4: string; hp: int; attack: int; defense:int;
+type pokemon = {name: string; element: element list; move1: move; move2: move;
+  move3: move; move4: move; hp: int; attack: int; defense:int;
   special_defense:int; special_attack:int; speed:int; ability:string; evs: evs;
   nature: nature; item: item}
 
