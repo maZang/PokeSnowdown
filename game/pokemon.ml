@@ -9,27 +9,99 @@ let open_json s = try Yojson.Basic.from_file ("../data/" ^ s ^ ".json") with
 
 let nth i lst = List.nth lst i
 
+let () = Random.self_init ()
+
 (* All data *)
 let poke_json = open_json "pokemon"
-let num_pokemon_total = try poke_json |> member "total" |> to_int with
-                      _ -> Printf.printf "Corrupted Json File \n%!"; exit 0
-let all_pokemon = [poke_json] |> filter_member "pokemon" |> flatten
+let poke_arr = open_json "pokemonlist"
+let move_json = open_json "moves"
+let num_pokemon_total = 721
 
-(* Preset data *)
-let preset_json = open_json "factorysets"
-let num_unlocked = try preset_json |> member "unlocked" |> to_int with
-                  _ -> Printf.printf "Corrupted Save File\n%!"; exit 0
-let preset_pokemon = [preset_json] |> filter_member "pokemon" |> flatten
+let getRandomNature () =
+  match Random.int 4 with
+  | 0 -> Adamant
+  | 1 -> Modest
+  | 2 -> Careful
+  | 3 -> Timid
+  | _ -> failwith "Does not occur"
 
-(* The array with all your unlocked pokemon *)
-let preset_array = let arr = Array.make num_unlocked "" in
-  for i = 0 to (num_unlocked - 1) do
-    arr.(i) <- preset_pokemon |> nth i |> member "name" |> to_string
-  done; arr
-(* The array with all the pokemon in the game *)
-let poke_array = let arr = Array.make num_pokemon_total "" in
-  for i = 0 to (num_pokemon_total - 1) do
-    arr.(i) <- all_pokemon |> nth i |> member "name" |> to_string
-  done; arr
+let getRandomItem () =
+  match Random.int 4 with
+  | 0 -> Leftovers
+  | 1 -> ChoiceBand
+  | 2 -> LifeOrb
+  | 3 -> ChoiceSpecs
+  | _ -> failwith "Does not occur"
 
-let getRandomPokemon () = failwith "TODO"
+let getElement str =
+  match str with
+  | "fire" -> Fire
+  | "water" -> Water
+  | "grass" -> Grass
+  | "rock" -> Rock
+  | "ground" -> Ground
+  | "fairy" -> Fairy
+  | "dark" -> Dark
+  | "electric" -> Electric
+  | "ghost" -> Ghost
+  | "steel" -> Steel
+  | "normal" -> Normal
+  | "bug" -> Bug
+  | "flying" -> Flying
+  | "psychic" -> Psychic
+  | "ice" -> Ice
+  | "dragon" -> Dragon
+  | "fighting" -> Fighting
+  | "poison" -> Poison
+  | _ -> failwith "Not a valid type"
+
+let getRandomElement lst =
+  let l = List.length lst in
+  lst |> nth (Random.int l)
+
+(* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
+    power:int; effect_chance: int; accuracy: int; element: element;
+    description: string} *)
+let getMoveFromString str =
+  let move = move_json |> member str in
+  let priority = move |> member "priority" |> to_string |> int_of_string in
+  let powerstr = move |> member "power" |> to_string in
+  let power = try int_of_string powerstr with |_ -> 0 in
+  ()
+
+let getRandomPokemon () =
+  let randomPokeName = poke_arr |>
+    member (string_of_int (Random.int num_pokemon_total + 1)) |> to_string in
+  let randomPoke = poke_json |> member randomPokeName in
+  let element_string = randomPoke |> member "type" |> to_list|> filter_string in
+  let element = List.map getElement element_string in
+  let moves = randomPoke |> member "moves" |> to_list in
+  let move1str = getRandomElement moves |> to_string in
+  let move2str = getRandomElement moves |> to_string in
+  let move3str = getRandomElement moves |> to_string in
+  let move4str = getRandomElement moves |> to_string in
+  let hp = randomPoke |> member "stats" |> member "hp" |> to_string
+            |> int_of_string in
+  let attack = randomPoke |> member "stats" |> member "attack" |> to_string
+            |> int_of_string in
+  let defense = randomPoke |> member "stats" |> member "defense" |> to_string
+            |> int_of_string in
+  let special_defense = randomPoke |> member "stats" |> member "special-defense"
+            |> to_string |> int_of_string in
+  let special_attack = randomPoke |> member "stats" |> member "special-attack"
+            |> to_string |> int_of_string in
+  let speed = randomPoke |> member "stats" |> member "speed" |> to_string
+            |> int_of_string in
+  let ability = getRandomElement (randomPoke |> member "ability" |> to_list)
+            |> to_string in
+  let evs = {attack = 84; defense =  84; special_attack= 84; special_defense= 84;
+            hp=84; speed=84} in
+  let nature = getRandomNature () in
+  let item = getRandomItem () in
+  {name = randomPokeName; element; move1 = move1str; move2 = move2str;
+  move3 = move3str; move4 = move4str; hp = hp; attack; defense;
+  special_defense; special_attack; speed; ability; evs;
+  nature; item}
+
+
+ (*  while !move2 = move1 do move2 := getRandomPokemon done *)

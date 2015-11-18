@@ -11,7 +11,7 @@ type element = Fire | Water | Grass | Rock | Ground | Fairy | Dark | Electric |
   Ghost | Steel | Normal | Bug | Flying | Psychic | Ice | Dragon | Fighting |
   Poison
 
-type evs = {attack:int; defense:int; special_defense: int; special_defense: int
+type evs = {attack:int; defense:int; special_attack: int; special_defense: int;
             hp:int; speed:int}
 
 type move = {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -38,11 +38,12 @@ type status = non_volatile_status * volatile_status list
 
 type nature = Adamant | Modest | Timid | Careful
 
-type pokemon = {element: element list; moves: move list; name: string;
-  hp: int; attack: int; defense:int; special_defense:int; special_attack:int;
-  speed:int; ability:string; evs: evs; nature: nature; item: item}
+type pokemon = {name: string; element: element list; move1: string; move2: string;
+  move3: string; move4: string; hp: int; attack: int; defense:int;
+  special_defense:int; special_attack:int; speed:int; ability:string; evs: evs;
+  nature: nature; item: item}
 
-type battle_poke = {pokeinfo: pokemon; curr_hp:int ref; curr_status: status ref
+type battle_poke = {pokeinfo: pokemon; curr_hp:int ref; curr_status: status ref;
   curr_item: item ref}
 
 (* stat modifier represents number of stages followed by multiplier *)
