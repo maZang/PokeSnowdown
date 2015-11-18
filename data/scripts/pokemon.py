@@ -4,6 +4,17 @@ import csv
 NUM_ABILITIES = 188
 NUM_MOVES = 621
 
+def generate_flag_dictionary ():
+	flagdict = {}
+	csvfile = open("../move_flags.csv")
+	csvfile.seek(0)
+	next(csvfile)
+	fieldnames = ("id", "identifier")
+	reader =  csv.DictReader(csvfile, fieldnames)
+	for row in reader:
+		flagdict[row["id"]] = row["identifier"]
+	return flagdict 
+
 def generate_move_dictionary ():
 	movedict = {}
 	csvfile = open("../moves.csv")
@@ -210,6 +221,19 @@ def generate_pokemon_json ():
 def generate_moves_json ():
 	move_list = {} 
 	effect_list = {} 
+	flags = {}
+	flag_dict = generate_flag_dictionary () 
+	csvfile = open("../move_flag_map.csv")
+	csvfile.seek(0)
+	next(csvfile)
+	fieldnames = ("move_id", "flag")
+	reader = csv.DictReader(csvfile, fieldnames)
+	for row in reader:
+		flag_list = []
+		if (row["move_id"] in flags):
+			flag_list = flags[row["move_id"]]
+		flag_list.append(flag_dict[row["flag"]])
+		flags[row["move_id"]] = flag_list
 	typedict = generate_type_dictionary () 
 	movedmgdict = generate_move_dmg_dictionary () 
 	movetarget = generate_move_target_dictionary () 
@@ -238,6 +262,8 @@ def generate_moves_json ():
 		move_dict["target"] = movetarget[row["target_id"]]
 		move_dict["dmg_class"] = movedmgdict[row["damage_class_id"]]
 		move_dict["effect"] = effect_list[row["effect_id"]]
+		if row["id"] in flags: 
+			move_dict["flags"] = flags[row["id"]]
 		move_dict["effect_chance"] = row["effect_chance"]
 		move_list[row["identifier"]] = move_dict 
 	with open("../moves.json", "w") as outfile:
