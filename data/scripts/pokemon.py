@@ -141,8 +141,7 @@ def generate_pokemon_json ():
 	fieldnames = ("id", "identifier", "species_id", "height", "weight", "base_experience"
 		, "order", "is_default")
 	reader = csv.DictReader(csvfile, fieldnames) 
-	num_pokemon = 0 
-	pokelist = [] 
+	pokearr = {}
 	for row in reader:
 		if int(row["id"]) >= 10080 and int(row["id"]) <= 10085:
 			continue 
@@ -200,13 +199,12 @@ def generate_pokemon_json ():
 			pokey = "keldeo"
 		if pokey == "meowstic-female":
 			pokey = "meowstic-f"
-		pokedict["name"] = pokey 
-		num_pokemon += 1
-		pokelist.append(pokedict)
-	pokemon["pokemon"] = pokelist 
-	pokemon["total"] = num_pokemon
+		pokemon[pokey] = pokedict
+		pokearr[row["id"]] = pokey 
 	with open("../pokemon.json", "w") as outfile:
 		json.dump(pokemon, outfile)
+	with open("../pokemonlist.json", "w") as outfile:
+		json.dump(pokearr, outfile)
 
 
 def generate_moves_json ():
