@@ -16,11 +16,13 @@ let quit thread_lst =
 let give_gui_permission () = current_state := Ivar.create ()
 
 let wait_for_command () =
+  Printf.printf "Currently waiting for command\n%!";
 	while Ivar.is_empty !current_state do
 		()
-	done
+  done
 
 let wait_for_empty () =
+  Printf.printf "Currently waiting for empty\n%!";
 	while (Ivar.is_full !current_state) do
 		()
 	done
@@ -37,7 +39,7 @@ let main () =
 			match state with
 			| MainMenu -> give_gui_permission ()
 			| Menu1P -> give_gui_permission ()
-      | Battle _ -> let battle_controller = Thread.create
+      | Battle _ ->   Printf.printf "Initializing battle controller\n%!"; let battle_controller = Thread.create
                     Battle_controller.initialize_controller
                     (current_state, battle_mode) in Thread.join
                     battle_controller; ()

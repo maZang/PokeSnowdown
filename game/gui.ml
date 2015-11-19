@@ -86,12 +86,12 @@ let load_battle_load engine img load_screen battle text buttonhide buttonshow
   if (Ivar.is_empty (!engine)) then
     ((main_menu#misc#hide (); battle_screen#misc#hide (); load_screen#misc#show ();
       current_screen :=
-    (Battle Loading); Ivar.fill !engine (Battle Loading);
+    (Battle Loading); Ivar.fill !engine (Battle Loading); Printf.printf "Initializing basddattle\n%!";
     Ivar.fill !battle_status mode); let rec load_helper () =
     upon (Ivar.read !engine) (fun s -> match s with | Battle InGame _ ->
-    (load_screen#misc#hide (); load_battle_screen engine img battle text buttonhide buttonshow
-    (battle_status, gui_ready) s poke1_img poke2_img text_buffer(); main_menu#misc#show ();
-    battle_screen#misc#show ()) | _ -> load_helper ()) in load_helper())
+    (main_menu#misc#show (); battle_screen#misc#show ();
+    load_screen#misc#hide ();load_battle_screen engine img battle text buttonhide buttonshow
+    (battle_status, gui_ready) s poke1_img poke2_img text_buffer()) | _ -> load_helper ()) in load_helper())
   else
     ()
 
@@ -109,7 +109,7 @@ let load_main_menu_from_battle engine one_player two_player no_player button_hid
  if (match Deferred.peek (Ivar.read (!engine)) with
       | Some Battle InGame _ -> true
       | _ -> false) then
-  (engine := Ivar.create (); Thread.delay 0.5;
+  (engine := Ivar.create (); Thread.delay 0.1;
   List.iter (fun s -> s#misc#hide ()) button_hide;
   List.iter (fun s -> s#misc#show ())[one_player; two_player; no_player];
   battle#misc#hide (); text#misc#hide (); main_menu_bg#misc#show ();
