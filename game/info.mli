@@ -23,7 +23,7 @@ type move = {name:string; priority: int; target: target; dmg_class: dmg_class;
     power:int; effect_chance: int; accuracy: int; element: element;
     description: string}
 
-type item = None | Leftovers | ChoiceBand | LifeOrb | CharizarditeX |
+type item = Nothing | Leftovers | ChoiceBand | LifeOrb | CharizarditeX |
             ChoiceSpecs
 
 (* variants containing all secondary effects of a given move *)
@@ -33,11 +33,12 @@ type secondary_effects
 type weather_terrain = HarshSun | Hail | Rain | SandStorm
 	| HeavyRain | Sun | AirCurrent | ClearSkies
 
-type non_volatile_status = Burn | Freeze | Paralysis | Poison | Toxic | Sleep
+type non_volatile_status = Burn | Freeze | Paralysis | Poison | Toxic | Sleep |
+                          NoNon
 
 type volatile_status =  Confusion | Curse | Embargo | Encore | Flinch | HealBlock
 	| Identification | Infatuation | Nightmare | Trapped | PerishSong | Leeched
-	| Taunt | Levitate | Torment
+	| Taunt | Levitate | Torment | NoVola
 
 type status = non_volatile_status * volatile_status list
 
@@ -59,8 +60,8 @@ type pokemon_stat_modifier = {attack: stat_modifier; defense: stat_modifier;
     special_defense: stat_modifier; evasion: stat_modifier;
     accuracy: stat_modifier}
 
-type trainer_team = int
-(*  {current: pokemon; alive: pokemon list; dead: pokemon list} *)
+type trainer_team = {current: battle_poke ref; alive: battle_poke list ref; dead:
+                        battle_poke list ref}
 
 (* As in competitive Pokemon, there will be no ties. If all Poke die in
 one turn, the one with the Poke standing the latest wins *)
