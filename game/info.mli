@@ -60,8 +60,8 @@ type pokemon_stat_modifier = {attack: stat_modifier; defense: stat_modifier;
     special_defense: stat_modifier; evasion: stat_modifier;
     accuracy: stat_modifier}
 
-type trainer_team = {current: battle_poke ref; alive: battle_poke list ref; dead:
-                        battle_poke list ref}
+type trainer_team = {mutable current: battle_poke; mutable alive: battle_poke list; mutable dead:
+                        battle_poke list}
 
 (* As in competitive Pokemon, there will be no ties. If all Poke die in
 one turn, the one with the Poke standing the latest wins *)
@@ -69,6 +69,8 @@ type outcome = WinnerP1 | WinnerP2
 
 type battle_mode = Random1p
 
-type battle_state = InGame of trainer_team * trainer_team * weather_terrain | Loading
+type screen = SwitchPoke | ChooseMove
+
+type battle_state = InGame of trainer_team * trainer_team * weather_terrain | Loading | P1 of screen| P2 of screen
 
 type game_state = MainMenu | Menu1P | Quit | Battle of battle_state

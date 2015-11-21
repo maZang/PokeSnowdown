@@ -9,8 +9,8 @@ let initialize_battle team1 team2 = Battle (InGame (team1, team2, ClearSkies))
 let getBattlePoke poke = {pokeinfo = poke; curr_hp = ref poke.hp; curr_status =
                           ref (NoNon, [NoVola]); curr_item = ref poke.item}
 
-let getRandomTeam () = {current = ref (getBattlePoke(getRandomPokemon ()));
-                       dead =ref []; alive = ref (List.map getBattlePoke
+let getRandomTeam () = {current = (getBattlePoke(getRandomPokemon ()));
+                       dead =[]; alive = (List.map getBattlePoke
                        (List.map getRandomPokemon [();();();();()]))}
 
 let handle_preprocessing state = state
