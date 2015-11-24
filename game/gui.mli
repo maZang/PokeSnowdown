@@ -15,4 +15,4 @@ open Async.Std
 package does this a lot to separate full function application from
 partial function application due to a multitude of optional
 arguments *)
-val main_gui: Info.game_state Ivar.t ref -> Info.battle_mode Ivar.t ref * (Info.battlemove option * Info.battlemove option) Ivar.t ref -> unit -> unit
+val main_gui: Info.game_state Ivar.t ref -> Info.battle_mode Ivar.t ref * (Info.battlemove option * Info.battlemove option) Ivar.t ref * bool Ivar.t ref -> unit -> unit

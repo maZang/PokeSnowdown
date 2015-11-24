@@ -126,11 +126,7 @@ let load_battle_screen engine img battle text buttonhide buttonshow
   List.iter (fun s -> s#misc#show ()) buttonshow; current_screen := Battle (P1 ChooseMove);
   poke1_img#set_file ("../data/back-sprites/" ^ poke2 ^ ".gif");
   poke2_img#set_file ("../data/sprites/" ^ poke1 ^ ".gif");
-  gui_ready := Ivar.create ();
-  while (!current_command = (None, None)) do
-    ()
-  done;
-  Printf.printf "Command intercepted \n%!"
+  gui_ready := Ivar.create ()
 
 (* In contrast to other cases, after engine is filled up with a battle status
 the game controller hands control to the battle controller. Some screens are hid
@@ -142,7 +138,7 @@ is loaded.Then
 engine -- Battle InGame
 *)
 let load_battle_load engine img load_screen battle text buttonhide buttonshow
-  (battle_status, gui_ready) mode main_menu battle_screen poke1_img poke2_img
+  (battle_status, gui_ready, ready) mode main_menu battle_screen poke1_img poke2_img
   text_buffer () =
   if (Ivar.is_empty (!engine)) then
     ((main_menu#misc#hide (); battle_screen#misc#hide (); load_screen#misc#show ();
@@ -166,7 +162,7 @@ let load_menu engine button_show button_hide img1 img2 screen () =
 		()
 
 let load_main_menu_from_battle engine one_player two_player no_player button_hide
- main_menu_bg battle text (battle_status, gui_ready) () =
+ main_menu_bg battle text (battle_status, gui_ready, ready) () =
  if (match Deferred.peek (Ivar.read (!engine)) with
       | Some Battle InGame _ -> true
       | _ -> false) then
@@ -174,8 +170,9 @@ let load_main_menu_from_battle engine one_player two_player no_player button_hid
   List.iter (fun s -> s#misc#hide ()) button_hide;
   List.iter (fun s -> s#misc#show ())[one_player; two_player; no_player];
   battle#misc#hide (); text#misc#hide (); main_menu_bg#misc#show ();
-  current_screen := MainMenu; Ivar.fill !engine MainMenu;
-  battle_status := Ivar.create (); gui_ready := Ivar.create ())
+  current_screen := MainMenu; Ivar.fill !engine MainMenu; Ivar.fill !ready true;
+  battle_status := Ivar.create (); gui_ready := Ivar.create ();
+  current_command := (None, None))
 else
   ()
 
@@ -237,7 +234,7 @@ let main_gui engine battle_engine () =
 	(* menu = menu_holder, main_menu, one_player, two_player, no_player,
 		one_player_menu, random_1p, preset_1p, touranment, buffer_area,
 		back_button *)
-  let battle_status, gui_ready = battle_engine in
+  let battle_status, gui_ready, ready = battle_engine in
 	let menu = make_menu ~packing:(window#add) () in
 	let menu_holder, main_menu, battle_screen, one_player,
 		two_player, no_player, random_1p, preset_1p, touranment,
