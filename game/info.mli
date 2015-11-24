@@ -1,5 +1,5 @@
 (* Info contains all the data types needed for the handling of the game *)
-type battlemove = SwitchPoke of int | UseAttack of int
+type battlemove = Poke of string | UseAttack of string
 
 type target = SpecificPoke | SelectedPokeMeFirst | Ally | UsersField |
     UserOrAlly | OpponentsFields | User | RandomOpp | AllOthers |

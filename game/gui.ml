@@ -6,14 +6,20 @@ open Info
 
 *)
 
-
+(* Screen width and height parameters *)
 let screen_width = 600
 let screen_height= 480
 
+(* Initializes GtkMain*)
 let locale = GtkMain.Main.init ()
 
+(* Holds similar information to the engine, but different in battle *)
 let current_screen = ref MainMenu
 
+(* Holds information on the moves/commands of players*)
+let current_command = ref (None, None)
+
+(* Returns the current status of the game. Called when sure it will be used*)
 let get_game_status engine =
   match Deferred.peek (Ivar.read !engine) with
   | Some v -> v
@@ -21,7 +27,16 @@ let get_game_status engine =
 
 (*
   make_battle_screen makes all the components needed in the battle screen
-  and sends it to the main function
+  and sends it to the main function:
+  -- battle is a 4x4 table containing the battle
+  -- text is a box containing the text buffer
+  -- bg_img holds the background image
+  -- text_buffer holds the text in game
+  -- poke1_img holds the image of the current pokemon
+  -- poke2_img holds the image of the opponent pokemon
+  -- move1 to move4 are buttons for the move of the current pokemon
+  -- switch gives you options to switch pokemon
+  -- poke1 to poke5 gives you the available pokemon to switch to
 *)
 let make_battle_screen ?packing () =
   let battle = GPack.table ~rows:4 ~columns: 4 ?packing ~width:screen_width
@@ -51,7 +66,21 @@ let make_battle_screen ?packing () =
   battle, text, bg_img, move1, move2, move3, move4, switch, poke1_img, poke2_img
   , text_buffer, poke1, poke2, poke3, poke4, poke5
 
-(* Make all the menu items for the game loading screen *)
+(* Make all the menu items for the game loading screen
+  -- vbox holds all the game components
+  -- hbox1 contains all the buttons
+  -- hbox2 contains the game screen
+  -- button1 is the 1player button
+  -- button2 is the 2player button
+  -- button3 is the no player button
+  -- button4 is the random battle button
+  -- button5 is the preset battle button
+  -- button6 is the tournament button
+  -- button7 is the back button packed to the back
+  -- img holds the main screen image
+  -- img2 holds the 1player background
+  -- load_screen contains the load screen image
+*)
 let make_menu ?packing () =
 	let vbox = GPack.vbox ?packing () in
 	let hbox1 = GPack.hbox ~homogeneous:true ~packing:(vbox#pack) ~height:
@@ -80,9 +109,14 @@ let make_menu ?packing () =
   (vbox, hbox1, hbox2, button1, button2, button3, button4,
 		button5, button6, button7, img, img2, load_screen)
 
+(* This is the main game loop for the battle. The game states will be
+  engine -- Battle InGame _
+  current_screen -- Battle P1 _ || Battle P2 _
+  current_command -- Some _, Some _
+*)
 let load_battle_screen engine img battle text buttonhide buttonshow
-  (battle_status, gui_ready) screen poke1_img poke2_img text_buffer () =
-  let team1, team2, weather = match screen with
+  (battle_status, gui_ready) poke1_img poke2_img text_buffer () =
+  let team1, team2, weather = match get_game_status engine with
   | Battle InGame (t1, t2, w) -> (t1, t2, w)
   | _ -> failwith "Impossible" in
   let poke1 = (team1.current).pokeinfo.name in
@@ -92,29 +126,42 @@ let load_battle_screen engine img battle text buttonhide buttonshow
   List.iter (fun s -> s#misc#show ()) buttonshow; current_screen := Battle (P1 ChooseMove);
   poke1_img#set_file ("../data/back-sprites/" ^ poke2 ^ ".gif");
   poke2_img#set_file ("../data/sprites/" ^ poke1 ^ ".gif");
-  gui_ready := Ivar.create ()
+  gui_ready := Ivar.create ();
+  while (!current_command = (None, None)) do
+    ()
+  done;
+  Printf.printf "Command intercepted \n%!"
 
+(* In contrast to other cases, after engine is filled up with a battle status
+the game controller hands control to the battle controller. Some screens are hid
+the current screen is set to Battle Loading. The overall outlook is
+engine -- Battle Loading
+current_screen -- Battle Loading
+After the callback is initiated, the battle information is read and the battle
+is loaded.Then
+engine -- Battle InGame
+*)
 let load_battle_load engine img load_screen battle text buttonhide buttonshow
   (battle_status, gui_ready) mode main_menu battle_screen poke1_img poke2_img
   text_buffer () =
   if (Ivar.is_empty (!engine)) then
     ((main_menu#misc#hide (); battle_screen#misc#hide (); load_screen#misc#show ();
       current_screen :=
-    (Battle Loading); Ivar.fill !engine (Battle Loading); Printf.printf "Initializing basddattle\n%!";
+    (Battle Loading); Ivar.fill !engine (Battle Loading); Printf.printf "Initializing gui\n%!";
     Ivar.fill !battle_status mode); let rec load_helper () =
     upon (Ivar.read !engine) (fun s -> match s with | Battle InGame _ ->
     (main_menu#misc#show (); battle_screen#misc#show ();
     load_screen#misc#hide ();load_battle_screen engine img battle text buttonhide buttonshow
-    (battle_status, gui_ready) s poke1_img poke2_img text_buffer()) | _ -> load_helper ()) in load_helper())
+    (battle_status, gui_ready) poke1_img poke2_img text_buffer()) | _ -> load_helper ()) in load_helper())
   else
     ()
 
-let load_menu engine button_show button_hide img1 img2 () =
+let load_menu engine button_show button_hide img1 img2 screen () =
 	if Ivar.is_empty (!engine) then
 		(List.iter (fun s -> s#misc#hide ()) button_hide;
     List.iter (fun s -> s#misc#show ()) button_show;
     img1#misc#hide (); img2#misc#show ();
-    current_screen := Menu1P; Ivar.fill !engine Menu1P)
+    current_screen := screen; Ivar.fill !engine screen)
 	else
 		()
 
@@ -139,9 +186,10 @@ let go_back engine (menu_holder, main_menu, battle_scren, one_player,
     poke3, poke4, poke5) battle_engine () =
 	(if !current_screen = Menu1P then
 		load_menu engine [one_player;two_player;no_player]
-    [random_1p; preset_1p ;touranment; back_button] one_bg main_menu_bg());
+    [random_1p; preset_1p ;touranment; back_button] one_bg main_menu_bg
+    MainMenu ());
   if (match !current_screen with
-    | Battle InGame _ -> true
+    | Battle (P1 ChooseMove)-> true
     | _ -> false ) then
     (load_main_menu_from_battle engine one_player two_player no_player [move1;
     move2; move3; move4; switch; back_button] main_menu_bg battle text
@@ -175,6 +223,13 @@ let switch_poke engine [poke1;poke2;poke3;poke4;poke5] [move1;move2;
   | _ -> failwith "Fauly game Logic") in
   List.iteri switch_poke_helper team.alive
 
+ let switch_poke_cmd poke1 gui_ready () =
+ match !current_command with
+ | None, None -> current_command := (Some (Poke (poke1#label)), None)
+ | Some x, None -> current_command := Some x, Some (Poke poke1#label);
+                  Ivar.fill !gui_ready !current_command
+ | Some _, Some _ -> failwith "Should not happen"
+
 (* The main gui *)
 let main_gui engine battle_engine () =
 	let window = GWindow.window ~width: screen_width ~height: screen_height
@@ -182,6 +237,7 @@ let main_gui engine battle_engine () =
 	(* menu = menu_holder, main_menu, one_player, two_player, no_player,
 		one_player_menu, random_1p, preset_1p, touranment, buffer_area,
 		back_button *)
+  let battle_status, gui_ready = battle_engine in
 	let menu = make_menu ~packing:(window#add) () in
 	let menu_holder, main_menu, battle_screen, one_player,
 		two_player, no_player, random_1p, preset_1p, touranment,
@@ -197,7 +253,8 @@ let main_gui engine battle_engine () =
   main_menu#pack poke4#coerce; main_menu#pack poke5#coerce;
   (* One player Button *)
 	one_player#connect#clicked ~callback:(load_menu engine [random_1p;preset_1p;
-  touranment;back_button] [one_player; two_player;no_player] main_menu_bg one_bg);
+  touranment;back_button] [one_player; two_player;no_player] main_menu_bg one_bg
+  Menu1P);
  (* Back button *)
    back_button#connect#clicked
   ~callback:(go_back engine menu battler battle_engine);
@@ -209,5 +266,7 @@ let main_gui engine battle_engine () =
   (* Switch button *)
   switch#connect#clicked ~callback:(switch_poke engine [poke1;poke2;poke3;
   poke4;poke5] [move1;move2;move3;move4;switch] back_button);
+  (* Pokemon buttons *)
+  poke1#connect#clicked ~callback:(switch_poke_cmd poke1 gui_ready);
 	window#show ();
 	let thread = GtkThread.start () in ()

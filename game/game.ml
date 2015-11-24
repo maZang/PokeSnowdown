@@ -37,12 +37,12 @@ let main () =
 		wait_for_command ();
 		upon (Ivar.read !current_state) (fun state ->
 			match state with
-			| MainMenu -> give_gui_permission ()
-			| Menu1P -> give_gui_permission ()
-      | Battle _ ->   Printf.printf "Initializing battle controller\n%!"; let battle_controller = Thread.create
+			| MainMenu -> Printf.printf "Loading Main Menu\n%!"; give_gui_permission ()
+			| Menu1P -> Printf.printf "Loading One Player \n%!"; give_gui_permission ()
+      | Battle _ -> Printf.printf "Initializing battle controller\n%!"; let battle_controller = Thread.create
                     Battle_controller.initialize_controller
                     (current_state, battle_mode) in Thread.join
-                    battle_controller; ()
+                    battle_controller; Printf.printf "Battle Ended\n%!"
 			| Quit -> Printf.printf "Quitting\n%!"; quit [gui_thread; scheduler_thread]
 		); wait_for_empty (); game_loop ()
 	in game_loop ()

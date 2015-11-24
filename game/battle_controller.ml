@@ -25,10 +25,11 @@ let rec main_controller_random1p engine gui_ready =
   engine := Ivar.create (); Ivar.fill !engine battle;
   let rec main_loop () =
     incr number_turns;
-    while (Ivar.is_full !gui_ready) do
+    while (Ivar.is_empty !gui_ready) do
       ()
     done in
-  ()
+  main_loop ();
+  Printf.printf "Battle controller ending \n%!"
 
 let initialize_controller (engine, battle_engine) =
   let battle_status, gui_ready = battle_engine in
