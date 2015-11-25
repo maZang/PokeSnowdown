@@ -6,7 +6,7 @@ etc... It will most likely contain its own Ivar for communication between
 the gui and the controller. *)
 
 (* Initialize the battle controller *)
-val initialize_controller: Info.game_state Ivar.t ref * (Info.battle_mode Ivar.t ref * (Info.battlemove option * Info.battlemove option) Ivar.t ref * bool Ivar.t ref) -> unit
+val initialize_controller: Info.game_state Ivar.t ref * (Info.battle_mode Ivar.t ref * (Info.battlemove option * Info.battlemove option) Ivar.t ref * bool Ivar.t ref * bool Ivar.t ref) -> unit
 (* Initializes the battle; game thread calls battle controller thread and suspends
 until battle thread completes *)
 val initialize_battle: Info.trainer_team -> Info.trainer_team -> Info.game_state
@@ -16,4 +16,4 @@ weather damage before the next battle turn begins *)
 val handle_preprocessing: Info.game_state -> Info.game_state
 
 (* This handles the game after two players have moved *)
-val handle_action: Info.game_state -> Info.battlemove -> Info.battlemove -> Info.game_state
+val handle_action: Info.game_state Ivar.t ref -> Info.battlemove -> Info.battlemove -> unit

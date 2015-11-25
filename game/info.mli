@@ -1,5 +1,7 @@
 (* Info contains all the data types needed for the handling of the game *)
-type battlemove = Poke of string | UseAttack of string
+type battlemove = Poke of string | UseAttack of string | NoMove
+
+type playerMove = Pl1 of battlemove | Pl2 of battlemove
 
 type target = SpecificPoke | SelectedPokeMeFirst | Ally | UsersField |
     UserOrAlly | OpponentsFields | User | RandomOpp | AllOthers |
@@ -71,6 +73,6 @@ type battle_mode = Random1p
 
 type screen = SwitchPoke | ChooseMove
 
-type battle_state = InGame of trainer_team * trainer_team * weather_terrain | Loading | P1 of screen| P2 of screen
+type battle_state = InGame of trainer_team * trainer_team * weather_terrain ref * playerMove ref * playerMove ref | Loading | P1 of screen| P2 of screen | Processing
 
 type game_state = MainMenu | Menu1P | Quit | Battle of battle_state
