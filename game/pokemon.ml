@@ -18,11 +18,32 @@ let move_json = open_json "moves"
 let num_pokemon_total = 721
 
 let getRandomNature () =
-  match Random.int 4 with
-  | 0 -> Adamant
-  | 1 -> Modest
-  | 2 -> Careful
-  | 3 -> Timid
+  match Random.int 25 with
+  | 0 -> Hardy
+  | 1 -> Lonely
+  | 2 -> Adamant
+  | 3 -> Naughty
+  | 4 -> Brave
+  | 5 -> Bold
+  | 6 -> Docile
+  | 7 -> Impish
+  | 8 -> Lax
+  | 9 -> Relaxed
+  | 10 -> Modest
+  | 11 -> Mild
+  | 12 -> Bashful
+  | 13 -> Rash
+  | 14 -> Quiet
+  | 15 -> Calm
+  | 16 -> Gentle
+  | 17 -> Careful
+  | 18 -> Quirky
+  | 19 -> Sassy
+  | 20 -> Timid
+  | 21 -> Hasty
+  | 22 -> Jolly
+  | 23 -> Naive
+  | 24 -> Serious
   | _ -> failwith "Does not occur"
 
 let getRandomItem () =

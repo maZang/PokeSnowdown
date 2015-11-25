@@ -47,6 +47,10 @@ let make_battle_screen ?packing () =
   let battle = GPack.table ~rows:4 ~columns: 4 ?packing ~width:screen_width
     ~height: (2 * screen_height / 3) ~show:false
      () in
+  let health_bar_holder1 = GPack.box `VERTICAL ~width:200 ~height:12 () in
+  let health_bar_holder2 = GPack.box `VERTICAL ~width:200 ~height:12 () in
+  let health_bar1 = GRange.progress_bar ~packing:(health_bar_holder1#pack ~expand:false) () in
+  let health_bar2 = GRange.progress_bar ~packing:(health_bar_holder2#pack ~expand:false) () in
   let text = GPack.hbox ?packing ~height: (1 * screen_height / 6) () in
   let bg_img = GMisc.image ~file:"../data/backgrounds/bg-volcanocave.jpg"
      () in
@@ -64,12 +68,18 @@ let make_battle_screen ?packing () =
   let poke3 = GButton.button ~label:"Poke3" ~show:false () in
   let poke4 = GButton.button ~label:"Poke4" ~show:false () in
   let poke5 = GButton.button ~label:"Poke5" ~show:false () in
+  health_bar1#set_fraction 1.;
+  health_bar1#set_text "Health";
+  health_bar2#set_fraction 1.;
+  health_bar2#set_text "Health";
   text_buffer#misc#modify_font (Pango.Font.from_string "arial,monospace condensed 10");
-  battle#attach ~left:0 ~top:1 ~bottom:4 poke1_img#coerce;
-  battle#attach ~left:3 ~top:0 ~bottom:3 poke2_img#coerce;
+  battle#attach ~left:0 ~top:1 ~right:2 ~bottom:4 poke1_img#coerce;
+  battle#attach ~left:1 ~top:1 ~right:3 ~bottom:3 poke2_img#coerce;
+  battle#attach ~left:0 ~top:3 ~right:2 ~bottom:4 ~fill:`NONE health_bar_holder1#coerce;
+  battle#attach ~left:1 ~top:0 ~right:3 ~bottom:1 ~fill:`NONE health_bar_holder2#coerce;
   battle#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH bg_img#coerce;
   battle, text, bg_img, move1, move2, move3, move4, switch, poke1_img, poke2_img
-  , text_buffer, poke1, poke2, poke3, poke4, poke5
+  , text_buffer, poke1, poke2, poke3, poke4, poke5, (health_bar_holder1, health_bar_holder2, health_bar1, health_bar2)
 
 (* Make all the menu items for the game loading screen
   -- vbox holds all the game components
@@ -121,6 +131,7 @@ let make_menu ?packing () =
 *)
 let load_battle_screen engine img battle text buttonhide buttonshow
   (battle_status, gui_ready) poke1_img poke2_img text_buffer () =
+  let [move1;move2;move3;move4;_] = buttonshow in
   let team1, team2, weather = match get_game_status engine with
   | Battle InGame (t1, t2, w, _, _) -> (t1, t2, w)
   | _ -> failwith "Impossible" in
@@ -128,7 +139,12 @@ let load_battle_screen engine img battle text buttonhide buttonshow
   let poke2 = (team2.current).pokeinfo.name in
   img#misc#hide (); battle#misc#show (); text#misc#show ();
   List.iter (fun s -> s#misc#hide ()) buttonhide;
-  List.iter (fun s -> s#misc#show ()) buttonshow; current_screen := Battle (P1 ChooseMove);
+  List.iter (fun s -> s#misc#show ()) buttonshow;
+  current_screen := Battle (P1 ChooseMove);
+  move1#set_label (team1.current).pokeinfo.move1.name;
+  move2#set_label (team1.current).pokeinfo.move2.name;
+  move3#set_label (team1.current).pokeinfo.move3.name;
+  move4#set_label (team1.current).pokeinfo.move4.name;
   poke1_img#set_file ("../data/back-sprites/" ^ poke1 ^ ".gif");
   poke2_img#set_file ("../data/sprites/" ^ poke2 ^ ".gif")
 
@@ -183,7 +199,7 @@ let go_back engine (menu_holder, main_menu, battle_scren, one_player,
     two_player, no_player, random_1p, preset_1p, touranment,
     back_button, main_menu_bg, one_bg, load_screen) (battle, text, bg_img, move1, move2,
     move3, move4, switch, poke1_img, poke2_img, text_buffer, poke1, poke2,
-    poke3, poke4, poke5) battle_engine () =
+    poke3, poke4, poke5, health_holders) battle_engine () =
 	(if !current_screen = Menu1P then
 		load_menu engine [one_player;two_player;no_player]
     [random_1p; preset_1p ;touranment; back_button] one_bg main_menu_bg
@@ -242,7 +258,11 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
   | _ -> failwith "unimplemented");
   busywait ();
   text_buffer#set_text "Player One's Turn to move";
-    List.iter (fun s -> s#misc#show ()) battle_buttons; current_screen := Battle (P1 ChooseMove)
+  move1#set_label (t1.current).pokeinfo.move1.name;
+  move2#set_label (t1.current).pokeinfo.move2.name;
+  move3#set_label (t1.current).pokeinfo.move3.name;
+  move4#set_label (t1.current).pokeinfo.move4.name;
+  List.iter (fun s -> s#misc#show ()) battle_buttons; current_screen := Battle (P1 ChooseMove)
 
  let process_command engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text
   (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img text_buffer =
@@ -258,12 +278,22 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
                       | _ -> failwith "Faulty Game Logic: Debug 01")
  | (Some _, Some _) -> failwith "Faultly Game Logic: Debug 02"
 
- let switch_poke_cmd engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text
+let poke_move_cmd button engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text
+  (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img text_buffer () =
+  Printf.printf "Using a move!\n%!";
+  let _ = match !current_command with
+ | None, None -> current_command := (Some (UseAttack (button#label)), None)
+ | Some x, None -> current_command := Some x, Some (UseAttack button#label)
+ | Some _, Some _ -> failwith "Faulty Game Logic: Debug 06" in
+ process_command engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text
+  (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img text_buffer
+
+ let switch_poke_cmd button engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text
   (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img text_buffer () =
  Printf.printf "Switching Pokemon\n%!";
  let _ = match !current_command with
- | None, None -> current_command := (Some (Poke (poke1#label)), None)
- | Some x, None -> current_command := Some x, Some (Poke poke1#label)
+ | None, None -> current_command := (Some (Poke (button#label)), None)
+ | Some x, None -> current_command := Some x, Some (Poke button#label)
  | Some _, Some _ -> failwith "Faulty Game Logic: Debug 04" in
  process_command engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text
   (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img text_buffer
@@ -283,7 +313,7 @@ let main_gui engine battle_engine () =
   let battler = make_battle_screen ~packing:(battle_screen#add) ()
   in let battle, text, bg_img, move1, move2, move3, move4, switch,
     poke1_img, poke2_img, text_buffer, poke1, poke2, poke3, poke4,
-    poke5 = battler in
+    poke5, health_holders = battler in
   main_menu#pack move1#coerce; main_menu#pack move2#coerce;
   main_menu#pack move3#coerce; main_menu#pack move4#coerce;
   main_menu#pack switch#coerce; main_menu#pack poke1#coerce;
@@ -305,6 +335,12 @@ let main_gui engine battle_engine () =
   switch#connect#clicked ~callback:(switch_poke engine [poke1;poke2;poke3;
   poke4;poke5] [move1;move2;move3;move4;switch] back_button);
   (* Pokemon buttons *)
-  poke1#connect#clicked ~callback:(switch_poke_cmd engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text battle_engine poke1_img poke2_img text_buffer);
+  poke1#connect#clicked ~callback:(switch_poke_cmd poke1 engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text battle_engine poke1_img poke2_img text_buffer);
+  poke2#connect#clicked ~callback:(switch_poke_cmd poke2 engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text battle_engine poke1_img poke2_img text_buffer);
+  poke3#connect#clicked ~callback:(switch_poke_cmd poke3 engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text battle_engine poke1_img poke2_img text_buffer);
+  poke4#connect#clicked ~callback:(switch_poke_cmd poke4 engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text battle_engine poke1_img poke2_img text_buffer);
+  poke5#connect#clicked ~callback:(switch_poke_cmd poke5 engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text battle_engine poke1_img poke2_img text_buffer);
+  (* Move buttons *)
+  move1#connect#clicked ~callback:(poke_move_cmd move1 engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text battle_engine poke1_img poke2_img text_buffer);
 	window#show ();
 	let thread = GtkThread.start () in ()

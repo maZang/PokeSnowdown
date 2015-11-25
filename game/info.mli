@@ -44,26 +44,30 @@ type volatile_status =  Confusion | Curse | Embargo | Encore | Flinch | HealBloc
 
 type status = non_volatile_status * volatile_status list
 
-type nature = Adamant | Modest | Timid | Careful
+type nature = Hardy | Lonely | Adamant | Naughty | Brave | Bold | Docile |
+              Impish | Lax | Relaxed | Modest | Mild | Bashful | Rash | Quiet
+              | Calm | Gentle | Careful | Quirky | Sassy | Timid | Hasty |
+              Jolly | Naive | Serious
 
 type pokemon = {name: string; element: element list; move1: move; move2: move;
   move3: move; move4: move; hp: int; attack: int; defense:int;
   special_defense:int; special_attack:int; speed:int; ability:string; evs: evs;
   nature: nature; item: item}
 
-type battle_poke = {pokeinfo: pokemon; curr_hp:int ref; curr_status: status ref;
-  curr_item: item ref}
+type battle_poke = {pokeinfo: pokemon; mutable curr_hp:int; mutable curr_status: status;
+  mutable curr_item: item; bhp:int; battack:int; bdefense:int; bspecial_attack:int;
+  bspecial_defense:int; bspeed:int}
 
 (* stat modifier represents number of stages followed by multiplier *)
 type stat_modifier = int * float
 
-type pokemon_stat_modifier = {attack: stat_modifier; defense: stat_modifier;
-    speed: stat_modifier; special_attack: stat_modifier;
-    special_defense: stat_modifier; evasion: stat_modifier;
-    accuracy: stat_modifier}
+type pokemon_stat_modifier = {mutable attack: stat_modifier; mutable defense: stat_modifier;
+    mutable speed: stat_modifier; mutable special_attack: stat_modifier;
+    mutable special_defense: stat_modifier; mutable evasion: stat_modifier;
+    mutable accuracy: stat_modifier}
 
 type trainer_team = {mutable current: battle_poke; mutable alive: battle_poke list; mutable dead:
-                        battle_poke list}
+                        battle_poke list; stat_enhance: pokemon_stat_modifier}
 
 (* As in competitive Pokemon, there will be no ties. If all Poke die in
 one turn, the one with the Poke standing the latest wins *)
