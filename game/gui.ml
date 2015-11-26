@@ -3,9 +3,12 @@ open Info
 
 (*
   Communication Details:
-
+  TODO
 *)
 
+(* Wait function to allow GUI to wait for some animations/text to be
+  displayed.
+*)
 let busywait = let ctr = ref 0 in fun () -> ctr := 0;
   for i = 1 to 100_000_000 do
     incr ctr
@@ -18,7 +21,10 @@ let screen_height= 480
 (* Initializes GtkMain*)
 let locale = GtkMain.Main.init ()
 
-(* Holds similar information to the engine, but different in battle *)
+(* Holds similar information to the engine, but acts differently in battle
+  In battle, engine holds the current battle state, but current_screen holds
+  the information on which player is selecting move/pokemon/etc...
+*)
 let current_screen = ref MainMenu
 
 (* Holds information on the moves/commands of players*)
@@ -42,44 +48,70 @@ let get_game_status engine =
   -- move1 to move4 are buttons for the move of the current pokemon
   -- switch gives you options to switch pokemon
   -- poke1 to poke5 gives you the available pokemon to switch to
+  -- health_bar_holder and health_bar are the containers and the actual health
+      bar respectively. health_bar1 is for player one and health_bar2 is for
+      player2.
 *)
 let make_battle_screen ?packing () =
+  (* Creates a 4x4 table for battle *)
   let battle = GPack.table ~rows:4 ~columns: 4 ?packing ~width:screen_width
     ~height: (2 * screen_height / 3) ~show:false
      () in
+  (* Container used to hold health bars to force the health bars to be a
+  certain size *)
   let health_bar_holder1 = GPack.box `VERTICAL ~width:200 ~height:12 () in
   let health_bar_holder2 = GPack.box `VERTICAL ~width:200 ~height:12 () in
-  let health_bar1 = GRange.progress_bar ~packing:(health_bar_holder1#pack ~expand:false) () in
-  let health_bar2 = GRange.progress_bar ~packing:(health_bar_holder2#pack ~expand:false) () in
+  (* Actual health bars implemented with progress bars *)
+  let health_bar1 = GRange.progress_bar
+                          ~packing:(health_bar_holder1#pack ~expand:false) () in
+  let health_bar2 = GRange.progress_bar
+                          ~packing:(health_bar_holder2#pack ~expand:false) () in
+  (* Holder to hold the text buffer *)
   let text = GPack.hbox ?packing ~height: (1 * screen_height / 6) () in
+  (* Background image of the battle: TODO RANDOMIZE BACKGROUND *)
   let bg_img = GMisc.image ~file:"../data/backgrounds/bg-volcanocave.jpg"
      () in
-  let text_buffer = GEdit.entry ~width:600 ~height:80 ~text:"Player 1 Make A Move"
+  (* The text buffer to hold the narration during the battle *)
+  let text_buffer = GEdit.entry ~width:600 ~height:80
+              ~text:"Player One's Turn To Move"
     ~packing:(text#pack ~expand:true) ~editable:false () in
-  let poke1_img = GMisc.image ~file:"../data/back-sprites/charizard-mega-x.gif" () in
+  (* The images to hold each pokemon initialized to default images*)
+  let poke1_img = GMisc.image ~file:"../data/back-sprites/charizard.gif" () in
   let poke2_img = GMisc.image ~file:"../data/sprites/blaziken-mega.gif" () in
+  (* The buttons that hold the moves of the pokemon with labels set to default
+  values. The buttons are placed in the main_menu hbox*)
   let move1 = GButton.button ~label:"Move1" ~show:false () in
   let move2 = GButton.button ~label:"Move2" ~show:false () in
   let move3 = GButton.button ~label:"Move3" ~show:false () in
   let move4 = GButton.button ~label:"Move4" ~show:false () in
+  (* These buttons are for the switch pokemon commands in battle *)
   let switch = GButton.button ~label:"Switch" ~show: false() in
   let poke1 = GButton.button ~label:"Poke1" ~show:false () in
   let poke2 = GButton.button ~label:"Poke2" ~show:false () in
   let poke3 = GButton.button ~label:"Poke3" ~show:false () in
   let poke4 = GButton.button ~label:"Poke4" ~show:false () in
   let poke5 = GButton.button ~label:"Poke5" ~show:false () in
+  (* Initialize size and text of the health bars*)
   health_bar1#set_fraction 1.;
   health_bar1#set_text "Health";
   health_bar2#set_fraction 1.;
   health_bar2#set_text "Health";
-  text_buffer#misc#modify_font (Pango.Font.from_string "arial,monospace condensed 10");
+  (* Set font of the text box *)
+  text_buffer#misc#modify_font
+      (Pango.Font.from_string "arial,monospace condensed 10");
+  (* Place the images within the 4x4 table. Holds the pokemon as well as the
+  health bars: TODO, figure out how to do animations *)
   battle#attach ~left:0 ~top:1 ~right:2 ~bottom:4 poke1_img#coerce;
   battle#attach ~left:1 ~top:1 ~right:3 ~bottom:3 poke2_img#coerce;
-  battle#attach ~left:0 ~top:3 ~right:2 ~bottom:4 ~fill:`NONE health_bar_holder1#coerce;
-  battle#attach ~left:1 ~top:0 ~right:3 ~bottom:1 ~fill:`NONE health_bar_holder2#coerce;
+  battle#attach ~left:0 ~top:3 ~right:2 ~bottom:4
+                  ~fill:`NONE health_bar_holder1#coerce;
+  battle#attach ~left:1 ~top:0 ~right:3 ~bottom:1
+                  ~fill:`NONE health_bar_holder2#coerce;
   battle#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH bg_img#coerce;
-  battle, text, bg_img, move1, move2, move3, move4, switch, poke1_img, poke2_img
-  , text_buffer, poke1, poke2, poke3, poke4, poke5, (health_bar_holder1, health_bar_holder2, health_bar1, health_bar2)
+  (* Return all the objects created *)
+  battle, text, bg_img, move1, move2, move3, move4, switch, poke1_img,
+  poke2_img, text_buffer, poke1, poke2, poke3, poke4, poke5,
+  (health_bar_holder1, health_bar_holder2, health_bar1, health_bar2)
 
 (* Make all the menu items for the game loading screen
   -- vbox holds all the game components
@@ -97,40 +129,71 @@ let make_battle_screen ?packing () =
   -- load_screen contains the load screen image
 *)
 let make_menu ?packing () =
+  (* vbox is known as menu_holder outside of this function *)
 	let vbox = GPack.vbox ?packing () in
+  (* hbox1 is known as main_menu outside of this function *)
 	let hbox1 = GPack.hbox ~homogeneous:true ~packing:(vbox#pack) ~height:
     (screen_height/6) ()in
+  (* hbox2 is known as battle_screen outside of this function *)
 	let hbox2 = GPack.vbox ~packing:(vbox#pack) () in
+  (* button1 is known as one_player outside of this function*)
 	let button1 = GButton.button ~label:"1-Player"
 		~packing:(hbox1#pack ~expand:true ~fill:true) () in
+  (* button2 is known as two_player outside of this function*)
 	let button2 = GButton.button ~label:"2-Player"
 		~packing:(hbox1#pack ~expand:true ~fill:true) () in
+  (* button3 is known as no_player outside of this function *)
 	let button3 = GButton.button ~label:"No Player"
 		~packing:(hbox1#pack ~expand:true ~fill:true) ()  in
+  (* button4 is known as random_1p outside of this function *)
 	let button4 = GButton.button ~label:"Random Battle"
 		~packing:(hbox1#pack ~expand:true ~fill:true) ~show:false () in
+  (* button5 is known as preset_1p outside of this function *)
 	let button5 = GButton.button ~label:"Preset Battle"
 		~packing:(hbox1#pack ~expand:true ~fill:true) ~show:false () in
+  (* button6 is known as tournament outside of this function *)
 	let button6 = GButton.button ~label:"Tournament"
 		~packing:(hbox1#pack ~expand:true ~fill:true) ~show:false () in
+  (* button7 is known as back_button outside of this function *)
 	let button7 = GButton.button ~label:"Back"
 		~packing:(hbox1#pack ~from:`END) () ~show:false in
+  (* img is known as main_menu_bg outside of this code *)
   let img = GMisc.image ~file:"./gui_pics/main.gif" ~packing:(hbox2#pack)
     ~width:screen_width ~height:(5*screen_height /6) () in
+  (* img2 is known as one_bg outside of this code *)
   let img2 = GMisc.image ~file:"./gui_pics/1p.jpg" ~packing:(hbox2#pack)
     ~width:screen_width ~height:(5*screen_height /6) ~show:false () in
-  let load_screen = GMisc.image ~file:"../data/backgrounds/background.gif" ~show:false
-    ~packing:(vbox#pack) () in
+  (* load_screen is a gif that plays before battle (during initialization)*)
+  let load_screen = GMisc.image ~file:"../data/backgrounds/background.gif"
+    ~show:false ~packing:(vbox#pack) () in
+  (* Return all objects created *)
   (vbox, hbox1, hbox2, button1, button2, button3, button4,
 		button5, button6, button7, img, img2, load_screen)
 
-(* This is the main game loop for the battle. The game states will be
+(* This is called once to load the battle screen . The game states will be
   engine -- Battle InGame _
   current_screen -- Battle P1 _ || Battle P2 _
   current_command -- Some _, Some _
+  @PARAMS:
+    --engine is the game state
+    --img is the background image to hide
+    --battle is the 4x4 table
+    --text is the text box
+    --button_hide consists of [random_1p;preset_1p;touranment]
+    --button_show consists of [move1;move2;move3;move4;switch]
+    --battle_status is the Ivar containing the current game mode
+    --gui_ready contains the gui info
+    --poke1_img contains the image of Player 1's poke
+    --poke2_img contains the image of Player 2's poke
+    --text_buffer contains the text itself
+    --health_bar 1 and 2 are health bars for player 1 and 2 respectively
+
+    NOTE SOME PARAMS MIGHT BE NOT USED AS OF NOW
 *)
 let load_battle_screen engine img battle text buttonhide buttonshow
-  (battle_status, gui_ready) poke1_img poke2_img text_buffer (_, _, health_bar1, health_bar2)() =
+  (battle_status, gui_ready) poke1_img poke2_img text_buffer
+  (_, _, health_bar1, health_bar2) () =
+  (* get the components of button show to manipulate *)
   let [move1;move2;move3;move4;_] = buttonshow in
   let team1, team2, weather = match get_game_status engine with
   | Battle InGame (t1, t2, w, _, _) -> (t1, t2, w)
@@ -149,15 +212,21 @@ let load_battle_screen engine img battle text buttonhide buttonshow
   move2#misc#set_has_tooltip true;
   move3#misc#set_has_tooltip true;
   move4#misc#set_has_tooltip true;
-  move1#misc#set_tooltip_text (Pokemon.getMoveToolTip team1.current.pokeinfo.move1);
-  move2#misc#set_tooltip_text (Pokemon.getMoveToolTip team1.current.pokeinfo.move2);
-  move3#misc#set_tooltip_text (Pokemon.getMoveToolTip team1.current.pokeinfo.move3);
-  move4#misc#set_tooltip_text (Pokemon.getMoveToolTip team1.current.pokeinfo.move4);
+  move1#misc#set_tooltip_text
+          (Pokemon.getMoveToolTip team1.current.pokeinfo.move1);
+  move2#misc#set_tooltip_text
+          (Pokemon.getMoveToolTip team1.current.pokeinfo.move2);
+  move3#misc#set_tooltip_text
+          (Pokemon.getMoveToolTip team1.current.pokeinfo.move3);
+  move4#misc#set_tooltip_text
+          (Pokemon.getMoveToolTip team1.current.pokeinfo.move4);
   poke1_img#set_file ("../data/back-sprites/" ^ poke1 ^ ".gif");
   poke2_img#set_file ("../data/sprites/" ^ poke2 ^ ".gif");
   health_bar1#misc#set_has_tooltip true;
+  health_bar1#set_fraction 1.;
   health_bar1#misc#set_tooltip_text (Pokemon.getPokeToolTip team1.current);
   health_bar2#misc#set_has_tooltip true;
+  health_bar2#set_fraction 1.;
   health_bar2#misc#set_tooltip_text (Pokemon.getPokeToolTip team2.current)
 
 (* In contrast to other cases, after engine is filled up with a battle status
@@ -332,6 +401,11 @@ let poke_move_cmd button engine [move1; move2; move3; move4; poke1; poke2; poke3
  process_command engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text
   (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img text_buffer health_holders
 
+let quit engine ready () =
+  match !current_screen with
+  | Battle _ -> engine := Ivar.create (); Thread.delay 0.1; Ivar.fill !engine Quit; Ivar.fill !ready true
+  | _ -> Ivar.fill !engine Quit
+
 (* The main gui *)
 let main_gui engine battle_engine () =
 	let window = GWindow.window ~width: screen_width ~height: screen_height
@@ -382,5 +456,6 @@ let main_gui engine battle_engine () =
   move3#connect#clicked ~callback:(poke_move_cmd move3 engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text battle_engine poke1_img poke2_img text_buffer health_holders);
   window#show ();
   move4#connect#clicked ~callback:(poke_move_cmd move4 engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text battle_engine poke1_img poke2_img text_buffer health_holders);
+  window#connect#destroy ~callback:(quit engine ready);
   window#show ();
 	let thread = GtkThread.start () in ()
