@@ -1,7 +1,12 @@
 (* Info contains all the data types needed for the handling of the game *)
 type battlemove = Poke of string | UseAttack of string | NoMove
 
-type playerMove = Pl1 of battlemove | Pl2 of battlemove
+type guiattack = NormMove of string | Crit of string | SEffCrit of string |
+                  SEff of string | NoEffCrit of string | NoEff of string
+
+type guimove = SPoke of string | Attack of guiattack | Flinch
+
+type playerMove = Pl1 of guimove | Pl2 of guimove
 
 type target = SpecificPoke | SelectedPokeMeFirst | Ally | UsersField |
     UserOrAlly | OpponentsFields | User | RandomOpp | AllOthers |

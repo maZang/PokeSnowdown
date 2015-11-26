@@ -52,6 +52,8 @@ let string_of_item item =
   | ChoiceBand -> "ChoiceBand"
   | LifeOrb -> "LifeOrb"
   | ChoiceSpecs -> "ChoiceSpecs"
+  | CharizarditeX -> "CharizarditeX"
+  | Nothing -> "NO ITEM"
 
 let getRandomItem () =
   match Random.int 4 with

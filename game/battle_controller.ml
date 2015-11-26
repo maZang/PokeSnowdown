@@ -14,7 +14,7 @@ let unpack opt =
   | Some v -> v
   | None -> failwith "Revisit game logic"
 
-let initialize_battle team1 team2 = Battle (InGame (team1, team2, ref ClearSkies, ref (Pl1 NoMove), ref (Pl2 NoMove)))
+let initialize_battle team1 team2 = Battle (InGame (team1, team2, ref ClearSkies, ref (Pl1 Flinch), ref (Pl2 Flinch)))
 
 let getBattlePoke poke =
   let bhp = (2 * poke.hp + pokeIV + poke.evs.hp / 4) + 100 + 10 in
@@ -48,15 +48,82 @@ let getRandomTeam () =
   dead =[]; alive = (List.map getBattlePoke
   (List.map getRandomPokemon [();();();();()])); stat_enhance}
 
-(* let damageCalculation t1 t2 move =
+(* This function returns the accuracy/evasion bonus given by the stages.
+   Pre-condition: num is between -6 and 6
+   Equation given by Bulbapedia on Statistics article *)
+let getStageEvasion num =
+  if abs(num) > 6 then failwith "Faulty Game Logic: Debug 43";
+  if num <= 0 then
+    3. /. float_of_int (num + 3)
+  else
+    float_of_int (num + 3) /. 3.
+
+(* This function returns the accuracy/evasion bonus given by the stages.
+   Pre-condition: num is between -6 and 6
+   Equation given by Bulbapedia on Statistics article *)
+let getStageAD num =
+  if abs(num) > 6 then failwith "Faulty Game Logic: Debug 42";
+  if num <= 0 then
+    2. /. float_of_int (num + 2)
+  else
+    float_of_int (num + 2) /. 2.
+
+let getCrit poke move = (false, 1.)
+
+let damageCalculation t1 t2 move =
   let defense = match move.dmg_class with
-    | Physical -> t2.current.bdefense
-    | Special -> t2.current.bspecial_defense in *)
+    | Physical ->
+      float_of_int t2.current.bdefense *.
+      getStageAD (fst t2.stat_enhance.defense) *.
+      (snd t2.stat_enhance.defense)
+    | Special ->
+      float_of_int t2.current.bspecial_defense *.
+      getStageAD (fst t2.stat_enhance.special_defense) *.
+      (snd t2.stat_enhance.special_defense)
+    | _ -> failwith "Faulty Game Logic: Debug 44" in
+  let attack = match move.dmg_class with
+    | Physical ->
+      float_of_int t1.current.battack *.
+      getStageAD (fst t1.stat_enhance.attack) *.
+      (snd t1.stat_enhance.attack)
+    | Special ->
+      float_of_int t1.current.bspecial_attack *.
+      getStageAD (fst t1.stat_enhance.special_attack) *.
+      (snd t1.stat_enhance.special_attack) in
+  let crit_bool, crit  = getCrit t1.current move in
+  let type_mod = List.fold_left (fun acc x -> acc *. getElementEffect
+      move.element x) 1. t2.current.pokeinfo.element in
+  let modifier =
+      (* type effectiveness *)
+      type_mod *.
+      (* STAB bonus *)
+      if (List.mem move.element t1.current.pokeinfo.element) then 1.5 else 1. *.
+      (* Crit bonus *)
+      crit *.
+      (* Random fluctuation in power *)
+      (Random.float 15. +. 85.) /. 100. in
+  let newMove =
+    if (crit_bool) then
+      if (type_mod > 1.) then
+        SEffCrit move.name
+      else if (type_mod < 1.) then
+        NoEffCrit move.name
+      else
+        Crit move.name
+    else
+      if (type_mod > 1.) then
+        SEff move.name
+      else if (type_mod < 1.) then
+        NoEff move.name
+      else
+        NormMove move.name in
+  ( newMove, (210. /. 250. *. attack /. defense*. float_of_int move.power
+    +. 2.)*. modifier)
 
 let findBattlePoke lst name =
   let rec helper acc lst =
     match lst with
-    | [] -> failwith "Faulty Game Logic"
+    | [] -> failwith ("Faulty Game Logic: Debug " ^ name)
     | h::t -> if h.pokeinfo.name = name then h, (acc @ t) else helper (h::acc) t in
   helper [] lst
 
@@ -88,7 +155,7 @@ let handle_action state action1 action2 =
       | NoMove -> let prevPoke = t1.current in
                   let switchPoke, restPoke = findBattlePoke t1.alive p in
                   t1.current <- switchPoke; t1.alive <- prevPoke::restPoke;
-                  m1 := Pl1 (Poke p); m2:= Pl2 NoMove)
+                  m1 := Pl1 (SPoke p); m2:= Pl2 Flinch)
   | UseAttack a ->
       (match action2 with
       | Poke p -> failwith "unimplemented"
@@ -96,7 +163,14 @@ let handle_action state action1 action2 =
       (* Later change it so that None becomes a bot move *)
       | NoMove -> let curr_poke = t1.current in
                   let curr_move = findBattleMove curr_poke.pokeinfo a in
-                  failwith "unimplemented")
+                  let newmove, fdamage = damageCalculation t1 t2 curr_move in
+                  let damage = int_of_float fdamage in
+                  (if damage > t2.current.curr_hp then
+                    failwith "unimplemented"
+                  else
+                    t2.current.curr_hp <- t2.current.curr_hp - damage);
+                    m1 := Pl1 (Attack newmove); m2 := Pl2 Flinch
+                )
   | NoMove -> failwith "unimplemented"
 
 let rec main_loop_1p engine gui_ready ready ready_gui () =

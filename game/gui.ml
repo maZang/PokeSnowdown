@@ -203,7 +203,8 @@ let load_main_menu_from_battle engine one_player two_player no_player button_hid
   List.iter (fun s -> s#misc#show ())[one_player; two_player; no_player];
   battle#misc#hide (); text#misc#hide (); main_menu_bg#misc#show ();
   current_screen := MainMenu; Ivar.fill !engine MainMenu; Ivar.fill !ready true;
-  battle_status := Ivar.create (); current_command := (None, None))
+  battle_status := Ivar.create (); current_command := (None, None);
+  gui_ready := Ivar.create ())
 else
   ()
 
@@ -262,11 +263,12 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
     | Battle InGame (t1, t2, w, m1, m2) -> t1, t2, w, m1, m2
     | _ -> failwith "Fauly Game Logic: Debug 05" in
   (match !m1 with
-  | Pl1 Poke p -> text_buffer#set_text ("Player One has switched to " ^ p); poke1_img#set_file ("../data/back-sprites/" ^ p ^ ".gif")
+  | Pl1 SPoke p -> text_buffer#set_text ("Player One has switched to " ^ p); poke1_img#set_file ("../data/back-sprites/" ^ p ^ ".gif")
+  | Pl1 Attack a -> text_buffer#set_text ("Player One has attacked")
   | _ -> failwith "unimplemented");
   busywait ();
   (match !m2 with
-  | Pl2 NoMove -> text_buffer#set_text "Player Two has failed to move"
+  | Pl2 Flinch -> text_buffer#set_text "Player Two has flinched"
   | _ -> failwith "unimplemented");
   busywait ();
   text_buffer#set_text "Player One's Turn to move";
@@ -280,7 +282,7 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
   move4#misc#set_tooltip_text (Pokemon.getMoveToolTip t1.current.pokeinfo.move4);
   (* Might need to change position of these statements *)
   health_bar1#set_fraction (float_of_int (t1.current).curr_hp /. float_of_int (t1.current).bhp);
-  health_bar2#set_fraction (float_of_int (t1.current).curr_hp /. float_of_int (t1.current).bhp);
+  health_bar2#set_fraction (float_of_int (t2.current).curr_hp /. float_of_int (t2.current).bhp);
   health_bar1#misc#set_tooltip_text (Pokemon.getPokeToolTip t1.current);
   health_bar2#misc#set_tooltip_text (Pokemon.getPokeToolTip t2.current);
   List.iter (fun s -> s#misc#show ()) battle_buttons; current_screen := Battle (P1 ChooseMove)
