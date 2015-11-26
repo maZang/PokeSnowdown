@@ -1,10 +1,10 @@
 (* Info contains all the data types needed for the handling of the game *)
-type battlemove = Poke of string | UseAttack of string | NoMove | FaintPoke of string
+type battlemove = Poke of string | UseAttack of string | NoMove | FaintPoke of string | Preprocess | TurnEnd
 
 type guiattack = NormMove of string | Crit of string | SEffCrit of string |
                   SEff of string | NoEffCrit of string | NoEff of string
 
-type guimove = SPoke of string | Attack of guiattack | Flinch | Faint | NoAction
+type guimove = SPoke of string | Attack of guiattack | Flinch | Faint | NoAction | Continue | Next
 
 type playerMove = Pl1 of guimove | Pl2 of guimove
 
@@ -80,7 +80,7 @@ type outcome = WinnerP1 | WinnerP2
 
 type battle_mode = Random1p
 
-type screen = SwitchPoke | ChooseMove
+type screen = SwitchPoke | ChooseMove | Faint
 
 type battle_state = InGame of trainer_team * trainer_team * weather_terrain ref * playerMove ref * playerMove ref | Loading | P1 of screen| P2 of screen | Processing
 

@@ -139,8 +139,81 @@ let findBattleMove poke move =
   else
     failwith "Faulty Game Logic: Debug 16"
 
+let handle_next_turn t1 t2 w m1 m2 =
+  match t1.current.curr_hp with
+  | 0 -> if (t2.current.curr_hp = 0) then
+            (m1 := Pl1 Faint; m2 := Pl2 Faint)
+          else
+            (m1 := Pl2 Next; m2 := Pl1 Faint)
+  | _ -> if (t2.current.curr_hp = 0) then
+            (m1 := Pl1 Next; m2 := Pl2 Faint)
+          else
+            (m1 := Pl1 Next; m2 := Pl2 Next)
 
-let handle_preprocessing state = state
+let handle_preprocessing t1 t2 w m1 m2 =
+  m1 := Pl1 Continue; m2 := Pl2 Continue
+
+let handle_two_moves t1 t2 w m1 m2 a1 a2 =
+  let p1poke = t1.current in
+  let p2poke = t2.current in
+  let p1speed = float_of_int t1.current.bspeed *.
+    getStageAD (fst t1.stat_enhance.speed) *. (snd t1.stat_enhance.speed) in
+  let p2speed = float_of_int t2.current.bspeed *.
+    getStageAD (fst t2.stat_enhance.speed) *. (snd t2.stat_enhance.speed) in
+  if p1speed > p2speed then (
+    let curr_move = findBattleMove p1poke.pokeinfo a1 in
+    let curr_move' = findBattleMove p2poke.pokeinfo a2 in
+    match curr_move.dmg_class with
+    | Status ->
+      (match curr_move'.dmg_class with
+      | Status -> m1 := Pl1 NoAction; m2 := Pl2 NoAction
+      | _ -> let newmove, fdamage = damageCalculation t2 t1 curr_move' in
+             let damage = int_of_float fdamage in
+             p1poke.curr_hp <- max 0 (p1poke.curr_hp - damage);
+             m1 := Pl1 NoAction; m2 := Pl2 (Attack newmove))
+    | _ -> let newmove, fdamage = damageCalculation t1 t2 curr_move in
+           let damage = int_of_float fdamage in
+           p2poke.curr_hp <- max 0 (p2poke.curr_hp - damage);
+           if (p2poke.curr_hp = 0) then
+              (m1 := Pl1 (Attack newmove); m2 := Pl2 NoAction)
+           else
+              (match curr_move'.dmg_class with
+              | Status -> m1 := Pl1 (Attack newmove); m2 := Pl2 NoAction
+              | _      -> let newmove', fdamage' = damageCalculation t2 t1
+                              curr_move' in
+                          let damage' = int_of_float fdamage' in
+                          p1poke.curr_hp<-max 0 (p1poke.curr_hp - damage');
+                          m1 := Pl1 (Attack newmove);
+                          m2 := Pl2 (Attack newmove')
+              )
+    )
+  else (
+    let curr_move = findBattleMove p2poke.pokeinfo a2 in
+    let curr_move' = findBattleMove p1poke.pokeinfo a1 in
+    match curr_move.dmg_class with
+    | Status ->
+      (match curr_move'.dmg_class with
+      | Status -> m1 := Pl2 NoAction; m2 := Pl1 NoAction
+      | _ -> let newmove, fdamage = damageCalculation t1 t2 curr_move' in
+             let damage = int_of_float fdamage in
+             p2poke.curr_hp <- max 0 (p2poke.curr_hp - damage);
+             m1 := Pl2 NoAction; m2 := Pl1 (Attack newmove))
+    | _ -> let newmove, fdamage = damageCalculation t2 t1 curr_move in
+           let damage = int_of_float fdamage in
+           p1poke.curr_hp <- max 0 (p1poke.curr_hp - damage);
+           if (p1poke.curr_hp = 0) then
+              (m1 := Pl2 (Attack newmove); m2 := Pl1 NoAction)
+           else
+              (match curr_move'.dmg_class with
+              | Status -> m1 := Pl2 (Attack newmove); m2 := Pl1 NoAction
+              | _      -> let newmove', fdamage' = damageCalculation t1 t2
+                              curr_move' in
+                          let damage' = int_of_float fdamage' in
+                          p2poke.curr_hp<-max 0 (p2poke.curr_hp - damage');
+                          m1 := Pl2 (Attack newmove);
+                          m2 := Pl1 (Attack newmove')
+              )
+    )
 
 let handle_action state action1 action2 =
   let t1, t2, w, m1, m2 = match get_game_status state with
@@ -150,36 +223,57 @@ let handle_action state action1 action2 =
   | Poke p ->
       (match action2 with
       | Poke p -> failwith "unimplemented"
-      | UseAttack a -> failwith "unimplemented"
+      | UseAttack a -> let prevPoke = t1.current in
+                       let switchPoke, restPoke = findBattlePoke t1.alive p in
+                       t1.current <- switchPoke; t1.alive <- prevPoke::restPoke;
+                       let curr_move = findBattleMove t2.current.pokeinfo a in
+                       if curr_move.dmg_class = Status then
+                          (m1 := Pl1 (SPoke p); m2 := Pl2 NoAction)
+                       else (
+                        let newmove, fdamage = damageCalculation t2 t1 curr_move in
+                        let damage = int_of_float fdamage in
+                        t1.current.curr_hp <- max 0 (t1.current.curr_hp - damage);
+                        m1 := Pl1 (SPoke p); m2 := Pl2 (Attack newmove))
       (* Later change it so that None becomes a bot move *)
       | NoMove -> let prevPoke = t1.current in
                   let switchPoke, restPoke = findBattlePoke t1.alive p in
                   t1.current <- switchPoke; t1.alive <- prevPoke::restPoke;
-                  m1 := Pl1 (SPoke p); m2:= Pl2 Flinch)
+                  m1 := Pl1 (SPoke p); m2:= Pl2 NoAction)
   | UseAttack a ->
       (match action2 with
       | Poke p -> failwith "unimplemented"
-      | UseAttack a -> failwith "unimplemented"
+      | UseAttack a' -> handle_two_moves t1 t2 w m1 m2 a a'
       (* Later change it so that None becomes a bot move *)
       | NoMove -> let curr_poke = t1.current in
                   let curr_move = findBattleMove curr_poke.pokeinfo a in
-                  let newmove, fdamage = damageCalculation t1 t2 curr_move in
-                  let damage = int_of_float fdamage in
-                  (if damage >= t2.current.curr_hp then
-                    (t2.current.curr_hp <- 0;
-                    m1 := Pl1 (Attack newmove); m2 := Pl2 Faint)
+                  if curr_move.dmg_class = Status then
+                    (m1 := Pl1 NoAction; m2 := Pl2 NoAction)
                   else
-                    (t2.current.curr_hp <- t2.current.curr_hp - damage;
-                    m1 := Pl1 (Attack newmove); m2 := Pl2 Flinch)
-                ))
+                    (let newmove, fdamage = damageCalculation t1 t2 curr_move in
+                    let damage = int_of_float fdamage in
+                    t2.current.curr_hp <- max 0 (t2.current.curr_hp - damage);
+                    m1 := Pl1 (Attack newmove); m2 := Pl2 NoAction)
+                  )
   | NoMove -> (match action2 with
               | FaintPoke p -> let prevPoke = t2.current in
                                let switchPoke, restPoke = findBattlePoke t2.alive p in
                                t2.current <- switchPoke; t2.dead <- prevPoke::t2.dead;
                                t2.alive <- restPoke; m1 := Pl2 (SPoke p);
-                               m2 := Pl1 NoAction
+                               m2 := Pl1 Next
               | _ -> failwith "Faulty Game Logic: Debug 177"
               )
+  | FaintPoke p -> (match action2 with
+                    | _ -> let prevPoke = t1.current in
+                                let switchPoke, restPoke = findBattlePoke t1.alive p in
+                                t1.current <- switchPoke; t1.dead <- prevPoke::t1.dead;
+                                t1.alive <- restPoke; m1 := Pl1 (SPoke p);
+                                m2 := Pl2 Next)
+  | Preprocess -> (match action2 with
+                  | Preprocess -> handle_preprocessing t1 t2 w m1 m2
+                  | _ -> failwith "Faulty Game Logic: Debug 211")
+  | TurnEnd -> (match action2 with
+                  | TurnEnd -> handle_next_turn t1 t2 w m1 m2
+                  | _ -> failwith "Faulty Game Logic: Debug 276")
 
 let rec main_loop_1p engine gui_ready ready ready_gui () =
   let t2 = match get_game_status engine with
@@ -187,8 +281,10 @@ let rec main_loop_1p engine gui_ready ready ready_gui () =
     | _ -> failwith "Fauly Game Logic" in
   upon (Ivar.read !gui_ready) (* Replace NoMove with ai move later *)
     (fun (cmd1, cmd2) -> let c1 = unpack cmd1 in let c2 = match (unpack cmd2) with
-                          | NoMove -> NoMove
-                          | FaintPoke _ -> FaintPoke (List.hd t2.alive).pokeinfo.name in
+                          | NoMove -> UseAttack (Ai.getRandomMove t2.current)
+                          | Preprocess -> Preprocess
+                          | FaintPoke _ -> FaintPoke (Ai.replaceDead t2.alive)
+                          | TurnEnd -> TurnEnd in
                          let () = handle_action engine c1 c2 in
                          gui_ready := Ivar.create ();
                          Ivar.fill !ready_gui true;

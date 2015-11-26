@@ -13,7 +13,7 @@ val initialize_battle: Info.trainer_team -> Info.trainer_team -> Info.game_state
 
 (* Handles the processing at the end of every turn and calculates burn/poision/
 weather damage before the next battle turn begins *)
-val handle_preprocessing: Info.game_state -> Info.game_state
+val handle_preprocessing: Info.trainer_team -> Info.trainer_team -> Info.weather_terrain ref -> Info.playerMove ref -> Info.playerMove ref -> unit
 
 (* This handles the game after two players have moved *)
 val handle_action: Info.game_state Ivar.t ref -> Info.battlemove -> Info.battlemove -> unit
