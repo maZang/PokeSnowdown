@@ -4,8 +4,10 @@ open Info
 
 val getRandomPokemon: unit -> pokemon
 
-val getPokeToolTip: battle_poke -> string
+val getPokeToolTip: trainer_team -> string
 
 val getMoveToolTip: move -> string
 
 val getElementEffect: element -> element -> float
+
+val getTestPoke: unit -> pokemon

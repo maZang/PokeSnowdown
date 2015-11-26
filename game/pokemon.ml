@@ -84,6 +84,29 @@ let string_of_element elm =
   | Fighting -> "Fighting"
   | Poison -> "Poison"
 
+let getStageEvasion num =
+  if abs(num) > 6 then failwith "Faulty Game Logic: Debug 43";
+  if num <= 0 then
+    3. /. float_of_int (num + 3)
+  else
+    float_of_int (num + 3) /. 3.
+
+(* This function returns the accuracy/evasion bonus given by the stages.
+   Pre-condition: num is between -6 and 6
+   Equation given by Bulbapedia on Statistics article *)
+let getStageAD num =
+  if abs(num) > 6 then failwith "Faulty Game Logic: Debug 42";
+  if num <= 0 then
+    2. /. float_of_int (num + 2)
+  else
+    float_of_int (num + 2) /. 2.
+
+let string_of_type elm =
+  match elm with
+  | [x] -> string_of_element x
+  | [x1;x2] -> string_of_element x1 ^ "/" ^ string_of_element x2
+  | _ -> failwith "Faulty Game Logic: Debug 100"
+
 let getElement str =
   match str with
   | "fire" -> Fire
@@ -258,6 +281,11 @@ let getDmgClass str =
   | "status" -> Status
   | _ -> failwith "Not a valid damage class"
 
+let getSecondaryEffect str = match str with
+  | "gear-grind" -> [MultHit 2]
+  | "calm-mind" -> [StageBoost [(SpecialDefense, 1); (SpecialAttack, 1)]]
+  | _ -> []
+
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
     power:int; effect_chance: int; accuracy: int; element: element;
     description: string} *)
@@ -274,8 +302,9 @@ let getMoveFromString str =
   let accuracy = try int_of_string accuracy_str with  |_ -> 100 in
   let element = move |> member "type" |> to_string |> getElement in
   let description = move |> member "effect" |> to_string in
+  let secondary = getSecondaryEffect str in
   {name = str; priority; target; dmg_class; power; effect_chance; accuracy;
-  element; description}
+  element; description; secondary}
 
 let getRandomPokemon () =
   let randomPokeName = poke_arr |>
@@ -319,14 +348,26 @@ let getRandomPokemon () =
   attack; defense; special_defense; special_attack; speed; ability; evs;
   nature; item}
 
-let getPokeToolTip battlePoke =
+let getTestPoke () =
+  let evs = {attack = 255; defense =  255; special_attack= 255; special_defense= 255;
+            hp=255; speed=255} in
+  let nature = Modest in
+  let item = Leftovers in
+  {name="gardevoir-mega"; element=[Psychic; Fairy]; move1= getMoveFromString "gear-grind"; move2 =
+  getMoveFromString "calm-mind"; move3 = getMoveFromString "charge-beam";
+  move4 = getMoveFromString "toxic"; hp = 68; attack = 85; special_attack = 165; defense = 65;
+  speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
+
+let getPokeToolTip t =
+  let battlePoke = t.current in
   "Name: " ^ battlePoke.pokeinfo.name ^
-  "\nHP: " ^ string_of_int battlePoke.curr_hp ^
-  "\nAttack: " ^ string_of_int battlePoke.battack ^
-  "\nDefense: " ^ string_of_int battlePoke.bdefense ^
-  "\nSpecial Attack: " ^ string_of_int battlePoke.bspecial_attack ^
-  "\nSpecial Defense: " ^ string_of_int battlePoke.bspecial_defense ^
-  "\nSpeed: " ^ string_of_int battlePoke.bspeed ^
+  "\nType: " ^ string_of_type battlePoke.pokeinfo.element ^
+  "\nHP: " ^ string_of_int battlePoke.curr_hp ^ "/" ^ string_of_int battlePoke.bhp ^
+  "\nAttack: " ^ string_of_int battlePoke.battack ^ "                  Modified: " ^ string_of_float (float_of_int battlePoke.battack *. getStageAD (fst t.stat_enhance.attack) *. (snd t.stat_enhance.attack)) ^
+  "\nDefense: " ^ string_of_int battlePoke.bdefense ^ "               Modified: " ^ string_of_float (float_of_int battlePoke.bdefense *. getStageAD (fst t.stat_enhance.defense) *. (snd t.stat_enhance.defense)) ^
+  "\nSpecial Attack: " ^ string_of_int battlePoke.bspecial_attack ^ "     Modified: " ^ string_of_float (float_of_int battlePoke.bspecial_attack *. getStageAD (fst t.stat_enhance.special_attack) *. (snd t.stat_enhance.special_attack)) ^
+  "\nSpecial Defense: " ^ string_of_int battlePoke.bspecial_defense ^ "  Modified: " ^ string_of_float (float_of_int battlePoke.bspecial_defense *. getStageAD (fst t.stat_enhance.special_defense) *. (snd t.stat_enhance.special_defense)) ^
+  "\nSpeed: " ^ string_of_int battlePoke.bspeed ^ "                  Modified: " ^ string_of_float (float_of_int battlePoke.bspeed *. getStageAD (fst t.stat_enhance.speed) *. (snd t.stat_enhance.speed)) ^
   "\nItem: " ^ string_of_item battlePoke.curr_item
 
 let getMoveToolTip move =

@@ -14,7 +14,6 @@ let unpack opt =
   | Some v -> v
   | None -> NoMove
 
-let initialize_battle team1 team2 = Battle (InGame (team1, team2, ref ClearSkies, ref (Pl1 NoAction), ref (Pl2 NoAction)))
 
 let getBattlePoke poke =
   let bhp = (2 * poke.hp + pokeIV + poke.evs.hp / 4) + 100 + 10 in
@@ -39,6 +38,9 @@ let getBattlePoke poke =
     | Brave | Relaxed | Quiet | Sassy -> 0.9
     | _ -> 1.0) *.  float_of_int (2 * poke.speed + pokeIV + poke.evs.speed / 4 + 5)) in
   {pokeinfo = poke; curr_hp = bhp; curr_status = (NoNon, [NoVola]); curr_item = poke.item; bhp; battack; bdefense; bspecial_attack; bspecial_defense; bspeed}
+
+let initialize_battle team1 team2 =
+  team1.current <- getBattlePoke (getTestPoke ()); Battle (InGame (team1, team2, ref ClearSkies, ref (Pl1 NoAction), ref (Pl2 NoAction)))
 
 let getRandomTeam () =
   let stat_enhance = {attack=(0,1.); defense=(0,1.); speed=(0,1.);
@@ -105,16 +107,16 @@ let damageCalculation t1 t2 move =
   let newMove =
     if (crit_bool) then
       if (type_mod > 1.) then
-        SEffCrit move.name
+        SEff (Crit (NormMove move.name))
       else if (type_mod < 1.) then
-        NoEffCrit move.name
+        NoEff (Crit (NormMove move.name))
       else
-        Crit move.name
+        Crit (NormMove move.name)
     else
       if (type_mod > 1.) then
-        SEff move.name
+        SEff (NormMove move.name)
       else if (type_mod < 1.) then
-        NoEff move.name
+        NoEff (NormMove move.name)
       else
         NormMove move.name in
   ( newMove, (210. /. 250. *. attack /. defense*. float_of_int move.power
@@ -138,6 +140,87 @@ let findBattleMove poke move =
     poke.move4
   else
     failwith "Faulty Game Logic: Debug 16"
+
+let rec link_multmove_descript m1 m2 =
+  match m2 with
+  | HitMult (n, x) ->
+      (match m1 with
+      | NormMove s -> HitMult (n+1, x)
+      | Crit v -> link_multmove_descript v (HitMult(n, Crit x))
+      | SEff v -> link_multmove_descript v (HitMult(n, SEff v))
+      | NoEff v -> link_multmove_descript v (HitMult (n, NoEff x)))
+  | x -> link_multmove_descript m1 (HitMult (1, x))
+
+let move_handler atk def move =
+  let moveDescript, fdamage = damageCalculation atk def move in
+  let newmove = ref moveDescript in
+  let damage = int_of_float fdamage in
+  let rec secondary_effects lst = match lst with
+    | (MultHit n)::t ->
+      if n <= 1 then () else
+        (let moveDescript', fdamage' = damageCalculation atk def move in
+        let damage' = int_of_float fdamage' in
+        let newmove' = link_multmove_descript moveDescript' !newmove in
+        newmove := newmove'; def.current.curr_hp <- max 0 (def.current.curr_hp - damage');
+        secondary_effects ((MultHit (n-1))::t))
+    | [] -> ()
+    in
+  def.current.curr_hp <- max 0 (def.current.curr_hp - damage);
+  secondary_effects move.secondary;
+  !newmove
+
+let rec status_move_handler atk def (move: move) =
+  let newmove = ref (NormStatus move.name) in
+  let rec secondary_effects lst = match lst with
+    | (StageBoost l)::t ->
+        (match l with
+          | [] -> secondary_effects t
+          | (s,n)::t' ->
+            (match s with
+              | Attack -> let stage, multiplier = atk.stat_enhance.attack in
+                          let boost = max (min 6 (stage + n)) (-6) in
+                          atk.stat_enhance.attack <- (boost, multiplier);
+                          newmove := StatBoost (Attack, (boost - stage), !newmove);
+                          secondary_effects ((StageBoost t')::t)
+              | Defense ->let stage, multiplier = atk.stat_enhance.defense in
+                          let boost = max (min 6 (stage + n)) (-6) in
+                          atk.stat_enhance.defense <- (boost, multiplier);
+                          newmove := StatBoost (Defense, (boost - stage), !newmove);
+                          secondary_effects ((StageBoost t')::t)
+              | SpecialAttack ->
+                          let stage, multiplier = atk.stat_enhance.special_attack in
+                          let boost = max (min 6 (stage + n)) (-6) in
+                          atk.stat_enhance.special_attack <- (boost, multiplier);
+                          newmove := StatBoost (SpecialAttack, (boost - stage), !newmove);
+                          secondary_effects ((StageBoost t')::t)
+              | SpecialDefense ->
+                          let stage, multiplier = atk.stat_enhance.special_defense in
+                          let boost = max (min 6 (stage + n)) (-6) in
+                          atk.stat_enhance.special_defense <- (boost, multiplier);
+                          newmove := StatBoost (SpecialDefense, (boost - stage), !newmove);
+                          secondary_effects ((StageBoost t')::t)
+              | Speed -> let stage, multiplier = atk.stat_enhance.speed in
+                          let boost = max (min 6 (stage + n)) (-6) in
+                          atk.stat_enhance.speed <- (boost, multiplier);
+                          newmove := StatBoost (Speed, (boost - stage), !newmove);
+                          secondary_effects ((StageBoost t')::t)
+              | Accuracy ->
+                          let stage, multiplier = atk.stat_enhance.accuracy in
+                          let boost = max (min 6 (stage + n)) (-6) in
+                          atk.stat_enhance.accuracy <- (boost, multiplier);
+                          newmove := StatBoost (Accuracy, (boost - stage), !newmove);
+                          secondary_effects ((StageBoost t')::t)
+              | Evasion ->
+                          let stage, multiplier = atk.stat_enhance.evasion in
+                          let boost = max (min 6 (stage + n)) (-6) in
+                          atk.stat_enhance.evasion <- (boost, multiplier);
+                          newmove := StatBoost (Evasion, (boost - stage), !newmove);
+                          secondary_effects ((StageBoost t')::t)
+              )
+          )
+    | [] -> ()
+  in
+  secondary_effects move.secondary; !newmove
 
 let handle_next_turn t1 t2 w m1 m2 =
   match t1.current.curr_hp with
@@ -164,54 +247,44 @@ let handle_two_moves t1 t2 w m1 m2 a1 a2 =
     let curr_move = findBattleMove p1poke.pokeinfo a1 in
     let curr_move' = findBattleMove p2poke.pokeinfo a2 in
     match curr_move.dmg_class with
-    | Status ->
+    | Status -> let newmove = status_move_handler t1 t2 curr_move in
       (match curr_move'.dmg_class with
-      | Status -> m1 := Pl1 NoAction; m2 := Pl2 NoAction
-      | _ -> let newmove, fdamage = damageCalculation t2 t1 curr_move' in
-             let damage = int_of_float fdamage in
-             p1poke.curr_hp <- max 0 (p1poke.curr_hp - damage);
-             m1 := Pl1 NoAction; m2 := Pl2 (Attack newmove))
-    | _ -> let newmove, fdamage = damageCalculation t1 t2 curr_move in
-           let damage = int_of_float fdamage in
-           p2poke.curr_hp <- max 0 (p2poke.curr_hp - damage);
+      | Status -> let newmove' = status_move_handler t2 t1 curr_move' in
+                  m1 := Pl1 (Status newmove); m2 := Pl2 (Status newmove')
+      | _ -> let newmove' = move_handler t2 t1 curr_move' in
+             m1 := Pl1 (Status newmove); m2 := Pl2 (AttackMove newmove'))
+    | _ -> let newmove = move_handler t1 t2 curr_move in
            if (p2poke.curr_hp = 0) then
-              (m1 := Pl1 (Attack newmove); m2 := Pl2 NoAction)
+              (m1 := Pl1 (AttackMove newmove); m2 := Pl2 NoAction)
            else
               (match curr_move'.dmg_class with
-              | Status -> m1 := Pl1 (Attack newmove); m2 := Pl2 NoAction
-              | _      -> let newmove', fdamage' = damageCalculation t2 t1
-                              curr_move' in
-                          let damage' = int_of_float fdamage' in
-                          p1poke.curr_hp<-max 0 (p1poke.curr_hp - damage');
-                          m1 := Pl1 (Attack newmove);
-                          m2 := Pl2 (Attack newmove')
+              | Status -> let newmove' = status_move_handler t2 t1 curr_move' in
+                          m1 := Pl1 (AttackMove newmove); m2 := Pl2 (Status newmove')
+              | _      -> let newmove' = move_handler t2 t1 curr_move' in
+                          m1 := Pl1 (AttackMove newmove);
+                          m2 := Pl2 (AttackMove newmove')
               )
     )
   else (
     let curr_move = findBattleMove p2poke.pokeinfo a2 in
     let curr_move' = findBattleMove p1poke.pokeinfo a1 in
     match curr_move.dmg_class with
-    | Status ->
+    | Status -> let newmove = status_move_handler t2 t1 curr_move in
       (match curr_move'.dmg_class with
-      | Status -> m1 := Pl2 NoAction; m2 := Pl1 NoAction
-      | _ -> let newmove, fdamage = damageCalculation t1 t2 curr_move' in
-             let damage = int_of_float fdamage in
-             p2poke.curr_hp <- max 0 (p2poke.curr_hp - damage);
-             m1 := Pl2 NoAction; m2 := Pl1 (Attack newmove))
-    | _ -> let newmove, fdamage = damageCalculation t2 t1 curr_move in
-           let damage = int_of_float fdamage in
-           p1poke.curr_hp <- max 0 (p1poke.curr_hp - damage);
+      | Status -> let newmove' = status_move_handler t1 t2 curr_move' in
+                  m1 := Pl2 (Status newmove); m2 := Pl1 (Status newmove')
+      | _ -> let newmove' = move_handler t1 t2 curr_move' in
+             m1 := Pl2 (Status newmove); m2 := Pl1 (AttackMove newmove'))
+    | _ -> let newmove = move_handler t2 t1 curr_move in
            if (p1poke.curr_hp = 0) then
-              (m1 := Pl2 (Attack newmove); m2 := Pl1 NoAction)
+              (m1 := Pl2 (AttackMove newmove); m2 := Pl1 NoAction)
            else
               (match curr_move'.dmg_class with
-              | Status -> m1 := Pl2 (Attack newmove); m2 := Pl1 NoAction
-              | _      -> let newmove', fdamage' = damageCalculation t1 t2
-                              curr_move' in
-                          let damage' = int_of_float fdamage' in
-                          p2poke.curr_hp<-max 0 (p2poke.curr_hp - damage');
-                          m1 := Pl2 (Attack newmove);
-                          m2 := Pl1 (Attack newmove')
+              | Status -> let newmove' = status_move_handler t1 t2 curr_move' in
+                          m1 := Pl2 (AttackMove newmove); m2 := Pl1 (Status newmove')
+              | _      -> let newmove'= move_handler t1 t2 curr_move' in
+                          m1 := Pl2 (AttackMove newmove);
+                          m2 := Pl1 (AttackMove newmove')
               )
     )
 
@@ -230,10 +303,8 @@ let handle_action state action1 action2 =
                        if curr_move.dmg_class = Status then
                           (m1 := Pl1 (SPoke p); m2 := Pl2 NoAction)
                        else (
-                        let newmove, fdamage = damageCalculation t2 t1 curr_move in
-                        let damage = int_of_float fdamage in
-                        t1.current.curr_hp <- max 0 (t1.current.curr_hp - damage);
-                        m1 := Pl1 (SPoke p); m2 := Pl2 (Attack newmove))
+                        let newmove = move_handler t2 t1 curr_move in
+                        m1 := Pl1 (SPoke p); m2 := Pl2 (AttackMove newmove))
       (* Later change it so that None becomes a bot move *)
       | NoMove -> let prevPoke = t1.current in
                   let switchPoke, restPoke = findBattlePoke t1.alive p in
@@ -244,16 +315,15 @@ let handle_action state action1 action2 =
       | Poke p -> failwith "unimplemented"
       | UseAttack a' -> handle_two_moves t1 t2 w m1 m2 a a'
       (* Later change it so that None becomes a bot move *)
-      | NoMove -> let curr_poke = t1.current in
+      | NoMove -> (*let curr_poke = t1.current in
                   let curr_move = findBattleMove curr_poke.pokeinfo a in
                   if curr_move.dmg_class = Status then
-                    (m1 := Pl1 NoAction; m2 := Pl2 NoAction)
+                    (let newmove = status_move_handler t1 t2 curr_move in
+                    m1 := Pl1 (Status newmove); m2 := Pl2 NoAction)
                   else
-                    (let newmove, fdamage = damageCalculation t1 t2 curr_move in
-                    let damage = int_of_float fdamage in
-                    t2.current.curr_hp <- max 0 (t2.current.curr_hp - damage);
-                    m1 := Pl1 (Attack newmove); m2 := Pl2 NoAction)
-                  )
+                    (let newmove = move_handler t1 t2 curr_move in
+                    m1 := Pl1 (AttackMove newmove); m2 := Pl2 NoAction)
+                  ) *) failwith "unimplemented")
   | NoMove -> (match action2 with
               | FaintPoke p -> let prevPoke = t2.current in
                                let switchPoke, restPoke = findBattlePoke t2.alive p in

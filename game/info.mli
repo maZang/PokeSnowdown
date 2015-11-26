@@ -1,10 +1,14 @@
 (* Info contains all the data types needed for the handling of the game *)
 type battlemove = Poke of string | UseAttack of string | NoMove | FaintPoke of string | Preprocess | TurnEnd
 
-type guiattack = NormMove of string | Crit of string | SEffCrit of string |
-                  SEff of string | NoEffCrit of string | NoEff of string
+type stat = Attack | Defense | SpecialAttack | SpecialDefense | Speed | Accuracy | Evasion
 
-type guimove = SPoke of string | Attack of guiattack | Flinch | Faint | NoAction | Continue | Next
+type guiattack = NormMove of string | Crit of guiattack |
+                  SEff of guiattack | NoEff of guiattack | HitMult of int * guiattack
+
+type guistatus = StatBoost of stat * int * guistatus | NormStatus of string
+
+type guimove = SPoke of string | AttackMove of guiattack | Flinch | Faint | NoAction | Continue | Next | Status of guistatus
 
 type playerMove = Pl1 of guimove | Pl2 of guimove
 
@@ -26,15 +30,15 @@ type flag = Contact | Charge | Protect | Recharge | Reflectable | Snatch |
 type evs = {attack:int; defense:int; special_attack: int; special_defense: int;
             hp:int; speed:int}
 
+(* variants containing all secondary effects of a given move *)
+type secondary_effects = MultHit of int | StageBoost of (stat * int) list
+
 type move = {name:string; priority: int; target: target; dmg_class: dmg_class;
     power:int; effect_chance: int; accuracy: int; element: element;
-    description: string}
+    description: string; secondary: secondary_effects list}
 
 type item = Nothing | Leftovers | ChoiceBand | LifeOrb | CharizarditeX |
             ChoiceSpecs
-
-(* variants containing all secondary effects of a given move *)
-type secondary_effects
 
 (* We hope to implement all of these below but we will see *)
 type weather_terrain = HarshSun | Hail | Rain | SandStorm

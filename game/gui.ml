@@ -230,10 +230,10 @@ let load_battle_screen engine img battle text buttonhide buttonshow
   (* set health bar information; give tooltips to health bars *)
   health_bar1#misc#set_has_tooltip true;
   health_bar1#set_fraction 1.;
-  health_bar1#misc#set_tooltip_text (Pokemon.getPokeToolTip team1.current);
+  health_bar1#misc#set_tooltip_text (Pokemon.getPokeToolTip team1);
   health_bar2#misc#set_has_tooltip true;
   health_bar2#set_fraction 1.;
-  health_bar2#misc#set_tooltip_text (Pokemon.getPokeToolTip team2.current)
+  health_bar2#misc#set_tooltip_text (Pokemon.getPokeToolTip team2)
 
 (* In contrast to other cases, after engine is filled up with a battle status
 the game controller hands control to the battle controller. Some screens are hid
@@ -339,14 +339,40 @@ let switch_poke engine [poke1;poke2;poke3;poke4;poke5] [move1;move2;
   | _ -> failwith "Fauly game Logic") in
   List.iteri switch_poke_helper team.alive
 
-let getAttackString a =
+let rec getNumCritSuperNoAndFinal c s n v=
+  match v with
+  | NormMove str -> (c, s, n, str)
+  | Crit v-> getNumCritSuperNoAndFinal (c+1) s n v
+  | SEff v -> getNumCritSuperNoAndFinal c (s+1) n v
+  | NoEff v -> getNumCritSuperNoAndFinal c s (n+1) v
+  | _ -> failwith "Bad move"
+
+let rec getAttackString a =
   match a with
   | NormMove s -> s
-  | Crit s -> s ^ ". It was a critical hit."
-  | SEffCrit s -> s ^ ". It was a critical hit. It was super effective!"
-  | SEff s -> s ^ ". It was super effective!"
-  | NoEffCrit s -> s ^ ". It was a critical hit. It was not very effective."
-  | NoEff s -> s ^ ". It was not very effective."
+  | Crit s -> getAttackString s ^ ". It was a critical hit"
+  | SEff s -> getAttackString s ^ ". It was super effective"
+  | NoEff s -> getAttackString s ^ ". It was not very effective"
+  | HitMult (n, s) ->
+      let c, s', n', str = getNumCritSuperNoAndFinal 0 0 0 s in
+      str ^ ". The move hit " ^ string_of_int n ^ " times with " ^ string_of_int
+      c ^ " crits." ^ (if s' > 0 then " Supereffective" else if n' > 0 then
+      " Not very effective" else "")
+
+let rec string_from_stat s =
+  match s with
+  | Attack -> "Attack"
+  | Defense -> "Defense"
+  | SpecialAttack -> "Special Attack"
+  | SpecialDefense -> "Sepcial Defense"
+  | Speed -> "Speed"
+  | Accuracy -> "Accuracy"
+  | Evasion -> "Evasion"
+
+let rec getStatusString s =
+  match s with
+  | NormStatus s -> s
+  | StatBoost (stat, i, s) -> getStatusString s ^ ". " ^ string_from_stat stat ^ " was boosted " ^ string_of_int i ^ " stage"
 
 let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text
   (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img text_buffer (health_bar_holder1, health_bar_holder2, health_bar1, health_bar2)  back_button () =
@@ -374,8 +400,8 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
     move2#misc#set_tooltip_text (Pokemon.getMoveToolTip t1.current.pokeinfo.move2);
     move3#misc#set_tooltip_text (Pokemon.getMoveToolTip t1.current.pokeinfo.move3);
     move4#misc#set_tooltip_text (Pokemon.getMoveToolTip t1.current.pokeinfo.move4);
-    health_bar1#misc#set_tooltip_text (Pokemon.getPokeToolTip t1.current);
-    health_bar2#misc#set_tooltip_text (Pokemon.getPokeToolTip t2.current);
+    health_bar1#misc#set_tooltip_text (Pokemon.getPokeToolTip t1);
+    health_bar2#misc#set_tooltip_text (Pokemon.getPokeToolTip t2);
     updatehealth1 (); updatehealth2 () in
   let simple_move () =
     text_buffer#set_text "Player One's Turn to move";
@@ -391,8 +417,20 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
   (match !m1 with
   | Pl1 SPoke p -> text_buffer#set_text ("Player One has switched to " ^ p); poke1_img#set_file ("../data/back-sprites/" ^ p ^ ".gif");updatetools ();busywait ()
   | Pl2 SPoke p -> text_buffer#set_text ("Player Two has switched to " ^ p); poke2_img#set_file ("../data/sprites/" ^ p ^ ".gif"); updatetools (); busywait ()
-  | Pl1 Attack a -> let atk_string = getAttackString a in text_buffer#set_text ("Player One used " ^ atk_string); updatehealth2 (); busywait ()
-  | Pl2 Attack a -> let atk_string = getAttackString a in text_buffer#set_text ("Player Two used " ^ atk_string); updatehealth1 (); busywait ()
+  | Pl1 AttackMove a ->let atk_string = "Player One used " ^ getAttackString a in
+                   let str_list = Str.split (Str.regexp "\.") atk_string in
+                   updatehealth2 ();
+                   List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list
+  | Pl2 AttackMove a ->let atk_string = "Player Two used " ^ getAttackString a in
+                   let str_list = Str.split (Str.regexp "\.") atk_string in
+                   updatehealth1 ();
+                   List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list
+  | Pl1 Status s ->let status_string = "Player One used " ^ getStatusString s in
+                   let str_list = Str.split (Str.regexp "\.") status_string in
+                   List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list
+  | Pl2 Status s ->let status_string = "Player Two used " ^ getStatusString s in
+                   let str_list = Str.split (Str.regexp "\.") status_string in
+                   List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list
   | Pl1 NoAction -> text_buffer#set_text ("Player One has failed to do anything"); busywait ()
   | Pl2 NoAction -> text_buffer#set_text ("Player Two has failed to do anything"); busywait ()
   | Pl1 Continue | Pl2 Continue | Pl1 Next | Pl2 Next -> ()
@@ -404,8 +442,26 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
                   )
   | _ -> failwith "unimplements");
   (match !m2 with
-  | Pl1 Attack a -> let atk_string = getAttackString a in text_buffer#set_text ("Player One used " ^ atk_string); updatetools (); busywait (); pre_process ()
-  | Pl2 Attack a -> let atk_string = getAttackString a in text_buffer#set_text ("Player Two used " ^ atk_string); updatetools (); busywait (); pre_process ()
+  | Pl1 AttackMove a ->let atk_string = "Player One used " ^ getAttackString a in
+                   let str_list = Str.split (Str.regexp "\.") atk_string in
+                   updatetools ();
+                   List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
+                   pre_process ()
+  | Pl2 AttackMove a ->let atk_string = "Player Two used " ^ getAttackString a in
+                   let str_list = Str.split (Str.regexp "\.") atk_string in
+                   updatetools ();
+                   List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
+                   pre_process ()
+  | Pl1 Status s ->let status_string = "Player One used " ^ getStatusString s in
+                   let str_list = Str.split (Str.regexp "\.") status_string in
+                   updatetools ();
+                   List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
+                   pre_process ()
+  | Pl2 Status s ->let status_string = "Player Two used " ^ getStatusString s in
+                   let str_list = Str.split (Str.regexp "\.") status_string in
+                   updatetools ();
+                   List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
+                   pre_process ()
   | Pl2 Flinch -> text_buffer#set_text "Player Two has flinched"; busywait (); pre_process ()
   | Pl1 Faint -> text_buffer#set_text "Player One Pokemon has fainted. Choosing a new Pokemon.";
                   (match get_game_status battle_status with
