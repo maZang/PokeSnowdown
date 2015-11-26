@@ -38,7 +38,7 @@ let getBattlePoke poke =
     | Timid | Hasty | Jolly | Naive -> 1.1
     | Brave | Relaxed | Quiet | Sassy -> 0.9
     | _ -> 1.0) *.  float_of_int (2 * poke.speed + pokeIV + poke.evs.speed / 4 + 5)) in
-  {pokeinfo = poke; curr_hp = poke.hp; curr_status = (NoNon, [NoVola]); curr_item = poke.item; bhp; battack; bdefense; bspecial_attack; bspecial_defense; bspeed}
+  {pokeinfo = poke; curr_hp = bhp; curr_status = (NoNon, [NoVola]); curr_item = poke.item; bhp; battack; bdefense; bspecial_attack; bspecial_defense; bspeed}
 
 let getRandomTeam () =
   let stat_enhance = {attack=(0,1.); defense=(0,1.); speed=(0,1.);

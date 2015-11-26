@@ -46,6 +46,13 @@ let getRandomNature () =
   | 24 -> Serious
   | _ -> failwith "Does not occur"
 
+let string_of_item item =
+  match item with
+  | Leftovers -> "Leftovers"
+  | ChoiceBand -> "ChoiceBand"
+  | LifeOrb -> "LifeOrb"
+  | ChoiceSpecs -> "ChoiceSpecs"
+
 let getRandomItem () =
   match Random.int 4 with
   | 0 -> Leftovers
@@ -53,6 +60,27 @@ let getRandomItem () =
   | 2 -> LifeOrb
   | 3 -> ChoiceSpecs
   | _ -> failwith "Does not occur"
+
+let string_of_element elm =
+  match elm with
+  | Fire -> "Fire"
+  | Water -> "Water"
+  | Grass -> "Grass"
+  | Rock -> "Rock"
+  | Ground -> "Ground"
+  | Fairy -> "Fairy"
+  | Dark -> "Dark"
+  | Electric -> "Electric"
+  | Ghost -> "Ghost"
+  | Steel -> "Steel"
+  | Normal -> "Normal"
+  | Bug -> "Bug"
+  | Flying -> "Flying"
+  | Psychic -> "Psychic"
+  | Ice -> "Ice"
+  | Dragon -> "Dragon"
+  | Fighting -> "Fighting"
+  | Poison -> "Poison"
 
 let getElement str =
   match str with
@@ -76,6 +104,122 @@ let getElement str =
   | "poison" -> Poison
   | _ -> failwith "Not a valid type"
 
+let getElementEffect elm1 elm2 =
+  match elm1 with
+  | Normal ->
+    (match elm2 with
+      | Rock | Steel -> 0.5
+      | Ghost -> 0.
+      | _ -> 1.
+    )
+  | Fighting ->
+    (match elm2 with
+      | Normal | Rock | Steel | Ice | Dark -> 2.
+      | Flying | Poison | Bug |Psychic | Fairy -> 0.5
+      | Ghost -> 0.
+      | _ -> 1.
+    )
+  | Flying ->
+    (match elm2 with
+      | Fighting | Bug | Grass -> 2.
+      | Rock | Electric -> 0.5
+      | _ -> 1.
+    )
+  |  Poison ->
+    (match elm2 with
+      | Grass | Fairy -> 2.
+      | Poison | Ground | Rock | Ghost -> 0.5
+      | _ -> 1.
+    )
+  |  Ground ->
+    (match elm2 with
+      | Poison | Rock | Steel | Fire | Electric -> 2.
+      | Bug | Grass -> 0.5
+      | Flying -> 0.
+      | _ -> 1.
+    )
+  |  Rock ->
+    (match elm2 with
+      | Flying | Bug | Fire | Ice -> 2.
+      | Fighting | Ground | Steel -> 0.5
+      | _ -> 1.
+    )
+  |  Bug ->
+    (match elm2 with
+      | Grass | Psychic | Dark -> 2.
+      | Fire | Fighting | Poison | Flying | Ghost | Steel | Fairy -> 0.5
+      | _ -> 1.
+    )
+  |  Ghost ->
+    (match elm2 with
+      | Psychic | Ghost -> 2.
+      | Dark -> 0.5
+      | Normal -> 0.
+      | _ -> 1.
+    )
+  |  Steel ->
+    (match elm2 with
+      | Ice | Rock | Fairy -> 2.
+      | Fire | Water | Electric | Steel -> 0.5
+      | _ -> 1.
+    )
+  |  Fire ->
+    (match elm2 with
+      | Grass | Ice | Bug | Steel -> 2.
+      | Fire | Water | Rock | Dragon -> 0.5
+      | _ -> 1.
+    )
+  |  Water ->
+    (match elm2 with
+      | Fire | Ground | Rock -> 2.
+      | Water | Grass | Dragon -> 0.5
+      | _ -> 1.
+    )
+  |  Grass ->
+    (match elm2 with
+      | Water | Ground | Rock -> 2.
+      | Fire | Grass | Poison | Flying | Bug | Dragon | Steel -> 0.5
+      | _ -> 1.
+    )
+  |  Electric ->
+    (match elm2 with
+      | Water | Flying -> 2.
+      | Electric | Grass | Dragon -> 0.5
+      | Ground -> 0.
+      | _ -> 1.
+    )
+  |  Psychic ->
+    (match elm2 with
+      | Fighting | Poison -> 2.
+      | Psychic | Steel -> 0.5
+      | Dark -> 0.
+      | _ -> 1.
+    )
+  | Ice->
+    (match elm2 with
+      | Grass | Ground | Flying | Dragon -> 2.
+      | Fire | Water | Ice | Steel -> 0.5
+      | _ -> 1.
+    )
+  | Dragon ->
+    (match elm2 with
+      | Dragon -> 2.
+      | Steel -> 0.5
+      | Fairy -> 0.
+      | _ -> 1.
+    )
+  |  Dark ->
+    (match elm2 with
+      | Psychic | Ghost -> 2.
+      | Fighting | Dark | Fairy -> 0.5
+      | _ -> 1.
+    )
+  |  Fairy ->
+    (match elm2 with
+      | Fighting | Dragon | Dark -> 2.
+      | Fire | Poison | Steel -> 0.5
+      | _ -> 1.
+    )
 (* Gets a random element in a list *)
 let getRandomElement lst =
   let l = List.length lst in
@@ -98,6 +242,12 @@ let getTarget str =
   | "user-and-allies" -> UserAndAlly
   | "all-pokemon" -> All
   | _ -> failwith "Not a valid target"
+
+let string_of_class cls =
+  match cls with
+  | Physical -> "Physical"
+  | Special -> "Special"
+  | Status -> "Status"
 
 let getDmgClass str =
   match str with
@@ -167,5 +317,20 @@ let getRandomPokemon () =
   attack; defense; special_defense; special_attack; speed; ability; evs;
   nature; item}
 
+let getPokeToolTip battlePoke =
+  "Name: " ^ battlePoke.pokeinfo.name ^
+  "\nHP: " ^ string_of_int battlePoke.curr_hp ^
+  "\nAttack: " ^ string_of_int battlePoke.battack ^
+  "\nDefense: " ^ string_of_int battlePoke.bdefense ^
+  "\nSpecial Attack: " ^ string_of_int battlePoke.bspecial_attack ^
+  "\nSpecial Defense: " ^ string_of_int battlePoke.bspecial_defense ^
+  "\nSpeed: " ^ string_of_int battlePoke.bspeed ^
+  "\nItem: " ^ string_of_item battlePoke.curr_item
 
- (*  while !move2 = move1 do move2 := getRandomPokemon done *)
+let getMoveToolTip move =
+  "Class: " ^ string_of_class move.dmg_class ^
+  (if move.dmg_class = Physical || move.dmg_class = Special then
+    "\nPower: " ^ string_of_int move.power else "") ^
+  "\nAccuracy: " ^ string_of_int move.accuracy ^
+  "\nType: " ^ string_of_element move.element ^
+  "\nDescription: " ^ move.description
