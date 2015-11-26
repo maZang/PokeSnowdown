@@ -1,5 +1,6 @@
 open Info
 
+(* Randomly gets the name of a move *)
 let getRandomMove (poke:battle_poke) : string =
   match Random.int 4 with
   | 0 -> poke.pokeinfo.move1.name
@@ -7,3 +8,9 @@ let getRandomMove (poke:battle_poke) : string =
   | 2 -> poke.pokeinfo.move3.name
   | 3 -> poke.pokeinfo.move4.name
   | _ -> failwith "Does not occur"
+
+(* Randomly choose a pokemon given a list of alive pokemon. Btw, doesn't work if
+ * if list is empty, what should I do if no alive pokemon Matt? *)
+let replaceDead (lst:battle_poke list) : battle_poke =
+  let n = Random.int (List.length lst) in
+    List.nth lst n
