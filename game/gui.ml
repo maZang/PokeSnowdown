@@ -230,9 +230,11 @@ let load_battle_screen engine img battle text buttonhide buttonshow
   (* set health bar information; give tooltips to health bars *)
   health_bar1#misc#set_has_tooltip true;
   health_bar1#set_fraction 1.;
+  health_bar1#set_text (string_of_int team1.current.curr_hp ^ "/" ^ string_of_int team1.current.bhp);
   health_bar1#misc#set_tooltip_text (Pokemon.getPokeToolTip team1);
   health_bar2#misc#set_has_tooltip true;
   health_bar2#set_fraction 1.;
+  health_bar2#set_text (string_of_int team2.current.curr_hp ^ "/" ^ string_of_int team2.current.bhp);
   health_bar2#misc#set_tooltip_text (Pokemon.getPokeToolTip team2)
 
 (* In contrast to other cases, after engine is filled up with a battle status
@@ -388,9 +390,11 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
     ready_gui) poke1_img poke2_img text_buffer (health_bar_holder1,
     health_bar_holder2, health_bar1, health_bar2) back_button ()) in
   let updatehealth1 () =
-    health_bar1#set_fraction (float_of_int (t1.current).curr_hp /. float_of_int (t1.current).bhp) in
+    health_bar1#set_fraction (float_of_int (t1.current).curr_hp /. float_of_int (t1.current).bhp);
+    health_bar1#set_text (string_of_int t1.current.curr_hp ^ "/" ^ string_of_int t1.current.bhp) in
   let updatehealth2 () =
-    health_bar2#set_fraction (float_of_int (t2.current).curr_hp /. float_of_int (t2.current).bhp) in
+    health_bar2#set_fraction (float_of_int (t2.current).curr_hp /. float_of_int (t2.current).bhp);
+    health_bar2#set_text (string_of_int t2.current.curr_hp ^ "/" ^ string_of_int t2.current.bhp) in
   let updatetools () =
     move1#set_label (t1.current).pokeinfo.move1.name;
     move2#set_label (t1.current).pokeinfo.move2.name;
