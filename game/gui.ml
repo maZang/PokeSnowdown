@@ -195,12 +195,14 @@ let load_battle_screen engine img battle text buttonhide buttonshow
   (_, _, health_bar1, health_bar2) () =
   (* get the components of button show to manipulate *)
   let [move1;move2;move3;move4;_] = buttonshow in
+  (* get current team information *)
   let team1, team2, weather = match get_game_status engine with
-  | Battle InGame (t1, t2, w, _, _) -> (t1, t2, w)
-  | _ -> failwith "Impossible" in
+    | Battle InGame (t1, t2, w, _, _) -> (t1, t2, w)
+    | _ -> failwith "Impossible" in
   let poke1 = (team1.current).pokeinfo.name in
   let poke2 = (team2.current).pokeinfo.name in
   img#misc#hide (); battle#misc#show (); text#misc#show ();
+  (* hide and show necessary buttons *)
   List.iter (fun s -> s#misc#hide ()) buttonhide;
   List.iter (fun s -> s#misc#show ()) buttonshow;
   current_screen := Battle (P1 ChooseMove);
@@ -208,10 +210,12 @@ let load_battle_screen engine img battle text buttonhide buttonshow
   move2#set_label (team1.current).pokeinfo.move2.name;
   move3#set_label (team1.current).pokeinfo.move3.name;
   move4#set_label (team1.current).pokeinfo.move4.name;
+  (* set tooltips *)
   move1#misc#set_has_tooltip true;
   move2#misc#set_has_tooltip true;
   move3#misc#set_has_tooltip true;
   move4#misc#set_has_tooltip true;
+  (* get tooltip information *)
   move1#misc#set_tooltip_text
           (Pokemon.getMoveToolTip team1.current.pokeinfo.move1);
   move2#misc#set_tooltip_text
@@ -220,8 +224,10 @@ let load_battle_screen engine img battle text buttonhide buttonshow
           (Pokemon.getMoveToolTip team1.current.pokeinfo.move3);
   move4#misc#set_tooltip_text
           (Pokemon.getMoveToolTip team1.current.pokeinfo.move4);
+  (* set Pokemon pictures *)
   poke1_img#set_file ("../data/back-sprites/" ^ poke1 ^ ".gif");
   poke2_img#set_file ("../data/sprites/" ^ poke2 ^ ".gif");
+  (* set health bar information; give tooltips to health bars *)
   health_bar1#misc#set_has_tooltip true;
   health_bar1#set_fraction 1.;
   health_bar1#misc#set_tooltip_text (Pokemon.getPokeToolTip team1.current);
@@ -239,17 +245,24 @@ is loaded.Then
 engine -- Battle InGame
 *)
 let load_battle_load engine img load_screen battle text buttonhide buttonshow
-  (battle_status, gui_ready, ready, ready_gui) mode main_menu battle_screen poke1_img poke2_img
-  text_buffer health_holders () =
+  (battle_status, gui_ready, ready, ready_gui) mode main_menu battle_screen
+  poke1_img poke2_img text_buffer health_holders () =
+  (* wait for engine to be filled by the battle controller *)
   if (Ivar.is_empty (!engine)) then
-    ((main_menu#misc#hide (); battle_screen#misc#hide (); load_screen#misc#show ();
-      current_screen :=
-    (Battle Loading); Ivar.fill !engine (Battle Loading); Printf.printf "Initializing gui\n%!";
+    ((main_menu#misc#hide (); battle_screen#misc#hide ();
+    load_screen#misc#show (); current_screen :=
+    (Battle Loading); Ivar.fill !engine (Battle Loading);
+    Printf.printf "Initializing gui\n%!";
     Ivar.fill !battle_status mode); let rec load_helper () =
-    upon (Ivar.read !engine) (fun s -> match s with | Battle InGame _ ->
-    (main_menu#misc#show (); battle_screen#misc#show ();
-    load_screen#misc#hide ();load_battle_screen engine img battle text buttonhide buttonshow
-    (battle_status, gui_ready) poke1_img poke2_img text_buffer health_holders ()) | _ -> load_helper ()) in load_helper())
+    upon (Ivar.read !engine) (fun s -> match s with
+      | Battle InGame _ ->
+          (main_menu#misc#show ();
+          battle_screen#misc#show ();
+          load_screen#misc#hide ();
+          load_battle_screen engine img battle text buttonhide buttonshow
+          (battle_status, gui_ready) poke1_img poke2_img
+          text_buffer health_holders ())
+      | _ -> load_helper ()) in load_helper())
   else
     ()
 
@@ -360,8 +373,16 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
   | Pl2 Flinch -> text_buffer#set_text "Player Two has flinched"; simple_move ()
   | Pl2 Faint -> text_buffer#set_text "Player Two Pokemon has fainted. Choosing a new Pokemon.";
                  (match get_game_status battle_status with
-                 | Random1p -> busywait (); updatetools (); Ivar.fill !gui_ready (None, Some (FaintPoke "")); upon (Ivar.read !ready_gui) (fun _ -> ready_gui := Ivar.create (); game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text
-                                                                        (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img text_buffer (health_bar_holder1, health_bar_holder2, health_bar1, health_bar2) ())
+                 | Random1p -> busywait (); updatetools ();
+                              Ivar.fill !gui_ready (None, Some (FaintPoke ""));
+                              upon (Ivar.read !ready_gui) (fun _ ->
+                                ready_gui := Ivar.create (); game_animation
+                                engine [move1; move2; move3; move4; poke1;
+                                poke2; poke3; poke4; poke5; switch] battle text
+                                (battle_status, gui_ready, ready, ready_gui)
+                                poke1_img poke2_img text_buffer
+                                (health_bar_holder1, health_bar_holder2,
+                                health_bar1, health_bar2) ())
                  | _ -> failwith "Fauly Game Logic: Debug 007")
   | Pl1 NoAction -> simple_move ()
   | _ -> failwith "unimplemented")
