@@ -12,9 +12,9 @@ let get_game_status engine =
 let unpack opt =
   match opt with
   | Some v -> v
-  | None -> failwith "Revisit game logic"
+  | None -> NoMove
 
-let initialize_battle team1 team2 = Battle (InGame (team1, team2, ref ClearSkies, ref (Pl1 Flinch), ref (Pl2 Flinch)))
+let initialize_battle team1 team2 = Battle (InGame (team1, team2, ref ClearSkies, ref (Pl1 NoAction), ref (Pl2 NoAction)))
 
 let getBattlePoke poke =
   let bhp = (2 * poke.hp + pokeIV + poke.evs.hp / 4) + 100 + 10 in
@@ -165,17 +165,30 @@ let handle_action state action1 action2 =
                   let curr_move = findBattleMove curr_poke.pokeinfo a in
                   let newmove, fdamage = damageCalculation t1 t2 curr_move in
                   let damage = int_of_float fdamage in
-                  (if damage > t2.current.curr_hp then
-                    failwith "unimplemented"
+                  (if damage >= t2.current.curr_hp then
+                    (t2.current.curr_hp <- 0;
+                    m1 := Pl1 (Attack newmove); m2 := Pl2 Faint)
                   else
-                    t2.current.curr_hp <- t2.current.curr_hp - damage);
-                    m1 := Pl1 (Attack newmove); m2 := Pl2 Flinch
-                )
-  | NoMove -> failwith "unimplemented"
+                    (t2.current.curr_hp <- t2.current.curr_hp - damage;
+                    m1 := Pl1 (Attack newmove); m2 := Pl2 Flinch)
+                ))
+  | NoMove -> (match action2 with
+              | FaintPoke p -> let prevPoke = t2.current in
+                               let switchPoke, restPoke = findBattlePoke t2.alive p in
+                               t2.current <- switchPoke; t2.dead <- prevPoke::t2.dead;
+                               t2.alive <- restPoke; m1 := Pl2 (SPoke p);
+                               m2 := Pl1 NoAction
+              | _ -> failwith "Faulty Game Logic: Debug 177"
+              )
 
 let rec main_loop_1p engine gui_ready ready ready_gui () =
+  let t2 = match get_game_status engine with
+    | Battle InGame (_, t2, _, _, _) -> t2
+    | _ -> failwith "Fauly Game Logic" in
   upon (Ivar.read !gui_ready) (* Replace NoMove with ai move later *)
-    (fun (cmd1, cmd2) -> let c1 = unpack cmd1 in let c2 = NoMove in
+    (fun (cmd1, cmd2) -> let c1 = unpack cmd1 in let c2 = match (unpack cmd2) with
+                          | NoMove -> NoMove
+                          | FaintPoke _ -> FaintPoke (List.hd t2.alive).pokeinfo.name in
                          let () = handle_action engine c1 c2 in
                          gui_ready := Ivar.create ();
                          Ivar.fill !ready_gui true;

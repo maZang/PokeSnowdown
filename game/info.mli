@@ -1,10 +1,10 @@
 (* Info contains all the data types needed for the handling of the game *)
-type battlemove = Poke of string | UseAttack of string | NoMove
+type battlemove = Poke of string | UseAttack of string | NoMove | FaintPoke of string
 
 type guiattack = NormMove of string | Crit of string | SEffCrit of string |
                   SEff of string | NoEffCrit of string | NoEff of string
 
-type guimove = SPoke of string | Attack of guiattack | Flinch
+type guimove = SPoke of string | Attack of guiattack | Flinch | Faint | NoAction
 
 type playerMove = Pl1 of guimove | Pl2 of guimove
 
