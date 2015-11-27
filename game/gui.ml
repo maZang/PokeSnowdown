@@ -361,6 +361,10 @@ let rec getAttackString a =
       c ^ " crits." ^ (if s' > 0 then " Supereffective" else if n' > 0 then
       " Not very effective" else "")
   | BurnMove s -> getAttackString s ^ ". This move caused a heavy burn"
+  | FreezeMove s -> getAttackString s ^ ". The opponent is frozen solid"
+  | MissMove s -> s ^ ". It Missed!"
+  | FrozenSolid -> "no move. It was frozen solid!"
+  | Thaw s-> getAttackString s ^ ". The Pokemon unfroze!"
 
 let rec string_from_stat s =
   match s with
@@ -376,6 +380,14 @@ let rec getStatusString s =
   match s with
   | NormStatus s -> s
   | StatBoost (stat, i, s) -> getStatusString s ^ ". " ^ string_from_stat stat ^ " was boosted " ^ string_of_int i ^ " stage"
+  | MissStatus s -> s ^ ". It Missed!"
+  | FrozenSolidS -> "no move. It was frozen solid!"
+  | ThawS s -> getStatusString s ^ ". The Pokemon unfroze!"
+
+let rec getDmgString starter s =
+  match s with
+  | Base -> ""
+  | BurnDmg s -> getDmgString starter s ^ starter ^ " burn damage."
 
 let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text
   (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img text_buffer (health_bar_holder1, health_bar_holder2, health_bar1, health_bar2)  back_button () =
@@ -445,7 +457,10 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
                                 move3;move4;switch] back_button ()
                   | _ -> failwith "Faulty Game Logic: Debug 008"
                   )
-  | Pl1 Burn -> text_buffer#set_text "Player One has suffered burn damage."; updatehealth1 (); busywait ()
+  | Pl1 IncDmg x -> let txt = getDmgString "Player One has taken " x in
+                    let str_list = Str.split (Str.regexp "\.") txt in
+                    List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
+                    updatehealth1 (); turn_end ()
   | _ -> failwith "unimplements");
   (match !m2 with
   | Pl1 AttackMove a ->let atk_string = "Player One used " ^ getAttackString a in
@@ -486,7 +501,10 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
   | Pl1 Next | Pl2 Next -> simple_move ()
   | Pl1 NoAction -> pre_process ()
   | Pl2 NoAction -> pre_process ()
-  | Pl2 Burn -> text_buffer#set_text "Player Two has suffered burn damage."; updatehealth2 (); busywait (); turn_end ()
+  | Pl2 IncDmg x -> let txt = getDmgString "Player Two has taken " x in
+                    let str_list = Str.split (Str.regexp "\.") txt in
+                    List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
+                    updatehealth2 (); turn_end ()
   | _ -> failwith "unimplement")
 
 

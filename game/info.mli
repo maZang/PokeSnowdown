@@ -4,11 +4,14 @@ type battlemove = Poke of string | UseAttack of string | NoMove | FaintPoke of s
 type stat = Attack | Defense | SpecialAttack | SpecialDefense | Speed | Accuracy | Evasion
 
 type guiattack = NormMove of string | Crit of guiattack |
-                  SEff of guiattack | NoEff of guiattack | HitMult of int * guiattack | BurnMove of guiattack
+                  SEff of guiattack | NoEff of guiattack | HitMult of int * guiattack | BurnMove of guiattack | FreezeMove of guiattack | MissMove of string | FrozenSolid |
+                  Thaw of guiattack
 
-type guistatus = StatBoost of stat * int * guistatus | NormStatus of string
+type guistatus = StatBoost of stat * int * guistatus | NormStatus of string | ThawS of guistatus | FrozenSolidS | MissStatus of string
 
-type guimove = SPoke of string | AttackMove of guiattack | Flinch | Faint | NoAction | Continue | Next | Status of guistatus | Burn
+type smallDmg = BurnDmg of smallDmg | Base
+
+type guimove = SPoke of string | AttackMove of guiattack | Flinch | Faint | NoAction | Continue | Next | Status of guistatus | IncDmg of smallDmg
 
 type playerMove = Pl1 of guimove | Pl2 of guimove
 

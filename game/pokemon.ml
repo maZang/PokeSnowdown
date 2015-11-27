@@ -316,6 +316,7 @@ let getSecondaryEffect str = match str with
   | "karate-chop" -> [IncCrit 1]
   | "double-slap" | "comet-punch" -> [RandMultHit]
   | "fire-punch" -> [BurnChance]
+  | "ice-punch" -> [FreezeChance]
   | "gear-grind" -> [MultHit 2]
   | "calm-mind" -> [StageBoost [(SpecialDefense, 1); (SpecialAttack, 1)]]
   | _ -> []
@@ -388,7 +389,7 @@ let getTestPoke () =
   let nature = Modest in
   let item = Leftovers in
   {name="gardevoir-mega"; element=[Psychic; Fairy]; move1= getMoveFromString "gear-grind"; move2 =
-  getMoveFromString "fire-punch"; move3 = getMoveFromString "charge-beam";
+  getMoveFromString "fire-punch"; move3 = getMoveFromString "ice-punch";
   move4 = getMoveFromString "toxic"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
 

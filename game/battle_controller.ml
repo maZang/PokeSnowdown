@@ -208,6 +208,75 @@ let findBattleMove poke move =
   else
     failwith "Faulty Game Logic: Debug 16"
 
+(* Returns true if Pokemon moves, false if it doesn't as well as some value
+  describing why it failed (has to do with some status) *)
+let hitAttackDueToStatus atk moveDescript =
+  let rec helperVolaStatus lst moveDescript' =
+    match lst with
+    | [] -> (true, moveDescript')
+    | _ -> failwith "unimplemented" in
+  let nvola, vola = atk.current.curr_status in
+  match nvola with
+  | Freeze -> if 20 > Random.int 100 then (
+                atk.current.curr_status <-(NoNon, snd atk.current.curr_status);
+                helperVolaStatus vola (Thaw moveDescript))
+              else
+                (false, FrozenSolid)
+  | _ -> helperVolaStatus vola moveDescript
+
+(* Returns true if Pokemon moves, otherwise returns false as well as some value
+   describing why the move failed *)
+let hitAttack atk def (move : move) moveDescript =
+  let hit, reason = hitAttackDueToStatus atk moveDescript in
+  if hit then
+    let accStage, accMult = atk.stat_enhance.accuracy in
+    let evStage, evMult = def.stat_enhance.evasion in
+    let probability = float_of_int move.accuracy *. getStageEvasion  accStage
+                    *. accMult /. (getStageEvasion evStage *. evMult) in
+    let randnum = Random.float 100. in
+    if probability > randnum then
+      (true, reason)
+    else
+      (false, MissMove move.name)
+  else
+    (hit, reason)
+(* Returns true if Pokemon moves, false if it doesn't as well as some value
+  describing why it failed (has to do with some status) *)
+let hitStatusDueToStatus atk moveDescript =
+  let rec helperVolaStatus lst moveDescript' =
+    match lst with
+    | [] -> (true, moveDescript')
+    | _ -> failwith "unimplemented" in
+  let nvola, vola = atk.current.curr_status in
+  match nvola with
+  | Freeze -> if 20 > Random.int 100 then (
+                atk.current.curr_status <-(NoNon, snd atk.current.curr_status);
+                helperVolaStatus vola (ThawS moveDescript))
+              else
+                (false, FrozenSolidS)
+  | _ -> helperVolaStatus vola moveDescript
+
+(* Returns true if Pokemon moves, false if it doesn't as well as some value
+  describing why it failed (has to do with some status) *)
+let hitStatus atk def (move: move) moveDescript =
+  let hit, reason = hitStatusDueToStatus atk moveDescript in
+  if hit then
+    match move.target with
+    | UserOrAlly | User | UsersField | OpponentsFields
+    | Ally | EntireField | UserAndAlly -> (true, reason)
+    | _ ->
+      let accStage, accMult = atk.stat_enhance.accuracy in
+      let evStage, evMult = def.stat_enhance.evasion in
+      let probability = float_of_int move.accuracy *. getStageEvasion  accStage
+                  *. accMult /. (getStageEvasion evStage *. evMult) in
+      let randnum = Random.float 100. in
+      if probability > randnum then
+        (true, reason)
+      else
+        (false, MissStatus move.name)
+  else
+    (hit, reason)
+
 (* Used for writing out the multi move description *)
 let rec link_multmove_descript m1 m2 =
   match m2 with
@@ -259,24 +328,39 @@ let move_handler atk def move =
           secondary_effects ((MultHit 4)::t)
         else
           secondary_effects ((MultHit 5)::t)
-    (* Burns opponent if chance excees a certain threshold *)
+    (* Burns opponent if chance exceeds a certain threshold *)
     | BurnChance::t ->
         let randum = Random.int 100 in
-        (if move.effect_chance < randum then
+        (if move.effect_chance > randum then
           match def.current.curr_status with
           | (NoNon, x) -> def.current.curr_status <- (Burn, x);
                            newmove := BurnMove !newmove
           | _ -> ()
         else
           ()); secondary_effects t
+    (* Freezes opponent if chance exceeds a certain threshold *)
+    | FreezeChance::t ->
+        let randnum = Random.int 100 in
+        (if move.effect_chance < randnum then
+           match def.current.curr_status with
+           | (NoNon, x) -> def.current.curr_status <- (Freeze, x);
+                            newmove := FreezeMove !newmove
+            | _ -> ()
+          else
+            ()); secondary_effects t
     (* Base case *)
     | [] -> ()
     in
-  (* damage is always dealt before secondary effects calculated *)
-  def.current.curr_hp <- max 0 (def.current.curr_hp - damage);
-  secondary_effects move.secondary;
-  (* returns a move description *)
-  !newmove
+  let hit, reason = hitAttack atk def move !newmove in
+  if hit then (
+    (* damage is always dealt before secondary effects calculated *)
+    newmove := reason;
+    def.current.curr_hp <- max 0 (def.current.curr_hp - damage);
+    secondary_effects move.secondary;
+    (* returns a move description *)
+    !newmove)
+  else
+    reason
 
 (* Deals with the status moves that are essentially all secondary effects *)
 let rec status_move_handler atk def (move: move) =
@@ -341,8 +425,15 @@ let rec status_move_handler atk def (move: move) =
     (* Base case*)
     | [] -> ()
   in
-  (* Returns a description of the status *)
-  secondary_effects move.secondary; !newmove
+  let hit, reason = hitStatus atk def move !newmove in
+  if hit then (
+    newmove := reason;
+    (* Returns a description of the status *)
+    secondary_effects move.secondary; !newmove)
+    (* returns a move description *)
+  else
+    reason
+
 
 (* Called after the turn ends; Decrements sleep counter; checks if Pokemon
    faints; etc... *)
@@ -362,11 +453,13 @@ let handle_next_turn t1 t2 w m1 m2 =
 let handle_preprocessing t1 t2 w m1 m2 =
   let nstatus, vstatus = t1.current.curr_status in
   (match nstatus with
-  | Burn -> t1.current.curr_hp <- 7 * t1.current.curr_hp / 8; m1 := Pl1 Burn
+  | Burn -> t1.current.curr_hp <- max 0 (t1.current.curr_hp - 1 * t1.current.bhp / 8);
+            m1 := Pl1 (IncDmg (BurnDmg Base))
   | _ -> m1 := Pl1 Continue);
   let nstatus', vstatus' = t2.current.curr_status in
   (match nstatus' with
-  | Burn -> t2.current.curr_hp <- 7 * t2.current.curr_hp / 8; m2 := Pl2 Burn
+  | Burn -> t2.current.curr_hp <- max 0 (t2.current.curr_hp - 1 * t2.current.bhp / 8);
+             m2 := Pl2 (IncDmg (BurnDmg Base))
   | _ -> m2 := Pl2 Continue)
 
 (* Handle the case when both Pokemon use a move *)
