@@ -15,7 +15,7 @@ let get_game_status engine =
 let unpack opt =
   match opt with
   | Some v -> v
-  | None -> NoMove
+  | None -> AIMove
 
 (* Status of Pokemon is changed after switching out *)
 let switchOutStatus bpoke =
@@ -171,6 +171,13 @@ let damageCalculation t1 t2 move =
   ( newMove, (210. /. 250. *. attack /. defense*. float_of_int move.power
     +. 2.)*. modifier)
 
+(* Gets the speed multiplier based on current team conditions *)
+let findSpeedMult t =
+  if fst (t.current.curr_status) = Paralysis then
+    0.25
+  else
+    1.
+
 (* Gets the attack multiplier based on current team conditions *)
 let findAttackMult t =
   if fst (t.current.curr_status) = Burn then
@@ -183,7 +190,9 @@ let findAttackMult t =
 let recomputeStat t =
   let stats = t.stat_enhance in
   let attack_mult = findAttackMult t in
-  stats.attack <- (fst stats.attack, attack_mult)
+  let speed_mult = findSpeedMult t in
+  stats.attack <- (fst stats.attack, attack_mult);
+  stats.speed <- (fst stats.speed, speed_mult)
 
 (* Finds the Pokemon within a list of Battle Pokemon. Typically used to select
   a Pokemon within the list of alive Pokemon for switching out. Returns the
@@ -195,6 +204,12 @@ let findBattlePoke lst name =
     | h::t -> if h.pokeinfo.name = name then h, (acc @ t) else helper (h::acc)
               t in
   helper [] lst
+
+(* Finds a random pokemon and returns name of Pokemon*)
+let getRandomPoke t =
+  let n = List.length t.alive in
+  let num = Random.int n in
+  (List.nth t.alive num).pokeinfo.name
 
 (* Finds the move of the pokemon based upon a string that is the move's name*)
 let findBattleMove poke move =
@@ -215,6 +230,7 @@ let hitMoveDueToStatus atk moveDescript =
   let rec helperVolaStatus lst moveDescript' =
     match lst with
       | [] -> (true, moveDescript')
+      | Charge::t -> helperVolaStatus t moveDescript'
       | _ -> failwith "unimplemented" in
   let nvola, vola = atk.current.curr_status in
   match nvola with
@@ -231,6 +247,13 @@ let hitMoveDueToStatus atk moveDescript =
               helperVolaStatus vola (`NoBurn moveDescript))
             else
               helperVolaStatus vola (`NoAdd moveDescript)
+  | Paralysis -> if List.mem Electric atk.current.pokeinfo.element then (
+                atk.current.curr_status <- (NoNon, snd atk.current.curr_status);
+                helperVolaStatus vola (`NoPara moveDescript))
+                else if 75 > Random.int 100 then (
+                  helperVolaStatus vola (`NoAdd moveDescript))
+              else
+                  (false, `Para moveDescript)
   |_ -> helperVolaStatus vola (`NoAdd moveDescript)
 
 (* Returns true if Pokemon moves, otherwise returns false as well as some value
@@ -241,10 +264,28 @@ let hitAttack atk def (move : move) moveDescript =
   let probability = float_of_int move.accuracy *. getStageEvasion  accStage
                     *. accMult /. (getStageEvasion evStage *. evMult) in
   let randnum = Random.float 100. in
-  if probability > randnum then
-    (true, moveDescript)
+  let rec need_charge_attack = function
+  | (ChargeMove s)::t -> (true, s)
+  | h::t -> need_charge_attack t
+  | [] -> (false, "") in
+  let hit_move () =
+    if probability > randnum then
+      (true, moveDescript)
+    else
+      (false, MissMove move.name) in
+  let need_charge, charge_string = need_charge_attack move.secondary in
+  if need_charge then
+    if List.mem Charge (snd atk.current.curr_status) then
+      let volatile_list =
+        List.filter (fun s -> not (s = Charge)) (snd atk.current.curr_status) in
+      atk.current.curr_status <- (fst atk.current.curr_status, volatile_list);
+      hit_move ()
+    else
+      (atk.current.curr_status <-
+        (fst atk.current.curr_status, Charge::(snd atk.current.curr_status));
+      (false, ChargingMove (charge_string, move.name)))
   else
-    (false, MissMove move.name)
+    hit_move ()
 
 (* Returns true if Pokemon moves, false if it doesn't as well as some value
   describing why it failed (has to do with some status) *)
@@ -317,7 +358,7 @@ let move_handler atk def move =
     (* Burns opponent if chance exceeds a certain threshold *)
     | BurnChance::t ->
         let randum = Random.int 100 in
-        (if move.effect_chance > randum then
+        (if move.effect_chance < randum then
           match def.current.curr_status with
           | (NoNon, x) -> def.current.curr_status <- (Burn, x);
                            newmove := BurnMove !newmove
@@ -334,6 +375,20 @@ let move_handler atk def move =
             | _ -> ()
           else
             ()); secondary_effects t
+    (* Paralyzed opponent if chance exceeds a certain threshold*)
+    | ParaChance::t ->
+        let randnum = Random.int 100 in
+        (if move.effect_chance > randnum then
+          match def.current.curr_status with
+          | (NoNon, x) -> def.current.curr_status <- (Paralysis, x);
+                            newmove := ParaMove !newmove
+          | _ -> ()
+        else
+          ()); secondary_effects t
+    (* One hit KO moves *)
+    | OHKO::t -> def.current.curr_hp <- 0; newmove := OHKill !newmove
+    (* Charging Moves dealt with in hit moves-- nothing to do here *)
+    | (ChargeMove s)::t -> secondary_effects t
     (* Base case *)
     | [] -> ()
     in
@@ -341,6 +396,8 @@ let move_handler atk def move =
   let reason' = match reason with
     | `NoFreeze s -> NoFreeze s
     | `NoBurn s -> NoBurn s
+    | `NoPara s -> NoPara s
+    | `Para s -> Para s
     | `Thaw s -> Thaw s
     | `FrozenSolid -> FrozenSolid
     | `NoAdd s -> s in
@@ -418,6 +475,8 @@ let rec status_move_handler atk def (move: move) =
                   secondary_effects ((StageBoost t')::t)
               )
           )
+    (* Move that forces a switch out *)
+    | ForceSwitch::t -> newmove := SwitchOut !newmove; secondary_effects t
     (* Base case*)
     | [] -> ()
   in
@@ -425,6 +484,8 @@ let rec status_move_handler atk def (move: move) =
   let reason' = match reason with
     | `NoFreeze s -> NoFreezeS s
     | `NoBurn s -> NoBurnS s
+    | `NoPara s -> NoParaS s
+    | `Para s -> ParaS s
     | `Thaw s -> ThawS s
     | `FrozenSolid -> FrozenSolidS
     | `NoAdd s -> s in
@@ -440,8 +501,9 @@ let rec status_move_handler atk def (move: move) =
   else
     reason'
 (* Called after the turn ends; Decrements sleep counter; checks if Pokemon
-   faints; etc... *)
+   faints; etc... Note Pl1 always faints before Pl2*)
 let handle_next_turn t1 t2 w m1 m2 =
+  (Printf.printf "Turn Ending\n%!";
   match t1.current.curr_hp with
   | 0 -> if (t2.current.curr_hp = 0) then
             (m1 := Pl1 Faint; m2 := Pl2 Faint)
@@ -450,13 +512,14 @@ let handle_next_turn t1 t2 w m1 m2 =
   | _ -> if (t2.current.curr_hp = 0) then
             (m1 := Pl1 Next; m2 := Pl2 Faint)
           else
-            (m1 := Pl1 Next; m2 := Pl2 Next)
+            (m1 := Pl1 Next; m2 := Pl2 Next))
 
 (* Handles Preprocessing -- Burn damage, weather damage, healing from Leech
     Seed etc... after every move to prepare for next turn *)
 let handle_preprocessing t1 t2 w m1 m2 =
+  Printf.printf "Handling preprocessing for move\n%!";
   let nstatus, vstatus = t1.current.curr_status in
-  match nstatus with
+  (match nstatus with
   | Burn -> if List.mem Fire t1.current.pokeinfo.element then
                 (t1.current.curr_status <- (NoNon, snd t1.current.curr_status);
                 m1 := Pl1 (EndMove (BreakBurn Base)))
@@ -467,10 +530,15 @@ let handle_preprocessing t1 t2 w m1 m2 =
                 (t1.current.curr_status <-  (NoNon, snd t1.current.curr_status);
                 m1 := Pl1 (EndMove (BreakFreeze Base)))
               else
-                ()
-  | _ -> m1 := Pl1 Continue;
+                m1 := Pl1 Continue
+  | Paralysis -> if List.mem Electric t1.current.pokeinfo.element then
+                  (t1.current.curr_status <- (NoNon, snd t1.current.curr_status);
+                  m1 := Pl1 (EndMove (BreakPara Base)))
+                else
+                  m1 := Pl1 Continue
+  | _ -> m1 := Pl1 Continue);
   let nstatus', vstatus' = t2.current.curr_status in
-  match nstatus' with
+  (match nstatus' with
   | Burn -> if List.mem Fire t2.current.pokeinfo.element then
                 (t2.current.curr_status <- (NoNon, snd t2.current.curr_status);
                 m2 := Pl2 (EndMove (BreakBurn Base)))
@@ -478,38 +546,59 @@ let handle_preprocessing t1 t2 w m1 m2 =
                 (t2.current.curr_hp <- max 0 (t2.current.curr_hp - 1 * t2.current.bhp / 8);
                 m2 := Pl2 (EndMove (BurnDmg Base)))
   | Freeze -> if List.mem Ice t2.current.pokeinfo.element then (
-              t2.current.curr_status <-  (NoNon, snd t2.current.curr_status);
-              m2 := Pl2 (EndMove (BreakFreeze Base))) else ()
-  | _ -> m2 := Pl2 Continue
+                t2.current.curr_status <-  (NoNon, snd t2.current.curr_status);
+                m2 := Pl2 (EndMove (BreakFreeze Base)))
+              else m2 := Pl2 Continue
+  | Paralysis -> if List.mem Electric t2.current.pokeinfo.element then (
+                  t2.current.curr_status <- (NoNon, snd t2.current.curr_status);
+                  m2 := Pl2 (EndMove (BreakPara Base)))
+                else m2 := Pl2 Continue
+  | _ -> m2 := Pl2 Continue)
 
 (* Handle the case when both Pokemon use a move *)
 let handle_two_moves t1 t2 w m1 m2 a1 a2 =
+  let () = recomputeStat t1 in
+  let () = recomputeStat t2 in
   let p1poke = t1.current in
   let p2poke = t2.current in
     (* Gets speed of both Pokemon with modifiers *)
-  let p1speed = float_of_int t1.current.bspeed *.
-    getStageAD (fst t1.stat_enhance.speed) *. (snd t1.stat_enhance.speed) in
-  let p2speed = float_of_int t2.current.bspeed *.
-    getStageAD (fst t2.stat_enhance.speed) *. (snd t2.stat_enhance.speed) in
+  let curr_move = findBattleMove p1poke.pokeinfo a1 in
+  let curr_move' = findBattleMove p2poke.pokeinfo a2 in
+  let p1speed = ref (float_of_int t1.current.bspeed *.
+    getStageAD (fst t1.stat_enhance.speed) *. (snd t1.stat_enhance.speed)) in
+  let p2speed = ref (float_of_int t2.current.bspeed *.
+    getStageAD (fst t2.stat_enhance.speed) *. (snd t2.stat_enhance.speed)) in
+  (if (p1speed = p2speed) && (curr_move.priority = curr_move'.priority) then
+      if 50 > Random.int 100 then
+        p1speed := 1. +. !p2speed
+      else
+        ()
+  else if (curr_move.priority > curr_move'.priority) then
+      p1speed := 1. +. !p2speed
+  else if (curr_move'.priority > curr_move.priority) then
+      p2speed := 1. +. !p1speed
+  else
+    ());
   (* Case for where Player 1 is faster *)
-  if p1speed > p2speed then (
+  if (!p1speed > !p2speed) || curr_move.priority > curr_move'.priority then (
     (* Gets the moves both pokemon used *)
-    let curr_move = findBattleMove p1poke.pokeinfo a1 in
-    let curr_move' = findBattleMove p2poke.pokeinfo a2 in
     match curr_move.dmg_class with
     (* case where Player 1 uses a Status move *)
     | Status -> let newmove = status_move_handler t1 t2 curr_move in
-      (match curr_move'.dmg_class with
-      (* case where Player 2 uses a Status Move *)
-      | Status -> let newmove' = status_move_handler t2 t1 curr_move' in
+            if (List.mem ForceSwitch curr_move.secondary) then
+              (m1 := Pl1(Status newmove); m2 := Pl2 NoAction)
+            else
+              (match curr_move'.dmg_class with
+               (* case where Player 2 uses a Status Move *)
+              | Status -> let newmove' = status_move_handler t2 t1 curr_move' in
                   m1 := Pl1 (Status newmove); m2 := Pl2 (Status newmove')
-      (* case where Player 2 uses a Special/Physical Move *)
-      | _ -> let newmove' = move_handler t2 t1 curr_move' in
-             m1 := Pl1 (Status newmove); m2 := Pl2 (AttackMove newmove'))
+              (* case where Player 2 uses a Special/Physical Move *)
+               | _ -> let newmove' = move_handler t2 t1 curr_move' in
+                  m1 := Pl1 (Status newmove); m2 := Pl2 (AttackMove newmove'))
     (* Case where Player 1 uses a Physical/Special Move *)
     | _ -> let newmove = move_handler t1 t2 curr_move in
            (* Case where second pokemon faints before getting to move *)
-           if (p2poke.curr_hp = 0) then
+           if (p2poke.curr_hp = 0 || List.mem ForceSwitch curr_move.secondary) then
               (m1 := Pl1 (AttackMove newmove); m2 := Pl2 NoAction)
            (* Case where second pokemon is still alive *)
            else
@@ -526,24 +615,25 @@ let handle_two_moves t1 t2 w m1 m2 a1 a2 =
     )
   (* Case for where Player 2 is faster *)
   else (
-    let curr_move = findBattleMove p2poke.pokeinfo a2 in
-    let curr_move' = findBattleMove p1poke.pokeinfo a1 in
-    match curr_move.dmg_class with
-    | Status -> let newmove = status_move_handler t2 t1 curr_move in
-      (match curr_move'.dmg_class with
-      | Status -> let newmove' = status_move_handler t1 t2 curr_move' in
+    match curr_move'.dmg_class with
+    | Status -> let newmove = status_move_handler t2 t1 curr_move' in
+            if (List.mem ForceSwitch curr_move'.secondary) then
+             (m1 := Pl2 (Status newmove); m2 := Pl1 NoAction)
+            else
+            (match curr_move.dmg_class with
+            | Status -> let newmove' = status_move_handler t1 t2 curr_move in
                   m1 := Pl2 (Status newmove); m2 := Pl1 (Status newmove')
-      | _ -> let newmove' = move_handler t1 t2 curr_move' in
-             m1 := Pl2 (Status newmove); m2 := Pl1 (AttackMove newmove'))
-    | _ -> let newmove = move_handler t2 t1 curr_move in
-           if (p1poke.curr_hp = 0) then
+            | _ -> let newmove' = move_handler t1 t2 curr_move in
+                  m1 := Pl2 (Status newmove); m2 := Pl1 (AttackMove newmove'))
+    | _ -> let newmove = move_handler t2 t1 curr_move' in
+           if (p1poke.curr_hp = 0 || List.mem ForceSwitch curr_move'.secondary) then
               (m1 := Pl2 (AttackMove newmove); m2 := Pl1 NoAction)
            else
-              (match curr_move'.dmg_class with
-              | Status -> let newmove' = status_move_handler t1 t2 curr_move' in
+              (match curr_move.dmg_class with
+              | Status -> let newmove' = status_move_handler t1 t2 curr_move in
                           m1 := Pl2 (AttackMove newmove);
                           m2 := Pl1 (Status newmove')
-              | _      -> let newmove'= move_handler t1 t2 curr_move' in
+              | _      -> let newmove'= move_handler t1 t2 curr_move in
                           m1 := Pl2 (AttackMove newmove);
                           m2 := Pl1 (AttackMove newmove')
               )
@@ -555,7 +645,7 @@ let handle_action state action1 action2 =
     | Battle InGame (t1, t2, w, m1, m2) -> t1, t2, w, m1, m2
     | _ -> failwith "Fauly Game Logic" in
   match action1 with
-  | Poke p ->
+  | Poke p' -> let p = if p' = "random" then getRandomPoke t1 else p' in
       (match action2 with
       | Poke p -> failwith "unimplemented"
       | UseAttack a -> let prevPoke = t1.current in
@@ -570,6 +660,12 @@ let handle_action state action1 action2 =
                        else (
                         let newmove = move_handler t2 t1 curr_move in
                         m1 := Pl1 (SPoke p); m2 := Pl2 (AttackMove newmove))
+      | NoMove -> let prevPoke = t1.current in
+                       let switchPoke, restPoke = findBattlePoke t1.alive p in
+                       t1.stat_enhance <- switchOutStatEnhancements t1;
+                       t1.current.curr_status <- switchOutStatus t1.current;
+                       t1.current <- switchPoke; t1.alive <- prevPoke::restPoke;
+                       m1 := Pl1 (SPoke p); m2 := Pl2 NoAction
       | _ -> failwith "Faulty Game Logic: Debug 444")
   | UseAttack a ->
       (match action2 with
@@ -583,6 +679,14 @@ let handle_action state action1 action2 =
                   t2.current <- switchPoke; t2.dead <- prevPoke::t2.dead;
                   t2.alive <- restPoke; m1 := Pl2 (SPoke p);
                   m2 := Pl1 Next
+              | Poke p' -> let p = if p' = "random" then getRandomPoke t2
+                          else p' in
+                          let prevPoke = t2.current in
+                          let switchPoke, restPoke = findBattlePoke t2.alive p in
+                          t2.stat_enhance <- switchOutStatEnhancements t2;
+                          t2.current.curr_status <- switchOutStatus t2.current;
+                          t2.current <- switchPoke; t2.alive <- prevPoke::restPoke;
+                          m1 := Pl2 (SPoke p); m2 := Pl1 NoAction
               | _ -> failwith "Faulty Game Logic: Debug 177"
               )
   | FaintPoke p -> (match action2 with
@@ -610,8 +714,11 @@ let rec main_loop_1p engine gui_ready ready ready_gui () =
   upon (Ivar.read !gui_ready) (* Replace NoMove with ai move later *)
     (fun (cmd1, cmd2) -> let c1 = unpack cmd1 in
                          let c2 = match (unpack cmd2) with
-                          | NoMove -> UseAttack (Ai.getRandomMove t2.current)
+                          | AIMove -> UseAttack (Ai.getRandomMove t2.current)
+                          | NoMove -> NoMove
+                          | UseAttack s -> UseAttack s
                           | Preprocess -> Preprocess
+                          | Poke s -> Poke s
                           | FaintPoke _ -> FaintPoke (Ai.replaceDead2 t1.current t2.alive)
                           | TurnEnd -> TurnEnd in
                          let () = handle_action engine c1 c2 in

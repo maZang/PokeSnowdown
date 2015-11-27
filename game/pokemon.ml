@@ -111,6 +111,7 @@ let string_of_vola_status elm =
   | Taunt -> "Taunt"
   | Torment -> "Torment"
   | Levitate -> "Levitate"
+  | Charge -> "Charging"
 
 let string_of_poke_status (non, vola) =
   List.fold_left (fun acc s -> acc ^ ", " ^ string_of_vola_status s) (string_of_status non) vola
@@ -317,6 +318,11 @@ let getSecondaryEffect str = match str with
   | "double-slap" | "comet-punch" -> [RandMultHit]
   | "fire-punch" -> [BurnChance]
   | "ice-punch" -> [FreezeChance]
+  | "thunder-punch" -> [ParaChance]
+  | "guillotine" -> [OHKO]
+  | "razor-wind" -> [ChargeMove "It made a whirlwind!"]
+  | "swords-dance" -> [StageBoost [(Attack, 2)]]
+  | "whirlwind" -> [ForceSwitch]
   | "gear-grind" -> [MultHit 2]
   | "calm-mind" -> [StageBoost [(SpecialDefense, 1); (SpecialAttack, 1)]]
   | _ -> []
@@ -388,9 +394,9 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Modest in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Psychic; Fire]; move1= getMoveFromString "gear-grind"; move2 =
-  getMoveFromString "fire-punch"; move3 = getMoveFromString "ice-punch";
-  move4 = getMoveFromString "toxic"; hp = 68; attack = 85; special_attack = 165; defense = 65;
+  {name="gardevoir-mega"; element=[Psychic; Electric]; move1= getMoveFromString "whirlwind"; move2 =
+  getMoveFromString "swords-dance"; move3 = getMoveFromString "fire-punch";
+  move4 = getMoveFromString "razor-wind"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
 
 let getPokeToolTip t =

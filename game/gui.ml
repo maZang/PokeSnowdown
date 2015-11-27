@@ -349,6 +349,9 @@ let rec getNumCritSuperNoAndFinal c s n v=
   | NoEff v -> getNumCritSuperNoAndFinal c s (n+1) v
   | _ -> failwith "Bad move"
 
+let secondaryEffect = ref `P1
+let endTurnEarly = ref false
+
 let rec getAttackString a =
   match a with
   | NormMove s -> s
@@ -360,13 +363,20 @@ let rec getAttackString a =
       str ^ ". The move hit " ^ string_of_int n ^ " times with " ^ string_of_int
       c ^ " crits." ^ (if s' > 0 then " Supereffective" else if n' > 0 then
       " Not very effective" else "")
-  | BurnMove s -> getAttackString s ^ ". This move caused a heavy burn"
+  | BurnMove s -> getAttackString s ^ ". The opponent has been burned"
   | FreezeMove s -> getAttackString s ^ ". The opponent is frozen solid"
+  | ParaMove s -> getAttackString s ^ ". The opponent has been paralyzed"
   | MissMove s -> s ^ ". It Missed!"
   | FrozenSolid -> "no move. It was frozen solid!"
   | Thaw s-> getAttackString s ^ ". The Pokemon unfroze!"
   | NoFreeze s -> getAttackString s ^ ". This Pokemon cannot freeze!"
   | NoBurn s ->getAttackString s ^ ". This Pokemon cannot burn!"
+  | NoPara s -> getAttackString s ^ ". This Pokemon cannot be paralyzed!"
+  | Para s -> getAttackString s ^ ". It failed due to paralysis!"
+  | OHKill s -> getAttackString s ^". This move is a one hit KO!"
+  | ChargingMove (s, n) -> (match !secondaryEffect with
+                             | `P1 -> current_command := (Some (UseAttack n), snd !current_command)
+                             |`P2 -> current_command := (fst !current_command, Some (UseAttack n))); "a charging move." ^ s
 
 let rec string_from_stat s =
   match s with
@@ -387,16 +397,24 @@ let rec getStatusString s =
   | ThawS s -> getStatusString s ^ ". The Pokemon unfroze!"
   | NoFreezeS s -> getStatusString s ^ ". This Pokemon cannot freeze!"
   | NoBurnS s -> getStatusString s ^ ". This Pokemon cannot burn!"
+  | NoParaS s -> getStatusString s ^ ". This Pokemon cannot be paralyzed!"
+  | ParaS s -> getStatusString s ^ ". It failed due to paralysis!"
+  | SwitchOut s -> (match !secondaryEffect with
+                    | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
+                    | `P2 -> current_command := (Some (Poke "random"), Some NoMove));
+                    endTurnEarly := true; getStatusString s ^ ". The opponent was forced out!"
 
 let rec getEndString starter s =
   match s with
   | Base -> ""
   | BreakBurn s -> starter ^ "cannot be burned." ^ getEndString starter s
   | BreakFreeze s -> starter ^ "cannot be frozen." ^ getEndString starter s
+  | BreakPara s -> starter ^ "cannot be paralyzed." ^ getEndString starter s
   | BurnDmg s -> starter ^ "has taken burn damage." ^ getEndString starter s
 
 let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text
   (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img text_buffer (health_bar_holder1, health_bar_holder2, health_bar1, health_bar2)  back_button () =
+  Printf.printf "DEBUG %B %B\n%!" (Ivar.is_empty !gui_ready) !endTurnEarly;
   let battle_buttons = [move1; move2; move3; move4; switch; back_button] in
   List.iter (fun s -> s#misc#hide ()) battle_buttons;
   let t1, t2, w, m1, m2 = match get_game_status engine with
@@ -426,32 +444,43 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
     health_bar1#misc#set_tooltip_text (Pokemon.getPokeToolTip t1);
     health_bar2#misc#set_tooltip_text (Pokemon.getPokeToolTip t2);
     updatehealth1 (); updatehealth2 () in
+  let skipturn () =
+    match get_game_status battle_status with
+    | Random1p -> (match !current_command with
+                  | (None, _) -> text_buffer#set_text "Player One's Turn to move"; List.iter (fun s -> s#misc#show ()) battle_buttons; current_screen := Battle (P1 ChooseMove);
+                                    current_screen := Battle (P1 ChooseMove)
+                  | _ -> Ivar.fill !gui_ready !current_command; current_command := (None, None); game_step ())
+    | _ -> failwith "Faulty Game Logic: Debug 100" in
   let simple_move () =
-    text_buffer#set_text "Player One's Turn to move";
     updatetools ();
-    List.iter (fun s -> s#misc#show ()) battle_buttons; current_screen := Battle (P1 ChooseMove);
-    current_screen := Battle (P1 ChooseMove) in
-  let pre_process () =
-    Ivar.fill !gui_ready (Some Preprocess, Some Preprocess);
-    game_step () in
+    skipturn () in
   let turn_end () =
-    Ivar.fill !gui_ready (Some TurnEnd, Some TurnEnd);
-    game_step () in
+    (Ivar.fill !gui_ready (Some TurnEnd, Some TurnEnd); game_step ()) in
+  let pre_process () =
+    if !endTurnEarly then
+      (endTurnEarly := false; skipturn ())
+    else
+      (Ivar.fill !gui_ready (Some Preprocess, Some Preprocess);
+      game_step ()) in
   (match !m1 with
   | Pl1 SPoke p -> text_buffer#set_text ("Player One has switched to " ^ p); poke1_img#set_file ("../data/back-sprites/" ^ p ^ ".gif");updatetools ();busywait ()
   | Pl2 SPoke p -> text_buffer#set_text ("Player Two has switched to " ^ p); poke2_img#set_file ("../data/sprites/" ^ p ^ ".gif"); updatetools (); busywait ()
-  | Pl1 AttackMove a ->let atk_string = "Player One used " ^ getAttackString a in
+  | Pl1 AttackMove a -> secondaryEffect := `P1;
+                   let atk_string = "Player One used " ^ getAttackString a in
                    let str_list = Str.split (Str.regexp "\.") atk_string in
                    updatehealth2 ();
                    List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list
-  | Pl2 AttackMove a ->let atk_string = "Player Two used " ^ getAttackString a in
+  | Pl2 AttackMove a -> secondaryEffect := `P2;
+                   let atk_string = "Player Two used " ^ getAttackString a in
                    let str_list = Str.split (Str.regexp "\.") atk_string in
                    updatehealth1 ();
                    List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list
-  | Pl1 Status s ->let status_string = "Player One used " ^ getStatusString s in
+  | Pl1 Status s ->secondaryEffect := `P1;
+                   let status_string = "Player One used " ^ getStatusString s in
                    let str_list = Str.split (Str.regexp "\.") status_string in
                    List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list
-  | Pl2 Status s ->let status_string = "Player Two used " ^ getStatusString s in
+  | Pl2 Status s ->secondaryEffect := `P2;
+                   let status_string = "Player Two used " ^ getStatusString s in
                    let str_list = Str.split (Str.regexp "\.") status_string in
                    List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list
   | Pl1 NoAction -> text_buffer#set_text ("Player One has failed to do anything"); busywait ()
@@ -468,23 +497,30 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
                     List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
                     updatehealth1 (); turn_end ()
   | _ -> failwith "unimplements");
+  if !endTurnEarly then
+    (endTurnEarly := false; skipturn ())
+  else
   (match !m2 with
-  | Pl1 AttackMove a ->let atk_string = "Player One used " ^ getAttackString a in
+  | Pl1 AttackMove a -> secondaryEffect := `P1;
+                   let atk_string = "Player One used " ^ getAttackString a in
                    let str_list = Str.split (Str.regexp "\.") atk_string in
                    updatetools ();
                    List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
                    pre_process ()
-  | Pl2 AttackMove a ->let atk_string = "Player Two used " ^ getAttackString a in
+  | Pl2 AttackMove a -> secondaryEffect := `P2;
+                   let atk_string = "Player Two used " ^ getAttackString a in
                    let str_list = Str.split (Str.regexp "\.") atk_string in
                    updatetools ();
                    List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
                    pre_process ()
-  | Pl1 Status s ->let status_string = "Player One used " ^ getStatusString s in
+  | Pl1 Status s ->secondaryEffect := `P1;
+                   let status_string = "Player One used " ^ getStatusString s in
                    let str_list = Str.split (Str.regexp "\.") status_string in
                    updatetools ();
                    List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
                    pre_process ()
-  | Pl2 Status s ->let status_string = "Player Two used " ^ getStatusString s in
+  | Pl2 Status s ->secondaryEffect := `P2;
+                   let status_string = "Player Two used " ^ getStatusString s in
                    let str_list = Str.split (Str.regexp "\.") status_string in
                    updatetools ();
                    List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
@@ -498,9 +534,8 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
                   )
   | Pl2 Faint -> text_buffer#set_text "Player Two Pokemon has fainted. Choosing a new Pokemon.";
                  (match get_game_status battle_status with
-                 | Random1p -> busywait (); updatetools ();
-                              Ivar.fill !gui_ready (None, Some (FaintPoke ""));
-                              game_step ()
+                 | Random1p -> busywait (); current_command := (Some (NoMove), Some (FaintPoke ""));
+                               simple_move()
                  | _ -> failwith "Faulty Game Logic: Debug 007")
   | Pl1 Continue -> turn_end ()
   | Pl2 Continue -> turn_end ()
@@ -526,13 +561,17 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
                                           upon (Ivar.read !ready_gui) (fun _ -> ready_gui := Ivar.create (); game_animation engine battle_buttons battle text
                                                                         (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img text_buffer health_holders back_button ())
                       | _ -> failwith "Faulty Game Logic: Debug 01")
- | (Some _, Some _) -> failwith "Faultly Game Logic: Debug 02"
+ | (Some _, Some _) -> current_screen := Battle Processing; List.iter (fun s -> s#misc#hide ()) battle_buttons; current_screen := Battle Processing; text_buffer#set_text "Both moves collected. Processing...";
+                                          Ivar.fill !gui_ready !current_command; current_command := (None, None);
+                                          upon (Ivar.read !ready_gui) (fun _ -> ready_gui := Ivar.create (); game_animation engine battle_buttons battle text
+                                                                        (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img text_buffer health_holders back_button ())
 
 let poke_move_cmd button engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text
   (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img text_buffer health_holders back_button () =
   Printf.printf "Using a move!\n%!";
   let _ = match !current_command with
  | None, None -> current_command := (Some (UseAttack (button#label)), None)
+ | None, Some x -> current_command := (Some (UseAttack (button#label)), Some x)
  | Some x, None -> current_command := Some x, Some (UseAttack button#label)
  | Some _, Some _ -> failwith "Faulty Game Logic: Debug 06" in
  process_command engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text
