@@ -89,7 +89,7 @@ let string_of_status elm =
   | Burn -> "Burn"
   | Freeze -> "Freeze"
   | Paralysis -> "Paralysis"
-  | Poison -> "Poison"
+  | Poisoned -> "Poison"
   | Toxic -> "Toxic"
   | Sleep -> "Sleep"
   | NoNon -> "None"
@@ -315,19 +315,22 @@ let getDmgClass str =
 
 let getSecondaryEffect str = match str with
   | "karate-chop" -> [IncCrit 1]
-  | "double-slap" | "comet-punch" | "fury-attack"-> [RandMultHit]
+  | "double-slap" | "comet-punch" | "fury-attack" | "pin-missile" -> [RandMultHit]
   | "fire-punch" -> [BurnChance]
   | "ice-punch" -> [FreezeChance]
   | "thunder-punch" | "body-slam" -> [ParaChance]
   | "guillotine" | "horn-drill" -> [OHKO]
   | "razor-wind" -> [ChargeMove "It made a whirlwind!"]
   | "swords-dance" -> [StageBoost [(Attack, 2)]]
-  | "whirlwind" -> [ForceSwitch]
-  | "stomp" | "rolling-kick" | "headbutt" -> [FlinchMove]
+  | "whirlwind" | "roar"-> [ForceSwitch]
+  | "stomp" | "rolling-kick" | "headbutt" | "bite" -> [FlinchMove]
   | "double-kick" | "gear-grind"  -> [MultHit 2]
   | "sand-attack" -> [StageAttack [(Accuracy, 1)]]
   | "take-down" | "double-edge" -> [RecoilMove]
-  | "tail-whip" -> [StageAttack [(Defense, 1)]]
+  | "tail-whip" | "leer" -> [StageAttack [(Defense, 1)]]
+  | "poison-sting" -> [PoisonChance]
+  | "twineedle" -> [MultHit 2; PoisonChance]
+  | "growl" -> [StageAttack [(Attack, 1)]]
   | "calm-mind" -> [StageBoost [(SpecialDefense, 1); (SpecialAttack, 1)]]
   | _ -> []
 
@@ -398,9 +401,9 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Modest in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Psychic; Electric]; move1= getMoveFromString "tail-whip"; move2 =
-  getMoveFromString "rolling-kick"; move3 = getMoveFromString "take-down";
-  move4 = getMoveFromString "double-edge"; hp = 68; attack = 85; special_attack = 165; defense = 65;
+  {name="gardevoir-mega"; element=[Psychic; Electric]; move1= getMoveFromString "poison-sting"; move2 =
+  getMoveFromString "twineedle"; move3 = getMoveFromString "pin-missile";
+  move4 = getMoveFromString "growl"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
 
 let getPokeToolTip t =

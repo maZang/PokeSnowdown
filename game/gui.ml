@@ -375,6 +375,7 @@ let rec getAttackString a =
   | Para s -> getAttackString s ^ ". It failed due to paralysis!"
   | OHKill s -> getAttackString s ^". This move is a one hit KO!"
   | FlinchA -> "no move! It flinched!"
+  | PoisonMove s -> getAttackString s ^ ". The opponent has been poisoned"
   | Recoil s -> getAttackString s ^". The user suffered some recoil damage!"
   | ChargingMove (s, n) -> (match !secondaryEffect with
                              | `P1 -> current_command := (Some (UseAttack n), snd !current_command)
@@ -414,7 +415,9 @@ let rec getEndString starter s =
   | BreakBurn s -> starter ^ "cannot be burned." ^ getEndString starter s
   | BreakFreeze s -> starter ^ "cannot be frozen." ^ getEndString starter s
   | BreakPara s -> starter ^ "cannot be paralyzed." ^ getEndString starter s
+  | BreakPoison s -> starter ^ "cannot be posioned." ^ getEndString starter s
   | BurnDmg s -> starter ^ "has taken burn damage." ^ getEndString starter s
+  | PoisonDmg s -> starter ^ "has taken poison damage." ^ getEndString starter s
 
 let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text
   (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img text_buffer (health_bar_holder1, health_bar_holder2, health_bar1, health_bar2)  back_button () =
@@ -499,7 +502,7 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
   | Pl1 EndMove x -> let txt = getEndString "Player One " x in
                     let str_list = Str.split (Str.regexp "\.") txt in
                     List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
-                    updatehealth1 (); turn_end ()
+                    updatehealth1 ()
   | _ -> failwith "unimplements");
   if !endTurnEarly then
     (endTurnEarly := false; skipturn ())
@@ -548,7 +551,7 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
   | Pl2 EndMove x -> let txt = getEndString "Player Two " x in
                     let str_list = Str.split (Str.regexp "\.") txt in
                     List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
-                    updatehealth2 (); turn_end ()
+                    updatehealth2 (); simple_move ()
   | _ -> failwith "unimplement")
 
 

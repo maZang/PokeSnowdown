@@ -402,6 +402,16 @@ let move_handler atk def move =
     | RecoilMove::t ->
         newmove := Recoil !newmove;
         atk.current.curr_hp <- atk.current.curr_hp - damage / 4
+    (* Chance of poisoning the opponent *)
+    | PoisonChance::t ->
+        let randnum = Random.int 100 in
+        (if move.effect_chance > randnum then
+          match def.current.curr_status with
+          | (NoNon, x) -> def.current.curr_status <- (Poisoned, x);
+                            newmove := PoisonMove !newmove
+          | _ -> ()
+        else
+          ()); secondary_effects t
     (* Base case *)
     | [] -> ()
     in
@@ -610,6 +620,12 @@ let handle_preprocessing t1 t2 w m1 m2 =
                   m1 := Pl1 (EndMove (BreakPara Base)))
                 else
                   m1 := Pl1 Continue
+  | Poisoned -> if List.mem Poison t1.current.pokeinfo.element || List.mem Steel t1.current.pokeinfo.element then
+                (t1.current.curr_status <- (NoNon, snd t1.current.curr_status);
+                m1 := Pl1 (EndMove (BreakPoison Base)))
+            else
+                (t1.current.curr_hp <- max 0 (t1.current.curr_hp - 1 * t1.current.bhp / 8);
+                m1 := Pl1 (EndMove (PoisonDmg Base)))
   | _ -> m1 := Pl1 Continue);
   let nstatus', vstatus' = t2.current.curr_status in
   (match nstatus' with
@@ -627,6 +643,12 @@ let handle_preprocessing t1 t2 w m1 m2 =
                   t2.current.curr_status <- (NoNon, snd t2.current.curr_status);
                   m2 := Pl2 (EndMove (BreakPara Base)))
                 else m2 := Pl2 Continue
+  | Poisoned -> if List.mem Poison t2.current.pokeinfo.element || List.mem Steel t2.current.pokeinfo.element then
+                (t2.current.curr_status <- (NoNon, snd t2.current.curr_status);
+                m2 := Pl2 (EndMove (BreakPoison Base)))
+            else
+                (t2.current.curr_hp <- max 0 (t2.current.curr_hp - 1 * t2.current.bhp / 8);
+                m2 := Pl2 (EndMove (PoisonDmg Base)))
   | _ -> m2 := Pl2 Continue)
 
 (* Handle the case when both Pokemon use a move *)

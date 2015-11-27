@@ -6,12 +6,12 @@ type stat = Attack | Defense | SpecialAttack | SpecialDefense | Speed | Accuracy
 type guiattack = NormMove of string | Crit of guiattack |
                   SEff of guiattack | NoEff of guiattack | HitMult of int * guiattack | BurnMove of guiattack | FreezeMove of guiattack | ParaMove of guiattack | MissMove of string | FrozenSolid |
                   Thaw of guiattack | NoFreeze of guiattack | NoBurn of guiattack | NoPara of guiattack | Para of guiattack | OHKill of guiattack | ChargingMove of string * string | FlinchA |
-                  Recoil of guiattack
+                  Recoil of guiattack | PoisonMove of guiattack
 
 type guistatus = StatBoost of stat * int * guistatus | NormStatus of string | ThawS of guistatus | FrozenSolidS | MissStatus of string | NoFreezeS of guistatus | NoBurnS of guistatus |
                   NoParaS of guistatus | ParaS of guistatus | SwitchOut of guistatus | FlinchS | StatAttack of stat * int * guistatus
 
-type endMove = BurnDmg of endMove | Base | BreakBurn of endMove | BreakFreeze of endMove | BreakPara of endMove
+type endMove = BurnDmg of endMove | Base | BreakBurn of endMove | BreakFreeze of endMove | BreakPara of endMove | BreakPoison of endMove | PoisonDmg of endMove
 
 type guimove = SPoke of string | AttackMove of guiattack | Faint | NoAction | Continue | Next | Status of guistatus | EndMove of endMove
 
@@ -37,7 +37,7 @@ type evs = {attack:int; defense:int; special_attack: int; special_defense: int;
 
 (* variants containing all secondary effects of a given move *)
 type secondary_effects = MultHit of int | StageBoost of (stat * int) list | IncCrit of int | RandMultHit | BurnChance | FreezeChance | ParaChance | OHKO | ChargeMove of string |
-                         ForceSwitch | FlinchMove | StageAttack of (stat * int) list | RecoilMove
+                         ForceSwitch | FlinchMove | StageAttack of (stat * int) list | RecoilMove | PoisonChance
 
 type move = {name:string; priority: int; target: target; dmg_class: dmg_class;
     power:int; effect_chance: int; accuracy: int; element: element;
@@ -50,7 +50,7 @@ type item = Nothing | Leftovers | ChoiceBand | LifeOrb | CharizarditeX |
 type weather_terrain = HarshSun | Hail | Rain | SandStorm
 	| HeavyRain | Sun | AirCurrent | ClearSkies
 
-type non_volatile_status = Burn | Freeze | Paralysis | Poison | Toxic | Sleep |
+type non_volatile_status = Burn | Freeze | Paralysis | Poisoned | Toxic | Sleep |
                           NoNon
 
 type volatile_status =  Confusion | Curse | Embargo | Encore | Flinch | HealBlock
