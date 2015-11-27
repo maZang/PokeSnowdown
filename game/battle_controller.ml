@@ -601,15 +601,18 @@ let handle_action state action1 action2 =
 
 (* Main loop for 1 player -- gets input from AI *)
 let rec main_loop_1p engine gui_ready ready ready_gui () =
+  let t1 = match get_game_status engine with
+    | Battle InGame (t1, _, _, _, _) -> t1
+    | _ -> failwith "Faulty Game Logic" in
   let t2 = match get_game_status engine with
     | Battle InGame (_, t2, _, _, _) -> t2
-    | _ -> failwith "Fauly Game Logic" in
+    | _ -> failwith "Faulty Game Logic" in
   upon (Ivar.read !gui_ready) (* Replace NoMove with ai move later *)
     (fun (cmd1, cmd2) -> let c1 = unpack cmd1 in
                          let c2 = match (unpack cmd2) with
                           | NoMove -> UseAttack (Ai.getRandomMove t2.current)
                           | Preprocess -> Preprocess
-                          | FaintPoke _ -> FaintPoke (Ai.replaceDead t2.alive)
+                          | FaintPoke _ -> FaintPoke (Ai.replaceDead2 t1.current t2.alive)
                           | TurnEnd -> TurnEnd in
                          let () = handle_action engine c1 c2 in
                          gui_ready := Ivar.create ();

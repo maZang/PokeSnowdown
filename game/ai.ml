@@ -23,23 +23,23 @@ let has_advantage (elst1:element list) (elst2:element list) : bool =
   let rec helper = function
     | [] -> 1.
     | h::t ->
-        (List.fold_left (fun acc x -> acc *. getElementEffect h x) 1. elst2)
-        *. (helper t)
+        (List.fold_left (fun acc x -> acc *. Pokemon.getElementEffect h x)
+        1. elst2) *. (helper t)
   in
   if (helper elst1 >= 2.) then true
   else false
 
 (* [replaceDead2] returns the string name of the first pokemon in the list of
  * alive pokemon [alivelst] that has a type advantage against the opposing
- * pokemon [poke1]. If there are no such pokemon, one is randomly chosen
+ * pokemon [poke]. If there are no such pokemon, one is randomly chosen
  * from the list [alivelst].
  *)
-let replaceDead2 (poke1:battle_poke) (alivelst:battle_poke list) : string =
+let replaceDead2 (poke:battle_poke) (alivelst:battle_poke list) : string =
   let rec helper = function
     | [] -> let n = Random.int (List.length alivelst) in
             (List.nth alivelst n).pokeinfo.name
     | h::t ->
-        if (has_advantage h.pokeinfo.element poke1.pokeinfo.element) then
+        if (has_advantage h.pokeinfo.element poke.pokeinfo.element) then
           h.pokeinfo.name
         else helper t
   in
