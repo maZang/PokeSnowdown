@@ -375,6 +375,7 @@ let rec getAttackString a =
   | Para s -> getAttackString s ^ ". It failed due to paralysis!"
   | OHKill s -> getAttackString s ^". This move is a one hit KO!"
   | FlinchA -> "no move! It flinched!"
+  | Recoil s -> getAttackString s ^". The user suffered some recoil damage!"
   | ChargingMove (s, n) -> (match !secondaryEffect with
                              | `P1 -> current_command := (Some (UseAttack n), snd !current_command)
                              |`P2 -> current_command := (fst !current_command, Some (UseAttack n))); "a charging move." ^ s
@@ -393,6 +394,7 @@ let rec getStatusString s =
   match s with
   | NormStatus s -> s
   | StatBoost (stat, i, s) -> getStatusString s ^ ". " ^ string_from_stat stat ^ " was boosted " ^ string_of_int i ^ " stage"
+  | StatAttack (stat, i, s) -> getStatusString s ^ ". Opponent's " ^ string_from_stat stat ^ " was lowered " ^ string_of_int i ^ " stage"
   | MissStatus s -> s ^ ". It Missed!"
   | FrozenSolidS -> "no move. It was frozen solid!"
   | ThawS s -> getStatusString s ^ ". The Pokemon unfroze!"

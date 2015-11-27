@@ -5,10 +5,11 @@ type stat = Attack | Defense | SpecialAttack | SpecialDefense | Speed | Accuracy
 
 type guiattack = NormMove of string | Crit of guiattack |
                   SEff of guiattack | NoEff of guiattack | HitMult of int * guiattack | BurnMove of guiattack | FreezeMove of guiattack | ParaMove of guiattack | MissMove of string | FrozenSolid |
-                  Thaw of guiattack | NoFreeze of guiattack | NoBurn of guiattack | NoPara of guiattack | Para of guiattack | OHKill of guiattack | ChargingMove of string * string | FlinchA
+                  Thaw of guiattack | NoFreeze of guiattack | NoBurn of guiattack | NoPara of guiattack | Para of guiattack | OHKill of guiattack | ChargingMove of string * string | FlinchA |
+                  Recoil of guiattack
 
 type guistatus = StatBoost of stat * int * guistatus | NormStatus of string | ThawS of guistatus | FrozenSolidS | MissStatus of string | NoFreezeS of guistatus | NoBurnS of guistatus |
-                  NoParaS of guistatus | ParaS of guistatus | SwitchOut of guistatus | FlinchS
+                  NoParaS of guistatus | ParaS of guistatus | SwitchOut of guistatus | FlinchS | StatAttack of stat * int * guistatus
 
 type endMove = BurnDmg of endMove | Base | BreakBurn of endMove | BreakFreeze of endMove | BreakPara of endMove
 
@@ -36,7 +37,7 @@ type evs = {attack:int; defense:int; special_attack: int; special_defense: int;
 
 (* variants containing all secondary effects of a given move *)
 type secondary_effects = MultHit of int | StageBoost of (stat * int) list | IncCrit of int | RandMultHit | BurnChance | FreezeChance | ParaChance | OHKO | ChargeMove of string |
-                         ForceSwitch | FlinchMove
+                         ForceSwitch | FlinchMove | StageAttack of (stat * int) list | RecoilMove
 
 type move = {name:string; priority: int; target: target; dmg_class: dmg_class;
     power:int; effect_chance: int; accuracy: int; element: element;

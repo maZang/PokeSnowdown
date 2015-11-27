@@ -119,7 +119,7 @@ let string_of_poke_status (non, vola) =
 let getStageEvasion num =
   if abs(num) > 6 then failwith "Faulty Game Logic: Debug 43";
   if num <= 0 then
-    3. /. float_of_int (num + 3)
+    3. /. float_of_int (-1 * num + 3)
   else
     float_of_int (num + 3) /. 3.
 
@@ -129,7 +129,7 @@ let getStageEvasion num =
 let getStageAD num =
   if abs(num) > 6 then failwith "Faulty Game Logic: Debug 42";
   if num <= 0 then
-    2. /. float_of_int (num + 2)
+    2. /. float_of_int (-1 * num + 2)
   else
     float_of_int (num + 2) /. 2.
 
@@ -315,16 +315,19 @@ let getDmgClass str =
 
 let getSecondaryEffect str = match str with
   | "karate-chop" -> [IncCrit 1]
-  | "double-slap" | "comet-punch" -> [RandMultHit]
+  | "double-slap" | "comet-punch" | "fury-attack"-> [RandMultHit]
   | "fire-punch" -> [BurnChance]
   | "ice-punch" -> [FreezeChance]
-  | "thunder-punch" -> [ParaChance]
-  | "guillotine" -> [OHKO]
+  | "thunder-punch" | "body-slam" -> [ParaChance]
+  | "guillotine" | "horn-drill" -> [OHKO]
   | "razor-wind" -> [ChargeMove "It made a whirlwind!"]
   | "swords-dance" -> [StageBoost [(Attack, 2)]]
   | "whirlwind" -> [ForceSwitch]
-  | "stomp" -> [FlinchMove]
-  | "gear-grind" -> [MultHit 2]
+  | "stomp" | "rolling-kick" | "headbutt" -> [FlinchMove]
+  | "double-kick" | "gear-grind"  -> [MultHit 2]
+  | "sand-attack" -> [StageAttack [(Accuracy, 1)]]
+  | "take-down" | "double-edge" -> [RecoilMove]
+  | "tail-whip" -> [StageAttack [(Defense, 1)]]
   | "calm-mind" -> [StageBoost [(SpecialDefense, 1); (SpecialAttack, 1)]]
   | _ -> []
 
@@ -395,9 +398,9 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Modest in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Psychic; Electric]; move1= getMoveFromString "stomp"; move2 =
-  getMoveFromString "swords-dance"; move3 = getMoveFromString "fire-punch";
-  move4 = getMoveFromString "razor-wind"; hp = 68; attack = 85; special_attack = 165; defense = 65;
+  {name="gardevoir-mega"; element=[Psychic; Electric]; move1= getMoveFromString "tail-whip"; move2 =
+  getMoveFromString "rolling-kick"; move3 = getMoveFromString "take-down";
+  move4 = getMoveFromString "double-edge"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
 
 let getPokeToolTip t =

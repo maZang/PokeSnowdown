@@ -82,7 +82,7 @@ let getRandomTeam () =
 let getStageEvasion num =
   if abs(num) > 6 then failwith "Faulty Game Logic: Debug 43";
   if num <= 0 then
-    3. /. float_of_int (num + 3)
+    3. /. float_of_int (- 1 * num + 3)
   else
     float_of_int (num + 3) /. 3.
 
@@ -92,7 +92,7 @@ let getStageEvasion num =
 let getStageAD num =
   if abs(num) > 6 then failwith "Faulty Game Logic: Debug 42";
   if num <= 0 then
-    2. /. float_of_int (num + 2)
+    2. /. float_of_int (-1 * num + 2)
   else
     float_of_int (num + 2) /. 2.
 
@@ -398,6 +398,10 @@ let move_handler atk def move =
                 Flinch::(snd def.current.curr_status))
         else
           ()); secondary_effects t
+    (* Recoil moves deal certain damage to the user *)
+    | RecoilMove::t ->
+        newmove := Recoil !newmove;
+        atk.current.curr_hp <- atk.current.curr_hp - damage / 4
     (* Base case *)
     | [] -> ()
     in
@@ -487,6 +491,59 @@ let rec status_move_handler atk def (move: move) =
           )
     (* Move that forces a switch out *)
     | ForceSwitch::t -> newmove := SwitchOut !newmove; secondary_effects t
+    (* Move that lowers stat of opponent *)
+    | StageAttack l::t ->
+        (match l with
+          | [] -> secondary_effects t
+          | (s,n)::t' ->
+            (match s with
+              | Attack ->
+                  let stage, multiplier = def.stat_enhance.attack in
+                  let boost = max (min 6 (stage - n)) (-6) in
+                  def.stat_enhance.attack <- (boost, multiplier);
+                  newmove := StatAttack (Attack, (boost - stage), !newmove);
+                  secondary_effects ((StageAttack t')::t)
+              | Defense ->
+                  let stage, multiplier = def.stat_enhance.defense in
+                  let boost = max (min 6 (stage - n)) (-6) in
+                  Printf.printf "%d\n%!" boost;
+                  def.stat_enhance.defense <- (boost, multiplier);
+                  newmove := StatAttack (Defense, (boost - stage), !newmove);
+                  secondary_effects ((StageAttack t')::t)
+              | SpecialAttack ->
+                  let stage, multiplier = def.stat_enhance.special_attack in
+                  let boost = max (min 6 (stage - n)) (-6) in
+                  def.stat_enhance.special_attack <- (boost, multiplier);
+                  newmove := StatAttack
+                                    (SpecialAttack, (boost - stage), !newmove);
+                  secondary_effects ((StageAttack t')::t)
+              | SpecialDefense ->
+                  let stage, multiplier = def.stat_enhance.special_defense in
+                  let boost = max (min 6 (stage - n)) (-6) in
+                  def.stat_enhance.special_defense <- (boost, multiplier);
+                  newmove := StatAttack
+                                    (SpecialDefense, (boost - stage), !newmove);
+                  secondary_effects ((StageAttack t')::t)
+              | Speed ->
+                  let stage, multiplier = def.stat_enhance.speed in
+                  let boost = max (min 6 (stage - n)) (-6) in
+                  def.stat_enhance.speed <- (boost, multiplier);
+                  newmove := StatAttack (Speed, (boost - stage), !newmove);
+                  secondary_effects ((StageAttack t')::t)
+              | Accuracy ->
+                  let stage, multiplier = def.stat_enhance.accuracy in
+                  let boost = max (min 6 (stage - n)) (-6) in
+                  def.stat_enhance.accuracy <- (boost, multiplier);
+                  newmove := StatAttack (Accuracy, (boost - stage), !newmove);
+                  secondary_effects ((StageAttack t')::t)
+              | Evasion ->
+                  let stage, multiplier = def.stat_enhance.evasion in
+                  let boost = max (min 6 (stage - n)) (-6) in
+                  def.stat_enhance.evasion <- (boost, multiplier);
+                  newmove := StatAttack (Evasion, (boost - stage), !newmove);
+                  secondary_effects ((StageAttack t')::t)
+              )
+          )
     (* Base case*)
     | [] -> ()
   in
