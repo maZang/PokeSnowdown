@@ -4,11 +4,14 @@ type battlemove = Poke of string | UseAttack of string | NoMove | FaintPoke of s
 type stat = Attack | Defense | SpecialAttack | SpecialDefense | Speed | Accuracy | Evasion
 
 type guiattack = NormMove of string | Crit of guiattack |
-                  SEff of guiattack | NoEff of guiattack | HitMult of int * guiattack
+                  SEff of guiattack | NoEff of guiattack | HitMult of int * guiattack | BurnMove of guiattack | FreezeMove of guiattack | MissMove of string | FrozenSolid |
+                  Thaw of guiattack | NoFreeze of guiattack | NoBurn of guiattack
 
-type guistatus = StatBoost of stat * int * guistatus | NormStatus of string
+type guistatus = StatBoost of stat * int * guistatus | NormStatus of string | ThawS of guistatus | FrozenSolidS | MissStatus of string | NoFreezeS of guistatus | NoBurnS of guistatus
 
-type guimove = SPoke of string | AttackMove of guiattack | Flinch | Faint | NoAction | Continue | Next | Status of guistatus
+type endMove = BurnDmg of endMove | Base | BreakBurn of endMove | BreakFreeze of endMove
+
+type guimove = SPoke of string | AttackMove of guiattack | Flinch | Faint | NoAction | Continue | Next | Status of guistatus | EndMove of endMove
 
 type playerMove = Pl1 of guimove | Pl2 of guimove
 
@@ -31,7 +34,7 @@ type evs = {attack:int; defense:int; special_attack: int; special_defense: int;
             hp:int; speed:int}
 
 (* variants containing all secondary effects of a given move *)
-type secondary_effects = MultHit of int | StageBoost of (stat * int) list
+type secondary_effects = MultHit of int | StageBoost of (stat * int) list | IncCrit of int | RandMultHit | BurnChance | FreezeChance
 
 type move = {name:string; priority: int; target: target; dmg_class: dmg_class;
     power:int; effect_chance: int; accuracy: int; element: element;
@@ -49,7 +52,7 @@ type non_volatile_status = Burn | Freeze | Paralysis | Poison | Toxic | Sleep |
 
 type volatile_status =  Confusion | Curse | Embargo | Encore | Flinch | HealBlock
 	| Identification | Infatuation | Nightmare | Trapped | PerishSong | Leeched
-	| Taunt | Levitate | Torment | NoVola
+	| Taunt | Levitate | Torment
 
 type status = non_volatile_status * volatile_status list
 
@@ -76,7 +79,7 @@ type pokemon_stat_modifier = {mutable attack: stat_modifier; mutable defense: st
     mutable accuracy: stat_modifier}
 
 type trainer_team = {mutable current: battle_poke; mutable alive: battle_poke list; mutable dead:
-                        battle_poke list; stat_enhance: pokemon_stat_modifier}
+                        battle_poke list; mutable stat_enhance: pokemon_stat_modifier}
 
 (* As in competitive Pokemon, there will be no ties. If all Poke die in
 one turn, the one with the Poke standing the latest wins *)
