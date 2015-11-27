@@ -63,7 +63,8 @@ let getBattlePoke poke =
 
 (* Initializes the game state *)
 let initialize_battle team1 team2 =
-  team1.current <- getBattlePoke (getTestPoke ()); Battle (InGame
+  team1.current <- getBattlePoke (getTestPoke ());
+  team2.current <- getBattlePoke (getTestPoke ()); Battle (InGame
     (team1, team2, ref ClearSkies, ref (Pl1 NoAction), ref (Pl2 NoAction)))
 
 (* Gets a random team of pokemon for initialization *)
@@ -208,74 +209,59 @@ let findBattleMove poke move =
   else
     failwith "Faulty Game Logic: Debug 16"
 
-(* Returns true if Pokemon moves, false if it doesn't as well as some value
-  describing why it failed (has to do with some status) *)
-let hitAttackDueToStatus atk moveDescript =
+(* Helper function to see if pokemon can move; also called to break a Pokemon
+  out of a status condition *)
+let hitMoveDueToStatus atk moveDescript =
   let rec helperVolaStatus lst moveDescript' =
     match lst with
-    | [] -> (true, moveDescript')
-    | _ -> failwith "unimplemented" in
+      | [] -> (true, moveDescript')
+      | _ -> failwith "unimplemented" in
   let nvola, vola = atk.current.curr_status in
   match nvola with
-  | Freeze -> if 20 > Random.int 100 then (
-                atk.current.curr_status <-(NoNon, snd atk.current.curr_status);
-                helperVolaStatus vola (Thaw moveDescript))
+  | Freeze -> if List.mem Ice atk.current.pokeinfo.element then (
+                atk.current.curr_status <- (NoNon, snd atk.current.curr_status);
+                helperVolaStatus vola (`NoFreeze moveDescript))
+              else if 20 > Random.int 100 then (
+                atk.current.curr_status <- (NoNon, snd atk.current.curr_status);
+                helperVolaStatus vola (`Thaw moveDescript))
               else
-                (false, FrozenSolid)
-  | _ -> helperVolaStatus vola moveDescript
+                (false, `FrozenSolid)
+  | Burn -> if List.mem Fire atk.current.pokeinfo.element then (
+              atk.current.curr_status <- (NoNon, snd atk.current.curr_status);
+              helperVolaStatus vola (`NoBurn moveDescript))
+            else
+              helperVolaStatus vola (`NoAdd moveDescript)
+  |_ -> helperVolaStatus vola (`NoAdd moveDescript)
 
 (* Returns true if Pokemon moves, otherwise returns false as well as some value
    describing why the move failed *)
 let hitAttack atk def (move : move) moveDescript =
-  let hit, reason = hitAttackDueToStatus atk moveDescript in
-  if hit then
-    let accStage, accMult = atk.stat_enhance.accuracy in
-    let evStage, evMult = def.stat_enhance.evasion in
-    let probability = float_of_int move.accuracy *. getStageEvasion  accStage
+  let accStage, accMult = atk.stat_enhance.accuracy in
+  let evStage, evMult = def.stat_enhance.evasion in
+  let probability = float_of_int move.accuracy *. getStageEvasion  accStage
                     *. accMult /. (getStageEvasion evStage *. evMult) in
-    let randnum = Random.float 100. in
-    if probability > randnum then
-      (true, reason)
-    else
-      (false, MissMove move.name)
+  let randnum = Random.float 100. in
+  if probability > randnum then
+    (true, moveDescript)
   else
-    (hit, reason)
-(* Returns true if Pokemon moves, false if it doesn't as well as some value
-  describing why it failed (has to do with some status) *)
-let hitStatusDueToStatus atk moveDescript =
-  let rec helperVolaStatus lst moveDescript' =
-    match lst with
-    | [] -> (true, moveDescript')
-    | _ -> failwith "unimplemented" in
-  let nvola, vola = atk.current.curr_status in
-  match nvola with
-  | Freeze -> if 20 > Random.int 100 then (
-                atk.current.curr_status <-(NoNon, snd atk.current.curr_status);
-                helperVolaStatus vola (ThawS moveDescript))
-              else
-                (false, FrozenSolidS)
-  | _ -> helperVolaStatus vola moveDescript
+    (false, MissMove move.name)
 
 (* Returns true if Pokemon moves, false if it doesn't as well as some value
   describing why it failed (has to do with some status) *)
 let hitStatus atk def (move: move) moveDescript =
-  let hit, reason = hitStatusDueToStatus atk moveDescript in
-  if hit then
-    match move.target with
-    | UserOrAlly | User | UsersField | OpponentsFields
-    | Ally | EntireField | UserAndAlly -> (true, reason)
-    | _ ->
-      let accStage, accMult = atk.stat_enhance.accuracy in
-      let evStage, evMult = def.stat_enhance.evasion in
-      let probability = float_of_int move.accuracy *. getStageEvasion  accStage
-                  *. accMult /. (getStageEvasion evStage *. evMult) in
-      let randnum = Random.float 100. in
-      if probability > randnum then
-        (true, reason)
-      else
-        (false, MissStatus move.name)
-  else
-    (hit, reason)
+  match move.target with
+  | UserOrAlly | User | UsersField | OpponentsFields
+  | Ally | EntireField | UserAndAlly -> (true, moveDescript)
+  | _ ->
+    let accStage, accMult = atk.stat_enhance.accuracy in
+    let evStage, evMult = def.stat_enhance.evasion in
+    let probability = float_of_int move.accuracy *. getStageEvasion  accStage
+                *. accMult /. (getStageEvasion evStage *. evMult) in
+    let randnum = Random.float 100. in
+    if probability > randnum then
+      (true, moveDescript)
+    else
+      (false, MissStatus move.name)
 
 (* Used for writing out the multi move description *)
 let rec link_multmove_descript m1 m2 =
@@ -341,7 +327,7 @@ let move_handler atk def move =
     (* Freezes opponent if chance exceeds a certain threshold *)
     | FreezeChance::t ->
         let randnum = Random.int 100 in
-        (if move.effect_chance < randnum then
+        (if move.effect_chance > randnum then
            match def.current.curr_status with
            | (NoNon, x) -> def.current.curr_status <- (Freeze, x);
                             newmove := FreezeMove !newmove
@@ -351,16 +337,26 @@ let move_handler atk def move =
     (* Base case *)
     | [] -> ()
     in
-  let hit, reason = hitAttack atk def move !newmove in
+  let hit, reason = hitMoveDueToStatus atk !newmove in
+  let reason' = match reason with
+    | `NoFreeze s -> NoFreeze s
+    | `NoBurn s -> NoBurn s
+    | `Thaw s -> Thaw s
+    | `FrozenSolid -> FrozenSolid
+    | `NoAdd s -> s in
   if hit then (
+    let hit', newreason = hitAttack atk def move reason' in
     (* damage is always dealt before secondary effects calculated *)
-    newmove := reason;
-    def.current.curr_hp <- max 0 (def.current.curr_hp - damage);
-    secondary_effects move.secondary;
+    if hit' then (
+      newmove := newreason;
+      def.current.curr_hp <- max 0 (def.current.curr_hp - damage);
+      secondary_effects move.secondary;
     (* returns a move description *)
-    !newmove)
+      !newmove)
+   else
+      newreason)
   else
-    reason
+    reason'
 
 (* Deals with the status moves that are essentially all secondary effects *)
 let rec status_move_handler atk def (move: move) =
@@ -425,16 +421,24 @@ let rec status_move_handler atk def (move: move) =
     (* Base case*)
     | [] -> ()
   in
-  let hit, reason = hitStatus atk def move !newmove in
+  let hit, reason = hitMoveDueToStatus atk !newmove in
+  let reason' = match reason with
+    | `NoFreeze s -> NoFreezeS s
+    | `NoBurn s -> NoBurnS s
+    | `Thaw s -> ThawS s
+    | `FrozenSolid -> FrozenSolidS
+    | `NoAdd s -> s in
   if hit then (
-    newmove := reason;
-    (* Returns a description of the status *)
-    secondary_effects move.secondary; !newmove)
-    (* returns a move description *)
+    let hit', newreason = hitStatus atk def move reason' in
+    if hit' then (
+      newmove := newreason;
+      (* Returns a description of the status *)
+      secondary_effects move.secondary; !newmove)
+      (* returns a move description *)
+    else
+      newreason)
   else
-    reason
-
-
+    reason'
 (* Called after the turn ends; Decrements sleep counter; checks if Pokemon
    faints; etc... *)
 let handle_next_turn t1 t2 w m1 m2 =
@@ -452,15 +456,31 @@ let handle_next_turn t1 t2 w m1 m2 =
     Seed etc... after every move to prepare for next turn *)
 let handle_preprocessing t1 t2 w m1 m2 =
   let nstatus, vstatus = t1.current.curr_status in
-  (match nstatus with
-  | Burn -> t1.current.curr_hp <- max 0 (t1.current.curr_hp - 1 * t1.current.bhp / 8);
-            m1 := Pl1 (IncDmg (BurnDmg Base))
-  | _ -> m1 := Pl1 Continue);
+  match nstatus with
+  | Burn -> if List.mem Fire t1.current.pokeinfo.element then
+                (t1.current.curr_status <- (NoNon, snd t1.current.curr_status);
+                m1 := Pl1 (EndMove (BreakBurn Base)))
+            else
+                (t1.current.curr_hp <- max 0 (t1.current.curr_hp - 1 * t1.current.bhp / 8);
+                m1 := Pl1 (EndMove (BurnDmg Base)))
+  | Freeze -> if List.mem Ice t1.current.pokeinfo.element then
+                (t1.current.curr_status <-  (NoNon, snd t1.current.curr_status);
+                m1 := Pl1 (EndMove (BreakFreeze Base)))
+              else
+                ()
+  | _ -> m1 := Pl1 Continue;
   let nstatus', vstatus' = t2.current.curr_status in
-  (match nstatus' with
-  | Burn -> t2.current.curr_hp <- max 0 (t2.current.curr_hp - 1 * t2.current.bhp / 8);
-             m2 := Pl2 (IncDmg (BurnDmg Base))
-  | _ -> m2 := Pl2 Continue)
+  match nstatus' with
+  | Burn -> if List.mem Fire t2.current.pokeinfo.element then
+                (t2.current.curr_status <- (NoNon, snd t2.current.curr_status);
+                m2 := Pl2 (EndMove (BreakBurn Base)))
+            else
+                (t2.current.curr_hp <- max 0 (t2.current.curr_hp - 1 * t2.current.bhp / 8);
+                m2 := Pl2 (EndMove (BurnDmg Base)))
+  | Freeze -> if List.mem Ice t2.current.pokeinfo.element then (
+              t2.current.curr_status <-  (NoNon, snd t2.current.curr_status);
+              m2 := Pl2 (EndMove (BreakFreeze Base))) else ()
+  | _ -> m2 := Pl2 Continue
 
 (* Handle the case when both Pokemon use a move *)
 let handle_two_moves t1 t2 w m1 m2 a1 a2 =

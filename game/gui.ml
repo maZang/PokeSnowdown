@@ -365,6 +365,8 @@ let rec getAttackString a =
   | MissMove s -> s ^ ". It Missed!"
   | FrozenSolid -> "no move. It was frozen solid!"
   | Thaw s-> getAttackString s ^ ". The Pokemon unfroze!"
+  | NoFreeze s -> getAttackString s ^ ". This Pokemon cannot freeze!"
+  | NoBurn s ->getAttackString s ^ ". This Pokemon cannot burn!"
 
 let rec string_from_stat s =
   match s with
@@ -383,11 +385,15 @@ let rec getStatusString s =
   | MissStatus s -> s ^ ". It Missed!"
   | FrozenSolidS -> "no move. It was frozen solid!"
   | ThawS s -> getStatusString s ^ ". The Pokemon unfroze!"
+  | NoFreezeS s -> getStatusString s ^ ". This Pokemon cannot freeze!"
+  | NoBurnS s -> getStatusString s ^ ". This Pokemon cannot burn!"
 
-let rec getDmgString starter s =
+let rec getEndString starter s =
   match s with
   | Base -> ""
-  | BurnDmg s -> getDmgString starter s ^ starter ^ " burn damage."
+  | BreakBurn s -> starter ^ "cannot be burned." ^ getEndString starter s
+  | BreakFreeze s -> starter ^ "cannot be frozen." ^ getEndString starter s
+  | BurnDmg s -> starter ^ "has taken burn damage." ^ getEndString starter s
 
 let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text
   (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img text_buffer (health_bar_holder1, health_bar_holder2, health_bar1, health_bar2)  back_button () =
@@ -457,7 +463,7 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
                                 move3;move4;switch] back_button ()
                   | _ -> failwith "Faulty Game Logic: Debug 008"
                   )
-  | Pl1 IncDmg x -> let txt = getDmgString "Player One has taken " x in
+  | Pl1 EndMove x -> let txt = getEndString "Player One " x in
                     let str_list = Str.split (Str.regexp "\.") txt in
                     List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
                     updatehealth1 (); turn_end ()
@@ -501,7 +507,7 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
   | Pl1 Next | Pl2 Next -> simple_move ()
   | Pl1 NoAction -> pre_process ()
   | Pl2 NoAction -> pre_process ()
-  | Pl2 IncDmg x -> let txt = getDmgString "Player Two has taken " x in
+  | Pl2 EndMove x -> let txt = getEndString "Player Two " x in
                     let str_list = Str.split (Str.regexp "\.") txt in
                     List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
                     updatehealth2 (); turn_end ()

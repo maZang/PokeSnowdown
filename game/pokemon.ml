@@ -388,7 +388,7 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Modest in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Psychic; Fairy]; move1= getMoveFromString "gear-grind"; move2 =
+  {name="gardevoir-mega"; element=[Psychic; Fire]; move1= getMoveFromString "gear-grind"; move2 =
   getMoveFromString "fire-punch"; move3 = getMoveFromString "ice-punch";
   move4 = getMoveFromString "toxic"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
