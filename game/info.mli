@@ -5,14 +5,14 @@ type stat = Attack | Defense | SpecialAttack | SpecialDefense | Speed | Accuracy
 
 type guiattack = NormMove of string | Crit of guiattack |
                   SEff of guiattack | NoEff of guiattack | HitMult of int * guiattack | BurnMove of guiattack | FreezeMove of guiattack | ParaMove of guiattack | MissMove of string | FrozenSolid |
-                  Thaw of guiattack | NoFreeze of guiattack | NoBurn of guiattack | NoPara of guiattack | Para of guiattack | OHKill of guiattack | ChargingMove of string * string
+                  Thaw of guiattack | NoFreeze of guiattack | NoBurn of guiattack | NoPara of guiattack | Para of guiattack | OHKill of guiattack | ChargingMove of string * string | FlinchA
 
 type guistatus = StatBoost of stat * int * guistatus | NormStatus of string | ThawS of guistatus | FrozenSolidS | MissStatus of string | NoFreezeS of guistatus | NoBurnS of guistatus |
-                  NoParaS of guistatus | ParaS of guistatus | SwitchOut of guistatus
+                  NoParaS of guistatus | ParaS of guistatus | SwitchOut of guistatus | FlinchS
 
 type endMove = BurnDmg of endMove | Base | BreakBurn of endMove | BreakFreeze of endMove | BreakPara of endMove
 
-type guimove = SPoke of string | AttackMove of guiattack | Flinch | Faint | NoAction | Continue | Next | Status of guistatus | EndMove of endMove
+type guimove = SPoke of string | AttackMove of guiattack | Faint | NoAction | Continue | Next | Status of guistatus | EndMove of endMove
 
 type playerMove = Pl1 of guimove | Pl2 of guimove
 
@@ -36,7 +36,7 @@ type evs = {attack:int; defense:int; special_attack: int; special_defense: int;
 
 (* variants containing all secondary effects of a given move *)
 type secondary_effects = MultHit of int | StageBoost of (stat * int) list | IncCrit of int | RandMultHit | BurnChance | FreezeChance | ParaChance | OHKO | ChargeMove of string |
-                         ForceSwitch
+                         ForceSwitch | FlinchMove
 
 type move = {name:string; priority: int; target: target; dmg_class: dmg_class;
     power:int; effect_chance: int; accuracy: int; element: element;

@@ -374,6 +374,7 @@ let rec getAttackString a =
   | NoPara s -> getAttackString s ^ ". This Pokemon cannot be paralyzed!"
   | Para s -> getAttackString s ^ ". It failed due to paralysis!"
   | OHKill s -> getAttackString s ^". This move is a one hit KO!"
+  | FlinchA -> "no move! It flinched!"
   | ChargingMove (s, n) -> (match !secondaryEffect with
                              | `P1 -> current_command := (Some (UseAttack n), snd !current_command)
                              |`P2 -> current_command := (fst !current_command, Some (UseAttack n))); "a charging move." ^ s
@@ -399,6 +400,7 @@ let rec getStatusString s =
   | NoBurnS s -> getStatusString s ^ ". This Pokemon cannot burn!"
   | NoParaS s -> getStatusString s ^ ". This Pokemon cannot be paralyzed!"
   | ParaS s -> getStatusString s ^ ". It failed due to paralysis!"
+  | FlinchS -> "no move! It flinched!"
   | SwitchOut s -> (match !secondaryEffect with
                     | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
                     | `P2 -> current_command := (Some (Poke "random"), Some NoMove));
@@ -525,7 +527,6 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
                    updatetools ();
                    List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
                    pre_process ()
-  | Pl2 Flinch -> text_buffer#set_text "Player Two has flinched"; busywait (); pre_process ()
   | Pl1 Faint -> text_buffer#set_text "Player One Pokemon has fainted. Choosing a new Pokemon.";
                   (match get_game_status battle_status with
                   | Random1p -> busywait (); updatetools (); current_screen := Battle (P1 Faint); switch_poke engine [poke1;poke2;poke3;poke4;poke5] [move1;move2;

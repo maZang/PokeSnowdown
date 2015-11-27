@@ -323,6 +323,7 @@ let getSecondaryEffect str = match str with
   | "razor-wind" -> [ChargeMove "It made a whirlwind!"]
   | "swords-dance" -> [StageBoost [(Attack, 2)]]
   | "whirlwind" -> [ForceSwitch]
+  | "stomp" -> [FlinchMove]
   | "gear-grind" -> [MultHit 2]
   | "calm-mind" -> [StageBoost [(SpecialDefense, 1); (SpecialAttack, 1)]]
   | _ -> []
@@ -394,7 +395,7 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Modest in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Psychic; Electric]; move1= getMoveFromString "whirlwind"; move2 =
+  {name="gardevoir-mega"; element=[Psychic; Electric]; move1= getMoveFromString "stomp"; move2 =
   getMoveFromString "swords-dance"; move3 = getMoveFromString "fire-punch";
   move4 = getMoveFromString "razor-wind"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}

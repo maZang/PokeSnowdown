@@ -231,6 +231,7 @@ let hitMoveDueToStatus atk moveDescript =
     match lst with
       | [] -> (true, moveDescript')
       | Charge::t -> helperVolaStatus t moveDescript'
+      | Flinch::t -> (false, `Flinch)
       | _ -> failwith "unimplemented" in
   let nvola, vola = atk.current.curr_status in
   match nvola with
@@ -358,7 +359,7 @@ let move_handler atk def move =
     (* Burns opponent if chance exceeds a certain threshold *)
     | BurnChance::t ->
         let randum = Random.int 100 in
-        (if move.effect_chance < randum then
+        (if move.effect_chance > randum then
           match def.current.curr_status with
           | (NoNon, x) -> def.current.curr_status <- (Burn, x);
                            newmove := BurnMove !newmove
@@ -389,6 +390,14 @@ let move_handler atk def move =
     | OHKO::t -> def.current.curr_hp <- 0; newmove := OHKill !newmove
     (* Charging Moves dealt with in hit moves-- nothing to do here *)
     | (ChargeMove s)::t -> secondary_effects t
+    (* Flinch Moves have a certain chance to make target flinch *)
+    | FlinchMove::t ->
+        let randnum = Random.int 100 in
+        (if move.effect_chance > randnum then
+          def.current.curr_status <- (fst def.current.curr_status,
+                Flinch::(snd def.current.curr_status))
+        else
+          ()); secondary_effects t
     (* Base case *)
     | [] -> ()
     in
@@ -400,6 +409,7 @@ let move_handler atk def move =
     | `Para s -> Para s
     | `Thaw s -> Thaw s
     | `FrozenSolid -> FrozenSolid
+    | `Flinch -> FlinchA
     | `NoAdd s -> s in
   if hit then (
     let hit', newreason = hitAttack atk def move reason' in
@@ -488,6 +498,7 @@ let rec status_move_handler atk def (move: move) =
     | `Para s -> ParaS s
     | `Thaw s -> ThawS s
     | `FrozenSolid -> FrozenSolidS
+    | `Flinch -> FlinchS
     | `NoAdd s -> s in
   if hit then (
     let hit', newreason = hitStatus atk def move reason' in
@@ -500,6 +511,11 @@ let rec status_move_handler atk def (move: move) =
       newreason)
   else
     reason'
+
+let remove_some_status bp =
+  let nonvola, vola = bp.curr_status in
+  let newvola = List.filter (fun s -> s <> Flinch) vola in
+  bp.curr_status <- (nonvola, newvola)
 (* Called after the turn ends; Decrements sleep counter; checks if Pokemon
    faints; etc... Note Pl1 always faints before Pl2*)
 let handle_next_turn t1 t2 w m1 m2 =
@@ -512,7 +528,8 @@ let handle_next_turn t1 t2 w m1 m2 =
   | _ -> if (t2.current.curr_hp = 0) then
             (m1 := Pl1 Next; m2 := Pl2 Faint)
           else
-            (m1 := Pl1 Next; m2 := Pl2 Next))
+            (m1 := Pl1 Next; m2 := Pl2 Next)); remove_some_status t1.current;
+  remove_some_status t2.current
 
 (* Handles Preprocessing -- Burn damage, weather damage, healing from Leech
     Seed etc... after every move to prepare for next turn *)
