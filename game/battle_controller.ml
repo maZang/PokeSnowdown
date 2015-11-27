@@ -197,7 +197,7 @@ let move_handler atk def move =
           secondary_effects ((MultHit 5)::t)
     | BurnChance::t ->
         let randum = Random.int 100 in
-        (if move.effect_chance < randum then
+        (if move.effect_chance > randum then
           match def.current.curr_status with
           | (NoNon, x) -> def.current.curr_status <- (Burn, x); newmove := BurnMove !newmove
           | _ -> ()
