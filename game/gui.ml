@@ -360,6 +360,7 @@ let rec getAttackString a =
       str ^ ". The move hit " ^ string_of_int n ^ " times with " ^ string_of_int
       c ^ " crits." ^ (if s' > 0 then " Supereffective" else if n' > 0 then
       " Not very effective" else "")
+  | BurnMove s -> getAttackString s ^ ". This move caused a heavy burn"
 
 let rec string_from_stat s =
   match s with
@@ -444,6 +445,7 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
                                 move3;move4;switch] back_button ()
                   | _ -> failwith "Faulty Game Logic: Debug 008"
                   )
+  | Pl1 Burn -> text_buffer#set_text "Player One has suffered burn damage."; updatehealth1 (); busywait ()
   | _ -> failwith "unimplements");
   (match !m2 with
   | Pl1 AttackMove a ->let atk_string = "Player One used " ^ getAttackString a in
@@ -484,6 +486,7 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
   | Pl1 Next | Pl2 Next -> simple_move ()
   | Pl1 NoAction -> pre_process ()
   | Pl2 NoAction -> pre_process ()
+  | Pl2 Burn -> text_buffer#set_text "Player Two has suffered burn damage."; updatehealth2 (); busywait (); turn_end ()
   | _ -> failwith "unimplement")
 
 

@@ -14,6 +14,9 @@ let unpack opt =
   | Some v -> v
   | None -> NoMove
 
+let switchOutStatEnhancements t =
+  {attack=(0,1.); defense=(0,1.); speed=(0,1.); special_attack=(0,1.);
+  special_defense=(0,1.); evasion=(0,1.); accuracy=(0,1.)}
 
 let getBattlePoke poke =
   let bhp = (2 * poke.hp + pokeIV + poke.evs.hp / 4) + 100 + 10 in
@@ -37,7 +40,7 @@ let getBattlePoke poke =
     | Timid | Hasty | Jolly | Naive -> 1.1
     | Brave | Relaxed | Quiet | Sassy -> 0.9
     | _ -> 1.0) *.  float_of_int (2 * poke.speed + pokeIV + poke.evs.speed / 4 + 5)) in
-  {pokeinfo = poke; curr_hp = bhp; curr_status = (NoNon, [NoVola]); curr_item = poke.item; bhp; battack; bdefense; bspecial_attack; bspecial_defense; bspeed}
+  {pokeinfo = poke; curr_hp = bhp; curr_status = (NoNon, []); curr_item = poke.item; bhp; battack; bdefense; bspecial_attack; bspecial_defense; bspeed}
 
 let initialize_battle team1 team2 =
   team1.current <- getBattlePoke (getTestPoke ()); Battle (InGame (team1, team2, ref ClearSkies, ref (Pl1 NoAction), ref (Pl2 NoAction)))
@@ -70,7 +73,25 @@ let getStageAD num =
   else
     float_of_int (num + 2) /. 2.
 
-let getCrit poke move = (false, 1.)
+let getCrit poke move =
+  let rec helper_crit acc eff = match eff with
+  | IncCrit n -> n + acc
+  | _ -> 0 in
+  let stage = List.fold_left helper_crit 0 move.secondary in
+  match stage with
+  | 0 -> if (0.0625 > Random.float 1.) then
+            (true, 1.5)
+          else
+            (false, 1.)
+  | 1 -> if (0.125 > Random.float 1.) then
+            (true, 1.5)
+          else
+            (false, 1.)
+  | 2 -> if (0.50 > Random.float 1.) then
+            (true, 1.5)
+          else
+            (false, 1.)
+  | n -> if n >= 3 then (true, 1.5) else (false, 1.)
 
 let damageCalculation t1 t2 move =
   let defense = match move.dmg_class with
@@ -157,17 +178,47 @@ let move_handler atk def move =
   let damage = int_of_float fdamage in
   let rec secondary_effects lst = match lst with
     | (MultHit n)::t ->
-      if n <= 1 then () else
+      if n <= 1 then secondary_effects t else
         (let moveDescript', fdamage' = damageCalculation atk def move in
         let damage' = int_of_float fdamage' in
         let newmove' = link_multmove_descript moveDescript' !newmove in
         newmove := newmove'; def.current.curr_hp <- max 0 (def.current.curr_hp - damage');
         secondary_effects ((MultHit (n-1))::t))
+    | (IncCrit _)::t -> secondary_effects t
+    | RandMultHit::t ->
+        let randnum = Random.int 6 + 1 in
+        if randnum < 3 then
+          secondary_effects ((MultHit 2)::t)
+        else if randnum < 5 then
+          secondary_effects ((MultHit 3)::t)
+        else if randnum < 6 then
+          secondary_effects ((MultHit 4)::t)
+        else
+          secondary_effects ((MultHit 5)::t)
+    | BurnChance::t ->
+        let randum = Random.int 100 in
+        (if move.effect_chance < randum then
+          match def.current.curr_status with
+          | (NoNon, x) -> def.current.curr_status <- (Burn, x); newmove := BurnMove !newmove
+          | _ -> ()
+        else
+          ()); secondary_effects t
     | [] -> ()
     in
   def.current.curr_hp <- max 0 (def.current.curr_hp - damage);
   secondary_effects move.secondary;
   !newmove
+
+let findAttackMult t =
+  if fst (t.current.curr_status) = Burn then
+    0.5
+  else
+    1.
+
+let recomputeStat t =
+  let stats = t.stat_enhance in
+  let attack_mult = findAttackMult t in
+  stats.attack <- (fst stats.attack, attack_mult)
 
 let rec status_move_handler atk def (move: move) =
   let newmove = ref (NormStatus move.name) in
@@ -234,7 +285,14 @@ let handle_next_turn t1 t2 w m1 m2 =
             (m1 := Pl1 Next; m2 := Pl2 Next)
 
 let handle_preprocessing t1 t2 w m1 m2 =
-  m1 := Pl1 Continue; m2 := Pl2 Continue
+  let nstatus, vstatus = t1.current.curr_status in
+  (match nstatus with
+  | Burn -> t1.current.curr_hp <- 7 * t1.current.curr_hp / 8; m1 := Pl1 Burn
+  | _ -> m1 := Pl1 Continue);
+  let nstatus', vstatus' = t2.current.curr_status in
+  (match nstatus' with
+  | Burn -> t2.current.curr_hp <- 7 * t2.current.curr_hp / 8; m2 := Pl2 Burn
+  | _ -> m2 := Pl2 Continue)
 
 let handle_two_moves t1 t2 w m1 m2 a1 a2 =
   let p1poke = t1.current in
@@ -292,6 +350,8 @@ let handle_action state action1 action2 =
   let t1, t2, w, m1, m2 = match get_game_status state with
     | Battle InGame (t1, t2, w, m1, m2) -> t1, t2, w, m1, m2
     | _ -> failwith "Fauly Game Logic" in
+  let () = recomputeStat t1 in
+  let () = recomputeStat t2 in
   match action1 with
   | Poke p ->
       (match action2 with
@@ -299,6 +359,7 @@ let handle_action state action1 action2 =
       | UseAttack a -> let prevPoke = t1.current in
                        let switchPoke, restPoke = findBattlePoke t1.alive p in
                        t1.current <- switchPoke; t1.alive <- prevPoke::restPoke;
+                       t1.stat_enhance <- switchOutStatEnhancements t1;
                        let curr_move = findBattleMove t2.current.pokeinfo a in
                        if curr_move.dmg_class = Status then
                           (m1 := Pl1 (SPoke p); m2 := Pl2 NoAction)
@@ -306,10 +367,11 @@ let handle_action state action1 action2 =
                         let newmove = move_handler t2 t1 curr_move in
                         m1 := Pl1 (SPoke p); m2 := Pl2 (AttackMove newmove))
       (* Later change it so that None becomes a bot move *)
-      | NoMove -> let prevPoke = t1.current in
+      | NoMove -> (* let prevPoke = t1.current in
                   let switchPoke, restPoke = findBattlePoke t1.alive p in
                   t1.current <- switchPoke; t1.alive <- prevPoke::restPoke;
-                  m1 := Pl1 (SPoke p); m2:= Pl2 NoAction)
+                  t1.stat_enhance <- switchOutStatEnhancements t1;
+                  m1 := Pl1 (SPoke p); m2:= Pl2 NoAction) *) failwith "unimplemented")
   | UseAttack a ->
       (match action2 with
       | Poke p -> failwith "unimplemented"
@@ -328,6 +390,7 @@ let handle_action state action1 action2 =
               | FaintPoke p -> let prevPoke = t2.current in
                                let switchPoke, restPoke = findBattlePoke t2.alive p in
                                t2.current <- switchPoke; t2.dead <- prevPoke::t2.dead;
+                               t2.stat_enhance <- switchOutStatEnhancements t2;
                                t2.alive <- restPoke; m1 := Pl2 (SPoke p);
                                m2 := Pl1 Next
               | _ -> failwith "Faulty Game Logic: Debug 177"
@@ -336,8 +399,9 @@ let handle_action state action1 action2 =
                     | _ -> let prevPoke = t1.current in
                                 let switchPoke, restPoke = findBattlePoke t1.alive p in
                                 t1.current <- switchPoke; t1.dead <- prevPoke::t1.dead;
-                                t1.alive <- restPoke; m1 := Pl1 (SPoke p);
-                                m2 := Pl2 Next)
+                                t1.alive <- restPoke;
+                                t1.stat_enhance <- switchOutStatEnhancements t1;
+                                m1 := Pl1 (SPoke p); m2 := Pl2 Next)
   | Preprocess -> (match action2 with
                   | Preprocess -> handle_preprocessing t1 t2 w m1 m2
                   | _ -> failwith "Faulty Game Logic: Debug 211")

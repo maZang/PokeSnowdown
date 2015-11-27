@@ -84,6 +84,37 @@ let string_of_element elm =
   | Fighting -> "Fighting"
   | Poison -> "Poison"
 
+let string_of_status elm =
+  match elm with
+  | Burn -> "Burn"
+  | Freeze -> "Freeze"
+  | Paralysis -> "Paralysis"
+  | Poison -> "Poison"
+  | Toxic -> "Toxic"
+  | Sleep -> "Sleep"
+  | NoNon -> "None"
+
+let string_of_vola_status elm =
+  match elm with
+  | Confusion -> "Confusion"
+  | Curse -> "Curse"
+  | Embargo -> "Embargo"
+  | Encore -> "Encore"
+  | Flinch -> "Flinch"
+  | HealBlock -> "HealBlock"
+  | Identification -> "Identification"
+  | Infatuation -> "Infatuation"
+  | Nightmare -> "Nightmare"
+  | Trapped -> "Trapped"
+  | PerishSong -> "PerishSong"
+  | Leeched -> "Leeched"
+  | Taunt -> "Taunt"
+  | Torment -> "Torment"
+  | Levitate -> "Levitate"
+
+let string_of_poke_status (non, vola) =
+  List.fold_left (fun acc s -> acc ^ ", " ^ string_of_vola_status s) (string_of_status non) vola
+
 let getStageEvasion num =
   if abs(num) > 6 then failwith "Faulty Game Logic: Debug 43";
   if num <= 0 then
@@ -282,6 +313,9 @@ let getDmgClass str =
   | _ -> failwith "Not a valid damage class"
 
 let getSecondaryEffect str = match str with
+  | "karate-chop" -> [IncCrit 1]
+  | "double-slap" | "comet-punch" -> [RandMultHit]
+  | "fire-punch" -> [BurnChance]
   | "gear-grind" -> [MultHit 2]
   | "calm-mind" -> [StageBoost [(SpecialDefense, 1); (SpecialAttack, 1)]]
   | _ -> []
@@ -354,7 +388,7 @@ let getTestPoke () =
   let nature = Modest in
   let item = Leftovers in
   {name="gardevoir-mega"; element=[Psychic; Fairy]; move1= getMoveFromString "gear-grind"; move2 =
-  getMoveFromString "calm-mind"; move3 = getMoveFromString "charge-beam";
+  getMoveFromString "fire-punch"; move3 = getMoveFromString "charge-beam";
   move4 = getMoveFromString "toxic"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
 
@@ -367,7 +401,8 @@ let getPokeToolTip t =
   "\nSpecial Attack: " ^ string_of_int battlePoke.bspecial_attack ^ "     Modified: " ^ string_of_float (float_of_int battlePoke.bspecial_attack *. getStageAD (fst t.stat_enhance.special_attack) *. (snd t.stat_enhance.special_attack)) ^
   "\nSpecial Defense: " ^ string_of_int battlePoke.bspecial_defense ^ "  Modified: " ^ string_of_float (float_of_int battlePoke.bspecial_defense *. getStageAD (fst t.stat_enhance.special_defense) *. (snd t.stat_enhance.special_defense)) ^
   "\nSpeed: " ^ string_of_int battlePoke.bspeed ^ "                  Modified: " ^ string_of_float (float_of_int battlePoke.bspeed *. getStageAD (fst t.stat_enhance.speed) *. (snd t.stat_enhance.speed)) ^
-  "\nItem: " ^ string_of_item battlePoke.curr_item
+  "\nItem: " ^ string_of_item battlePoke.curr_item ^
+  "\nStatus: " ^ string_of_poke_status battlePoke.curr_status
 
 let getMoveToolTip move =
   "Class: " ^ string_of_class move.dmg_class ^
