@@ -12,8 +12,9 @@ type guiattack = NormMove of string | Crit of guiattack |
 type guistatus = StatBoost of stat * int * guistatus | NormStatus of string | ThawS of guistatus | FrozenSolidS | MissStatus of string | NoFreezeS of guistatus | NoBurnS of guistatus |
                   NoParaS of guistatus | ParaS | SwitchOut of guistatus | FlinchS | StatAttack of stat * int * guistatus | AsleepS | WakeS of guistatus | MakeSleep of guistatus
                   | ConfusedS | BreakConfuseS of guistatus | ConfuseMove of guistatus | LeechS of guistatus | PoisonStatus of guistatus | ParaStatus of guistatus
+                  | BadPoisonStatus of guistatus | HealHealth of guistatus | LightScreenS of guistatus
 
-type endMove = BurnDmg | BreakBurn | BreakFreeze  | BreakPara  | BreakPoison | PoisonDmg | LeechDmg of endMove | LeechHeal of endMove | Base
+type endMove = BurnDmg | BreakBurn | BreakFreeze  | BreakPara  | BreakPoison | PoisonDmg | LeechDmg of endMove | LeechHeal of endMove | Base | LightScreenFade of endMove
 
 type guimove = SPoke of string | AttackMove of guiattack | Faint | NoAction | Continue | Next | Status of guistatus | EndMove of endMove | FaintNext
 
@@ -40,7 +41,7 @@ type evs = {attack:int; defense:int; special_attack: int; special_defense: int;
 (* variants containing all secondary effects of a given move *)
 type secondary_effects = MultHit of int | StageBoost of (stat * int) list | IncCrit of int | RandMultHit | BurnChance | FreezeChance | ParaChance | OHKO | ChargeMove of string |
                          ForceSwitch | FlinchMove | StageAttack of (stat * int) list | RecoilMove | PoisonChance | PutToSleep | ConfuseOpp | ConstantDmg of int | RechargeMove |
-                         WeightDamage | DrainMove | LeechSeed | ChargeInSunlight of string
+                         WeightDamage | DrainMove | LeechSeed | ChargeInSunlight of string | ToxicChance | StageBoostSunlight of (stat * int) list | Recovery | LightScreenMake
 
 type move = {name:string; priority: int; target: target; dmg_class: dmg_class;
     mutable power:int; effect_chance: int; accuracy: int; element: element;
@@ -49,13 +50,15 @@ type move = {name:string; priority: int; target: target; dmg_class: dmg_class;
 type item = Nothing | Leftovers | ChoiceBand | LifeOrb | CharizarditeX |
             ChoiceSpecs
 
-type terrain = int
+type terrain_element = LightScreen of int
+
+type terrain = {side1: terrain_element list ref; side2: terrain_element list ref}
 
 type weather = HarshSun | Hail | Rain | SandStorm
   | HeavyRain | Sun | AirCurrent | ClearSkies
 
 (* We hope to implement all of these below but we will see *)
-type weather_terrain = {mutable weather: weather; mutable terrain: terrain}
+type weather_terrain = {mutable weather: weather; terrain: terrain}
 
 type non_volatile_status = Burn | Freeze | Paralysis | Poisoned | Toxic of int | Sleep of int |
                           NoNon

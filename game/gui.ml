@@ -411,6 +411,7 @@ let rec getStatusString starter s =
   | MissStatus s -> starter ^ " used " ^ s ^ " but it missed."
   | FrozenSolidS -> starter ^  " was frozen solid."
   | PoisonStatus s-> getStatusString starter s ^ "The opponent has been poisoned."
+  | BadPoisonStatus s -> getStatusString starter s ^ "The opponent has been badly poisoned."
   | ParaStatus s -> getStatusString starter s ^ "The opponent has been paralyzed."
   | ThawS s -> " unfroze." ^ getStatusString starter s
   | NoFreezeS s -> starter ^ " cannot freeze. " ^ getStatusString starter s
@@ -425,6 +426,8 @@ let rec getStatusString starter s =
   | ConfusedS -> starter ^ " hit itself in its confusion."
   | ConfuseMove s -> getStatusString starter s ^ "The opponent is confused."
   | LeechS s -> getStatusString starter s ^ "Seeds were spread around the opponent."
+  | HealHealth s -> getStatusString starter s ^ starter ^ " healed itself for some of its health."
+  | LightScreenS s -> getStatusString starter s ^ starter ^ " has put up a field protecting it from special attacks."
   | SwitchOut s -> (match !secondaryEffect with
                     | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
                     | `P2 -> current_command := (Some (Poke "random"), Some NoMove));
@@ -441,6 +444,7 @@ let rec getEndString starter s =
   | PoisonDmg -> starter ^ " has taken poison damage."
   | LeechDmg s -> starter ^ " has taken leech seed damage." ^ getEndString starter s
   | LeechHeal s -> starter ^ " has healed from leech seeds." ^ getEndString starter s
+  | LightScreenFade s -> getEndString starter s ^ starter ^ "'s Light Screen has faded."
 
 let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text
   (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img text_buffer (health_bar_holder1, health_bar_holder2, health_bar1, health_bar2)  back_button () =

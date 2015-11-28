@@ -20,7 +20,9 @@ let unpack opt =
 (* Status of Pokemon is changed after switching out *)
 let switchOutStatus bpoke =
   match bpoke.curr_status with
-  | (x, _) -> (x, [])
+  | (x, _) -> (match x with
+              | Toxic _ -> (Toxic 0, [])
+              | _ -> (x, []))
 
 (* Stat enhancements are lost after switching out (except for some edge cases)*)
 let switchOutStatEnhancements t =
@@ -65,7 +67,7 @@ let getBattlePoke poke =
 let initialize_battle team1 team2 =
   team1.current <- getBattlePoke (getTestPoke ());
   team2.current <- getBattlePoke (getTestOpp ()); Battle (InGame
-    (team1, team2, {weather = ClearSkies; terrain = 0}, ref (Pl1 NoAction), ref (Pl2 NoAction)))
+    (team1, team2, {weather = ClearSkies; terrain = {side1= ref []; side2= ref []}}, ref (Pl1 NoAction), ref (Pl2 NoAction)))
 
 (* Gets a random team of pokemon for initialization *)
 let getRandomTeam () =
@@ -121,13 +123,20 @@ let getCrit poke move =
 
 (* Damage calculation following the equation given by Bulbapedia.
    Stat boosts are taken into account in the beginning *)
-let damageCalculation t1 t2 move =
+let damageCalculation t1 t2 (w,ter1, ter2) move =
   let defense = match move.dmg_class with
     | Physical ->
       float_of_int t2.current.bdefense *.
       getStageAD (fst t2.stat_enhance.defense) *.
       (snd t2.stat_enhance.defense)
     | Special ->
+      let rec findLightScreen ter = match ter with
+      | [] -> false
+      | (LightScreen _)::t -> true
+      | h::t -> findLightScreen t in
+      (match findLightScreen !ter2 with
+      | true -> 2.0
+      | false -> 1.0) *.
       float_of_int t2.current.bspecial_defense *.
       getStageAD (fst t2.stat_enhance.special_defense) *.
       (snd t2.stat_enhance.special_defense)
@@ -295,7 +304,7 @@ let hitMoveDueToStatus atk moveDescript =
 
 (* Returns true if Pokemon moves, otherwise returns false as well as some value
    describing why the move failed *)
-let hitAttack atk def w (move : move) moveDescript =
+let hitAttack atk def (w,t1,t2) (move : move) moveDescript =
   let accStage, accMult = atk.stat_enhance.accuracy in
   let evStage, evMult = def.stat_enhance.evasion in
   let probability = float_of_int move.accuracy *. getStageEvasion  accStage
@@ -304,7 +313,7 @@ let hitAttack atk def w (move : move) moveDescript =
   let rec need_charge_attack = function
   | (ChargeMove s)::t -> (true, s)
   | (ChargeInSunlight s)::t ->
-                (match w.weather with
+                (match w with
                 | Sun | HarshSun -> need_charge_attack t
                 | _ -> (true, s))
   | h::t -> need_charge_attack t
@@ -364,7 +373,7 @@ let move_handler atk def weather move =
   let () = recomputeStat def in
   (* Call damage calculation to get preliminary move description and damage
       -- ignores secondary effects *)
-  let moveDescript, fdamage = damageCalculation atk def move in
+  let moveDescript, fdamage = damageCalculation atk def weather move in
   (* creates a reference to move description to allow mutation *)
   let newmove = ref moveDescript in
   (* damage does not need to be mutated *)
@@ -376,7 +385,7 @@ let move_handler atk def weather move =
     | (MultHit n)::t ->
       (* Once MultHit is done calculating, it calculates rest of effects *)
       if n <= 1 then secondary_effects t else
-        (let moveDescript', fdamage' = damageCalculation atk def move in
+        (let moveDescript', fdamage' = damageCalculation atk def weather move in
          let damage' = int_of_float fdamage' in
          let newmove' = link_multmove_descript moveDescript' !newmove in
          newmove := newmove';
@@ -545,7 +554,7 @@ let move_handler atk def weather move =
     | WeightDamage::t ->
       (let base_power = def.current.curr_hp * 120 / def.current.bhp in
       move.power <- base_power;
-      let moveDescript', fdamage' = damageCalculation atk def move in
+      let moveDescript', fdamage' = damageCalculation atk def weather move in
       let damage' = int_of_float fdamage' in
       def.current.curr_hp <- max 0 (def.current.curr_hp - damage' + damage));
       secondary_effects t
@@ -588,13 +597,19 @@ let move_handler atk def weather move =
     reason'
 
 (* Deals with the status moves that are essentially all secondary effects *)
-let rec status_move_handler atk def weather (move: move) =
+let rec status_move_handler atk def (w, t1, t2) (move: move) =
   (* stats recomputed -- mainly for accuracy/evasion reasons *)
   let () = recomputeStat atk in
   let () = recomputeStat def in
   (* Similar code to move_handler *)
   let newmove = ref (NormStatus move.name) in
   let rec secondary_effects lst = match lst with
+    | (StageBoostSunlight l)::t ->
+        if w = HarshSun || w = Sun then
+          secondary_effects
+            ((StageBoost (List.map (fun (stat, n) -> (stat, 2 * n)) l))::t)
+        else
+          secondary_effects ((StageBoost l)::t)
   (* StageBoost is any status move that boosts stats *)
     | (StageBoost l)::t ->
         (match l with
@@ -743,6 +758,27 @@ let rec status_move_handler atk def weather (move: move) =
           | (NoNon, x) -> def.current.curr_status <- (Paralysis, x);
                             newmove := ParaStatus !newmove
           | _ -> ()); secondary_effects t
+    (* status moves that badly poison opponents *)
+    | ToxicChance::t -> (match def.current.curr_status with
+          | (NoNon, x) -> def.current.curr_status <- (Toxic 0, x);
+                          newmove := BadPoisonStatus !newmove
+          | _ -> ()); secondary_effects t
+    (* moves that heal the user *)
+    | Recovery::t -> let heal = atk.current.bhp / 2 in
+                  atk.current.curr_hp <-
+                      min atk.current.bhp (atk.current.curr_hp + heal);
+                  newmove := HealHealth !newmove; secondary_effects t
+    (* moves that make light screen *)
+    | LightScreenMake::t -> let rec findLightScreen ter = match ter with
+                            | (LightScreen _)::t -> true
+                            | h::t -> findLightScreen t
+                            | [] -> false in
+                            (if findLightScreen !t1 then
+                              ()
+                            else
+                              (t1 := ((LightScreen 1)::!t1);
+                              newmove := LightScreenS !newmove));
+                            secondary_effects t
     | [] -> ()
   in
   let hit, reason = hitMoveDueToStatus atk (`NoAdd !newmove) in
@@ -799,6 +835,13 @@ let handle_next_turn t1 t2 w m1 m2 =
     Seed etc... after every move to prepare for next turn *)
 let handle_preprocessing t1 t2 w m1 m2 =
   Printf.printf "Handling preprocessing for move\n%!";
+  let rec fix_terrain t acc descript =  function
+  | (LightScreen n)::t' -> if n = 0 then
+                           fix_terrain t acc (LightScreenFade descript) t'
+                          else
+                            fix_terrain t ((LightScreen (n-1))::acc) descript t'
+  | h::t' -> fix_terrain t (h::acc) descript t'
+  | [] -> (acc, descript) in
   let rec fix_vstatus t1 t2 descript1 descript2 = function
   | [] -> (descript1, descript2)
   | Leeched::t ->
@@ -831,6 +874,13 @@ let handle_preprocessing t1 t2 w m1 m2 =
                 else
                   (t.current.curr_hp <- t.current.curr_hp - 1 * t.current.bhp / 8;
                     PoisonDmg)
+  | Toxic n -> if List.mem Poison t.current.pokeinfo.element || List.mem Steel t.current.pokeinfo.element then
+                  (t.current.curr_status <- (NoNon, snd t.current.curr_status);
+                  BreakPoison)
+                else
+                  (let damage = t.current.bhp * (n+1) / 16 in
+                  t.current.curr_hp <- t.current.curr_hp - damage;
+                  PoisonDmg)
   | _ -> Base in
   let nstatus, vstatus = t1.current.curr_status in
   let nstatus', vstatus' = t2.current.curr_status in
@@ -838,14 +888,17 @@ let handle_preprocessing t1 t2 w m1 m2 =
   let move2 = fix_nstatus nstatus' t2 in
   let move1', move2' = fix_vstatus t1 t2 move1 move2 vstatus in
   let move1'', move2'' = fix_vstatus t2 t1 move2' move1' vstatus' in
-  (match move1'' with
+  let (ter1, move1f) = fix_terrain t1 [] move1'' !(w.terrain.side1) in
+  let (ter2, move2f) = fix_terrain t2 [] move2'' !(w.terrain.side2) in
+  (match move1f with
   | Base -> m1 := Pl1 Continue
-  | _ -> m1 := Pl1 (EndMove move1''));
-  (match move2'' with
+  | _ -> m1 := Pl1 (EndMove move1f));
+  (match move2f with
   | Base -> m2 := Pl2 Continue
-  | _ -> m2 := Pl2 (EndMove move2''));
+  | _ -> m2 := Pl2 (EndMove move2f));
   t1.current.curr_hp <- min (max 0 t1.current.curr_hp) t1.current.bhp;
-  t2.current.curr_hp <- min (max 0 t2.current.curr_hp) t2.current.bhp
+  t2.current.curr_hp <- min (max 0 t2.current.curr_hp) t2.current.bhp;
+  w.terrain.side1 := ter1; w.terrain.side2 := ter2
 
 (* Handle the case when both Pokemon use a move *)
 let handle_two_moves t1 t2 w m1 m2 a1 a2 =
@@ -876,19 +929,19 @@ let handle_two_moves t1 t2 w m1 m2 a1 a2 =
     (* Gets the moves both pokemon used *)
     match curr_move.dmg_class with
     (* case where Player 1 uses a Status move *)
-    | Status -> let newmove = status_move_handler t1 t2 w curr_move in
+    | Status -> let newmove = status_move_handler t1 t2 (w.weather, w.terrain.side1, w.terrain.side2) curr_move in
             if (List.mem ForceSwitch curr_move.secondary) then
               (m1 := Pl1(Status newmove); m2 := Pl2 NoAction)
             else
               (match curr_move'.dmg_class with
                (* case where Player 2 uses a Status Move *)
-              | Status -> let newmove' = status_move_handler t2 t1 w curr_move' in
+              | Status -> let newmove' = status_move_handler t2 t1 (w.weather, w.terrain.side2, w.terrain.side1) curr_move' in
                   m1 := Pl1 (Status newmove); m2 := Pl2 (Status newmove')
               (* case where Player 2 uses a Special/Physical Move *)
-               | _ -> let newmove' = move_handler t2 t1 w curr_move' in
+               | _ -> let newmove' = move_handler t2 t1 (w.weather, w.terrain.side2, w.terrain.side1) curr_move' in
                   m1 := Pl1 (Status newmove); m2 := Pl2 (AttackMove newmove'))
     (* Case where Player 1 uses a Physical/Special Move *)
-    | _ -> let newmove = move_handler t1 t2 w curr_move in
+    | _ -> let newmove = move_handler t1 t2 (w.weather, w.terrain.side1, w.terrain.side2) curr_move in
            (* Case where second pokemon faints before getting to move *)
            if (p2poke.curr_hp = 0 || List.mem ForceSwitch curr_move.secondary) then
               (m1 := Pl1 (AttackMove newmove); m2 := Pl2 NoAction)
@@ -896,11 +949,11 @@ let handle_two_moves t1 t2 w m1 m2 a1 a2 =
            else
               (match curr_move'.dmg_class with
               (* Case where Player 2 uses a Status Move *)
-              | Status -> let newmove' = status_move_handler t2 t1 w curr_move' in
+              | Status -> let newmove' = status_move_handler t2 t1 (w.weather, w.terrain.side2, w.terrain.side1) curr_move' in
                           m1 := Pl1 (AttackMove newmove);
                           m2 := Pl2 (Status newmove')
               (* Case where Player 2 Uses a Physical/Special Move *)
-              | _      -> let newmove' = move_handler t2 t1 w curr_move' in
+              | _      -> let newmove' = move_handler t2 t1 (w.weather, w.terrain.side2, w.terrain.side1) curr_move' in
                           m1 := Pl1 (AttackMove newmove);
                           m2 := Pl2 (AttackMove newmove')
               )
@@ -908,24 +961,24 @@ let handle_two_moves t1 t2 w m1 m2 a1 a2 =
   (* Case for where Player 2 is faster *)
   else (
     match curr_move'.dmg_class with
-    | Status -> let newmove = status_move_handler t2 t1 w curr_move' in
+    | Status -> let newmove = status_move_handler t2 t1 (w.weather, w.terrain.side2, w.terrain.side1) curr_move' in
             if (List.mem ForceSwitch curr_move'.secondary) then
              (m1 := Pl2 (Status newmove); m2 := Pl1 NoAction)
             else
             (match curr_move.dmg_class with
-            | Status -> let newmove' = status_move_handler t1 t2 w curr_move in
+            | Status -> let newmove' = status_move_handler t1 t2 (w.weather, w.terrain.side1, w.terrain.side2) curr_move in
                   m1 := Pl2 (Status newmove); m2 := Pl1 (Status newmove')
-            | _ -> let newmove' = move_handler t1 t2 w curr_move in
+            | _ -> let newmove' = move_handler t1 t2 (w.weather, w.terrain.side1, w.terrain.side2) curr_move in
                   m1 := Pl2 (Status newmove); m2 := Pl1 (AttackMove newmove'))
-    | _ -> let newmove = move_handler t2 t1 w curr_move' in
+    | _ -> let newmove = move_handler t2 t1 (w.weather, w.terrain.side2, w.terrain.side1) curr_move' in
            if (p1poke.curr_hp = 0 || List.mem ForceSwitch curr_move'.secondary) then
               (m1 := Pl2 (AttackMove newmove); m2 := Pl1 NoAction)
            else
               (match curr_move.dmg_class with
-              | Status -> let newmove' = status_move_handler t1 t2 w curr_move in
+              | Status -> let newmove' = status_move_handler t1 t2 (w.weather, w.terrain.side1, w.terrain.side2) curr_move in
                           m1 := Pl2 (AttackMove newmove);
                           m2 := Pl1 (Status newmove')
-              | _      -> let newmove'= move_handler t1 t2 w curr_move in
+              | _      -> let newmove'= move_handler t1 t2 (w.weather, w.terrain.side1, w.terrain.side2) curr_move in
                           m1 := Pl2 (AttackMove newmove);
                           m2 := Pl1 (AttackMove newmove')
               )
@@ -947,10 +1000,10 @@ let handle_action state action1 action2 =
                        t1.current <- switchPoke; t1.alive <- prevPoke::restPoke;
                        let curr_move = findBattleMove t2.current.pokeinfo a in
                        if curr_move.dmg_class = Status then
-                          ( let newmove = status_move_handler t2 t1 w curr_move in
+                          ( let newmove = status_move_handler t2 t1 (w.weather, w.terrain.side2, w.terrain.side1) curr_move in
                             m1 := Pl1 (SPoke p); m2 := Pl2 (Status newmove))
                        else (
-                        let newmove = move_handler t2 t1 w curr_move in
+                        let newmove = move_handler t2 t1 (w.weather, w.terrain.side2, w.terrain.side1) curr_move in
                         m1 := Pl1 (SPoke p); m2 := Pl2 (AttackMove newmove))
       | NoMove -> let prevPoke = t1.current in
                        let switchPoke, restPoke = findBattlePoke t1.alive p in
@@ -966,10 +1019,10 @@ let handle_action state action1 action2 =
       | NoMove -> let curr_poke = t1.current in
                   let curr_move = findBattleMove curr_poke.pokeinfo a in
                   if curr_move.dmg_class = Status then
-                    (let newmove = status_move_handler t1 t2 w curr_move in
+                    (let newmove = status_move_handler t1 t2 (w.weather, w.terrain.side1, w.terrain.side2) curr_move in
                     m1 := Pl1 (Status newmove); m2 := Pl2 NoAction)
                   else
-                    (let newmove = move_handler t1 t2 w curr_move in
+                    (let newmove = move_handler t1 t2 (w.weather, w.terrain.side1, w.terrain.side2) curr_move in
                     m1 := Pl1 (AttackMove newmove); m2 := Pl2 NoAction)
       | _ -> failwith "Faulty Game Logic: Debug 449")
   | NoMove -> (match action2 with
@@ -990,10 +1043,10 @@ let handle_action state action1 action2 =
               | UseAttack a -> let curr_poke = t2.current in
                               let curr_move = findBattleMove curr_poke.pokeinfo a in
                               if curr_move.dmg_class = Status then
-                              (let newmove = status_move_handler t2 t1 w curr_move in
+                              (let newmove = status_move_handler t2 t1 (w.weather, w.terrain.side2, w.terrain.side1) curr_move in
                                 m1 := Pl2 (Status newmove); m2 := Pl1 NoAction)
                               else
-                                (let newmove = move_handler t2 t1 w curr_move in
+                                (let newmove = move_handler t2 t1 (w.weather, w.terrain.side2, w.terrain.side1) curr_move in
                                 m1 := Pl2 (AttackMove newmove); m2 := Pl1 NoAction)
               | NoMove -> m1 := Pl1 NoAction; m2 := Pl2 NoAction
               | _ -> failwith "Faulty Game Logic: Debug 177"
