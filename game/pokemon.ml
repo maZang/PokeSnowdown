@@ -326,7 +326,7 @@ let getSecondaryEffect str = match str with
   | "stomp" | "rolling-kick" | "headbutt" | "bite" -> [FlinchMove]
   | "double-kick" | "gear-grind"  -> [MultHit 2]
   | "sand-attack" -> [StageAttack [(Accuracy, 1)]]
-  | "take-down" | "double-edge" -> [RecoilMove]
+  | "take-down" | "double-edge" | "submission" -> [RecoilMove]
   | "tail-whip" | "leer" -> [StageAttack [(Defense, 1)]]
   | "poison-sting" -> [PoisonChance]
   | "twineedle" -> [MultHit 2; PoisonChance]
@@ -337,6 +337,8 @@ let getSecondaryEffect str = match str with
   | "acid" -> [StageAttack [(SpecialDefense, 1)]]
   | "bubble-beam" -> [StageAttack [(Speed, 1)]]
   | "hyper-beam" -> [RechargeMove]
+  | "low-kick" -> [WeightDamage]
+  | "seismic-toss" -> [ConstantDmg 100]
   | "calm-mind" -> [StageBoost [(SpecialDefense, 1); (SpecialAttack, 1)]]
   | _ -> []
 
@@ -408,8 +410,8 @@ let getTestPoke () =
   let nature = Modest in
   let item = Leftovers in
   {name="gardevoir-mega"; element=[Psychic; Electric]; move1= getMoveFromString "ember"; move2 =
-  getMoveFromString "aurora-beam"; move3 = getMoveFromString "ice-beam";
-  move4 = getMoveFromString "hyper-beam"; hp = 68; attack = 85; special_attack = 165; defense = 65;
+  getMoveFromString "seismic-toss"; move3 = getMoveFromString "ice-beam";
+  move4 = getMoveFromString "low-kick"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
 
 let getPokeToolTip t =

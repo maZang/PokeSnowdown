@@ -571,7 +571,7 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
   | Pl2 EndMove x -> let txt = getEndString "Player Two " x in
                     let str_list = Str.split (Str.regexp "\.") txt in
                     List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
-                    updatehealth2 (); simple_move ()
+                    updatehealth2 (); turn_end ()
   | _ -> failwith "unimplement")
 
 
