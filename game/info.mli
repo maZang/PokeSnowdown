@@ -7,13 +7,13 @@ type guiattack = NormMove of string | Crit of guiattack |
                   SEff of guiattack | NoEff of guiattack | HitMult of int * guiattack | BurnMove of guiattack | FreezeMove of guiattack | ParaMove of guiattack | MissMove of string | FrozenSolid |
                   Thaw of guiattack | NoFreeze of guiattack | NoBurn of guiattack | NoPara of guiattack | Para | OHKill of guiattack | ChargingMove of string * string | FlinchA |
                   Recoil of guiattack | PoisonMove of guiattack | Asleep | Wake of guiattack | Confused | BreakConfuse of guiattack | StatAttackA of stat * int * guiattack
-                  | ConfuseMoveA of guiattack | Recharging of guiattack
+                  | ConfuseMoveA of guiattack | Recharging of guiattack | DrainA of guiattack
 
 type guistatus = StatBoost of stat * int * guistatus | NormStatus of string | ThawS of guistatus | FrozenSolidS | MissStatus of string | NoFreezeS of guistatus | NoBurnS of guistatus |
                   NoParaS of guistatus | ParaS | SwitchOut of guistatus | FlinchS | StatAttack of stat * int * guistatus | AsleepS | WakeS of guistatus | MakeSleep of guistatus
-                  | ConfusedS | BreakConfuseS of guistatus | ConfuseMove of guistatus
+                  | ConfusedS | BreakConfuseS of guistatus | ConfuseMove of guistatus | LeechS of guistatus
 
-type endMove = BurnDmg of endMove | Base | BreakBurn of endMove | BreakFreeze of endMove | BreakPara of endMove | BreakPoison of endMove | PoisonDmg of endMove
+type endMove = BurnDmg | BreakBurn | BreakFreeze  | BreakPara  | BreakPoison | PoisonDmg | LeechDmg of endMove | LeechHeal of endMove | Base
 
 type guimove = SPoke of string | AttackMove of guiattack | Faint | NoAction | Continue | Next | Status of guistatus | EndMove of endMove | FaintNext
 
@@ -40,7 +40,7 @@ type evs = {attack:int; defense:int; special_attack: int; special_defense: int;
 (* variants containing all secondary effects of a given move *)
 type secondary_effects = MultHit of int | StageBoost of (stat * int) list | IncCrit of int | RandMultHit | BurnChance | FreezeChance | ParaChance | OHKO | ChargeMove of string |
                          ForceSwitch | FlinchMove | StageAttack of (stat * int) list | RecoilMove | PoisonChance | PutToSleep | ConfuseOpp | ConstantDmg of int | RechargeMove |
-                         WeightDamage
+                         WeightDamage | DrainMove | LeechSeed
 
 type move = {name:string; priority: int; target: target; dmg_class: dmg_class;
     mutable power:int; effect_chance: int; accuracy: int; element: element;

@@ -339,6 +339,8 @@ let getSecondaryEffect str = match str with
   | "hyper-beam" -> [RechargeMove]
   | "low-kick" -> [WeightDamage]
   | "seismic-toss" -> [ConstantDmg 100]
+  | "absorb" | "mega-drain" -> [DrainMove]
+  | "leech-seed" -> [LeechSeed]
   | "calm-mind" -> [StageBoost [(SpecialDefense, 1); (SpecialAttack, 1)]]
   | _ -> []
 
@@ -410,7 +412,7 @@ let getTestPoke () =
   let nature = Modest in
   let item = Leftovers in
   {name="gardevoir-mega"; element=[Psychic; Electric]; move1= getMoveFromString "ember"; move2 =
-  getMoveFromString "seismic-toss"; move3 = getMoveFromString "ice-beam";
+  getMoveFromString "seismic-toss"; move3 = getMoveFromString "leech-seed";
   move4 = getMoveFromString "low-kick"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
 

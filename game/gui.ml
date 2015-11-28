@@ -393,6 +393,7 @@ let rec getAttackString starter a =
   | Recoil s -> getAttackString starter s ^"The user suffered some recoil damage!"
   | BreakConfuse s -> starter ^ " has broken out of its confusion." ^ getAttackString starter s
   | Confused -> starter ^ " hit itself in its confusion."
+  | DrainA s-> getAttackString starter s ^ starter ^ " drained some of it's opponents health."
   | ConfuseMoveA s -> getAttackString starter s ^ "The opponent is confused."
   | ChargingMove (s, n) -> (match !secondaryEffect with
                              | `P1 -> current_command := (Some (UseAttack n), snd !current_command)
@@ -421,6 +422,7 @@ let rec getStatusString starter s =
   | BreakConfuseS s-> starter ^ " has broken out of its confusion." ^ getStatusString starter s
   | ConfusedS -> starter ^ " hit itself in its confusion."
   | ConfuseMove s -> getStatusString starter s ^ "The opponent is confused."
+  | LeechS s -> getStatusString starter s ^ "Seeds were spread around the opponent."
   | SwitchOut s -> (match !secondaryEffect with
                     | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
                     | `P2 -> current_command := (Some (Poke "random"), Some NoMove));
@@ -429,12 +431,14 @@ let rec getStatusString starter s =
 let rec getEndString starter s =
   match s with
   | Base -> ""
-  | BreakBurn s -> starter ^ "cannot be burned." ^ getEndString starter s
-  | BreakFreeze s -> starter ^ "cannot be frozen." ^ getEndString starter s
-  | BreakPara s -> starter ^ "cannot be paralyzed." ^ getEndString starter s
-  | BreakPoison s -> starter ^ "cannot be posioned." ^ getEndString starter s
-  | BurnDmg s -> starter ^ "has taken burn damage." ^ getEndString starter s
-  | PoisonDmg s -> starter ^ "has taken poison damage." ^ getEndString starter s
+  | BreakBurn -> starter ^ " cannot be burned."
+  | BreakFreeze -> starter ^ " cannot be frozen."
+  | BreakPara -> starter ^ " cannot be paralyzed."
+  | BreakPoison -> starter ^ " cannot be posioned."
+  | BurnDmg -> starter ^ " has taken burn damage."
+  | PoisonDmg -> starter ^ "has taken poison damage."
+  | LeechDmg s -> starter ^ " has taken leech seed damage." ^ getEndString starter s
+  | LeechHeal s -> starter ^ " has healed from leech seeds." ^ getEndString starter s
 
 let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text
   (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img text_buffer (health_bar_holder1, health_bar_holder2, health_bar1, health_bar2)  back_button () =
@@ -522,7 +526,7 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
                  | Random1p -> busywait (); current_command := (Some (NoMove), Some (FaintPoke ""));
                                simple_move()
                  | _ -> failwith "Faulty Game Logic: Debug 007")
-  | Pl1 EndMove x -> let txt = getEndString "Player One " x in
+  | Pl1 EndMove x -> let txt = getEndString t1.current.pokeinfo.name x in
                     let str_list = Str.split (Str.regexp "\.") txt in
                     List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
                     updatehealth1 ()
@@ -568,7 +572,7 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
   | Pl1 FaintNext | Pl2 FaintNext -> ()
   | Pl1 NoAction -> pre_process ()
   | Pl2 NoAction -> pre_process ()
-  | Pl2 EndMove x -> let txt = getEndString "Player Two " x in
+  | Pl2 EndMove x -> let txt = getEndString t2.current.pokeinfo.name x in
                     let str_list = Str.split (Str.regexp "\.") txt in
                     List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
                     updatehealth2 (); turn_end ()

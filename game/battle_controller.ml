@@ -262,6 +262,7 @@ let hitMoveDueToStatus atk moveDescript =
                 atk.current.curr_hp <- atk.current.curr_hp - confuse_damage;
                 (false, `Confused))
               ))
+      | Leeched::t -> helperVolaStatus t moveDescript'
       | _ -> failwith "unimplemented" in
   let nvola, vola = atk.current.curr_status in
   match nvola with
@@ -532,6 +533,11 @@ let move_handler atk def move =
       let damage' = int_of_float fdamage' in
       def.current.curr_hp <- max 0 (def.current.curr_hp - damage' + damage));
       secondary_effects t
+    (* Moves that drain health *)
+    | DrainMove::t ->
+      let heal = damage / 2 in
+      atk.current.curr_hp <- atk.current.curr_hp + heal;
+      newmove := DrainA !newmove
     (* Base case *)
     | [] -> ()
     in
@@ -687,6 +693,7 @@ let rec status_move_handler atk def (move: move) =
                          def.current.curr_status <- (Sleep sleep_turns, x);
                         newmove := MakeSleep !newmove
                       | _ -> ()); secondary_effects t
+    (* Moves that confuse opponent *)
     | ConfuseOpp::t -> let confuse_turns = Random.int 4 + 1 in
                        let novola , x = def.current.curr_status in
                        let rec check_for_confusion = function
@@ -699,6 +706,17 @@ let rec status_move_handler atk def (move: move) =
                           (def.current.curr_status <-
                             (novola, (Confusion confuse_turns)::x);
                           newmove := ConfuseMove !newmove)); secondary_effects t
+    (* Essentially for Leech Seed *)
+    | LeechSeed::t -> let novola, x = def.current.curr_status in
+                      let rec check_for_leech = function
+                      | [] -> false
+                      | Leeched::t -> true
+                      | h::t -> check_for_leech t in
+                      (if check_for_leech x then
+                        ()
+                      else
+                        (def.current.curr_status <- (novola, Leeched::x);
+                        newmove := LeechS !newmove)); secondary_effects t
     | [] -> ()
   in
   let hit, reason = hitMoveDueToStatus atk (`NoAdd !newmove) in
@@ -755,54 +773,53 @@ let handle_next_turn t1 t2 w m1 m2 =
     Seed etc... after every move to prepare for next turn *)
 let handle_preprocessing t1 t2 w m1 m2 =
   Printf.printf "Handling preprocessing for move\n%!";
-  let nstatus, vstatus = t1.current.curr_status in
-  (match nstatus with
-  | Burn -> if List.mem Fire t1.current.pokeinfo.element then
-                (t1.current.curr_status <- (NoNon, snd t1.current.curr_status);
-                m1 := Pl1 (EndMove (BreakBurn Base)))
+  let rec fix_vstatus t1 t2 descript1 descript2 = function
+  | [] -> (descript1, descript2)
+  | Leeched::t ->
+          let damage = t1.current.bhp / 16 in
+          t1.current.curr_hp <- t1.current.curr_hp - damage;
+          t2.current.curr_hp <- t2.current.curr_hp + damage;
+          fix_vstatus t1 t2 (LeechDmg descript1) (LeechHeal descript2) t
+  | h::t -> fix_vstatus t1 t2 descript1 descript2 t in
+  let fix_nstatus nstatus t =
+  match nstatus with
+  | Burn -> if List.mem Fire t.current.pokeinfo.element then
+              (t.current.curr_status <- (NoNon, snd t1.current.curr_status);
+               BreakBurn)
             else
-                (t1.current.curr_hp <- max 0 (t1.current.curr_hp - 1 * t1.current.bhp / 8);
-                m1 := Pl1 (EndMove (BurnDmg Base)))
-  | Freeze -> if List.mem Ice t1.current.pokeinfo.element then
-                (t1.current.curr_status <-  (NoNon, snd t1.current.curr_status);
-                m1 := Pl1 (EndMove (BreakFreeze Base)))
-              else
-                m1 := Pl1 Continue
-  | Paralysis -> if List.mem Electric t1.current.pokeinfo.element then
-                  (t1.current.curr_status <- (NoNon, snd t1.current.curr_status);
-                  m1 := Pl1 (EndMove (BreakPara Base)))
+              (t.current.curr_hp <- t1.current.curr_hp - 1 * t.current.bhp / 8;
+              BurnDmg)
+  | Freeze -> if List.mem Ice t.current.pokeinfo.element then
+              (t.current.curr_status <- (NoNon, snd t1.current.curr_status);
+              BreakFreeze)
+            else
+              Base
+  | Paralysis -> if List.mem Electric t.current.pokeinfo.element then
+                  (t.current.curr_status <- (NoNon, snd t.current.curr_status);
+                  BreakPara)
                 else
-                  m1 := Pl1 Continue
-  | Poisoned -> if List.mem Poison t1.current.pokeinfo.element || List.mem Steel t1.current.pokeinfo.element then
-                (t1.current.curr_status <- (NoNon, snd t1.current.curr_status);
-                m1 := Pl1 (EndMove (BreakPoison Base)))
-            else
-                (t1.current.curr_hp <- max 0 (t1.current.curr_hp - 1 * t1.current.bhp / 8);
-                m1 := Pl1 (EndMove (PoisonDmg Base)))
-  | _ -> m1 := Pl1 Continue);
+                  Base
+  | Poisoned -> if List.mem Poison t.current.pokeinfo.element || List.mem Steel t.current.pokeinfo.element then
+                  (t.current.curr_status <- (NoNon, snd t.current.curr_status);
+                  BreakPoison)
+                else
+                  (t.current.curr_hp <- t.current.curr_hp - 1 * t.current.bhp / 8;
+                    PoisonDmg)
+  | _ -> Base in
+  let nstatus, vstatus = t1.current.curr_status in
   let nstatus', vstatus' = t2.current.curr_status in
-  (match nstatus' with
-  | Burn -> if List.mem Fire t2.current.pokeinfo.element then
-                (t2.current.curr_status <- (NoNon, snd t2.current.curr_status);
-                m2 := Pl2 (EndMove (BreakBurn Base)))
-            else
-                (t2.current.curr_hp <- max 0 (t2.current.curr_hp - 1 * t2.current.bhp / 8);
-                m2 := Pl2 (EndMove (BurnDmg Base)))
-  | Freeze -> if List.mem Ice t2.current.pokeinfo.element then (
-                t2.current.curr_status <-  (NoNon, snd t2.current.curr_status);
-                m2 := Pl2 (EndMove (BreakFreeze Base)))
-              else m2 := Pl2 Continue
-  | Paralysis -> if List.mem Electric t2.current.pokeinfo.element then (
-                  t2.current.curr_status <- (NoNon, snd t2.current.curr_status);
-                  m2 := Pl2 (EndMove (BreakPara Base)))
-                else m2 := Pl2 Continue
-  | Poisoned -> if List.mem Poison t2.current.pokeinfo.element || List.mem Steel t2.current.pokeinfo.element then
-                (t2.current.curr_status <- (NoNon, snd t2.current.curr_status);
-                m2 := Pl2 (EndMove (BreakPoison Base)))
-            else
-                (t2.current.curr_hp <- max 0 (t2.current.curr_hp - 1 * t2.current.bhp / 8);
-                m2 := Pl2 (EndMove (PoisonDmg Base)))
-  | _ -> m2 := Pl2 Continue)
+  let move1 = fix_nstatus nstatus t1 in
+  let move2 = fix_nstatus nstatus t2 in
+  let move1', move2' = fix_vstatus t1 t2 move1 move2 vstatus in
+  let move1'', move2'' = fix_vstatus t2 t1 move2' move1' vstatus' in
+  (match move1'' with
+  | Base -> m1 := Pl1 Continue
+  | _ -> m1 := Pl1 (EndMove move1''));
+  (match move2'' with
+  | Base -> m2 := Pl2 Continue
+  | _ -> m2 := Pl2 (EndMove move2''));
+  t1.current.curr_hp <- min (max 0 t1.current.curr_hp) t1.current.bhp;
+  t2.current.curr_hp <- min (max 0 t2.current.curr_hp) t2.current.bhp
 
 (* Handle the case when both Pokemon use a move *)
 let handle_two_moves t1 t2 w m1 m2 a1 a2 =
