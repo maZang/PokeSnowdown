@@ -113,6 +113,8 @@ let string_of_vola_status elm =
   | Levitate -> "Levitate"
   | Charge -> "Charging"
   | Substitute _ -> "Substitute"
+  | Protected -> "Protect"
+  | UsedProtect -> "Used Protect"
 
 let string_of_poke_status (non, vola) =
   List.fold_left (fun acc s -> acc ^ ", " ^ string_of_vola_status s) (string_of_status non) vola
@@ -379,6 +381,7 @@ let getSecondaryEffect str = match str with
   | "substitute" -> [SubstituteMake]
   | "triple-kick" -> [MultHit 3]
   | "flail" | "reversal" -> [Flail]
+  | "protect" | "detect"-> [Protect]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -451,7 +454,7 @@ let getTestPoke () =
   let nature = Bold in
   let item = Leftovers in
   {name="gardevoir-mega"; element=[Psychic]; move1= getMoveFromString "substitute"; move2 =
-  getMoveFromString "flail"; move3 = getMoveFromString "reversal";
+  getMoveFromString "detect"; move3 = getMoveFromString "protect";
   move4 = getMoveFromString "mud-slap"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
 

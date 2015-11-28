@@ -400,6 +400,7 @@ let rec getAttackString starter a =
   | DrainSleepFail s -> starter ^ " used " ^ s ^ " but the opponent is not asleep!"
   | BreakSub s -> getAttackString starter s ^ starter ^ " has broken the opponent's substitute."
   | SubDmg s -> getAttackString starter s ^ "The opponent's substitute took the damage instead."
+  | ProtectedA s -> starter ^ " used " ^ s ^ " but opponent protected itself."
   | ChargingMove (s, n) -> (match !secondaryEffect with
                              | `P1 -> current_command := (Some (UseAttack n), snd !current_command)
                              |`P2 -> current_command := (fst !current_command, Some (UseAttack n))); starter ^ " is charging up." ^ s
@@ -439,6 +440,9 @@ let rec getStatusString starter s =
   | SubBlock s -> getStatusString starter s ^ "The move was blocked by the opponent's substitute."
   | SubFail s -> getStatusString starter s ^ "The substitute failed."
   | SubMake s -> getStatusString starter s ^ starter ^ " has created a substitute."
+  | ProtectedS s -> starter ^ " used " ^ s ^ " but opponent protected itself."
+  | ProtectS s-> getStatusString starter s ^ starter ^ " has protected itself."
+  | ProtectFail s-> getStatusString starter s ^ starter ^ " has failed to protect itself."
   | SwitchOut s -> (match !secondaryEffect with
                     | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
                     | `P2 -> current_command := (Some (Poke "random"), Some NoMove));

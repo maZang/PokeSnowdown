@@ -291,6 +291,8 @@ let hitMoveDueToStatus atk moveDescript =
               ))
       | Leeched::t -> helperVolaStatus t moveDescript'
       | (Substitute _)::t -> helperVolaStatus t moveDescript'
+      | Protected::t -> helperVolaStatus t moveDescript'
+      | UsedProtect::t -> helperVolaStatus t moveDescript'
       | _ -> failwith "unimplemented" in
   let nvola, vola = atk.current.curr_status in
   match nvola with
@@ -321,6 +323,13 @@ let hitMoveDueToStatus atk moveDescript =
                 (false ,`Asleep)
   |_ -> helperVolaStatus vola (moveDescript)
 
+(* Helper function for finding protect *)
+let rec find_protect lst =
+  match lst with
+  | Protected::t -> true
+  | h::t -> find_protect t
+  | [] -> false
+
 (* Returns true if Pokemon moves, otherwise returns false as well as some value
    describing why the move failed *)
 let hitAttack atk def (w,t1,t2) (move : move) damage moveDescript =
@@ -347,7 +356,10 @@ let hitAttack atk def (w,t1,t2) (move : move) damage moveDescript =
   let hit_move () =
     if probability > randnum || List.mem NeverMiss move.secondary then
       match get_substitute_health (snd def.current.curr_status) with
-      | None -> (true, moveDescript)
+      | None -> (if find_protect (snd def.current.curr_status) then
+                  (false, ProtectedA move.name)
+                else
+                  (true, moveDescript))
       | Some n -> let sub_damage = max 0 (n - damage) in
                   let newvola = filter_substitute sub_damage (snd def.current.curr_status) in
                   def.current.curr_status <- (fst def.current.curr_status, newvola);
@@ -392,6 +404,8 @@ let hitStatus atk def (move: move) moveDescript =
     if probability > randnum then
       if find_substitute (snd def.current.curr_status) then
         (false, SubBlock moveDescript)
+      else if find_protect (snd def.current.curr_status) then
+        (false, ProtectedS move.name)
       else
         (true, moveDescript)
     else
@@ -891,6 +905,20 @@ let rec status_move_handler atk def (w, t1, t2) (move: move) =
                         (atk.current.curr_hp <- atk.current.curr_hp - atk.current.bhp / 4;
                         atk.current.curr_status <- (fst atk.current.curr_status, (Substitute (atk.current.bhp/4))::(snd atk.current.curr_status));
                         newmove := SubMake !newmove)); secondary_effects t
+    (* protect has 1/4 chance of working on subsequent use  *)
+    | Protect::t -> let rec find = function
+                    | [] -> false
+                    | UsedProtect::_ -> true
+                    | h::t -> find t in
+                   (if find (snd atk.current.curr_status) then
+                    (if 1 > Random.int 4 then
+                      (atk.current.curr_status <- (fst atk.current.curr_status, Protected::(snd atk.current.curr_status));
+                      newmove := ProtectS !newmove)
+                    else
+                      newmove := ProtectFail !newmove)
+                  else
+                    (atk.current.curr_status <- (fst atk.current.curr_status, Protected::(snd atk.current.curr_status));
+                    newmove := ProtectS !newmove)); secondary_effects t
     | [] -> ()
   in
   let hit, reason = hitMoveDueToStatus atk (`NoAdd !newmove) in
@@ -923,7 +951,11 @@ let rec status_move_handler atk def (w, t1, t2) (move: move) =
 
 let remove_some_status bp =
   let nonvola, vola = bp.curr_status in
-  let newvola = List.filter (fun s -> s <> Flinch) vola in
+  let newvola' = List.filter (fun s -> s <> Flinch && s <> UsedProtect) vola in
+  let newvola = if find_protect vola then
+                UsedProtect::(List.filter (fun s -> s <> Protected) newvola')
+               else
+                newvola' in
   match nonvola with
   | Toxic n -> bp.curr_status <- (Toxic (n + 1), newvola)
   | Sleep n -> bp.curr_status <- (Sleep (n-1), newvola)
