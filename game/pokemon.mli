@@ -11,3 +11,5 @@ val getMoveToolTip: move -> string
 val getElementEffect: element -> element -> float
 
 val getTestPoke: unit -> pokemon
+
+val getTestOpp: unit -> pokemon

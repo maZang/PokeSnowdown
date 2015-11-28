@@ -314,7 +314,7 @@ let getDmgClass str =
   | _ -> failwith "Not a valid damage class"
 
 let getSecondaryEffect str = match str with
-  | "karate-chop" -> [IncCrit 1]
+  | "karate-chop" | "razor-leaf"-> [IncCrit 1]
   | "double-slap" | "comet-punch" | "fury-attack" | "pin-missile" -> [RandMultHit]
   | "fire-punch" | "ember" | "flamethrower" -> [BurnChance]
   | "ice-punch" | "ice-beam" | "blizzard" -> [FreezeChance]
@@ -341,6 +341,7 @@ let getSecondaryEffect str = match str with
   | "seismic-toss" -> [ConstantDmg 100]
   | "absorb" | "mega-drain" -> [DrainMove]
   | "leech-seed" -> [LeechSeed]
+  | "growth" -> [StageBoost [(Attack, 1); (SpecialAttack, 1)]]
   | "calm-mind" -> [StageBoost [(SpecialDefense, 1); (SpecialAttack, 1)]]
   | _ -> []
 
@@ -407,12 +408,22 @@ let getRandomPokemon () =
   nature; item}
 
 let getTestPoke () =
-  let evs = {attack = 255; defense =  255; special_attack= 255; special_defense= 255;
+  let evs = {attack = 0; defense =  255; special_attack= 0; special_defense= 255;
             hp=255; speed=255} in
-  let nature = Modest in
+  let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Psychic; Electric]; move1= getMoveFromString "ember"; move2 =
-  getMoveFromString "seismic-toss"; move3 = getMoveFromString "leech-seed";
+  {name="gardevoir-mega"; element=[Psychic; Electric]; move1= getMoveFromString "growth"; move2 =
+  getMoveFromString "seismic-toss"; move3 = getMoveFromString "razor-leaf";
+  move4 = getMoveFromString "low-kick"; hp = 68; attack = 85; special_attack = 165; defense = 65;
+  speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
+
+let getTestOpp () =
+  let evs = {attack = 0; defense =  255; special_attack= 0; special_defense= 255;
+            hp=255; speed=255} in
+  let nature = Bold in
+  let item = Leftovers in
+  {name="gallade-mega"; element=[Psychic; Electric]; move1= getMoveFromString "growth"; move2 =
+  getMoveFromString "seismic-toss"; move3 = getMoveFromString "razor-leaf";
   move4 = getMoveFromString "low-kick"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
 

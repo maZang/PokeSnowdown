@@ -40,7 +40,7 @@ type evs = {attack:int; defense:int; special_attack: int; special_defense: int;
 (* variants containing all secondary effects of a given move *)
 type secondary_effects = MultHit of int | StageBoost of (stat * int) list | IncCrit of int | RandMultHit | BurnChance | FreezeChance | ParaChance | OHKO | ChargeMove of string |
                          ForceSwitch | FlinchMove | StageAttack of (stat * int) list | RecoilMove | PoisonChance | PutToSleep | ConfuseOpp | ConstantDmg of int | RechargeMove |
-                         WeightDamage | DrainMove | LeechSeed
+                         WeightDamage | DrainMove | LeechSeed | ChargeInSunlight of string
 
 type move = {name:string; priority: int; target: target; dmg_class: dmg_class;
     mutable power:int; effect_chance: int; accuracy: int; element: element;
@@ -49,9 +49,13 @@ type move = {name:string; priority: int; target: target; dmg_class: dmg_class;
 type item = Nothing | Leftovers | ChoiceBand | LifeOrb | CharizarditeX |
             ChoiceSpecs
 
+type terrain = int
+
+type weather = HarshSun | Hail | Rain | SandStorm
+  | HeavyRain | Sun | AirCurrent | ClearSkies
+
 (* We hope to implement all of these below but we will see *)
-type weather_terrain = HarshSun | Hail | Rain | SandStorm
-	| HeavyRain | Sun | AirCurrent | ClearSkies
+type weather_terrain = {mutable weather: weather; mutable terrain: terrain}
 
 type non_volatile_status = Burn | Freeze | Paralysis | Poisoned | Toxic of int | Sleep of int |
                           NoNon
@@ -95,6 +99,6 @@ type battle_mode = Random1p
 
 type screen = SwitchPoke | ChooseMove | Faint | BothFaint
 
-type battle_state = InGame of trainer_team * trainer_team * weather_terrain ref * playerMove ref * playerMove ref | Loading | P1 of screen| P2 of screen | Processing
+type battle_state = InGame of trainer_team * trainer_team * weather_terrain * playerMove ref * playerMove ref | Loading | P1 of screen| P2 of screen | Processing
 
 type game_state = MainMenu | Menu1P | Quit | Battle of battle_state

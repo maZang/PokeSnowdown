@@ -369,7 +369,7 @@ let rec getAttackString starter a =
   | Crit s -> getAttackString starter s ^ "It was a critical hit."
   | SEff s -> getAttackString starter s ^ "It was super effective."
   | NoEff s -> getAttackString starter s ^ "It was not very effective."
-  | StatAttackA (stat, i, s) -> getAttackString starter s ^ "Opponent's " ^ string_from_stat stat ^ " was lowered " ^ string_of_int i ^ " stage"
+  | StatAttackA (stat, i, s) -> getAttackString starter s ^ "Opponent's " ^ string_from_stat stat ^ " was lowered " ^ string_of_int i ^ " stage."
   | HitMult (n, s) ->
       let c, s', n', str = getNumCritSuperNoAndFinal 0 0 0 s in
       starter ^ " used " ^ str ^ ". The move hit " ^ string_of_int n ^ " times with " ^ string_of_int
@@ -406,7 +406,7 @@ let rec getAttackString starter a =
 let rec getStatusString starter s =
   match s with
   | NormStatus s -> starter ^ " used " ^ s ^ "."
-  | StatBoost (stat, i, s) -> getStatusString starter s ^ string_from_stat stat ^ " was boosted " ^ string_of_int i ^ " stage"
+  | StatBoost (stat, i, s) -> getStatusString starter s ^ string_from_stat stat ^ " was boosted " ^ string_of_int i ^ " stage."
   | StatAttack (stat, i, s) -> getStatusString starter s ^ "Opponent's " ^ string_from_stat stat ^ " was lowered " ^ string_of_int i ^ " stage"
   | MissStatus s -> starter ^ " used " ^ s ^ " but it missed."
   | FrozenSolidS -> starter ^  " was frozen solid."
