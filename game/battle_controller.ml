@@ -447,6 +447,9 @@ let move_handler atk def move =
           | _ -> ()
         else
           ()); secondary_effects t
+    (* Constant damage moves -- note these moves have a power level of 0 *)
+    | (ConstantDmg n)::t ->
+          def.current.curr_hp <- max 0 (def.current.curr_hp - n + damage);
     (* Base case *)
     | [] -> ()
     in

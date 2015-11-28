@@ -366,7 +366,7 @@ let rec getAttackString starter a =
   | BurnMove s -> getAttackString starter s ^ "The opponent has been burned"
   | FreezeMove s -> getAttackString starter s ^ "The opponent is frozen solid"
   | ParaMove s -> getAttackString starter s ^ "The opponent has been paralyzed"
-  | MissMove s ->  starter ^ " used" ^ s ^ " but it missed!"
+  | MissMove s ->  starter ^ " used " ^ s ^ " but it missed!"
   | Asleep -> starter ^ " was fast asleep!"
   | Wake s -> starter ^ " woke up." ^ getAttackString starter s
   | FrozenSolid -> starter ^ " was frozen solid!"
@@ -401,7 +401,7 @@ let rec getStatusString starter s =
   | NormStatus s -> starter ^ " used " ^ s ^ "."
   | StatBoost (stat, i, s) -> getStatusString starter s ^ string_from_stat stat ^ " was boosted " ^ string_of_int i ^ " stage"
   | StatAttack (stat, i, s) -> getStatusString starter s ^ "Opponent's " ^ string_from_stat stat ^ " was lowered " ^ string_of_int i ^ " stage"
-  | MissStatus s -> starter ^ " used " ^ s ^ "but it missed."
+  | MissStatus s -> starter ^ " used " ^ s ^ " but it missed."
   | FrozenSolidS -> starter ^  " was frozen solid."
   | ThawS s -> " unfroze." ^ getStatusString starter s
   | NoFreezeS s -> starter ^ " cannot freeze. " ^ getStatusString starter s
