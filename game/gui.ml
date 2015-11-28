@@ -352,38 +352,38 @@ let rec getNumCritSuperNoAndFinal c s n v=
 let secondaryEffect = ref `P1
 let endTurnEarly = ref false
 
-let rec getAttackString a =
+let rec getAttackString starter a =
   match a with
-  | NormMove s -> s
-  | Crit s -> getAttackString s ^ ". It was a critical hit"
-  | SEff s -> getAttackString s ^ ". It was super effective"
-  | NoEff s -> getAttackString s ^ ". It was not very effective"
+  | NormMove s -> starter ^ " used " ^ s ^"."
+  | Crit s -> getAttackString starter s ^ "It was a critical hit."
+  | SEff s -> getAttackString starter s ^ "It was super effective."
+  | NoEff s -> getAttackString starter s ^ "It was not very effective."
   | HitMult (n, s) ->
       let c, s', n', str = getNumCritSuperNoAndFinal 0 0 0 s in
-      str ^ ". The move hit " ^ string_of_int n ^ " times with " ^ string_of_int
-      c ^ " crits." ^ (if s' > 0 then " Supereffective" else if n' > 0 then
-      " Not very effective" else "")
-  | BurnMove s -> getAttackString s ^ ". The opponent has been burned"
-  | FreezeMove s -> getAttackString s ^ ". The opponent is frozen solid"
-  | ParaMove s -> getAttackString s ^ ". The opponent has been paralyzed"
-  | MissMove s -> s ^ ". It Missed!"
-  | Asleep -> "no move! It was fast asleep!"
-  | Wake s -> getAttackString s ^ ". Your Pokemon woke up."
-  | FrozenSolid -> "no move. It was frozen solid!"
-  | Thaw s-> getAttackString s ^ ". The Pokemon unfroze!"
-  | NoFreeze s -> getAttackString s ^ ". This Pokemon cannot freeze!"
-  | NoBurn s ->getAttackString s ^ ". This Pokemon cannot burn!"
-  | NoPara s -> getAttackString s ^ ". This Pokemon cannot be paralyzed!"
-  | Para s -> getAttackString s ^ ". It failed due to paralysis!"
-  | OHKill s -> getAttackString s ^". This move is a one hit KO!"
-  | FlinchA -> "no move! It flinched!"
-  | PoisonMove s -> getAttackString s ^ ". The opponent has been poisoned"
-  | Recoil s -> getAttackString s ^". The user suffered some recoil damage!"
-  | BreakConfuse s -> getAttackString s ^ ". The Pokemon has broken out of its confusion"
-  | Confused -> "no move! It hit itself in its confusion."
+      starter ^ " used " ^ str ^ ". The move hit " ^ string_of_int n ^ " times with " ^ string_of_int
+      c ^ " crits." ^ (if s' > 0 then "It was supereffective." else if n' > 0 then
+      "It was not very effective." else "")
+  | BurnMove s -> getAttackString starter s ^ "The opponent has been burned"
+  | FreezeMove s -> getAttackString starter s ^ "The opponent is frozen solid"
+  | ParaMove s -> getAttackString starter s ^ "The opponent has been paralyzed"
+  | MissMove s ->  starter ^ " used" ^ s ^ " but it missed!"
+  | Asleep -> starter ^ " was fast asleep!"
+  | Wake s -> starter ^ " woke up." ^ getAttackString starter s
+  | FrozenSolid -> starter ^ " was frozen solid!"
+  | Thaw s-> starter ^ " unfroze." ^ getAttackString starter s
+  | NoFreeze s -> starter ^ " cannot be frozen." ^ getAttackString starter s
+  | NoBurn s -> starter ^ " cannot be burned." ^ getAttackString starter s
+  | NoPara s -> starter ^ " cannot be paralyzed." ^ getAttackString starter s
+  | Para -> starter ^ " couldn't move due to paralysis!"
+  | OHKill s -> getAttackString starter s ^"This move is a one hit KO!"
+  | FlinchA -> starter ^ " flinched!'"
+  | PoisonMove s -> getAttackString starter s ^ "The opponent has been poisoned"
+  | Recoil s -> getAttackString starter s ^"The user suffered some recoil damage!"
+  | BreakConfuse s -> starter ^ " has broken out of its confusion." ^ getAttackString starter s
+  | Confused -> starter ^ " hit itself in its confusion."
   | ChargingMove (s, n) -> (match !secondaryEffect with
                              | `P1 -> current_command := (Some (UseAttack n), snd !current_command)
-                             |`P2 -> current_command := (fst !current_command, Some (UseAttack n))); "a charging move." ^ s
+                             |`P2 -> current_command := (fst !current_command, Some (UseAttack n))); starter ^ " is charging up." ^ s
 
 let rec string_from_stat s =
   match s with
@@ -395,29 +395,30 @@ let rec string_from_stat s =
   | Accuracy -> "Accuracy"
   | Evasion -> "Evasion"
 
-let rec getStatusString s =
+(* starter is either 'Player One' or 'Player Two'*)
+let rec getStatusString starter s =
   match s with
-  | NormStatus s -> s
-  | StatBoost (stat, i, s) -> getStatusString s ^ ". " ^ string_from_stat stat ^ " was boosted " ^ string_of_int i ^ " stage"
-  | StatAttack (stat, i, s) -> getStatusString s ^ ". Opponent's " ^ string_from_stat stat ^ " was lowered " ^ string_of_int i ^ " stage"
-  | MissStatus s -> s ^ ". It Missed!"
-  | FrozenSolidS -> "no move. It was frozen solid!"
-  | ThawS s -> getStatusString s ^ ". The Pokemon unfroze!"
-  | NoFreezeS s -> getStatusString s ^ ". This Pokemon cannot freeze!"
-  | NoBurnS s -> getStatusString s ^ ". This Pokemon cannot burn!"
-  | NoParaS s -> getStatusString s ^ ". This Pokemon cannot be paralyzed!"
-  | ParaS s -> getStatusString s ^ ". It failed due to paralysis!"
-  | AsleepS -> "no move! It was fast asleep!"
-  | WakeS s -> "Your Pokemon woke up." ^ getStatusString s
-  | MakeSleep s -> getStatusString s ^ ". The opponent has fallen asleep."
-  | FlinchS -> "no move! It flinched!"
-  | BreakConfuseS s-> getStatusString s ^ ". The Pokemon has broken out of its confusion"
-  | ConfusedS -> " no move. The Pokemon hit iself in its confusion"
-  | ConfuseMove s -> getStatusString s ^ ". The opponent is confused!"
+  | NormStatus s -> starter ^ " used " ^ s ^ "."
+  | StatBoost (stat, i, s) -> getStatusString starter s ^ string_from_stat stat ^ " was boosted " ^ string_of_int i ^ " stage"
+  | StatAttack (stat, i, s) -> getStatusString starter s ^ "Opponent's " ^ string_from_stat stat ^ " was lowered " ^ string_of_int i ^ " stage"
+  | MissStatus s -> starter ^ " used " ^ s ^ "but it missed."
+  | FrozenSolidS -> starter ^  " was frozen solid."
+  | ThawS s -> " unfroze." ^ getStatusString starter s
+  | NoFreezeS s -> starter ^ " cannot freeze. " ^ getStatusString starter s
+  | NoBurnS s -> starter ^ " cannot burn. " ^ getStatusString starter s
+  | NoParaS s -> " cannot be paralyzed." ^ getStatusString starter s
+  | ParaS -> starter ^ " was paralyzed."
+  | AsleepS -> starter ^ " is still asleep."
+  | WakeS s -> starter ^ " woke up." ^ getStatusString starter s
+  | MakeSleep s -> getStatusString starter s ^ "The opponent has fallen asleep."
+  | FlinchS -> starter ^ " flinched."
+  | BreakConfuseS s-> starter ^ " has broken out of its confusion." ^ getStatusString starter s
+  | ConfusedS -> starter ^ " hit itself in its confusion."
+  | ConfuseMove s -> getStatusString starter s ^ "The opponent is confused."
   | SwitchOut s -> (match !secondaryEffect with
                     | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
                     | `P2 -> current_command := (Some (Poke "random"), Some NoMove));
-                    endTurnEarly := true; getStatusString s ^ ". The opponent was forced out!"
+                    endTurnEarly := true; getStatusString starter s ^ "The opponent was forced out!"
 
 let rec getEndString starter s =
   match s with
@@ -483,21 +484,21 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
   | Pl1 SPoke p -> text_buffer#set_text ("Player One has switched to " ^ p); poke1_img#set_file ("../data/back-sprites/" ^ p ^ ".gif");updatetools ();busywait ()
   | Pl2 SPoke p -> text_buffer#set_text ("Player Two has switched to " ^ p); poke2_img#set_file ("../data/sprites/" ^ p ^ ".gif"); updatetools (); busywait ()
   | Pl1 AttackMove a -> secondaryEffect := `P1;
-                   let atk_string = "Player One used " ^ getAttackString a in
+                   let atk_string = getAttackString t1.current.pokeinfo.name a in
                    let str_list = Str.split (Str.regexp "\.") atk_string in
                    updatehealth2 ();
                    List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list
   | Pl2 AttackMove a -> secondaryEffect := `P2;
-                   let atk_string = "Player Two used " ^ getAttackString a in
+                   let atk_string = getAttackString t2.current.pokeinfo.name a in
                    let str_list = Str.split (Str.regexp "\.") atk_string in
                    updatehealth1 ();
                    List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list
   | Pl1 Status s ->secondaryEffect := `P1;
-                   let status_string = "Player One used " ^ getStatusString s in
+                   let status_string = getStatusString t1.current.pokeinfo.name s in
                    let str_list = Str.split (Str.regexp "\.") status_string in
                    List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list
   | Pl2 Status s ->secondaryEffect := `P2;
-                   let status_string = "Player Two used " ^ getStatusString s in
+                   let status_string = getStatusString t2.current.pokeinfo.name s in
                    let str_list = Str.split (Str.regexp "\.") status_string in
                    List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list
   | Pl1 NoAction -> text_buffer#set_text ("Player One has failed to do anything"); busywait ()
@@ -519,25 +520,25 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
   else
   (match !m2 with
   | Pl1 AttackMove a -> secondaryEffect := `P1;
-                   let atk_string = "Player One used " ^ getAttackString a in
+                   let atk_string = getAttackString t1.current.pokeinfo.name a in
                    let str_list = Str.split (Str.regexp "\.") atk_string in
                    updatetools ();
                    List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
                    pre_process ()
   | Pl2 AttackMove a -> secondaryEffect := `P2;
-                   let atk_string = "Player Two used " ^ getAttackString a in
+                   let atk_string = getAttackString t2.current.pokeinfo.name a in
                    let str_list = Str.split (Str.regexp "\.") atk_string in
                    updatetools ();
                    List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
                    pre_process ()
   | Pl1 Status s ->secondaryEffect := `P1;
-                   let status_string = "Player One used " ^ getStatusString s in
+                   let status_string = getStatusString t1.current.pokeinfo.name s in
                    let str_list = Str.split (Str.regexp "\.") status_string in
                    updatetools ();
                    List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
                    pre_process ()
   | Pl2 Status s ->secondaryEffect := `P2;
-                   let status_string = "Player Two used " ^ getStatusString s in
+                   let status_string = getStatusString t2.current.pokeinfo.name s in
                    let str_list = Str.split (Str.regexp "\.") status_string in
                    updatetools ();
                    List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;

@@ -284,7 +284,7 @@ let hitMoveDueToStatus atk moveDescript =
                 else if 75 > Random.int 100 then (
                   helperVolaStatus vola (moveDescript))
               else
-                  (false, `Para moveDescript)
+                  (false, `Para)
   | Sleep n -> if n <= 0 then
                 (atk.current.curr_status <- (NoNon, snd atk.current.curr_status);
                 helperVolaStatus vola (`Wake moveDescript))
@@ -458,7 +458,7 @@ let move_handler atk def move =
     | `NoPara s -> NoPara (decompose s)
     | `Asleep -> Asleep
     | `Wake s -> Wake (decompose s)
-    | `Para s -> Para (decompose s)
+    | `Para -> Para
     | `Thaw s -> Thaw (decompose s)
     | `FrozenSolid -> FrozenSolid
     | `Flinch -> FlinchA
@@ -624,7 +624,7 @@ let rec status_move_handler atk def (move: move) =
     | `NoPara s -> NoParaS (decompose s)
     | `Asleep -> AsleepS
     | `Wake s -> WakeS (decompose s)
-    | `Para s -> ParaS (decompose s)
+    | `Para -> ParaS
     | `Thaw s -> ThawS (decompose s)
     | `FrozenSolid -> FrozenSolidS
     | `Flinch -> FlinchS
