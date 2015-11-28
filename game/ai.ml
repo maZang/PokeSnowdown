@@ -26,8 +26,7 @@ let has_advantage (elst1:element list) (elst2:element list) : bool =
         (List.fold_left (fun acc x -> acc *. Pokemon.getElementEffect h x)
         1. elst2) *. (helper t)
   in
-  if (helper elst1 >= 2.) then true
-  else false
+  helper elst1 >= 2.
 
 (* [replaceDead2] returns the string name of the first pokemon in the list of
  * alive pokemon [alivelst] that has a type advantage against the opposing
