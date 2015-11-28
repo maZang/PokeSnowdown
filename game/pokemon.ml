@@ -336,6 +336,7 @@ let getSecondaryEffect str = match str with
   | "sonic-boom" -> [ConstantDmg 20]
   | "acid" -> [StageAttack [(SpecialDefense, 1)]]
   | "bubble-beam" -> [StageAttack [(Speed, 1)]]
+  | "hyper-beam" -> [RechargeMove]
   | "calm-mind" -> [StageBoost [(SpecialDefense, 1); (SpecialAttack, 1)]]
   | _ -> []
 
@@ -408,7 +409,7 @@ let getTestPoke () =
   let item = Leftovers in
   {name="gardevoir-mega"; element=[Psychic; Electric]; move1= getMoveFromString "ember"; move2 =
   getMoveFromString "aurora-beam"; move3 = getMoveFromString "ice-beam";
-  move4 = getMoveFromString "psybeam"; hp = 68; attack = 85; special_attack = 165; defense = 65;
+  move4 = getMoveFromString "hyper-beam"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
 
 let getPokeToolTip t =

@@ -396,6 +396,9 @@ let rec getAttackString starter a =
   | ChargingMove (s, n) -> (match !secondaryEffect with
                              | `P1 -> current_command := (Some (UseAttack n), snd !current_command)
                              |`P2 -> current_command := (fst !current_command, Some (UseAttack n))); starter ^ " is charging up." ^ s
+  | Recharging s -> (match !secondaryEffect with
+                        | `P1 -> current_command := (Some (NoMove), snd !current_command)
+                        | `P2 -> current_command := (fst !current_command, Some NoMove)); getAttackString starter s ^ starter ^ " will need a turn to recharge."
 
 (* starter is either 'Player One' or 'Player Two'*)
 let rec getStatusString starter s =
@@ -508,7 +511,8 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
   | Pl1 Continue | Pl2 Continue | Pl1 Next | Pl2 Next -> ()
   | Pl1 Faint -> text_buffer#set_text "Player One Pokemon has fainted. Choosing a new Pokemon.";
                   (match get_game_status battle_status with
-                  | Random1p -> busywait (); updatetools (); current_screen := Battle (P1 Faint); switch_poke engine [poke1;poke2;poke3;poke4;poke5] [move1;move2;
+                  | Random1p -> busywait (); updatetools (); current_screen := Battle (P1 Faint);
+                                switch_poke engine [poke1;poke2;poke3;poke4;poke5] [move1;move2;
                                 move3;move4;switch] back_button ()
                   | _ -> failwith "Faulty Game Logic: Debug 008"
                   )
@@ -547,7 +551,8 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
                    pre_process ()
   | Pl1 Faint -> text_buffer#set_text "Player One Pokemon has fainted. Choosing a new Pokemon.";
                   (match get_game_status battle_status with
-                  | Random1p -> busywait (); updatetools (); current_screen := Battle (P1 Faint); switch_poke engine [poke1;poke2;poke3;poke4;poke5] [move1;move2;
+                  | Random1p -> busywait (); updatetools (); current_screen := Battle (P1 Faint);
+                                switch_poke engine [poke1;poke2;poke3;poke4;poke5] [move1;move2;
                                 move3;move4;switch] back_button ()
                   | _ -> failwith "Faulty Game Logic: Debug 008"
                   )

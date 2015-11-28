@@ -522,6 +522,8 @@ let move_handler atk def move =
                             newmove := ConfuseMoveA !newmove)))
                           else
                            ()); secondary_effects t
+    (* Moves that take a turn of recharge after use e.g. hyperbeam *)
+    | RechargeMove::t -> newmove := Recharging !newmove; secondary_effects t
     (* Base case *)
     | [] -> ()
     in
@@ -910,6 +912,14 @@ let handle_action state action1 action2 =
       (match action2 with
       | Poke p -> failwith "unimplemented"
       | UseAttack a' -> handle_two_moves t1 t2 w m1 m2 a a'
+      | NoMove -> let curr_poke = t1.current in
+                  let curr_move = findBattleMove curr_poke.pokeinfo a in
+                  if curr_move.dmg_class = Status then
+                    (let newmove = status_move_handler t1 t2 curr_move in
+                    m1 := Pl1 (Status newmove); m2 := Pl2 NoAction)
+                  else
+                    (let newmove = move_handler t1 t2 curr_move in
+                    m1 := Pl1 (AttackMove newmove); m2 := Pl2 NoAction)
       | _ -> failwith "Faulty Game Logic: Debug 449")
   | NoMove -> (match action2 with
               | FaintPoke p ->
@@ -926,6 +936,14 @@ let handle_action state action1 action2 =
                           t2.current.curr_status <- switchOutStatus t2.current;
                           t2.current <- switchPoke; t2.alive <- prevPoke::restPoke;
                           m1 := Pl2 (SPoke p); m2 := Pl1 NoAction
+              | UseAttack a -> let curr_poke = t2.current in
+                              let curr_move = findBattleMove curr_poke.pokeinfo a in
+                              if curr_move.dmg_class = Status then
+                              (let newmove = status_move_handler t2 t1 curr_move in
+                                m1 := Pl2 (Status newmove); m2 := Pl1 NoAction)
+                              else
+                                (let newmove = move_handler t2 t1 curr_move in
+                                m1 := Pl2 (AttackMove newmove); m2 := Pl1 NoAction)
               | _ -> failwith "Faulty Game Logic: Debug 177"
               )
   | FaintPoke p -> (match action2 with
