@@ -736,9 +736,9 @@ let handle_next_turn t1 t2 w m1 m2 =
   | 0 -> if (t2.current.curr_hp = 0) then
             (m1 := Pl1 Faint; m2 := Pl2 Faint)
           else
-            (m1 := Pl2 Next; m2 := Pl1 Faint)
+            (m1 := Pl1 Faint; m2 := Pl2 FaintNext)
   | _ -> if (t2.current.curr_hp = 0) then
-            (m1 := Pl1 Next; m2 := Pl2 Faint)
+            (m1 := Pl2 Faint; m2 := Pl1 FaintNext)
           else
             (m1 := Pl1 Next; m2 := Pl2 Next)); remove_some_status t1.current;
   remove_some_status t2.current
@@ -944,6 +944,7 @@ let handle_action state action1 action2 =
                               else
                                 (let newmove = move_handler t2 t1 curr_move in
                                 m1 := Pl2 (AttackMove newmove); m2 := Pl1 NoAction)
+              | NoMove -> m1 := Pl1 NoAction; m2 := Pl2 NoAction
               | _ -> failwith "Faulty Game Logic: Debug 177"
               )
   | FaintPoke p -> (match action2 with

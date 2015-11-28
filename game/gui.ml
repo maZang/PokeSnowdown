@@ -333,6 +333,7 @@ let switch_poke engine [poke1;poke2;poke3;poke4;poke5] [move1;move2;
   let team = (match get_game_status engine with
   | Battle (InGame (t1, t2, _, _, _)) ->
       match !current_screen with
+      | Battle (P1 BothFaint) -> back_button#misc#hide (); t1
       | Battle (P1 Faint) -> back_button#misc#hide (); t1
       | Battle (P2 Faint) -> back_button#misc#hide (); t2
       | Battle (P1 _) -> current_screen := Battle (P1 SwitchPoke); t1
@@ -506,16 +507,21 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
                    let status_string = getStatusString t2.current.pokeinfo.name s in
                    let str_list = Str.split (Str.regexp "\.") status_string in
                    List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list
-  | Pl1 NoAction -> text_buffer#set_text ("Player One has failed to do anything"); busywait ()
-  | Pl2 NoAction -> text_buffer#set_text ("Player Two has failed to do anything"); busywait ()
+  | Pl1 NoAction -> text_buffer#set_text ("Both Pokemon Not Doing Anything"); busywait ()
+  | Pl2 NoAction -> text_buffer#set_text ("Both Pokemon Not Doing Anything"); busywait ()
   | Pl1 Continue | Pl2 Continue | Pl1 Next | Pl2 Next -> ()
   | Pl1 Faint -> text_buffer#set_text "Player One Pokemon has fainted. Choosing a new Pokemon.";
-                  (match get_game_status battle_status with
-                  | Random1p -> busywait (); updatetools (); current_screen := Battle (P1 Faint);
-                                switch_poke engine [poke1;poke2;poke3;poke4;poke5] [move1;move2;
-                                move3;move4;switch] back_button ()
-                  | _ -> failwith "Faulty Game Logic: Debug 008"
-                  )
+                  (match !m2 with
+                  | Pl2 Faint -> current_screen := Battle (P1 BothFaint)
+                  | _ -> current_screen := Battle (P1 Faint));
+                  busywait (); updatetools ();
+                  switch_poke engine [poke1;poke2;poke3;poke4;poke5] [move1;move2;
+                  move3;move4;switch] back_button ()
+  | Pl2 Faint -> text_buffer#set_text "Player Two Pokemon has fainted. Choosing a new Pokemon.";
+                 (match get_game_status battle_status with
+                 | Random1p -> busywait (); current_command := (Some (NoMove), Some (FaintPoke ""));
+                               simple_move()
+                 | _ -> failwith "Faulty Game Logic: Debug 007")
   | Pl1 EndMove x -> let txt = getEndString "Player One " x in
                     let str_list = Str.split (Str.regexp "\.") txt in
                     List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
@@ -556,14 +562,10 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
                                 move3;move4;switch] back_button ()
                   | _ -> failwith "Faulty Game Logic: Debug 008"
                   )
-  | Pl2 Faint -> text_buffer#set_text "Player Two Pokemon has fainted. Choosing a new Pokemon.";
-                 (match get_game_status battle_status with
-                 | Random1p -> busywait (); current_command := (Some (NoMove), Some (FaintPoke ""));
-                               simple_move()
-                 | _ -> failwith "Faulty Game Logic: Debug 007")
   | Pl1 Continue -> turn_end ()
   | Pl2 Continue -> turn_end ()
   | Pl1 Next | Pl2 Next -> simple_move ()
+  | Pl1 FaintNext | Pl2 FaintNext -> ()
   | Pl1 NoAction -> pre_process ()
   | Pl2 NoAction -> pre_process ()
   | Pl2 EndMove x -> let txt = getEndString "Player Two " x in
@@ -604,14 +606,21 @@ let poke_move_cmd button engine [move1; move2; move3; move4; poke1; poke2; poke3
  let switch_poke_cmd button engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text
   (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img text_buffer health_holders back_button () =
  Printf.printf "Switching Pokemon\n%!";
- let _ = match !current_screen with
-  | Battle (P1 Faint) -> current_command := (Some (FaintPoke (button#label)), snd !current_command)
-  | Battle (P2 Faint) -> current_command := (fst !current_command, Some (FaintPoke (button#label)))
-  | Battle (P1 SwitchPoke) -> current_command := (Some (Poke (button#label)), snd !current_command)
-  | Battle (P2 SwitchPoke) -> current_command := (fst !current_command, Some (Poke (button#label)))
-  | _ -> failwith "Faulty Game Logic: Debug 449" in
- process_command engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text
-  (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img text_buffer health_holders back_button
+ let next () =
+  process_command engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text
+  (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img text_buffer health_holders back_button in
+ match !current_screen with
+  | Battle (P1 BothFaint) ->
+        (match get_game_status battle_status with
+        | Random1p -> current_command := (Some (FaintPoke (button#label)), Some (FaintPoke "")); next ()
+        (* In two player, you would call switch_poke command again *)
+        | _ -> failwith "Faulty Game Logic: Debug 616")
+  | Battle (P1 Faint) -> current_command := (Some (FaintPoke (button#label)), snd !current_command); next ()
+  | Battle (P2 Faint) -> current_command := (fst !current_command, Some (FaintPoke (button#label))); next ()
+  | Battle (P1 SwitchPoke) -> current_command := (Some (Poke (button#label)), snd !current_command); next ()
+  | Battle (P2 SwitchPoke) -> current_command := (fst !current_command, Some (Poke (button#label))); next ()
+  | _ -> failwith "Faulty Game Logic: Debug 449"
+
 
 let quit engine ready () =
   match !current_screen with

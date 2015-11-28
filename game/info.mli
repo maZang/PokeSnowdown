@@ -15,7 +15,7 @@ type guistatus = StatBoost of stat * int * guistatus | NormStatus of string | Th
 
 type endMove = BurnDmg of endMove | Base | BreakBurn of endMove | BreakFreeze of endMove | BreakPara of endMove | BreakPoison of endMove | PoisonDmg of endMove
 
-type guimove = SPoke of string | AttackMove of guiattack | Faint | NoAction | Continue | Next | Status of guistatus | EndMove of endMove
+type guimove = SPoke of string | AttackMove of guiattack | Faint | NoAction | Continue | Next | Status of guistatus | EndMove of endMove | FaintNext
 
 type playerMove = Pl1 of guimove | Pl2 of guimove
 
@@ -92,7 +92,7 @@ type outcome = WinnerP1 | WinnerP2
 
 type battle_mode = Random1p
 
-type screen = SwitchPoke | ChooseMove | Faint
+type screen = SwitchPoke | ChooseMove | Faint | BothFaint
 
 type battle_state = InGame of trainer_team * trainer_team * weather_terrain ref * playerMove ref * playerMove ref | Loading | P1 of screen| P2 of screen | Processing
 
