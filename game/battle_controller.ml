@@ -449,6 +449,15 @@ let move_handler atk def weather move =
           | _ -> ()
         else
           ()); secondary_effects t
+    (* For the move super fang *)
+    | SuperFang::t ->
+          (let type_mod = List.fold_left (fun acc x -> acc *. getElementEffect
+              move.element x) 1. def.current.pokeinfo.element in
+            if type_mod > 0. then
+              (def.current.curr_hp <- (def.current.curr_hp + !damage)/2;
+              secondary_effects t)
+            else
+              newmove := NoEffAll move.name)
     (* One hit KO moves *)
     | OHKO::t ->
             (let type_mod = List.fold_left (fun acc x -> acc *. getElementEffect
@@ -753,7 +762,7 @@ let rec status_move_handler atk def (w, t1, t2) (move: move) =
               )
           )
     (* Moves that put opponent to sleep *)
-    | PutToSleep::t -> let sleep_turns = Random.int 3 + 1 in
+    | PutToSleep::t -> let sleep_turns = Random.int 3 + 2 in
                       (match def.current.curr_status with
                       | (NoNon, x) ->
                          def.current.curr_status <- (Sleep sleep_turns, x);
@@ -830,6 +839,13 @@ let rec status_move_handler atk def (w, t1, t2) (move: move) =
                           (t1 := ((Reflect 4)::!t1);
                           newmove := ReflectS !newmove));
                         secondary_effects t
+    (* for the move rest *)
+    | Rest::t -> (match atk.current.curr_status with
+                  | (Sleep _, _) -> ()
+                  | (_, _) -> atk.current.curr_status <- (Sleep 4, []);
+                              atk.stat_enhance <- switchOutStatEnhancements atk;
+                              atk.current.curr_hp <- atk.current.bhp;
+                              newmove := RestS !newmove); secondary_effects t
     | [] -> ()
   in
   let hit, reason = hitMoveDueToStatus atk (`NoAdd !newmove) in

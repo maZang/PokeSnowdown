@@ -2,3 +2,4 @@ Changes to Moves;
 Hyperbeam -- Recharge instantly
 Low Kick -- Based on current health
 Trasnform -- 100% carbon clone
+Rest -- resets all status ailments as well (even stat boosts)

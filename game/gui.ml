@@ -433,6 +433,7 @@ let rec getStatusString starter s =
   | LightScreenS s -> getStatusString starter s ^ starter ^ " has put up a field protecting it from special attacks."
   | HazeS s -> getStatusString starter s ^ "Both Pokemon's stat changes were removed."
   | ReflectS s -> getStatusString starter s ^ starter ^ " has put up a field protecting it from physical attacks."
+  | RestS s -> getStatusString starter s ^ starter ^ " has fallen asleep and been completely restored."
   | SwitchOut s -> (match !secondaryEffect with
                     | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
                     | `P2 -> current_command := (Some (Poke "random"), Some NoMove));

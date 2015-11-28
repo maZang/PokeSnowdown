@@ -314,9 +314,9 @@ let getDmgClass str =
   | _ -> failwith "Not a valid damage class"
 
 let getSecondaryEffect str = match str with
-  | "karate-chop" | "razor-leaf"-> [IncCrit 1]
+  | "karate-chop" | "razor-leaf" | "crabhammer" | "slash" -> [IncCrit 1]
   | "double-slap" | "comet-punch" | "fury-attack" | "pin-missile" |
-      "spike-cannon" | "barrage" -> [RandMultHit]
+      "spike-cannon" | "barrage" | "fury-swipes" -> [RandMultHit]
   | "fire-punch" | "ember" | "flamethrower" | "fire-blast" -> [BurnChance]
   | "ice-punch" | "ice-beam" | "blizzard" -> [FreezeChance]
   | "thunder-punch" | "body-slam" | "stun-spore" | "thunder-shock"
@@ -324,10 +324,11 @@ let getSecondaryEffect str = match str with
   | "guillotine" | "horn-drill" | "fissure"-> [OHKO]
   | "razor-wind" -> [ChargeMove "It made a whirlwind!"]
   | "swords-dance" -> [StageBoost [(Attack, 2)]]
-  | "meditate" -> [StageBoost [(Attack, 1)]]
+  | "meditate" | "sharpen" -> [StageBoost [(Attack, 1)]]
   | "whirlwind" | "roar"-> [ForceSwitch]
-  | "stomp" | "rolling-kick" | "headbutt" | "bite" | "bone-club" | "waterfall" -> [FlinchMove]
-  | "double-kick" | "gear-grind"  -> [MultHit 2]
+  | "stomp" | "rolling-kick" | "headbutt" | "bite" | "bone-club" | "waterfall"
+    | "rock-slide" | "hyper-fang" -> [FlinchMove]
+  | "double-kick" | "gear-grind" | "bonemerang"  -> [MultHit 2]
   | "sand-attack" | "smokescreen" | "kinesis" | "flash" -> [StageAttack [(Accuracy, 1)]]
   | "take-down" | "double-edge" | "submission" -> [RecoilMove]
   | "tail-whip" | "leer" -> [StageAttack [(Defense, 1)]]
@@ -361,12 +362,15 @@ let getSecondaryEffect str = match str with
   | "light-screen" -> [LightScreenMake]
   | "haze" -> [Haze]
   | "reflect" -> [ReflectMake]
-  | "self-destruct" -> [UserFaint]
+  | "self-destruct" | "explosion" -> [UserFaint]
   | "swift" -> [NeverMiss]
   | "amnesia" -> [StageBoost [(SpecialDefense, 2)]]
   | "dream-eater" -> [DrainMoveSleep]
   | "sky-attack" -> [ChargeMove "The Pokemon is glowing."; IncCrit 1; FlinchMove]
   | "psywave" -> [VariableDamage]
+  | "rest" -> [Rest]
+  | "tri-attack" -> [ParaChance; BurnChance; FreezeChance]
+  | "super-fang" -> [SuperFang]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -436,7 +440,7 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Psychic; Electric]; move1= getMoveFromString "acid-armor"; move2 =
+  {name="gardevoir-mega"; element=[Psychic]; move1= getMoveFromString "super-fang"; move2 =
   getMoveFromString "psywave"; move3 = getMoveFromString "lovely-kiss";
   move4 = getMoveFromString "sky-attack"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
@@ -446,7 +450,7 @@ let getTestOpp () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gallade-mega"; element=[Psychic;Flying]; move1= getMoveFromString "pound"; move2 =
+  {name="gallade-mega"; element=[Psychic]; move1= getMoveFromString "pound"; move2 =
   getMoveFromString "pound"; move3 = getMoveFromString "pound";
   move4 = getMoveFromString "pound"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
