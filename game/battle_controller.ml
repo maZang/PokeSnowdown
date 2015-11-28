@@ -224,6 +224,17 @@ let findBattleMove poke move =
   else
     failwith "Faulty Game Logic: Debug 16"
 
+(* Helper function to fix confusion *)
+let decrementConfusion atk =
+  let nonvola, vola = atk.curr_status in
+  let rec helper acc lst = match lst with
+  | (Confusion n)::t when n <= 0 -> acc @ t
+  | (Confusion n)::t -> acc @ ((Confusion(n-1))::t)
+  | h::t -> helper (h::acc) t
+  | [] -> acc in
+  let newvola = helper [] vola in
+  atk.curr_status <- (nonvola, newvola)
+
 (* Helper function to see if pokemon can move; also called to break a Pokemon
   out of a status condition *)
 let hitMoveDueToStatus atk moveDescript =
@@ -232,6 +243,25 @@ let hitMoveDueToStatus atk moveDescript =
       | [] -> (true, moveDescript')
       | Charge::t -> helperVolaStatus t moveDescript'
       | Flinch::t -> (false, `Flinch)
+      | (Confusion n)::t ->
+            (* n cannot be less than 0 -- invariant *)
+            decrementConfusion atk.current;
+            (if n = 0 then
+                helperVolaStatus t (`BreakConfuse moveDescript')
+            else
+              (if Random.int 100 > 50 then
+                helperVolaStatus t moveDescript'
+              else
+                (let confuse_damage = int_of_float
+                    (42. *. float_of_int atk.current.battack *.
+                     getStageAD (fst atk.stat_enhance.attack) *.
+                    (snd atk.stat_enhance.attack) *. 0.8 /.
+                    (float_of_int atk.current.bdefense *.
+                    getStageAD (fst atk.stat_enhance.defense) *.
+                    (snd atk.stat_enhance.defense)) +. 2.) in
+                atk.current.curr_hp <- atk.current.curr_hp - confuse_damage;
+                (false, `Confused))
+              ))
       | _ -> failwith "unimplemented" in
   let nvola, vola = atk.current.curr_status in
   match nvola with
@@ -247,15 +277,20 @@ let hitMoveDueToStatus atk moveDescript =
               atk.current.curr_status <- (NoNon, snd atk.current.curr_status);
               helperVolaStatus vola (`NoBurn moveDescript))
             else
-              helperVolaStatus vola (`NoAdd moveDescript)
+              helperVolaStatus vola (moveDescript)
   | Paralysis -> if List.mem Electric atk.current.pokeinfo.element then (
                 atk.current.curr_status <- (NoNon, snd atk.current.curr_status);
                 helperVolaStatus vola (`NoPara moveDescript))
                 else if 75 > Random.int 100 then (
-                  helperVolaStatus vola (`NoAdd moveDescript))
+                  helperVolaStatus vola (moveDescript))
               else
                   (false, `Para moveDescript)
-  |_ -> helperVolaStatus vola (`NoAdd moveDescript)
+  | Sleep n -> if n <= 0 then
+                (atk.current.curr_status <- (NoNon, snd atk.current.curr_status);
+                helperVolaStatus vola (`Wake moveDescript))
+               else
+                (false ,`Asleep)
+  |_ -> helperVolaStatus vola (moveDescript)
 
 (* Returns true if Pokemon moves, otherwise returns false as well as some value
    describing why the move failed *)
@@ -415,16 +450,22 @@ let move_handler atk def move =
     (* Base case *)
     | [] -> ()
     in
-  let hit, reason = hitMoveDueToStatus atk !newmove in
-  let reason' = match reason with
-    | `NoFreeze s -> NoFreeze s
-    | `NoBurn s -> NoBurn s
-    | `NoPara s -> NoPara s
-    | `Para s -> Para s
-    | `Thaw s -> Thaw s
+  let hit, reason = hitMoveDueToStatus atk (`NoAdd !newmove) in
+  let rec decompose reason =
+    match reason with
+    | `NoFreeze s -> NoFreeze (decompose s)
+    | `NoBurn s -> NoBurn (decompose s)
+    | `NoPara s -> NoPara (decompose s)
+    | `Asleep -> Asleep
+    | `Wake s -> Wake (decompose s)
+    | `Para s -> Para (decompose s)
+    | `Thaw s -> Thaw (decompose s)
     | `FrozenSolid -> FrozenSolid
     | `Flinch -> FlinchA
-    | `NoAdd s -> s in
+    | `NoAdd s -> s
+    | `BreakConfuse s -> BreakConfuse (decompose s)
+    | `Confused -> Confused in
+  let reason' = decompose reason in
   if hit then (
     let hit', newreason = hitAttack atk def move reason' in
     (* damage is always dealt before secondary effects calculated *)
@@ -554,19 +595,43 @@ let rec status_move_handler atk def (move: move) =
                   secondary_effects ((StageAttack t')::t)
               )
           )
-    (* Base case*)
+    (* Moves that put opponent to sleep *)
+    | PutToSleep::t -> let sleep_turns = Random.int 3 + 1 in
+                      (match def.current.curr_status with
+                      | (NoNon, x) ->
+                         def.current.curr_status <- (Sleep sleep_turns, x);
+                        newmove := MakeSleep !newmove
+                      | _ -> ()); secondary_effects t
+    | ConfuseOpp::t -> let confuse_turns = Random.int 4 + 1 in
+                       let novola , x = def.current.curr_status in
+                       let rec check_for_confusion = function
+                       | [] -> false
+                       | (Confusion _)::t -> true
+                       | h::t -> check_for_confusion t in
+                       (if check_for_confusion x then
+                          ()
+                        else
+                          (def.current.curr_status <-
+                            (novola, (Confusion confuse_turns)::x);
+                          newmove := ConfuseMove !newmove)); secondary_effects t
     | [] -> ()
   in
-  let hit, reason = hitMoveDueToStatus atk !newmove in
-  let reason' = match reason with
-    | `NoFreeze s -> NoFreezeS s
-    | `NoBurn s -> NoBurnS s
-    | `NoPara s -> NoParaS s
-    | `Para s -> ParaS s
-    | `Thaw s -> ThawS s
+  let hit, reason = hitMoveDueToStatus atk (`NoAdd !newmove) in
+  let rec decompose reason =
+    match reason with
+    | `NoFreeze s -> NoFreezeS (decompose s)
+    | `NoBurn s -> NoBurnS (decompose s)
+    | `NoPara s -> NoParaS (decompose s)
+    | `Asleep -> AsleepS
+    | `Wake s -> WakeS (decompose s)
+    | `Para s -> ParaS (decompose s)
+    | `Thaw s -> ThawS (decompose s)
     | `FrozenSolid -> FrozenSolidS
     | `Flinch -> FlinchS
-    | `NoAdd s -> s in
+    | `NoAdd s -> s
+    | `BreakConfuse s -> BreakConfuseS (decompose s)
+    | `Confused -> ConfusedS in
+  let reason' = decompose reason in
   if hit then (
     let hit', newreason = hitStatus atk def move reason' in
     if hit' then (
@@ -582,7 +647,10 @@ let rec status_move_handler atk def (move: move) =
 let remove_some_status bp =
   let nonvola, vola = bp.curr_status in
   let newvola = List.filter (fun s -> s <> Flinch) vola in
-  bp.curr_status <- (nonvola, newvola)
+  match nonvola with
+  | Toxic n -> bp.curr_status <- (Toxic (n + 1), newvola)
+  | Sleep n -> bp.curr_status <- (Sleep (n-1), newvola)
+  | _ -> bp.curr_status <- (nonvola, newvola)
 (* Called after the turn ends; Decrements sleep counter; checks if Pokemon
    faints; etc... Note Pl1 always faints before Pl2*)
 let handle_next_turn t1 t2 w m1 m2 =

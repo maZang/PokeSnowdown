@@ -367,6 +367,8 @@ let rec getAttackString a =
   | FreezeMove s -> getAttackString s ^ ". The opponent is frozen solid"
   | ParaMove s -> getAttackString s ^ ". The opponent has been paralyzed"
   | MissMove s -> s ^ ". It Missed!"
+  | Asleep -> "no move! It was fast asleep!"
+  | Wake s -> getAttackString s ^ ". Your Pokemon woke up."
   | FrozenSolid -> "no move. It was frozen solid!"
   | Thaw s-> getAttackString s ^ ". The Pokemon unfroze!"
   | NoFreeze s -> getAttackString s ^ ". This Pokemon cannot freeze!"
@@ -377,6 +379,8 @@ let rec getAttackString a =
   | FlinchA -> "no move! It flinched!"
   | PoisonMove s -> getAttackString s ^ ". The opponent has been poisoned"
   | Recoil s -> getAttackString s ^". The user suffered some recoil damage!"
+  | BreakConfuse s -> getAttackString s ^ ". The Pokemon has broken out of its confusion"
+  | Confused -> "no move! It hit itself in its confusion."
   | ChargingMove (s, n) -> (match !secondaryEffect with
                              | `P1 -> current_command := (Some (UseAttack n), snd !current_command)
                              |`P2 -> current_command := (fst !current_command, Some (UseAttack n))); "a charging move." ^ s
@@ -403,7 +407,13 @@ let rec getStatusString s =
   | NoBurnS s -> getStatusString s ^ ". This Pokemon cannot burn!"
   | NoParaS s -> getStatusString s ^ ". This Pokemon cannot be paralyzed!"
   | ParaS s -> getStatusString s ^ ". It failed due to paralysis!"
+  | AsleepS -> "no move! It was fast asleep!"
+  | WakeS s -> "Your Pokemon woke up." ^ getStatusString s
+  | MakeSleep s -> getStatusString s ^ ". The opponent has fallen asleep."
   | FlinchS -> "no move! It flinched!"
+  | BreakConfuseS s-> getStatusString s ^ ". The Pokemon has broken out of its confusion"
+  | ConfusedS -> " no move. The Pokemon hit iself in its confusion"
+  | ConfuseMove s -> getStatusString s ^ ". The opponent is confused!"
   | SwitchOut s -> (match !secondaryEffect with
                     | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
                     | `P2 -> current_command := (Some (Poke "random"), Some NoMove));

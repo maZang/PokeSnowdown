@@ -90,13 +90,13 @@ let string_of_status elm =
   | Freeze -> "Freeze"
   | Paralysis -> "Paralysis"
   | Poisoned -> "Poison"
-  | Toxic -> "Toxic"
-  | Sleep -> "Sleep"
+  | Toxic _ -> "Toxic"
+  | Sleep _ -> "Sleep"
   | NoNon -> "None"
 
 let string_of_vola_status elm =
   match elm with
-  | Confusion -> "Confusion"
+  | Confusion _-> "Confusion"
   | Curse -> "Curse"
   | Embargo -> "Embargo"
   | Encore -> "Encore"
@@ -331,6 +331,8 @@ let getSecondaryEffect str = match str with
   | "poison-sting" -> [PoisonChance]
   | "twineedle" -> [MultHit 2; PoisonChance]
   | "growl" -> [StageAttack [(Attack, 1)]]
+  | "sing" -> [PutToSleep]
+  | "supersonic" -> [ConfuseOpp]
   | "calm-mind" -> [StageBoost [(SpecialDefense, 1); (SpecialAttack, 1)]]
   | _ -> []
 
@@ -401,8 +403,8 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Modest in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Psychic; Electric]; move1= getMoveFromString "poison-sting"; move2 =
-  getMoveFromString "twineedle"; move3 = getMoveFromString "pin-missile";
+  {name="gardevoir-mega"; element=[Psychic; Electric]; move1= getMoveFromString "sing"; move2 =
+  getMoveFromString "twineedle"; move3 = getMoveFromString "supersonic";
   move4 = getMoveFromString "growl"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
 
