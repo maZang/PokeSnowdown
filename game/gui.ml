@@ -410,6 +410,8 @@ let rec getStatusString starter s =
   | StatAttack (stat, i, s) -> getStatusString starter s ^ "Opponent's " ^ string_from_stat stat ^ " was lowered " ^ string_of_int i ^ " stage"
   | MissStatus s -> starter ^ " used " ^ s ^ " but it missed."
   | FrozenSolidS -> starter ^  " was frozen solid."
+  | PoisonStatus s-> getStatusString starter s ^ "The opponent has been poisoned."
+  | ParaStatus s -> getStatusString starter s ^ "The opponent has been paralyzed."
   | ThawS s -> " unfroze." ^ getStatusString starter s
   | NoFreezeS s -> starter ^ " cannot freeze. " ^ getStatusString starter s
   | NoBurnS s -> starter ^ " cannot burn. " ^ getStatusString starter s
@@ -436,7 +438,7 @@ let rec getEndString starter s =
   | BreakPara -> starter ^ " cannot be paralyzed."
   | BreakPoison -> starter ^ " cannot be posioned."
   | BurnDmg -> starter ^ " has taken burn damage."
-  | PoisonDmg -> starter ^ "has taken poison damage."
+  | PoisonDmg -> starter ^ " has taken poison damage."
   | LeechDmg s -> starter ^ " has taken leech seed damage." ^ getEndString starter s
   | LeechHeal s -> starter ^ " has healed from leech seeds." ^ getEndString starter s
 

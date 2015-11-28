@@ -318,8 +318,9 @@ let getSecondaryEffect str = match str with
   | "double-slap" | "comet-punch" | "fury-attack" | "pin-missile" -> [RandMultHit]
   | "fire-punch" | "ember" | "flamethrower" -> [BurnChance]
   | "ice-punch" | "ice-beam" | "blizzard" -> [FreezeChance]
-  | "thunder-punch" | "body-slam" -> [ParaChance]
-  | "guillotine" | "horn-drill" -> [OHKO]
+  | "thunder-punch" | "body-slam" | "stun-spore" | "thunder-shock"
+    | "thunderbolt" | "thunder-wave" | "thunder"-> [ParaChance]
+  | "guillotine" | "horn-drill" | "fissure"-> [OHKO]
   | "razor-wind" -> [ChargeMove "It made a whirlwind!"]
   | "swords-dance" -> [StageBoost [(Attack, 2)]]
   | "whirlwind" | "roar"-> [ForceSwitch]
@@ -328,13 +329,13 @@ let getSecondaryEffect str = match str with
   | "sand-attack" -> [StageAttack [(Accuracy, 1)]]
   | "take-down" | "double-edge" | "submission" -> [RecoilMove]
   | "tail-whip" | "leer" -> [StageAttack [(Defense, 1)]]
-  | "poison-sting" -> [PoisonChance]
+  | "poison-sting" | "poison-powder" -> [PoisonChance]
   | "twineedle" -> [MultHit 2; PoisonChance]
   | "growl" | "aurora-beam" -> [StageAttack [(Attack, 1)]]
-  | "sing" -> [PutToSleep]
-  | "supersonic" | "psybeam" -> [ConfuseOpp]
+  | "sing" | "sleep-powder" -> [PutToSleep]
+  | "supersonic" | "psybeam" | "confusion" -> [ConfuseOpp]
   | "sonic-boom" -> [ConstantDmg 20]
-  | "acid" -> [StageAttack [(SpecialDefense, 1)]]
+  | "acid" | "psychic" -> [StageAttack [(SpecialDefense, 1)]]
   | "bubble-beam" -> [StageAttack [(Speed, 1)]]
   | "hyper-beam" -> [RechargeMove]
   | "low-kick" -> [WeightDamage]
@@ -342,6 +343,9 @@ let getSecondaryEffect str = match str with
   | "absorb" | "mega-drain" -> [DrainMove]
   | "leech-seed" -> [LeechSeed]
   | "growth" -> [StageBoost [(Attack, 1); (SpecialAttack, 1)]]
+  | "solar-beam" -> [ChargeInSunlight "Need sunlight to charge faster!"]
+  | "string-shot" -> [StageAttack [(Speed, 2)]]
+  | "dragon-rage" -> [ConstantDmg 40]
   | "calm-mind" -> [StageBoost [(SpecialDefense, 1); (SpecialAttack, 1)]]
   | _ -> []
 
@@ -412,9 +416,9 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Psychic; Electric]; move1= getMoveFromString "growth"; move2 =
-  getMoveFromString "seismic-toss"; move3 = getMoveFromString "razor-leaf";
-  move4 = getMoveFromString "low-kick"; hp = 68; attack = 85; special_attack = 165; defense = 65;
+  {name="gardevoir-mega"; element=[Psychic; Electric]; move1= getMoveFromString "solar-beam"; move2 =
+  getMoveFromString "thunder-wave"; move3 = getMoveFromString "psychic";
+  move4 = getMoveFromString "confusion"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
 
 let getTestOpp () =
@@ -422,9 +426,9 @@ let getTestOpp () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gallade-mega"; element=[Psychic; Electric]; move1= getMoveFromString "growth"; move2 =
-  getMoveFromString "seismic-toss"; move3 = getMoveFromString "razor-leaf";
-  move4 = getMoveFromString "low-kick"; hp = 68; attack = 85; special_attack = 165; defense = 65;
+  {name="gallade-mega"; element=[Psychic;Flying]; move1= getMoveFromString "splash"; move2 =
+  getMoveFromString "splash"; move3 = getMoveFromString "splash";
+  move4 = getMoveFromString "splash"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
 
 let getPokeToolTip t =

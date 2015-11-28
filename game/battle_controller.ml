@@ -427,9 +427,15 @@ let move_handler atk def weather move =
         else
           ()); secondary_effects t
     (* One hit KO moves *)
-    | OHKO::t -> def.current.curr_hp <- 0; newmove := OHKill !newmove
+    | OHKO::t ->
+            (let type_mod = List.fold_left (fun acc x -> acc *. getElementEffect
+              move.element x) 1. def.current.pokeinfo.element in
+            if type_mod > 0. then
+              (def.current.curr_hp <- 0; newmove := OHKill !newmove; secondary_effects t)
+            else
+              newmove := MissMove move.name)
     (* Charging Moves dealt with in hit moves-- nothing to do here *)
-    | (ChargeMove s)::t -> secondary_effects t
+    | (ChargeMove _)::t | (ChargeInSunlight _)::t -> secondary_effects t
     (* Flinch Moves have a certain chance to make target flinch *)
     | FlinchMove::t ->
         let randnum = Random.int 100 in
@@ -454,7 +460,13 @@ let move_handler atk def weather move =
           ()); secondary_effects t
     (* Constant damage moves -- note these moves have a power level of 0 *)
     | (ConstantDmg n)::t ->
-          def.current.curr_hp <- max 0 (def.current.curr_hp - n + damage)
+          let type_mod = List.fold_left (fun acc x -> acc *. getElementEffect
+            move.element x) 1. def.current.pokeinfo.element in
+          if type_mod > 0. then
+            (def.current.curr_hp <- max 0 (def.current.curr_hp - n + damage);
+            secondary_effects t)
+          else
+            newmove := MissMove move.name
     (* Moves that have a chance of lowering a Pokemon's stat *)
     | (StageAttack l)::t ->
         (match l with
@@ -721,6 +733,16 @@ let rec status_move_handler atk def weather (move: move) =
                       else
                         (def.current.curr_status <- (novola, Leeched::x);
                         newmove := LeechS !newmove)); secondary_effects t
+    (* Poison status moves *)
+    | PoisonChance::t -> (match def.current.curr_status with
+          | (NoNon, x) -> def.current.curr_status <- (Poisoned, x);
+                            newmove := PoisonStatus !newmove
+          | _ -> ()); secondary_effects t
+    (* Paralysis status moves *)
+    | ParaChance::t -> (match def.current.curr_status with
+          | (NoNon, x) -> def.current.curr_status <- (Paralysis, x);
+                            newmove := ParaStatus !newmove
+          | _ -> ()); secondary_effects t
     | [] -> ()
   in
   let hit, reason = hitMoveDueToStatus atk (`NoAdd !newmove) in
@@ -813,7 +835,7 @@ let handle_preprocessing t1 t2 w m1 m2 =
   let nstatus, vstatus = t1.current.curr_status in
   let nstatus', vstatus' = t2.current.curr_status in
   let move1 = fix_nstatus nstatus t1 in
-  let move2 = fix_nstatus nstatus t2 in
+  let move2 = fix_nstatus nstatus' t2 in
   let move1', move2' = fix_vstatus t1 t2 move1 move2 vstatus in
   let move1'', move2'' = fix_vstatus t2 t1 move2' move1' vstatus' in
   (match move1'' with
