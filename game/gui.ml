@@ -369,6 +369,7 @@ let rec getAttackString starter a =
   | Crit s -> getAttackString starter s ^ "It was a critical hit."
   | SEff s -> getAttackString starter s ^ "It was super effective."
   | NoEff s -> getAttackString starter s ^ "It was not very effective."
+  | NoEffAll s -> starter ^ " used " ^ s ^ " but it had no effect."
   | StatAttackA (stat, i, s) -> getAttackString starter s ^ "Opponent's " ^ string_from_stat stat ^ " was lowered " ^ string_of_int i ^ " stage."
   | HitMult (n, s) ->
       let c, s', n', str = getNumCritSuperNoAndFinal 0 0 0 s in
@@ -388,13 +389,15 @@ let rec getAttackString starter a =
   | NoPara s -> starter ^ " cannot be paralyzed." ^ getAttackString starter s
   | Para -> starter ^ " couldn't move due to paralysis!"
   | OHKill s -> getAttackString starter s ^"This move is a one hit KO!"
-  | FlinchA -> starter ^ " flinched!'"
+  | FlinchA -> starter ^ " flinched!"
   | PoisonMove s -> getAttackString starter s ^ "The opponent has been poisoned"
   | Recoil s -> getAttackString starter s ^"The user suffered some recoil damage!"
   | BreakConfuse s -> starter ^ " has broken out of its confusion." ^ getAttackString starter s
   | Confused -> starter ^ " hit itself in its confusion."
   | DrainA s-> getAttackString starter s ^ starter ^ " drained some of it's opponents health."
   | ConfuseMoveA s -> getAttackString starter s ^ "The opponent is confused."
+  | UserFaintA s -> getAttackString starter s ^ starter ^ " takes damage from the move and is about to faint!"
+  | DrainSleepFail s -> starter ^ " used " ^ s ^ " but the opponent is not asleep!"
   | ChargingMove (s, n) -> (match !secondaryEffect with
                              | `P1 -> current_command := (Some (UseAttack n), snd !current_command)
                              |`P2 -> current_command := (fst !current_command, Some (UseAttack n))); starter ^ " is charging up." ^ s
@@ -428,6 +431,8 @@ let rec getStatusString starter s =
   | LeechS s -> getStatusString starter s ^ "Seeds were spread around the opponent."
   | HealHealth s -> getStatusString starter s ^ starter ^ " healed itself for some of its health."
   | LightScreenS s -> getStatusString starter s ^ starter ^ " has put up a field protecting it from special attacks."
+  | HazeS s -> getStatusString starter s ^ "Both Pokemon's stat changes were removed."
+  | ReflectS s -> getStatusString starter s ^ starter ^ " has put up a field protecting it from physical attacks."
   | SwitchOut s -> (match !secondaryEffect with
                     | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
                     | `P2 -> current_command := (Some (Poke "random"), Some NoMove));
@@ -445,6 +450,7 @@ let rec getEndString starter s =
   | LeechDmg s -> starter ^ " has taken leech seed damage." ^ getEndString starter s
   | LeechHeal s -> starter ^ " has healed from leech seeds." ^ getEndString starter s
   | LightScreenFade s -> getEndString starter s ^ starter ^ "'s Light Screen has faded."
+  | ReflectFade s -> getEndString starter s ^ starter ^ "'s Reflect has faded."
 
 let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text
   (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img text_buffer (health_bar_holder1, health_bar_holder2, health_bar1, health_bar2)  back_button () =

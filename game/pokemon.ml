@@ -315,33 +315,35 @@ let getDmgClass str =
 
 let getSecondaryEffect str = match str with
   | "karate-chop" | "razor-leaf"-> [IncCrit 1]
-  | "double-slap" | "comet-punch" | "fury-attack" | "pin-missile" -> [RandMultHit]
-  | "fire-punch" | "ember" | "flamethrower" -> [BurnChance]
+  | "double-slap" | "comet-punch" | "fury-attack" | "pin-missile" |
+      "spike-cannon" | "barrage" -> [RandMultHit]
+  | "fire-punch" | "ember" | "flamethrower" | "fire-blast" -> [BurnChance]
   | "ice-punch" | "ice-beam" | "blizzard" -> [FreezeChance]
   | "thunder-punch" | "body-slam" | "stun-spore" | "thunder-shock"
-    | "thunderbolt" | "thunder-wave" | "thunder"-> [ParaChance]
+    | "thunderbolt" | "thunder-wave" | "thunder" | "lick" | "glare"-> [ParaChance]
   | "guillotine" | "horn-drill" | "fissure"-> [OHKO]
   | "razor-wind" -> [ChargeMove "It made a whirlwind!"]
   | "swords-dance" -> [StageBoost [(Attack, 2)]]
   | "meditate" -> [StageBoost [(Attack, 1)]]
   | "whirlwind" | "roar"-> [ForceSwitch]
-  | "stomp" | "rolling-kick" | "headbutt" | "bite" -> [FlinchMove]
+  | "stomp" | "rolling-kick" | "headbutt" | "bite" | "bone-club" | "waterfall" -> [FlinchMove]
   | "double-kick" | "gear-grind"  -> [MultHit 2]
-  | "sand-attack" | "smokescreen"-> [StageAttack [(Accuracy, 1)]]
+  | "sand-attack" | "smokescreen" | "kinesis" | "flash" -> [StageAttack [(Accuracy, 1)]]
   | "take-down" | "double-edge" | "submission" -> [RecoilMove]
   | "tail-whip" | "leer" -> [StageAttack [(Defense, 1)]]
-  | "poison-sting" | "poison-powder" -> [PoisonChance]
+  | "poison-sting" | "poison-powder" | "smog" | "sludge" |
+      "poison-gas" -> [PoisonChance]
   | "twineedle" -> [MultHit 2; PoisonChance]
   | "growl" | "aurora-beam" -> [StageAttack [(Attack, 1)]]
-  | "sing" | "sleep-powder" | "hypnosis" -> [PutToSleep]
-  | "supersonic" | "psybeam" | "confusion" | "confuse-ray"-> [ConfuseOpp]
+  | "sing" | "sleep-powder" | "hypnosis" | "lovely-kiss" | "spore" -> [PutToSleep]
+  | "supersonic" | "psybeam" | "confusion" | "confuse-ray" | "dizzy-punch" -> [ConfuseOpp]
   | "sonic-boom" -> [ConstantDmg 20]
   | "acid" | "psychic" -> [StageAttack [(SpecialDefense, 1)]]
-  | "bubble-beam" -> [StageAttack [(Speed, 1)]]
+  | "bubble-beam" | "bubble" -> [StageAttack [(Speed, 1)]]
   | "hyper-beam" -> [RechargeMove]
   | "low-kick" -> [WeightDamage]
   | "seismic-toss" | "night-shade" -> [ConstantDmg 100]
-  | "absorb" | "mega-drain" -> [DrainMove]
+  | "absorb" | "mega-drain" | "leech-life" -> [DrainMove]
   | "leech-seed" -> [LeechSeed]
   | "growth" -> [StageBoostSunlight [(Attack, 1); (SpecialAttack, 1)]]
   | "solar-beam" -> [ChargeInSunlight "Need sunlight to charge faster!"]
@@ -353,10 +355,18 @@ let getSecondaryEffect str = match str with
   | "double-team" -> [StageBoost [(Evasion, 1)]]
   | "minimize" -> [StageBoost [(Evasion, 2)]]
   | "harden" | "withdraw" | "defense-curl" -> [StageBoost [(Defense, 1)]]
-  | "barrier"  -> [StageBoost [(Defense, 2)]]
+  | "barrier" | "acid-armor"  -> [StageBoost [(Defense, 2)]]
   | "calm-mind" -> [StageBoost [(SpecialDefense, 1); (SpecialAttack, 1)]]
-  | "recover" -> [Recovery]
+  | "recover" | "soft-boiled" -> [Recovery]
   | "light-screen" -> [LightScreenMake]
+  | "haze" -> [Haze]
+  | "reflect" -> [ReflectMake]
+  | "self-destruct" -> [UserFaint]
+  | "swift" -> [NeverMiss]
+  | "amnesia" -> [StageBoost [(SpecialDefense, 2)]]
+  | "dream-eater" -> [DrainMoveSleep]
+  | "sky-attack" -> [ChargeMove "The Pokemon is glowing."; IncCrit 1; FlinchMove]
+  | "psywave" -> [VariableDamage]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -426,9 +436,9 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Psychic; Electric]; move1= getMoveFromString "light-screen"; move2 =
-  getMoveFromString "solar-beam"; move3 = getMoveFromString "bubble";
-  move4 = getMoveFromString "confusion"; hp = 68; attack = 85; special_attack = 165; defense = 65;
+  {name="gardevoir-mega"; element=[Psychic; Electric]; move1= getMoveFromString "acid-armor"; move2 =
+  getMoveFromString "psywave"; move3 = getMoveFromString "lovely-kiss";
+  move4 = getMoveFromString "sky-attack"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
 
 let getTestOpp () =
@@ -436,9 +446,9 @@ let getTestOpp () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gallade-mega"; element=[Psychic;Flying]; move1= getMoveFromString "bubble"; move2 =
-  getMoveFromString "bubble"; move3 = getMoveFromString "bubble";
-  move4 = getMoveFromString "bubble"; hp = 68; attack = 85; special_attack = 165; defense = 65;
+  {name="gallade-mega"; element=[Psychic;Flying]; move1= getMoveFromString "pound"; move2 =
+  getMoveFromString "pound"; move3 = getMoveFromString "pound";
+  move4 = getMoveFromString "pound"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
 
 let getPokeToolTip t =

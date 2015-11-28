@@ -126,6 +126,13 @@ let getCrit poke move =
 let damageCalculation t1 t2 (w,ter1, ter2) move =
   let defense = match move.dmg_class with
     | Physical ->
+      let rec findReflect ter = match ter with
+      | [] -> false
+      | (Reflect _)::t -> true
+      | h::t -> findReflect t in
+      (match findReflect !ter2 with
+      | true -> 2.0
+      | false -> 1.0) *.
       float_of_int t2.current.bdefense *.
       getStageAD (fst t2.stat_enhance.defense) *.
       (snd t2.stat_enhance.defense)
@@ -166,17 +173,22 @@ let damageCalculation t1 t2 (w,ter1, ter2) move =
     if (crit_bool) then
       if (type_mod > 1.) then
         SEff (Crit (NormMove move.name))
-      else if (type_mod < 1.) then
+      else if (type_mod < 1. && type_mod > 0.) then
         NoEff (Crit (NormMove move.name))
+      else if (type_mod = 0.) then
+        NoEffAll (move.name)
       else
         Crit (NormMove move.name)
     else
       if (type_mod > 1.) then
         SEff (NormMove move.name)
-      else if (type_mod < 1.) then
+      else if (type_mod < 1. && type_mod > 0.) then
         NoEff (NormMove move.name)
+      else if (type_mod = 0.) then
+        NoEffAll (move.name)
       else
         NormMove move.name in
+  Printf.printf "%d\n%!" (int_of_float type_mod);
   ( newMove, (210. /. 250. *. attack /. defense*. float_of_int move.power
     +. 2.)*. modifier)
 
@@ -321,6 +333,8 @@ let hitAttack atk def (w,t1,t2) (move : move) moveDescript =
   let hit_move () =
     if probability > randnum then
       (true, moveDescript)
+    else if List.mem NeverMiss move.secondary then
+      (true, moveDescript)
     else
       (false, MissMove move.name) in
   let need_charge, charge_string = need_charge_attack move.secondary in
@@ -377,7 +391,7 @@ let move_handler atk def weather move =
   (* creates a reference to move description to allow mutation *)
   let newmove = ref moveDescript in
   (* damage does not need to be mutated *)
-  let damage = int_of_float fdamage in
+  let damage = ref (int_of_float fdamage) in
   (* helper function to deal with secondary effects *)
   let rec secondary_effects lst = match lst with
     (* MultiHit is any move that can occur more than once e.g. Double Slap;
@@ -442,7 +456,7 @@ let move_handler atk def weather move =
             if type_mod > 0. then
               (def.current.curr_hp <- 0; newmove := OHKill !newmove; secondary_effects t)
             else
-              newmove := MissMove move.name)
+              newmove := NoEffAll move.name)
     (* Charging Moves dealt with in hit moves-- nothing to do here *)
     | (ChargeMove _)::t | (ChargeInSunlight _)::t -> secondary_effects t
     (* Flinch Moves have a certain chance to make target flinch *)
@@ -456,7 +470,7 @@ let move_handler atk def weather move =
     (* Recoil moves deal certain damage to the user *)
     | RecoilMove::t ->
         newmove := Recoil !newmove;
-        atk.current.curr_hp <- atk.current.curr_hp - damage / 4
+        atk.current.curr_hp <- atk.current.curr_hp - !damage / 4
     (* Chance of poisoning the opponent *)
     | PoisonChance::t ->
         let randnum = Random.int 100 in
@@ -472,10 +486,10 @@ let move_handler atk def weather move =
           let type_mod = List.fold_left (fun acc x -> acc *. getElementEffect
             move.element x) 1. def.current.pokeinfo.element in
           if type_mod > 0. then
-            (def.current.curr_hp <- max 0 (def.current.curr_hp - n + damage);
+            (def.current.curr_hp <- max 0 (def.current.curr_hp - n + !damage);
             secondary_effects t)
           else
-            newmove := MissMove move.name
+            newmove := NoEffAll move.name
     (* Moves that have a chance of lowering a Pokemon's stat *)
     | (StageAttack l)::t ->
         (match l with
@@ -556,13 +570,33 @@ let move_handler atk def weather move =
       move.power <- base_power;
       let moveDescript', fdamage' = damageCalculation atk def weather move in
       let damage' = int_of_float fdamage' in
-      def.current.curr_hp <- max 0 (def.current.curr_hp - damage' + damage));
+      def.current.curr_hp <- max 0 (def.current.curr_hp - damage' + !damage));
       secondary_effects t
+    (* Damage that varies *)
+    | VariableDamage::t ->
+      (let base_power = int_of_float ((Random.float 1. +. 0.5) *. 100.) in
+        move.power <- base_power;
+        let moveDescript', fdamage' = damageCalculation atk def weather move in
+        let damage' = int_of_float fdamage' in
+        def.current.curr_hp <- max 0 (def.current.curr_hp - damage' + !damage));
+        secondary_effects t
     (* Moves that drain health *)
     | DrainMove::t ->
-      let heal = damage / 2 in
+      let heal = !damage / 2 in
       atk.current.curr_hp <- atk.current.curr_hp + heal;
       newmove := DrainA !newmove
+      (* Moves that drain health if opponent is asleep *)
+    | DrainMoveSleep::t ->
+      (match fst def.current.curr_status with
+      | Sleep _ -> secondary_effects (DrainMove::t)
+      | _ -> newmove := DrainSleepFail move.name;
+            def.current.curr_hp <- def.current.curr_hp + !damage)
+            ;secondary_effects t
+    (* Moves that cause user to faint *)
+    | UserFaint::t -> atk.current.curr_hp <- 0; newmove := UserFaintA !newmove;
+                      secondary_effects t
+    (* Moves that never miss are handled elsewhere *)
+    | NeverMiss::t -> secondary_effects t
     (* Base case *)
     | [] -> ()
     in
@@ -582,12 +616,13 @@ let move_handler atk def weather move =
     | `BreakConfuse s -> BreakConfuse (decompose s)
     | `Confused -> Confused in
   let reason' = decompose reason in
-  if hit then (
+  if hit && !damage > 0 then (
     let hit', newreason = hitAttack atk def weather move reason' in
     (* damage is always dealt before secondary effects calculated *)
     if hit' then (
       newmove := newreason;
-      def.current.curr_hp <- max 0 (def.current.curr_hp - damage);
+      damage := min def.current.curr_hp !damage;
+      def.current.curr_hp <-def.current.curr_hp - !damage;
       secondary_effects move.secondary;
     (* returns a move description *)
       !newmove)
@@ -776,9 +811,25 @@ let rec status_move_handler atk def (w, t1, t2) (move: move) =
                             (if findLightScreen !t1 then
                               ()
                             else
-                              (t1 := ((LightScreen 1)::!t1);
+                              (t1 := ((LightScreen 4)::!t1);
                               newmove := LightScreenS !newmove));
                             secondary_effects t
+    (* move that resets stat boosts/drops *)
+    | Haze::t -> atk.stat_enhance <- switchOutStatEnhancements atk;
+                 def.stat_enhance <- switchOutStatEnhancements def;
+                 newmove := HazeS !newmove;
+                 secondary_effects t
+    (* for the move Reflect *)
+    | ReflectMake::t -> let rec findReflect ter = match ter with
+                        | (Reflect _)::t -> true
+                        | h::t -> findReflect t
+                        | [] -> false in
+                        (if findReflect !t1 then
+                          ()
+                        else
+                          (t1 := ((Reflect 4)::!t1);
+                          newmove := ReflectS !newmove));
+                        secondary_effects t
     | [] -> ()
   in
   let hit, reason = hitMoveDueToStatus atk (`NoAdd !newmove) in
@@ -840,15 +891,22 @@ let handle_preprocessing t1 t2 w m1 m2 =
                            fix_terrain t acc (LightScreenFade descript) t'
                           else
                             fix_terrain t ((LightScreen (n-1))::acc) descript t'
+  | (Reflect n)::t' -> if n = 0 then
+                        fix_terrain t acc (ReflectFade descript) t'
+                       else
+                        fix_terrain t ((Reflect (n-1))::acc) descript t'
   | h::t' -> fix_terrain t (h::acc) descript t'
   | [] -> (acc, descript) in
   let rec fix_vstatus t1 t2 descript1 descript2 = function
   | [] -> (descript1, descript2)
   | Leeched::t ->
-          let damage = t1.current.bhp / 16 in
+        if t2.current.curr_hp > 0 then
+          (let damage = t1.current.bhp / 16 in
           t1.current.curr_hp <- t1.current.curr_hp - damage;
           t2.current.curr_hp <- t2.current.curr_hp + damage;
-          fix_vstatus t1 t2 (LeechDmg descript1) (LeechHeal descript2) t
+          fix_vstatus t1 t2 (LeechDmg descript1) (LeechHeal descript2) t)
+        else
+          fix_vstatus t1 t2 descript1 descript2 t
   | h::t -> fix_vstatus t1 t2 descript1 descript2 t in
   let fix_nstatus nstatus t =
   match nstatus with
