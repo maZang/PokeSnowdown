@@ -398,6 +398,8 @@ let rec getAttackString starter a =
   | ConfuseMoveA s -> getAttackString starter s ^ "The opponent is confused."
   | UserFaintA s -> getAttackString starter s ^ starter ^ " takes damage from the move and is about to faint!"
   | DrainSleepFail s -> starter ^ " used " ^ s ^ " but the opponent is not asleep!"
+  | BreakSub s -> getAttackString starter s ^ starter ^ " has broken the opponent's substitute."
+  | SubDmg s -> getAttackString starter s ^ "The opponent's substitute took the damage instead."
   | ChargingMove (s, n) -> (match !secondaryEffect with
                              | `P1 -> current_command := (Some (UseAttack n), snd !current_command)
                              |`P2 -> current_command := (fst !current_command, Some (UseAttack n))); starter ^ " is charging up." ^ s
@@ -434,6 +436,9 @@ let rec getStatusString starter s =
   | HazeS s -> getStatusString starter s ^ "Both Pokemon's stat changes were removed."
   | ReflectS s -> getStatusString starter s ^ starter ^ " has put up a field protecting it from physical attacks."
   | RestS s -> getStatusString starter s ^ starter ^ " has fallen asleep and been completely restored."
+  | SubBlock s -> getStatusString starter s ^ "The move was blocked by the opponent's substitute."
+  | SubFail s -> getStatusString starter s ^ "The substitute failed."
+  | SubMake s -> getStatusString starter s ^ starter ^ " has created a substitute."
   | SwitchOut s -> (match !secondaryEffect with
                     | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
                     | `P2 -> current_command := (Some (Poke "random"), Some NoMove));

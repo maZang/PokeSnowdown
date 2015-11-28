@@ -256,6 +256,12 @@ let decrementConfusion atk =
   let newvola = helper [] vola in
   atk.curr_status <- (nonvola, newvola)
 
+let rec filter_substitute n lst =
+  match lst with
+  | (Substitute _)::t -> if n = 0 then t else (Substitute n)::t
+  | h::t -> h::(filter_substitute n t)
+  | [] -> []
+
 (* Helper function to see if pokemon can move; also called to break a Pokemon
   out of a status condition *)
 let hitMoveDueToStatus atk moveDescript =
@@ -284,6 +290,7 @@ let hitMoveDueToStatus atk moveDescript =
                 (false, `Confused))
               ))
       | Leeched::t -> helperVolaStatus t moveDescript'
+      | (Substitute _)::t -> helperVolaStatus t moveDescript'
       | _ -> failwith "unimplemented" in
   let nvola, vola = atk.current.curr_status in
   match nvola with
@@ -316,7 +323,7 @@ let hitMoveDueToStatus atk moveDescript =
 
 (* Returns true if Pokemon moves, otherwise returns false as well as some value
    describing why the move failed *)
-let hitAttack atk def (w,t1,t2) (move : move) moveDescript =
+let hitAttack atk def (w,t1,t2) (move : move) damage moveDescript =
   let accStage, accMult = atk.stat_enhance.accuracy in
   let evStage, evMult = def.stat_enhance.evasion in
   let probability = float_of_int move.accuracy *. getStageEvasion  accStage
@@ -330,11 +337,24 @@ let hitAttack atk def (w,t1,t2) (move : move) moveDescript =
                 | _ -> (true, s))
   | h::t -> need_charge_attack t
   | [] -> (false, "") in
+  let rec remove_subs = function
+  | Substitute _ -> false
+  | _ -> true in
+  let rec get_substitute_health = function
+  | [] -> None
+  | (Substitute n)::_  -> Some n
+  | h::t -> get_substitute_health t in
   let hit_move () =
-    if probability > randnum then
-      (true, moveDescript)
-    else if List.mem NeverMiss move.secondary then
-      (true, moveDescript)
+    if probability > randnum || List.mem NeverMiss move.secondary then
+      match get_substitute_health (snd def.current.curr_status) with
+      | None -> (true, moveDescript)
+      | Some n -> let sub_damage = max 0 (n - damage) in
+                  let newvola = filter_substitute sub_damage (snd def.current.curr_status) in
+                  def.current.curr_status <- (fst def.current.curr_status, newvola);
+                  if sub_damage = 0 then
+                    (false, BreakSub moveDescript)
+                  else
+                    (false, SubDmg moveDescript)
     else
       (false, MissMove move.name) in
   let need_charge, charge_string = need_charge_attack move.secondary in
@@ -351,6 +371,12 @@ let hitAttack atk def (w,t1,t2) (move : move) moveDescript =
   else
     hit_move ()
 
+(* Helper function for finding substitutes *)
+let rec find_substitute lst =
+  match lst with
+  | (Substitute _)::t -> true
+  | h::t -> find_substitute t
+  | [] -> false
 (* Returns true if Pokemon moves, false if it doesn't as well as some value
   describing why it failed (has to do with some status) *)
 let hitStatus atk def (move: move) moveDescript =
@@ -364,7 +390,10 @@ let hitStatus atk def (move: move) moveDescript =
                 *. accMult /. (getStageEvasion evStage *. evMult) in
     let randnum = Random.float 100. in
     if probability > randnum then
-      (true, moveDescript)
+      if find_substitute (snd def.current.curr_status) then
+        (false, SubBlock moveDescript)
+      else
+        (true, moveDescript)
     else
       (false, MissStatus move.name)
 
@@ -626,7 +655,7 @@ let move_handler atk def weather move =
     | `Confused -> Confused in
   let reason' = decompose reason in
   if hit && !damage > 0 then (
-    let hit', newreason = hitAttack atk def weather move reason' in
+    let hit', newreason = hitAttack atk def weather move !damage reason' in
     (* damage is always dealt before secondary effects calculated *)
     if hit' then (
       newmove := newreason;
@@ -842,10 +871,17 @@ let rec status_move_handler atk def (w, t1, t2) (move: move) =
     (* for the move rest *)
     | Rest::t -> (match atk.current.curr_status with
                   | (Sleep _, _) -> ()
-                  | (_, _) -> atk.current.curr_status <- (Sleep 4, []);
+                  | (_, x) -> atk.current.curr_status <- (Sleep 4, x);
                               atk.stat_enhance <- switchOutStatEnhancements atk;
                               atk.current.curr_hp <- atk.current.bhp;
                               newmove := RestS !newmove); secondary_effects t
+    (* for the move substitute *)
+    | SubstituteMake::t -> (if find_substitute (snd atk.current.curr_status) || atk.current.curr_hp <= atk.current.bhp / 4 then
+                        newmove := SubFail !newmove
+                      else
+                        (atk.current.curr_hp <- atk.current.curr_hp - atk.current.bhp / 4;
+                        atk.current.curr_status <- (fst atk.current.curr_status, (Substitute (atk.current.bhp/4))::(snd atk.current.curr_status));
+                        newmove := SubMake !newmove)); secondary_effects t
     | [] -> ()
   in
   let hit, reason = hitMoveDueToStatus atk (`NoAdd !newmove) in

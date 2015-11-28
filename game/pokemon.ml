@@ -112,6 +112,7 @@ let string_of_vola_status elm =
   | Torment -> "Torment"
   | Levitate -> "Levitate"
   | Charge -> "Charging"
+  | Substitute _ -> "Substitute"
 
 let string_of_poke_status (non, vola) =
   List.fold_left (fun acc s -> acc ^ ", " ^ string_of_vola_status s) (string_of_status non) vola
@@ -371,6 +372,7 @@ let getSecondaryEffect str = match str with
   | "rest" -> [Rest]
   | "tri-attack" -> [ParaChance; BurnChance; FreezeChance]
   | "super-fang" -> [SuperFang]
+  | "substitute" -> [SubstituteMake]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -384,7 +386,8 @@ let getMoveFromString str =
   let dmg_class = move |> member "dmg_class" |> to_string |> getDmgClass in
   let target = move |> member "target" |> to_string |> getTarget in
   let effect_chance_str = move |> member "effect_chance" |> to_string in
-  let effect_chance = try int_of_string effect_chance_str with |_ -> 100 in
+  let effect_chance = if str = "tri-attack" then 7 else
+                      try int_of_string effect_chance_str with |_ -> 100 in
   let accuracy_str = move |> member "accuracy" |> to_string in
   let accuracy = try int_of_string accuracy_str with  |_ -> 100 in
   let element = move |> member "type" |> to_string |> getElement in
@@ -440,7 +443,7 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Psychic]; move1= getMoveFromString "super-fang"; move2 =
+  {name="gardevoir-mega"; element=[Psychic]; move1= getMoveFromString "substitute"; move2 =
   getMoveFromString "psywave"; move3 = getMoveFromString "lovely-kiss";
   move4 = getMoveFromString "sky-attack"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
