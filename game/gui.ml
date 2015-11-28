@@ -352,12 +352,23 @@ let rec getNumCritSuperNoAndFinal c s n v=
 let secondaryEffect = ref `P1
 let endTurnEarly = ref false
 
+let rec string_from_stat s =
+  match s with
+  | Attack -> "Attack"
+  | Defense -> "Defense"
+  | SpecialAttack -> "Special Attack"
+  | SpecialDefense -> "Sepcial Defense"
+  | Speed -> "Speed"
+  | Accuracy -> "Accuracy"
+  | Evasion -> "Evasion"
+
 let rec getAttackString starter a =
   match a with
   | NormMove s -> starter ^ " used " ^ s ^"."
   | Crit s -> getAttackString starter s ^ "It was a critical hit."
   | SEff s -> getAttackString starter s ^ "It was super effective."
   | NoEff s -> getAttackString starter s ^ "It was not very effective."
+  | StatAttackA (stat, i, s) -> getAttackString starter s ^ "Opponent's " ^ string_from_stat stat ^ " was lowered " ^ string_of_int i ^ " stage"
   | HitMult (n, s) ->
       let c, s', n', str = getNumCritSuperNoAndFinal 0 0 0 s in
       starter ^ " used " ^ str ^ ". The move hit " ^ string_of_int n ^ " times with " ^ string_of_int
@@ -381,19 +392,10 @@ let rec getAttackString starter a =
   | Recoil s -> getAttackString starter s ^"The user suffered some recoil damage!"
   | BreakConfuse s -> starter ^ " has broken out of its confusion." ^ getAttackString starter s
   | Confused -> starter ^ " hit itself in its confusion."
+  | ConfuseMoveA s -> getAttackString starter s ^ "The opponent is confused."
   | ChargingMove (s, n) -> (match !secondaryEffect with
                              | `P1 -> current_command := (Some (UseAttack n), snd !current_command)
                              |`P2 -> current_command := (fst !current_command, Some (UseAttack n))); starter ^ " is charging up." ^ s
-
-let rec string_from_stat s =
-  match s with
-  | Attack -> "Attack"
-  | Defense -> "Defense"
-  | SpecialAttack -> "Special Attack"
-  | SpecialDefense -> "Sepcial Defense"
-  | Speed -> "Speed"
-  | Accuracy -> "Accuracy"
-  | Evasion -> "Evasion"
 
 (* starter is either 'Player One' or 'Player Two'*)
 let rec getStatusString starter s =

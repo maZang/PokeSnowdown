@@ -449,7 +449,79 @@ let move_handler atk def move =
           ()); secondary_effects t
     (* Constant damage moves -- note these moves have a power level of 0 *)
     | (ConstantDmg n)::t ->
-          def.current.curr_hp <- max 0 (def.current.curr_hp - n + damage);
+          def.current.curr_hp <- max 0 (def.current.curr_hp - n + damage)
+    (* Moves that have a chance of lowering a Pokemon's stat *)
+    | (StageAttack l)::t ->
+        (match l with
+          | [] -> secondary_effects t
+          | (s,n)::t' ->
+            let randnum = Random.int 100 in
+            if (move.effect_chance > randnum) then
+            (match s with
+              | Attack ->
+                  let stage, multiplier = def.stat_enhance.attack in
+                  let boost = max (min 6 (stage - n)) (-6) in
+                  def.stat_enhance.attack <- (boost, multiplier);
+                  newmove := StatAttackA (Attack, (boost - stage), !newmove);
+                  secondary_effects ((StageAttack t')::t)
+              | Defense ->
+                  let stage, multiplier = def.stat_enhance.defense in
+                  let boost = max (min 6 (stage - n)) (-6) in
+                  Printf.printf "%d\n%!" boost;
+                  def.stat_enhance.defense <- (boost, multiplier);
+                  newmove := StatAttackA (Defense, (boost - stage), !newmove);
+                  secondary_effects ((StageAttack t')::t)
+              | SpecialAttack ->
+                  let stage, multiplier = def.stat_enhance.special_attack in
+                  let boost = max (min 6 (stage - n)) (-6) in
+                  def.stat_enhance.special_attack <- (boost, multiplier);
+                  newmove := StatAttackA
+                                    (SpecialAttack, (boost - stage), !newmove);
+                  secondary_effects ((StageAttack t')::t)
+              | SpecialDefense ->
+                  let stage, multiplier = def.stat_enhance.special_defense in
+                  let boost = max (min 6 (stage - n)) (-6) in
+                  def.stat_enhance.special_defense <- (boost, multiplier);
+                  newmove := StatAttackA
+                                    (SpecialDefense, (boost - stage), !newmove);
+                  secondary_effects ((StageAttack t')::t)
+              | Speed ->
+                  let stage, multiplier = def.stat_enhance.speed in
+                  let boost = max (min 6 (stage - n)) (-6) in
+                  def.stat_enhance.speed <- (boost, multiplier);
+                  newmove := StatAttackA (Speed, (boost - stage), !newmove);
+                  secondary_effects ((StageAttack t')::t)
+              | Accuracy ->
+                  let stage, multiplier = def.stat_enhance.accuracy in
+                  let boost = max (min 6 (stage - n)) (-6) in
+                  def.stat_enhance.accuracy <- (boost, multiplier);
+                  newmove := StatAttackA (Accuracy, (boost - stage), !newmove);
+                  secondary_effects ((StageAttack t')::t)
+              | Evasion ->
+                  let stage, multiplier = def.stat_enhance.evasion in
+                  let boost = max (min 6 (stage - n)) (-6) in
+                  def.stat_enhance.evasion <- (boost, multiplier);
+                  newmove := StatAttackA (Evasion, (boost - stage), !newmove);
+                  secondary_effects ((StageAttack t')::t)
+              ) else secondary_effects ((StageAttack t')::t)
+          )
+    (* Moves that have a chance of confusing the opponent *)
+    | ConfuseOpp::t ->let randnum = Random.int 100 in
+                          (if (move.effect_chance > randnum) then
+                            (let confuse_turns = Random.int 4 + 1 in
+                            let novola , x = def.current.curr_status in
+                            let rec check_for_confusion = function
+                            | [] -> false
+                            | (Confusion _)::t -> true
+                            | h::t -> check_for_confusion t in
+                            (if check_for_confusion x then
+                              ()
+                            else
+                            (def.current.curr_status <-
+                              (novola, (Confusion confuse_turns)::x);
+                            newmove := ConfuseMoveA !newmove)))
+                          else
+                           ()); secondary_effects t
     (* Base case *)
     | [] -> ()
     in
