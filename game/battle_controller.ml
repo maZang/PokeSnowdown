@@ -618,6 +618,15 @@ let move_handler atk def weather move =
         let damage' = int_of_float fdamage' in
         def.current.curr_hp <- max 0 (def.current.curr_hp - damage' + !damage));
         secondary_effects t
+    (* for the move flail *)
+    | Flail::t ->
+        (let base_power = (atk.current.bhp - atk.current.curr_hp) * 200 / atk.current.bhp in
+        move.power <- base_power;
+        let moveDescript', fdamage' = damageCalculation atk def weather move in
+        let damage' = int_of_float fdamage' in
+        Printf.printf "%d \n%!" base_power;
+        def.current.curr_hp <- max 0 (def.current.curr_hp - damage' + !damage));
+        secondary_effects t
     (* Moves that drain health *)
     | DrainMove::t ->
       let heal = !damage / 2 in
@@ -997,7 +1006,7 @@ let handle_preprocessing t1 t2 w m1 m2 =
   let move1 = fix_nstatus nstatus t1 in
   let move2 = fix_nstatus nstatus' t2 in
   let move1', move2' = fix_vstatus t1 t2 move1 move2 vstatus in
-  let move1'', move2'' = fix_vstatus t2 t1 move2' move1' vstatus' in
+  let move2'', move1'' = fix_vstatus t2 t1 move2' move1' vstatus' in
   let (ter1, move1f) = fix_terrain t1 [] move1'' !(w.terrain.side1) in
   let (ter2, move2f) = fix_terrain t2 [] move2'' !(w.terrain.side2) in
   (match move1f with
