@@ -4,3 +4,4 @@ Low Kick -- Based on current health
 triple kick -- constant 20 power
 flail -- equation changed
 protect --has 1/4 chance of working on subsequent use
+present -- changed to always do damage
