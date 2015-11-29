@@ -716,7 +716,7 @@ let move_handler atk def wt move =
     (* Moves that drain health *)
     | DrainMove::t ->
       let heal = !damage / 2 in
-      atk.current.curr_hp <- atk.current.curr_hp + heal;
+      atk.current.curr_hp <- min atk.current.bhp (atk.current.curr_hp + heal);
       newmove := DrainA !newmove
       (* Moves that drain health if opponent is asleep *)
     | DrainMoveSleep::t ->
@@ -1133,7 +1133,7 @@ let handle_preprocessing t1 t2 w m1 m2 =
               (t.current.curr_status <- (NoNon, snd t1.current.curr_status);
                BreakBurn)
             else
-              (t.current.curr_hp <- t1.current.curr_hp - 1 * t.current.bhp / 8;
+              (t.current.curr_hp <- t.current.curr_hp - 1 * t.current.bhp / 8;
               BurnDmg)
   | Freeze -> if List.mem Ice t.current.pokeinfo.element then
               (t.current.curr_status <- (NoNon, snd t1.current.curr_status);
