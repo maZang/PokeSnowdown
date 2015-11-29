@@ -346,9 +346,6 @@ let hitAttack atk def (w,t1,t2) (move : move) damage moveDescript =
                 | _ -> (true, s))
   | h::t -> need_charge_attack t
   | [] -> (false, "") in
-  let rec remove_subs = function
-  | Substitute _ -> false
-  | _ -> true in
   let rec get_substitute_health = function
   | [] -> None
   | (Substitute n)::_  -> Some n
@@ -919,6 +916,27 @@ let rec status_move_handler atk def (w, t1, t2) (move: move) =
                   else
                     (atk.current.curr_status <- (fst atk.current.curr_status, Protected::(snd atk.current.curr_status));
                     newmove := ProtectS !newmove)); secondary_effects t
+    (* For the move belly drum *)
+    | BellyDrum::t -> if atk.current.curr_hp > atk.current.bhp / 2 then
+                        (atk.current.curr_hp <- atk.current.curr_hp - atk.current.bhp / 2;
+                          secondary_effects ((StageBoost [(Attack,6)])::t))
+                      else
+                        newmove := Fail "Belly Drum"
+    (* for the spikes *)
+    | Spikes::t -> let rec addSpikes acc1 acc2 ter = match ter with
+                        | (Spikes n)::t ->if n >= 3 then
+                                            (false, acc2 @ (Spikes 3)::t)
+                                          else
+                                            (true, acc2 @ (Spikes (n+1))::t)
+                        | h::t -> addSpikes acc1 (h::acc2) t
+                        | [] -> (acc1, (Spikes 1)::acc2) in
+                  let success, newter = addSpikes true [] !t2 in
+                  if success then
+                    (t2 := newter;
+                    newmove := SpikesS !newmove;
+                    secondary_effects t)
+                  else
+                    newmove := Fail move.name
     | [] -> ()
   in
   let hit, reason = hitMoveDueToStatus atk (`NoAdd !newmove) in
@@ -1135,6 +1153,28 @@ let handle_two_moves t1 t2 w m1 m2 a1 a2 =
               )
     )
 
+let getEntryHazardDmg t ter1=
+  let rec helper acc lst = match lst with
+  | [] -> acc
+  | (Spikes n)::t -> (if n = 1 then (helper (0.125 +. acc) t)
+                      else if n = 2 then (helper (1. /. 6. +. acc) t)
+                      else (helper (0.25 +. acc) t))
+  | h::t -> helper acc t in
+  let damage = int_of_float (helper 0. !ter1 *. float_of_int t.current.bhp) in
+  t.current.curr_hp <- max 0 (t.current.curr_hp - damage)
+
+let switchPokeHandler faint nextpoke t ter1 =
+  let prevPoke = t.current in
+  let switchPoke, restPoke = findBattlePoke t.alive nextpoke in
+  t.stat_enhance <- switchOutStatEnhancements t;
+  t.current.curr_status <- switchOutStatus t.current;
+  t.current <- switchPoke;
+  (if faint then
+    (t.dead <- prevPoke::t.dead; t.alive <- restPoke)
+  else
+    t.alive <- prevPoke::restPoke);
+  getEntryHazardDmg t ter1
+
 (* The main action handler for the game *)
 let handle_action state action1 action2 =
   let t1, t2, w, m1, m2 = match get_game_status state with
@@ -1144,24 +1184,22 @@ let handle_action state action1 action2 =
   | Poke p' -> let p = if p' = "random" then getRandomPoke t1 else p' in
       (match action2 with
       | Poke p -> failwith "unimplemented"
-      | UseAttack a -> let prevPoke = t1.current in
-                       let switchPoke, restPoke = findBattlePoke t1.alive p in
-                       t1.stat_enhance <- switchOutStatEnhancements t1;
-                       t1.current.curr_status <- switchOutStatus t1.current;
-                       t1.current <- switchPoke; t1.alive <- prevPoke::restPoke;
-                       let curr_move = findBattleMove t2.current.pokeinfo a in
+      | UseAttack a -> switchPokeHandler false p t1 w.terrain.side1;
+                       if (t1.current.curr_hp = 0) then
+                        (m1 := Pl1 SFaint; m2 := Pl2 FaintNext)
+                      else
+                       (let curr_move = findBattleMove t2.current.pokeinfo a in
                        if curr_move.dmg_class = Status then
                           ( let newmove = status_move_handler t2 t1 (w.weather, w.terrain.side2, w.terrain.side1) curr_move in
                             m1 := Pl1 (SPoke p); m2 := Pl2 (Status newmove))
                        else (
                         let newmove = move_handler t2 t1 (w.weather, w.terrain.side2, w.terrain.side1) curr_move in
-                        m1 := Pl1 (SPoke p); m2 := Pl2 (AttackMove newmove))
-      | NoMove -> let prevPoke = t1.current in
-                       let switchPoke, restPoke = findBattlePoke t1.alive p in
-                       t1.stat_enhance <- switchOutStatEnhancements t1;
-                       t1.current.curr_status <- switchOutStatus t1.current;
-                       t1.current <- switchPoke; t1.alive <- prevPoke::restPoke;
-                       m1 := Pl1 (SPoke p); m2 := Pl2 NoAction
+                        m1 := Pl1 (SPoke p); m2 := Pl2 (AttackMove newmove)))
+      | NoMove ->  switchPokeHandler false p t1 w.terrain.side1;
+                    if (t1.current.curr_hp = 0) then
+                      (m1 := Pl1 Faint; m2 := Pl2 FaintNext)
+                    else
+                       (m1 := Pl1 (SPoke p); m2 := Pl2 NoAction)
       | _ -> failwith "Faulty Game Logic: Debug 444")
   | UseAttack a ->
       (match action2 with
@@ -1185,12 +1223,11 @@ let handle_action state action1 action2 =
                   m2 := Pl1 Next
               | Poke p' -> let p = if p' = "random" then getRandomPoke t2
                           else p' in
-                          let prevPoke = t2.current in
-                          let switchPoke, restPoke = findBattlePoke t2.alive p in
-                          t2.stat_enhance <- switchOutStatEnhancements t2;
-                          t2.current.curr_status <- switchOutStatus t2.current;
-                          t2.current <- switchPoke; t2.alive <- prevPoke::restPoke;
-                          m1 := Pl2 (SPoke p); m2 := Pl1 NoAction
+                          switchPokeHandler false p t2 w.terrain.side2;
+                          if (t2.current.curr_hp = 0) then
+                            (m1 := Pl2 SFaint; m2 := Pl1 FaintNext)
+                          else
+                            (m1 := Pl2 (SPoke p); m2 := Pl1 NoAction)
               | UseAttack a -> let curr_poke = t2.current in
                               let curr_move = findBattleMove curr_poke.pokeinfo a in
                               if curr_move.dmg_class = Status then
@@ -1203,12 +1240,25 @@ let handle_action state action1 action2 =
               | _ -> failwith "Faulty Game Logic: Debug 177"
               )
   | FaintPoke p -> (match action2 with
+                    | FaintPoke p' ->
+                        (switchPokeHandler true p t1 w.terrain.side1;
+                        switchPokeHandler true p' t2 w.terrain.side2;
+                        if (t1.current.curr_hp = 0) then
+                          if (t2.current.curr_hp = 0) then
+                            (m1 := Pl1 SFaint; m2 := Pl2 Faint)
+                          else
+                            (m1 := Pl1 SFaint; m2 := Pl2 FaintNext)
+                        else
+                          if (t2.current.curr_hp = 0) then
+                            (m1 := Pl2 SFaint; m1 := Pl1 FaintNext)
+                          else
+                            m1 := Pl1 (SPoke p); m2 := Pl2 (SPoke p'))
                     | _ ->
-                        let prevPoke = t1.current in
-                        let switchPoke, restPoke = findBattlePoke t1.alive p in
-                        t1.current <- switchPoke; t1.dead <- prevPoke::t1.dead;
-                        t1.alive <- restPoke;
-                        m1 := Pl1 (SPoke p); m2 := Pl2 Next)
+                        (switchPokeHandler true p t1 w.terrain.side1;
+                        if (t1.current.curr_hp = 0) then
+                          (m1 := Pl1 SFaint; m2 := Pl2 FaintNext)
+                        else
+                          (m1 := Pl1 (SPoke p); m2 := Pl2 Next)))
   | Preprocess -> (match action2 with
                   | Preprocess -> handle_preprocessing t1 t2 w m1 m2
                   | _ -> failwith "Faulty Game Logic: Debug 211")

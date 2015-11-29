@@ -319,13 +319,13 @@ let getDmgClass str =
 let getSecondaryEffect str = match str with
   | "karate-chop" | "razor-leaf" | "crabhammer" | "slash" | "aeroblast" -> [IncCrit 1]
   | "double-slap" | "comet-punch" | "fury-attack" | "pin-missile" |
-      "spike-cannon" | "barrage" | "fury-swipes" -> [RandMultHit]
+      "spike-cannon" | "barrage" | "fury-swipes" | "bone-rush" -> [RandMultHit]
   | "fire-punch" | "ember" | "flamethrower" | "fire-blast" |
         "flame-wheel" -> [BurnChance]
   | "ice-punch" | "ice-beam" | "blizzard" -> [FreezeChance]
   | "thunder-punch" | "body-slam" | "stun-spore" | "thunder-shock"
     | "thunderbolt" | "thunder-wave" | "thunder" | "lick" | "glare"
-    | "zap-cannon" -> [ParaChance]
+    | "zap-cannon" | "spark" -> [ParaChance]
   | "guillotine" | "horn-drill" | "fissure"-> [OHKO]
   | "razor-wind" -> [ChargeMove "It made a whirlwind!"]
   | "swords-dance" -> [StageBoost [(Attack, 2)]]
@@ -351,7 +351,7 @@ let getSecondaryEffect str = match str with
   | "hyper-beam" -> [RechargeMove]
   | "low-kick" -> [WeightDamage]
   | "seismic-toss" | "night-shade" -> [ConstantDmg 100]
-  | "absorb" | "mega-drain" | "leech-life" -> [DrainMove]
+  | "absorb" | "mega-drain" | "leech-life" | "giga-drain" -> [DrainMove]
   | "leech-seed" -> [LeechSeed]
   | "growth" -> [StageBoostSunlight [(Attack, 1); (SpecialAttack, 1)]]
   | "solar-beam" -> [ChargeInSunlight "Need sunlight to charge faster!"]
@@ -365,12 +365,12 @@ let getSecondaryEffect str = match str with
   | "harden" | "withdraw" | "defense-curl" -> [StageBoost [(Defense, 1)]]
   | "barrier" | "acid-armor"  -> [StageBoost [(Defense, 2)]]
   | "calm-mind" -> [StageBoost [(SpecialDefense, 1); (SpecialAttack, 1)]]
-  | "recover" | "soft-boiled" -> [Recovery]
+  | "recover" | "soft-boiled" | "milk-drink" -> [Recovery]
   | "light-screen" -> [LightScreenMake]
   | "haze" -> [Haze]
   | "reflect" -> [ReflectMake]
   | "self-destruct" | "explosion" -> [UserFaint]
-  | "swift" -> [NeverMiss]
+  | "swift" | "feint-attack" -> [NeverMiss]
   | "amnesia" -> [StageBoost [(SpecialDefense, 2)]]
   | "dream-eater" -> [DrainMoveSleep]
   | "sky-attack" -> [ChargeMove "The Pokemon is glowing."; IncCrit 1; FlinchMove]
@@ -382,6 +382,8 @@ let getSecondaryEffect str = match str with
   | "triple-kick" -> [MultHit 3]
   | "flail" | "reversal" -> [Flail]
   | "protect" | "detect"-> [Protect]
+  | "belly-drum" -> [BellyDrum]
+  | "spikes" -> [Spikes]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -453,8 +455,8 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Psychic]; move1= getMoveFromString "substitute"; move2 =
-  getMoveFromString "detect"; move3 = getMoveFromString "protect";
+  {name="gardevoir-mega"; element=[Psychic]; move1= getMoveFromString "spikes"; move2 =
+  getMoveFromString "roar"; move3 = getMoveFromString "protect";
   move4 = getMoveFromString "mud-slap"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
 
@@ -463,9 +465,9 @@ let getTestOpp () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gallade-mega"; element=[Psychic]; move1= getMoveFromString "pound"; move2 =
-  getMoveFromString "pound"; move3 = getMoveFromString "pound";
-  move4 = getMoveFromString "pound"; hp = 68; attack = 85; special_attack = 165; defense = 65;
+  {name="gallade-mega"; element=[Psychic]; move1= getMoveFromString "splash"; move2 =
+  getMoveFromString "splash"; move3 = getMoveFromString "splash";
+  move4 = getMoveFromString "splash"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
 
 let getPokeToolTip t =

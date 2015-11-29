@@ -443,6 +443,8 @@ let rec getStatusString starter s =
   | ProtectedS s -> starter ^ " used " ^ s ^ " but opponent protected itself."
   | ProtectS s-> getStatusString starter s ^ starter ^ " has protected itself."
   | ProtectFail s-> getStatusString starter s ^ starter ^ " has failed to protect itself."
+  | SpikesS s -> getStatusString starter s ^ starter ^ " has depositied a layer of spikes."
+  | Fail s -> starter ^ " used " ^ s ^ " but it failed."
   | SwitchOut s -> (match !secondaryEffect with
                     | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
                     | `P2 -> current_command := (Some (Poke "random"), Some NoMove));
@@ -536,6 +538,14 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
   | Pl1 NoAction -> text_buffer#set_text ("Both Pokemon Not Doing Anything"); busywait ()
   | Pl2 NoAction -> text_buffer#set_text ("Both Pokemon Not Doing Anything"); busywait ()
   | Pl1 Continue | Pl2 Continue | Pl1 Next | Pl2 Next -> ()
+  | Pl1 SFaint -> poke1_img#set_file ("../data/back-sprites/" ^ t1.current.pokeinfo.name ^ ".gif");
+                  text_buffer#set_text (t1.current.pokeinfo.name ^ " has fainted. Choosing a new Pokemon.");
+                  (match !m2 with
+                  | Pl2 Faint -> current_screen := Battle (P1 BothFaint)
+                  | _ -> current_screen := Battle (P1 Faint));
+                  busywait (); updatetools ();
+                  switch_poke engine [poke1;poke2;poke3;poke4;poke5] [move1;move2;
+                  move3;move4;switch] back_button ()
   | Pl1 Faint -> text_buffer#set_text "Player One Pokemon has fainted. Choosing a new Pokemon.";
                   (match !m2 with
                   | Pl2 Faint -> current_screen := Battle (P1 BothFaint)
@@ -544,6 +554,12 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
                   switch_poke engine [poke1;poke2;poke3;poke4;poke5] [move1;move2;
                   move3;move4;switch] back_button ()
   | Pl2 Faint -> text_buffer#set_text "Player Two Pokemon has fainted. Choosing a new Pokemon.";
+                 (match get_game_status battle_status with
+                 | Random1p -> busywait (); current_command := (Some (NoMove), Some (FaintPoke ""));
+                               simple_move()
+                 | _ -> failwith "Faulty Game Logic: Debug 007")
+  | Pl2 SFaint ->poke2_img#set_file ("../data/sprites/" ^ t2.current.pokeinfo.name ^ ".gif");
+                 text_buffer#set_text (t2.current.pokeinfo.name ^ " has fainted. Choosing a new Pokemon.");
                  (match get_game_status battle_status with
                  | Random1p -> busywait (); current_command := (Some (NoMove), Some (FaintPoke ""));
                                simple_move()
@@ -591,9 +607,10 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
   | Pl1 Continue -> turn_end ()
   | Pl2 Continue -> turn_end ()
   | Pl1 Next | Pl2 Next -> simple_move ()
-  | Pl1 FaintNext | Pl2 FaintNext -> ()
+  | Pl1 FaintNext | Pl2 FaintNext | Pl2 Faint -> ()
   | Pl1 NoAction -> pre_process ()
   | Pl2 NoAction -> pre_process ()
+  | Pl2 SPoke p -> text_buffer#set_text ("Player Two has switched to " ^ p); poke2_img#set_file ("../data/sprites/" ^ p ^ ".gif"); updatetools (); pre_process ()
   | Pl2 EndMove x -> let txt = getEndString t2.current.pokeinfo.name x in
                     let str_list = Str.split (Str.regexp "\.") txt in
                     List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
