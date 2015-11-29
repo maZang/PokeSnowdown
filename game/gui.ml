@@ -405,6 +405,10 @@ let rec getAttackString starter a =
   | ChargingMove (s, n) -> (match !secondaryEffect with
                              | `P1 -> current_command := (Some (UseAttack n), snd !current_command)
                              |`P2 -> current_command := (fst !current_command, Some (UseAttack n))); starter ^ " is charging up." ^ s
+  | SwitchOutA s -> (match !secondaryEffect with
+                    | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
+                    | `P2 -> current_command := (Some (Poke "random"), Some NoMove));
+                    endTurnEarly := true; getAttackString starter s ^ "The opponent was forced out!"
   | Recharging s -> (match !secondaryEffect with
                         | `P1 -> current_command := (Some (NoMove), snd !current_command)
                         | `P2 -> current_command := (fst !current_command, Some NoMove)); getAttackString starter s ^ starter ^ " will need a turn to recharge."

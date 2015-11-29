@@ -8,7 +8,7 @@ type guiattack = NormMove of string | Crit of guiattack |
                   Thaw of guiattack | NoFreeze of guiattack | NoBurn of guiattack | NoPara of guiattack | Para | OHKill of guiattack | ChargingMove of string * string | FlinchA |
                   Recoil of guiattack | PoisonMove of guiattack | Asleep | Wake of guiattack | Confused | BreakConfuse of guiattack | StatAttackA of stat * int * guiattack
                   | ConfuseMoveA of guiattack | Recharging of guiattack | DrainA of guiattack | UserFaintA of guiattack | NoEffAll of string | DrainSleepFail of string
-                  | BreakSub of guiattack | SubDmg of guiattack | ProtectedA of string | StatBoostA of stat * int * guiattack
+                  | BreakSub of guiattack | SubDmg of guiattack | ProtectedA of string | StatBoostA of stat * int * guiattack | SwitchOutA of guiattack
 
 type guistatus = StatBoost of stat * int * guistatus | NormStatus of string | ThawS of guistatus | FrozenSolidS | MissStatus of string | NoFreezeS of guistatus | NoBurnS of guistatus |
                   NoParaS of guistatus | ParaS | SwitchOut of guistatus | FlinchS | StatAttack of stat * int * guistatus | AsleepS | WakeS of guistatus | MakeSleep of guistatus

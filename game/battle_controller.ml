@@ -730,6 +730,8 @@ let move_handler atk def wt move =
                       secondary_effects t
     (* Moves that never miss are handled elsewhere *)
     | NeverMiss::t -> secondary_effects t
+    (* Moves that force a switch out *)
+    | ForceSwitch::t -> newmove := SwitchOutA !newmove; secondary_effects t
     (* Base case *)
     | [] -> ()
     in

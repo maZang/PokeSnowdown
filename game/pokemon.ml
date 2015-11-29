@@ -340,17 +340,21 @@ let getSecondaryEffect str = match str with
     | "zap-cannon" | "spark" | "dragon-breath" | "nuzzle"-> [ParaChance]
   | "guillotine" | "horn-drill" | "fissure"-> [OHKO]
   | "razor-wind" -> [ChargeMove "It made a whirlwind!"]
+  | "fly" -> [ChargeMove "It flew up into the air."]
+  | "skull-bash" -> [ChargeMove "It tucked its head in."; StageBoost [(Defense, 1)]]
+  | "dig" -> [ChargeMove "It went slightly underground"]
+  | "dive" -> [ChargeMove "It went underwater somehow"]
   | "swords-dance" -> [StageBoost [(Attack, 2)]]
   | "charm" -> [StageAttack [(Attack, 2)]]
   | "meditate" | "sharpen" | "metal-claw" -> [StageBoost [(Attack, 1)]]
-  | "whirlwind" | "roar"-> [ForceSwitch]
+  | "whirlwind" | "roar" | "dragon-tail" -> [ForceSwitch]
   | "stomp" | "rolling-kick" | "headbutt" | "bite" | "bone-club" | "waterfall"
     | "rock-slide" | "hyper-fang" -> [FlinchMove]
   | "double-kick" | "gear-grind" | "bonemerang"  -> [MultHit 2]
   | "sand-attack" | "smokescreen" | "kinesis" | "flash" |
       "mud-slap" | "octazooka"-> [StageAttack [(Accuracy, 1)]]
   | "take-down" | "double-edge" | "submission" -> [RecoilMove]
-  | "tail-whip" | "leer" | "iron-tail" -> [StageAttack [(Defense, 1)]]
+  | "tail-whip" | "leer" | "iron-tail" | "crunch" -> [StageAttack [(Defense, 1)]]
   | "poison-sting" | "poison-powder" | "smog" | "sludge" |
       "poison-gas" | "sludge-bomb" -> [PoisonChance]
   | "twineedle" -> [MultHit 2; PoisonChance]
@@ -379,7 +383,7 @@ let getSecondaryEffect str = match str with
   | "harden" | "withdraw" | "defense-curl" | "steel-wing" -> [StageBoost [(Defense, 1)]]
   | "barrier" | "acid-armor"  -> [StageBoost [(Defense, 2)]]
   | "calm-mind" -> [StageBoost [(SpecialDefense, 1); (SpecialAttack, 1)]]
-  | "recover" | "soft-boiled" | "milk-drink" -> [Recovery]
+  | "recover" | "soft-boiled" | "milk-drink" | "roost" -> [Recovery]
   | "light-screen" -> [LightScreenMake]
   | "haze" -> [Haze]
   | "reflect" -> [ReflectMake]
@@ -481,7 +485,7 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Psychic]; move1= getMoveFromString "sunny-day"; move2 =
+  {name="gardevoir-mega"; element=[Psychic]; move1= getMoveFromString "dragon-tail"; move2 =
   getMoveFromString "solar-beam"; move3 = getMoveFromString "flamethrower";
   move4 = getMoveFromString "rock-wrecker"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
