@@ -370,7 +370,8 @@ let rec getAttackString starter a =
   | SEff s -> getAttackString starter s ^ "It was super effective."
   | NoEff s -> getAttackString starter s ^ "It was not very effective."
   | NoEffAll s -> starter ^ " used " ^ s ^ " but it had no effect."
-  | StatAttackA (stat, i, s) -> getAttackString starter s ^ "Opponent's " ^ string_from_stat stat ^ " was lowered " ^ string_of_int i ^ " stage."
+  | StatBoostA (stat, i, s) -> getAttackString starter s ^ string_from_stat stat ^ " was boosted " ^ string_of_int i ^ " stage."
+  | StatAttackA (stat, i, s) -> getAttackString starter s ^ "Opponent's " ^ string_from_stat stat ^ " was lowered " ^ string_of_int (-1 * i) ^ " stage."
   | HitMult (n, s) ->
       let c, s', n', str = getNumCritSuperNoAndFinal 0 0 0 s in
       starter ^ " used " ^ str ^ ". The move hit " ^ string_of_int n ^ " times with " ^ string_of_int
@@ -413,10 +414,11 @@ let rec getStatusString starter s =
   match s with
   | NormStatus s -> starter ^ " used " ^ s ^ "."
   | StatBoost (stat, i, s) -> getStatusString starter s ^ string_from_stat stat ^ " was boosted " ^ string_of_int i ^ " stage."
-  | StatAttack (stat, i, s) -> getStatusString starter s ^ "Opponent's " ^ string_from_stat stat ^ " was lowered " ^ string_of_int i ^ " stage"
+  | StatAttack (stat, i, s) -> getStatusString starter s ^ "Opponent's " ^ string_from_stat stat ^ " was lowered " ^ string_of_int (-1 * i) ^ " stage."
   | MissStatus s -> starter ^ " used " ^ s ^ " but it missed."
   | FrozenSolidS -> starter ^  " was frozen solid."
   | PoisonStatus s-> getStatusString starter s ^ "The opponent has been poisoned."
+  | BurnStatus s -> getStatusString starter s ^ "The opponent has been burned."
   | BadPoisonStatus s -> getStatusString starter s ^ "The opponent has been badly poisoned."
   | ParaStatus s -> getStatusString starter s ^ "The opponent has been paralyzed."
   | ThawS s -> " unfroze." ^ getStatusString starter s
@@ -444,6 +446,7 @@ let rec getStatusString starter s =
   | ProtectS s-> getStatusString starter s ^ starter ^ " has protected itself."
   | ProtectFail s-> getStatusString starter s ^ starter ^ " has failed to protect itself."
   | SpikesS s -> getStatusString starter s ^ starter ^ " has depositied a layer of spikes."
+  | HealBellS s -> getStatusString starter s ^ starter ^ " has healed itself and its allies of status ailments."
   | Fail s -> starter ^ " used " ^ s ^ " but it failed."
   | SwitchOut s -> (match !secondaryEffect with
                     | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
@@ -463,6 +466,7 @@ let rec getEndString starter s =
   | LeechHeal s -> starter ^ " has healed from leech seeds." ^ getEndString starter s
   | LightScreenFade s -> getEndString starter s ^ starter ^ "'s Light Screen has faded."
   | ReflectFade s -> getEndString starter s ^ starter ^ "'s Reflect has faded."
+  | SunFade s-> getEndString starter s ^ "The sunlight has faded."
 
 let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text
   (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img text_buffer (health_bar_holder1, health_bar_holder2, health_bar1, health_bar2)  back_button () =
@@ -499,7 +503,7 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
   let skipturn () =
     match get_game_status battle_status with
     | Random1p -> (match !current_command with
-                  | (None, _) -> text_buffer#set_text "Player One's Turn to move"; List.iter (fun s -> s#misc#show ()) battle_buttons; current_screen := Battle (P1 ChooseMove);
+                  | (None, _) -> text_buffer#set_text (Pokemon.string_of_weather w.weather); List.iter (fun s -> s#misc#show ()) battle_buttons; current_screen := Battle (P1 ChooseMove);
                                     current_screen := Battle (P1 ChooseMove)
                   | _ -> Ivar.fill !gui_ready !current_command; current_command := (None, None); game_step ())
     | _ -> failwith "Faulty Game Logic: Debug 100" in

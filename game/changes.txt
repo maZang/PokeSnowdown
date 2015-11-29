@@ -1,5 +1,5 @@
 Changes to Moves;
-Hyperbeam -- Recharge instantly
+Hyperbeam -- Recharge instantly after kill, power knocked down to 120
 Low Kick -- Based on current health
 triple kick -- constant 20 power
 flail -- equation changed

@@ -309,6 +309,17 @@ let string_of_class cls =
   | Special -> "Special"
   | Status -> "Status"
 
+let string_of_weather w =
+  match w with
+  | HarshSun _-> "There is a very harsh sunlight."
+  | Hail _-> "Hail is pouring down."
+  | Rain _-> "Rain is pouring down."
+  | SandStorm _-> "A sandstorm is kicking up."
+  | HeavyRain _-> "Rain is pouring down heavily"
+  | Sun _-> "It is currently very sunny."
+  | AirCurrent _-> "An air current is present."
+  | ClearSkies -> "There are no aberrant weather conditions."
+
 let getDmgClass str =
   match str with
   | "physical" -> Physical
@@ -317,19 +328,21 @@ let getDmgClass str =
   | _ -> failwith "Not a valid damage class"
 
 let getSecondaryEffect str = match str with
-  | "karate-chop" | "razor-leaf" | "crabhammer" | "slash" | "aeroblast" -> [IncCrit 1]
+  | "karate-chop" | "razor-leaf" | "crabhammer" | "slash" | "aeroblast" |
+      "cross-chop" -> [IncCrit 1]
   | "double-slap" | "comet-punch" | "fury-attack" | "pin-missile" |
       "spike-cannon" | "barrage" | "fury-swipes" | "bone-rush" -> [RandMultHit]
   | "fire-punch" | "ember" | "flamethrower" | "fire-blast" |
-        "flame-wheel" -> [BurnChance]
+        "flame-wheel" | "will-o-wisp" -> [BurnChance]
   | "ice-punch" | "ice-beam" | "blizzard" -> [FreezeChance]
   | "thunder-punch" | "body-slam" | "stun-spore" | "thunder-shock"
     | "thunderbolt" | "thunder-wave" | "thunder" | "lick" | "glare"
-    | "zap-cannon" | "spark" -> [ParaChance]
+    | "zap-cannon" | "spark" | "dragon-breath" | "nuzzle"-> [ParaChance]
   | "guillotine" | "horn-drill" | "fissure"-> [OHKO]
   | "razor-wind" -> [ChargeMove "It made a whirlwind!"]
   | "swords-dance" -> [StageBoost [(Attack, 2)]]
-  | "meditate" | "sharpen" -> [StageBoost [(Attack, 1)]]
+  | "charm" -> [StageAttack [(Attack, 2)]]
+  | "meditate" | "sharpen" | "metal-claw" -> [StageBoost [(Attack, 1)]]
   | "whirlwind" | "roar"-> [ForceSwitch]
   | "stomp" | "rolling-kick" | "headbutt" | "bite" | "bone-club" | "waterfall"
     | "rock-slide" | "hyper-fang" -> [FlinchMove]
@@ -337,18 +350,19 @@ let getSecondaryEffect str = match str with
   | "sand-attack" | "smokescreen" | "kinesis" | "flash" |
       "mud-slap" | "octazooka"-> [StageAttack [(Accuracy, 1)]]
   | "take-down" | "double-edge" | "submission" -> [RecoilMove]
-  | "tail-whip" | "leer" -> [StageAttack [(Defense, 1)]]
+  | "tail-whip" | "leer" | "iron-tail" -> [StageAttack [(Defense, 1)]]
   | "poison-sting" | "poison-powder" | "smog" | "sludge" |
       "poison-gas" | "sludge-bomb" -> [PoisonChance]
   | "twineedle" -> [MultHit 2; PoisonChance]
   | "growl" | "aurora-beam" -> [StageAttack [(Attack, 1)]]
   | "sing" | "sleep-powder" | "hypnosis" | "lovely-kiss" | "spore" -> [PutToSleep]
   | "supersonic" | "psybeam" | "confusion" | "confuse-ray" | "dizzy-punch"
-    | "sweet-kiss"-> [ConfuseOpp]
+    | "sweet-kiss" | "dynamic-punch"-> [ConfuseOpp]
   | "sonic-boom" -> [ConstantDmg 20]
   | "acid" | "psychic" -> [StageAttack [(SpecialDefense, 1)]]
   | "bubble-beam" | "bubble" | "powder-snow" | "icy-wind" -> [StageAttack [(Speed, 1)]]
-  | "hyper-beam" -> [RechargeMove]
+  | "hyper-beam"| "blast-burn" | "frenzy-plant" | "hydro-cannon"
+      | "roar-of-time" | "giga-impact" | "rock-wrecker"  -> [RechargeMove]
   | "low-kick" -> [WeightDamage]
   | "seismic-toss" | "night-shade" -> [ConstantDmg 100]
   | "absorb" | "mega-drain" | "leech-life" | "giga-drain" -> [DrainMove]
@@ -362,7 +376,7 @@ let getSecondaryEffect str = match str with
   | "screech" -> [StageAttack [(Defense, 2)]]
   | "double-team" -> [StageBoost [(Evasion, 1)]]
   | "minimize" -> [StageBoost [(Evasion, 2)]]
-  | "harden" | "withdraw" | "defense-curl" -> [StageBoost [(Defense, 1)]]
+  | "harden" | "withdraw" | "defense-curl" | "steel-wing" -> [StageBoost [(Defense, 1)]]
   | "barrier" | "acid-armor"  -> [StageBoost [(Defense, 2)]]
   | "calm-mind" -> [StageBoost [(SpecialDefense, 1); (SpecialAttack, 1)]]
   | "recover" | "soft-boiled" | "milk-drink" -> [Recovery]
@@ -370,8 +384,10 @@ let getSecondaryEffect str = match str with
   | "haze" -> [Haze]
   | "reflect" -> [ReflectMake]
   | "self-destruct" | "explosion" -> [UserFaint]
-  | "swift" | "feint-attack" -> [NeverMiss]
+  | "swift" | "feint-attack" | "vital-throw" | "aerial-ace" | "magnet-bomb"
+      | "shock-wave" | "magical-leaf" | "shadow-punch" -> [NeverMiss]
   | "amnesia" -> [StageBoost [(SpecialDefense, 2)]]
+  | "nasty-plot" -> [StageBoost [(SpecialAttack, 2)]]
   | "dream-eater" -> [DrainMoveSleep]
   | "sky-attack" -> [ChargeMove "The Pokemon is glowing."; IncCrit 1; FlinchMove]
   | "psywave" -> [VariableDamage]
@@ -384,6 +400,12 @@ let getSecondaryEffect str = match str with
   | "protect" | "detect"-> [Protect]
   | "belly-drum" -> [BellyDrum]
   | "spikes" -> [Spikes]
+  | "swagger" -> [StageAttack [(Attack, -2)]; ConfuseOpp]
+  | "heal-bell" | "aromatherapy" -> [HealBell]
+  | "sweet-scent" -> [StageAttack [(Evasion, 2)]]
+  | "morning-sun" | "synthesis" | "moonlight" -> [SunHeal]
+  | "water-spout" | "eruption" -> [MaxHealthDmg]
+  | "sunny-day" -> [SunnyDay]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -393,8 +415,12 @@ let getMoveFromString str =
   let move = move_json |> member str in
   let priority = move |> member "priority" |> to_string |> int_of_string in
   let powerstr = move |> member "power" |> to_string in
-  let power = if str = "triple-kick" then 20 else
-                    try int_of_string powerstr with |_ -> 0 in
+  let power = match str with
+            | "triple-kick" -> 20
+            | "return" | "frustration" -> 102
+            | "hyper-beam" | "blast-burn" | "frenzy-plant" | "hydro-cannon"
+              | "roar-of-time" | "giga-impact" | "rock-wrecker" -> 120
+            | _ ->  (try int_of_string powerstr with |_ -> 0) in
   let dmg_class = move |> member "dmg_class" |> to_string |> getDmgClass in
   let target = move |> member "target" |> to_string |> getTarget in
   let effect_chance_str = move |> member "effect_chance" |> to_string in
@@ -455,9 +481,9 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Psychic]; move1= getMoveFromString "spikes"; move2 =
-  getMoveFromString "roar"; move3 = getMoveFromString "protect";
-  move4 = getMoveFromString "mud-slap"; hp = 68; attack = 85; special_attack = 165; defense = 65;
+  {name="gardevoir-mega"; element=[Psychic]; move1= getMoveFromString "sunny-day"; move2 =
+  getMoveFromString "solar-beam"; move3 = getMoveFromString "flamethrower";
+  move4 = getMoveFromString "rock-wrecker"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
 
 let getTestOpp () =

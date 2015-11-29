@@ -8,17 +8,17 @@ type guiattack = NormMove of string | Crit of guiattack |
                   Thaw of guiattack | NoFreeze of guiattack | NoBurn of guiattack | NoPara of guiattack | Para | OHKill of guiattack | ChargingMove of string * string | FlinchA |
                   Recoil of guiattack | PoisonMove of guiattack | Asleep | Wake of guiattack | Confused | BreakConfuse of guiattack | StatAttackA of stat * int * guiattack
                   | ConfuseMoveA of guiattack | Recharging of guiattack | DrainA of guiattack | UserFaintA of guiattack | NoEffAll of string | DrainSleepFail of string
-                  | BreakSub of guiattack | SubDmg of guiattack | ProtectedA of string
+                  | BreakSub of guiattack | SubDmg of guiattack | ProtectedA of string | StatBoostA of stat * int * guiattack
 
 type guistatus = StatBoost of stat * int * guistatus | NormStatus of string | ThawS of guistatus | FrozenSolidS | MissStatus of string | NoFreezeS of guistatus | NoBurnS of guistatus |
                   NoParaS of guistatus | ParaS | SwitchOut of guistatus | FlinchS | StatAttack of stat * int * guistatus | AsleepS | WakeS of guistatus | MakeSleep of guistatus
                   | ConfusedS | BreakConfuseS of guistatus | ConfuseMove of guistatus | LeechS of guistatus | PoisonStatus of guistatus | ParaStatus of guistatus
                   | BadPoisonStatus of guistatus | HealHealth of guistatus | LightScreenS of guistatus | HazeS of guistatus | ReflectS of guistatus | RestS of guistatus
                   | SubBlock of guistatus | SubFail of guistatus | SubMake of guistatus | ProtectedS of string | ProtectS of guistatus | ProtectFail of guistatus |
-                   Fail of string | SpikesS of guistatus
+                   Fail of string | SpikesS of guistatus | BurnStatus of guistatus | HealBellS of guistatus
 
 type endMove = BurnDmg | BreakBurn | BreakFreeze  | BreakPara  | BreakPoison | PoisonDmg | LeechDmg of endMove | LeechHeal of endMove | Base | LightScreenFade of endMove |
-               ReflectFade of endMove
+               ReflectFade of endMove | SunFade of endMove
 
 type guimove = SPoke of string | AttackMove of guiattack | Faint | NoAction | Continue | Next | Status of guistatus | EndMove of endMove | FaintNext | SFaint
 
@@ -47,7 +47,7 @@ type secondary_effects = MultHit of int | StageBoost of (stat * int) list | IncC
                          ForceSwitch | FlinchMove | StageAttack of (stat * int) list | RecoilMove | PoisonChance | PutToSleep | ConfuseOpp | ConstantDmg of int | RechargeMove |
                          WeightDamage | DrainMove | LeechSeed | ChargeInSunlight of string | ToxicChance | StageBoostSunlight of (stat * int) list | Recovery | LightScreenMake
                          | Haze | ReflectMake | UserFaint | NeverMiss | DrainMoveSleep | VariableDamage | Rest | SuperFang | SubstituteMake | Flail | Protect | BellyDrum
-                         | Spikes
+                         | Spikes | HealBell | SunHeal | MaxHealthDmg | SunnyDay
 
 type move = {name:string; priority: int; target: target; dmg_class: dmg_class;
     mutable power:int; effect_chance: int; accuracy: int; element: element;
@@ -60,8 +60,8 @@ type terrain_element = LightScreen of int | Reflect of int | Spikes of int
 
 type terrain = {side1: terrain_element list ref; side2: terrain_element list ref}
 
-type weather = HarshSun | Hail | Rain | SandStorm
-  | HeavyRain | Sun | AirCurrent | ClearSkies
+type weather = HarshSun of int | Hail of int | Rain of int | SandStorm of int
+  | HeavyRain of int | Sun of int | AirCurrent of int | ClearSkies
 
 (* We hope to implement all of these below but we will see *)
 type weather_terrain = {mutable weather: weather; terrain: terrain}
