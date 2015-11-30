@@ -302,7 +302,7 @@ let load_menu engine button_show button_hide img screen () =
     List.iter (fun s -> s#misc#show ()) button_show;
     current_screen := screen; (match screen with
     | Menu1P -> img#set_file "./gui_pics/1p.jpg"
-    | Menu2P -> ()
+    | Menu2P -> img#set_file "./gui_pics/2p.jpg"
     | MainMenu -> img#set_file "./gui_pics/main.gif"
     | _ -> failwith "Faulty Game Logic: Debug 307"); Ivar.fill !engine screen)
 	else
@@ -330,7 +330,7 @@ let go_back engine (menu_holder, main_menu, battle_scren, one_player,
     back_button, main_menu_bg, load_screen) (battle, text, bg_img, move1, move2,
     move3, move4, switch, poke1_img, poke2_img, move_img, text_buffer, poke1, poke2,
     poke3, poke4, poke5, health_holders, pokeanim1, pokeanim2, moveanim) battle_engine () =
-	(if !current_screen = Menu1P then
+	(if !current_screen = Menu1P || !current_screen = Menu2P then
 		load_menu engine [one_player;two_player;no_player]
     [random_1p; preset_1p ;touranment; back_button] main_menu_bg
     MainMenu ());
@@ -825,6 +825,9 @@ let main_gui engine battle_engine () =
 	one_player#connect#clicked ~callback:(load_menu engine [random;preset;
   touranment;back_button] [one_player; two_player;no_player] main_menu_bg
   Menu1P);
+  (* Two player button *)
+  two_player#connect#clicked ~callback:(load_menu engine [random;preset;
+  back_button] [one_player; two_player; no_player] main_menu_bg Menu2P);
  (* Back button *)
    back_button#connect#clicked
   ~callback:(go_back engine menu battler battle_engine);
