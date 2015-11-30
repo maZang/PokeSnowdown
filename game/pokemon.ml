@@ -363,7 +363,7 @@ let getSecondaryEffect str = match str with
   | "supersonic" | "psybeam" | "confusion" | "confuse-ray" | "dizzy-punch"
     | "sweet-kiss" | "dynamic-punch"-> [ConfuseOpp]
   | "sonic-boom" -> [ConstantDmg 20]
-  | "acid" | "psychic" -> [StageAttack [(SpecialDefense, 1)]]
+  | "acid" | "psychic" | "shadow-ball" -> [StageAttack [(SpecialDefense, 1)]]
   | "bubble-beam" | "bubble" | "powder-snow" | "icy-wind" -> [StageAttack [(Speed, 1)]]
   | "hyper-beam"| "blast-burn" | "frenzy-plant" | "hydro-cannon"
       | "roar-of-time" | "giga-impact" | "rock-wrecker"  -> [RechargeMove]
@@ -383,6 +383,7 @@ let getSecondaryEffect str = match str with
   | "harden" | "withdraw" | "defense-curl" | "steel-wing" -> [StageBoost [(Defense, 1)]]
   | "barrier" | "acid-armor"  -> [StageBoost [(Defense, 2)]]
   | "calm-mind" -> [StageBoost [(SpecialDefense, 1); (SpecialAttack, 1)]]
+  | "leaf-storm" -> [StageBoost [(SpecialAttack, -2)]]
   | "recover" | "soft-boiled" | "milk-drink" | "roost" -> [Recovery]
   | "light-screen" -> [LightScreenMake]
   | "haze" -> [Haze]
@@ -485,7 +486,7 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Psychic]; move1= getMoveFromString "dragon-tail"; move2 =
+  {name="gardevoir-mega"; element=[Psychic]; move1= getMoveFromString "leaf-storm"; move2 =
   getMoveFromString "solar-beam"; move3 = getMoveFromString "flamethrower";
   move4 = getMoveFromString "rock-wrecker"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}

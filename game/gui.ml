@@ -179,6 +179,7 @@ let make_menu ?packing () =
   (* button7 is known as back_button outside of this function *)
 	let button7 = GButton.button ~label:"Back"
 		~packing:(hbox1#pack ~from:`END) () ~show:false in
+  let select1 = GEdit.combo ~popdown_strings:["hi";"bye"] ~packing:(hbox2#pack) ~show:false () in
   (* img is known as main_menu_bg outside of this code *)
   let img = GMisc.image ~file:"./gui_pics/main.gif" ~packing:(hbox2#pack)
     ~width:screen_width ~height:(5*screen_height /6) () in
