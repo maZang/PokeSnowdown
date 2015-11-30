@@ -10,12 +10,12 @@ open Info
   displayed.
 *)
 let busywait = let ctr = ref 0 in fun () -> ctr := 0;
-  for i = 1 to 200_000_000 do
+  for i = 1 to 100_000_000 do
     incr ctr
   done
 
 let busywait_small = let ctr = ref 0 in fun () -> ctr := 0;
-  for i = 1 to 2_000_000 do
+  for i = 1 to 1_500_000 do
     incr ctr
   done
 
@@ -167,10 +167,10 @@ let make_menu ?packing () =
   (* button3 is known as no_player outside of this function *)
 	let button3 = GButton.button ~label:"No Player"
 		~packing:(hbox1#pack ~expand:true ~fill:true) ()  in
-  (* button4 is known as random_1p outside of this function *)
+  (* button4 is known as random outside of this function *)
 	let button4 = GButton.button ~label:"Random Battle"
 		~packing:(hbox1#pack ~expand:true ~fill:true) ~show:false () in
-  (* button5 is known as preset_1p outside of this function *)
+  (* button5 is known as preset outside of this function *)
 	let button5 = GButton.button ~label:"Preset Battle"
 		~packing:(hbox1#pack ~expand:true ~fill:true) ~show:false () in
   (* button6 is known as tournament outside of this function *)
@@ -182,15 +182,12 @@ let make_menu ?packing () =
   (* img is known as main_menu_bg outside of this code *)
   let img = GMisc.image ~file:"./gui_pics/main.gif" ~packing:(hbox2#pack)
     ~width:screen_width ~height:(5*screen_height /6) () in
-  (* img2 is known as one_bg outside of this code *)
-  let img2 = GMisc.image ~file:"./gui_pics/1p.jpg" ~packing:(hbox2#pack)
-    ~width:screen_width ~height:(5*screen_height /6) ~show:false () in
   (* load_screen is a gif that plays before battle (during initialization)*)
   let load_screen = GMisc.image ~file:"../data/backgrounds/background.gif"
     ~show:false ~packing:(vbox#pack) () in
   (* Return all objects created *)
   (vbox, hbox1, hbox2, button1, button2, button3, button4,
-		button5, button6, button7, img, img2, load_screen)
+		button5, button6, button7, img, load_screen)
 
 (* This is called once to load the battle screen . The game states will be
   engine -- Battle InGame _
@@ -290,12 +287,24 @@ let load_battle_load engine img load_screen battle text buttonhide buttonshow
   else
     ()
 
-let load_menu engine button_show button_hide img1 img2 screen () =
+let load_random  engine img load_screen battle text buttonhide buttonshow
+  (battle_status, gui_ready, ready, ready_gui) main_menu battle_screen
+  poke1_img poke2_img text_buffer health_holders () =
+  match !current_screen with
+  | Menu1P ->  load_battle_load engine img load_screen battle text buttonhide buttonshow
+              (battle_status, gui_ready, ready, ready_gui) Random1p main_menu battle_screen
+              poke1_img poke2_img text_buffer health_holders ()
+  | _ -> failwith "Faulty Game Logic: Debug 298"
+
+let load_menu engine button_show button_hide img screen () =
 	if Ivar.is_empty (!engine) then
 		(List.iter (fun s -> s#misc#hide ()) button_hide;
     List.iter (fun s -> s#misc#show ()) button_show;
-    img1#misc#hide (); img2#misc#show ();
-    current_screen := screen; Ivar.fill !engine screen)
+    current_screen := screen; (match screen with
+    | Menu1P -> img#set_file "./gui_pics/1p.jpg"
+    | Menu2P -> ()
+    | MainMenu -> img#set_file "./gui_pics/main.gif"
+    | _ -> failwith "Faulty Game Logic: Debug 307"); Ivar.fill !engine screen)
 	else
 		()
 
@@ -307,7 +316,9 @@ let load_main_menu_from_battle engine one_player two_player no_player button_hid
   (engine := Ivar.create (); Thread.delay 0.1;
   List.iter (fun s -> s#misc#hide ()) button_hide;
   List.iter (fun s -> s#misc#show ())[one_player; two_player; no_player];
-  battle#misc#hide (); text#misc#hide (); main_menu_bg#misc#show ();
+  battle#misc#hide (); text#misc#hide ();
+  main_menu_bg#set_file "./gui_pics/main.gif";
+  main_menu_bg#misc#show ();
   current_screen := MainMenu; Ivar.fill !engine MainMenu; Ivar.fill !ready true;
   battle_status := Ivar.create (); current_command := (None, None);
   gui_ready := Ivar.create ())
@@ -316,12 +327,12 @@ else
 
 let go_back engine (menu_holder, main_menu, battle_scren, one_player,
     two_player, no_player, random_1p, preset_1p, touranment,
-    back_button, main_menu_bg, one_bg, load_screen) (battle, text, bg_img, move1, move2,
+    back_button, main_menu_bg, load_screen) (battle, text, bg_img, move1, move2,
     move3, move4, switch, poke1_img, poke2_img, move_img, text_buffer, poke1, poke2,
     poke3, poke4, poke5, health_holders, pokeanim1, pokeanim2, moveanim) battle_engine () =
 	(if !current_screen = Menu1P then
 		load_menu engine [one_player;two_player;no_player]
-    [random_1p; preset_1p ;touranment; back_button] one_bg main_menu_bg
+    [random_1p; preset_1p ;touranment; back_button] main_menu_bg
     MainMenu ());
   if (match !current_screen with
     | Battle (P1 ChooseMove)-> true
@@ -799,8 +810,8 @@ let main_gui engine battle_engine () =
   let battle_status, gui_ready, ready, ready_gui = battle_engine in
 	let menu = make_menu ~packing:(window#add) () in
 	let menu_holder, main_menu, battle_screen, one_player,
-		two_player, no_player, random_1p, preset_1p, touranment,
-		back_button, main_menu_bg, one_bg, load_screen = menu in
+		two_player, no_player, random, preset, touranment,
+		back_button, main_menu_bg, load_screen = menu in
   let battler = make_battle_screen ~packing:(battle_screen#add) ()
   in let battle, text, bg_img, move1, move2, move3, move4, switch,
     poke1_img, poke2_img, move_img, text_buffer, poke1, poke2, poke3, poke4,
@@ -811,16 +822,16 @@ let main_gui engine battle_engine () =
   main_menu#pack poke2#coerce; main_menu#pack poke3#coerce;
   main_menu#pack poke4#coerce; main_menu#pack poke5#coerce;
   (* One player Button *)
-	one_player#connect#clicked ~callback:(load_menu engine [random_1p;preset_1p;
-  touranment;back_button] [one_player; two_player;no_player] main_menu_bg one_bg
+	one_player#connect#clicked ~callback:(load_menu engine [random;preset;
+  touranment;back_button] [one_player; two_player;no_player] main_menu_bg
   Menu1P);
  (* Back button *)
    back_button#connect#clicked
   ~callback:(go_back engine menu battler battle_engine);
   (* Random 1p battle button *)
-  random_1p#connect#clicked ~callback:(load_battle_load engine one_bg load_screen
-  battle text [random_1p;preset_1p;touranment] [move1; move2; move3; move4;
-  switch] battle_engine Random1p main_menu battle_screen poke1_img poke2_img
+  random#connect#clicked ~callback:(load_random engine main_menu_bg load_screen
+  battle text [random;preset;touranment] [move1; move2; move3; move4;
+  switch] battle_engine main_menu battle_screen poke1_img poke2_img
   text_buffer health_holders);
   (* Switch button *)
   switch#connect#clicked ~callback:(switch_poke engine [poke1;poke2;poke3;

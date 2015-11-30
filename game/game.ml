@@ -43,6 +43,8 @@ let main () =
                     give_gui_permission (); game_loop ()
 			| Menu1P -> Printf.printf "Loading One Player \n%!";
                     give_gui_permission (); game_loop ()
+      | Menu2P -> Printf.printf "Loading Two Player \n%!";
+                    give_gui_permission (); game_loop ()
       | Battle Loading -> Printf.printf "Initializing battle controller\n%!";
                     (* Initialize battle controller *)
                     Battle_controller.initialize_controller
