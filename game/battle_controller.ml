@@ -1399,6 +1399,16 @@ let rec main_loop_1p engine gui_ready ready ready_gui () =
                          (main_loop_1p engine gui_ready ready ready_gui ()));
    Printf.printf "Debug %d \n%!" (Scheduler.cycle_count ())
 
+(* Main loop for 2 player -- gets input from two players *)
+let rec main_loop_2p engine gui_ready ready ready_gui () =
+  upon (Ivar.read !gui_ready)
+    (fun (cmd1, cmd2) -> let c1 = unpack cmd1 in let c2 = unpack cmd2 in
+                          let () = handle_action engine c1 c2 in
+                          gui_ready := Ivar.create ();
+                          Ivar.fill !ready_gui true;
+                          (main_loop_2p engine gui_ready ready ready_gui ()));
+    Printf.printf "Debug %d \n%!" (Scheduler.cycle_count ())
+
 (* Main controller for random one player *)
 let rec main_controller_random1p engine gui_ready ready ready_gui=
   let team1 = getRandomTeam () in
@@ -1407,10 +1417,19 @@ let rec main_controller_random1p engine gui_ready ready ready_gui=
   let () = engine := Ivar.create (); Ivar.fill !engine battle in
   main_loop_1p engine gui_ready ready ready_gui ()
 
+(* Main controller for random two player *)
+let rec main_controller_random2p engine gui_ready ready ready_gui =
+  let team1 = getRandomTeam () in
+  let team2 = getRandomTeam () in
+  let battle = initialize_battle team1 team2 in
+  let () = engine := Ivar.create (); Ivar.fill !engine battle in
+  main_loop_2p engine gui_ready ready ready_gui ()
+
 (* Initialize controller -- called by Game.ml *)
 let initialize_controller (engine, battle_engine) =
   let battle_status, gui_ready, ready, ready_gui = battle_engine in
     Printf.printf "Initializing battle\n%!";
   upon (Ivar.read !battle_status) (fun s -> match s with
-    | Random1p -> (main_controller_random1p engine gui_ready ready ready_gui));
+    | Random1p -> (main_controller_random1p engine gui_ready ready ready_gui);
+    | Random2p -> (main_controller_random2p engine gui_ready ready ready_gui));
   ()

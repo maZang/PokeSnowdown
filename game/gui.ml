@@ -294,6 +294,9 @@ let load_random  engine img load_screen battle text buttonhide buttonshow
   | Menu1P ->  load_battle_load engine img load_screen battle text buttonhide buttonshow
               (battle_status, gui_ready, ready, ready_gui) Random1p main_menu battle_screen
               poke1_img poke2_img text_buffer health_holders ()
+  | Menu2P -> load_battle_load engine img load_screen battle text buttonhide buttonshow
+              (battle_status, gui_ready, ready, ready_gui) Random2p main_menu battle_screen
+              poke1_img poke2_img text_buffer health_holders ()
   | _ -> failwith "Faulty Game Logic: Debug 298"
 
 let load_menu engine button_show button_hide img screen () =
@@ -587,6 +590,23 @@ let animate_attack (animbox : GPack.fixed) img startx starty nextx' nexty (movea
       move_img#misc#hide ())
     | Status -> failwith "Faulty Game Logic: Debug 512")
 
+let update_buttons engine move1 move2 move3 move4 =
+  let team = (match get_game_status engine with
+  | Battle (InGame (t1, t2, _, _, _)) ->
+      (match !current_screen with
+      | Battle (P1 ChooseMove) -> t1
+      | Battle (P2 ChooseMove) -> t2
+      | _ -> failwith "Faulty Game logic")
+  | _ -> failwith "Fauly game Logic") in
+  move1#set_label team.current.pokeinfo.move1.name;
+  move2#set_label team.current.pokeinfo.move2.name;
+  move3#set_label team.current.pokeinfo.move3.name;
+  move4#set_label team.current.pokeinfo.move4.name;
+  move1#misc#set_tooltip_text (Pokemon.getMoveToolTip team.current.pokeinfo.move1);
+  move2#misc#set_tooltip_text (Pokemon.getMoveToolTip team.current.pokeinfo.move2);
+  move3#misc#set_tooltip_text (Pokemon.getMoveToolTip team.current.pokeinfo.move3);
+  move4#misc#set_tooltip_text (Pokemon.getMoveToolTip team.current.pokeinfo.move4)
+
 let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] (battle: GPack.table) text
   (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img move_img text_buffer (health_bar_holder1, health_bar_holder2, health_bar1, health_bar2)  pokeanim1 pokeanim2 moveanim back_button () =
   Printf.printf "DEBUG %B %B\n%!" (Ivar.is_empty !gui_ready) !endTurnEarly;
@@ -622,8 +642,11 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
   let skipturn () =
     match get_game_status battle_status with
     | Random1p -> (match !current_command with
-                  | (None, _) -> text_buffer#set_text (Pokemon.string_of_weather w.weather); List.iter (fun s -> s#misc#show ()) battle_buttons; current_screen := Battle (P1 ChooseMove);
-                                    current_screen := Battle (P1 ChooseMove)
+                  | (None, _) -> text_buffer#set_text (Pokemon.string_of_weather w.weather); List.iter (fun s -> s#misc#show ()) battle_buttons; current_screen := Battle (P1 ChooseMove); update_buttons engine move1 move2 move3 move4
+                  | _ -> Ivar.fill !gui_ready !current_command; current_command := (None, None); game_step ())
+    | Random2p -> (match !current_command with
+                  | (None, _) -> text_buffer#set_text (Pokemon.string_of_weather w.weather); List.iter (fun s -> s#misc#show ()) battle_buttons; current_screen := Battle (P1 ChooseMove); update_buttons engine move1 move2 move3 move4
+                  | (_, None) -> text_buffer#set_text (Pokemon.string_of_weather w.weather); List.iter (fun s -> s#misc#show ()) battle_buttons; current_screen := Battle (P2 ChooseMove); update_buttons engine move1 move2 move3 move4
                   | _ -> Ivar.fill !gui_ready !current_command; current_command := (None, None); game_step ())
     | _ -> failwith "Faulty Game Logic: Debug 100" in
   let simple_move () =
@@ -748,18 +771,18 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
                     updatehealth2 (); turn_end ()
   | _ -> failwith "unimplement")
 
-
  let process_command engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text
   (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img move_img text_buffer health_holders pokeanim1 pokeanim2 moveanim back_button =
  let battle_buttons = [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch]  in
  match !current_command with
  | (None, None) -> failwith "Faulty Game Logic: Debug 03"
- | (Some _, None) -> current_screen := Battle (P2 ChooseMove);
-                      (match get_game_status battle_status with
+ | (Some _, None) -> (match get_game_status battle_status with
                       | Random1p -> List.iter (fun s -> s#misc#hide ()) battle_buttons; current_screen := Battle Processing; text_buffer#set_text "Both moves collected. Processing...";
                                           Ivar.fill !gui_ready !current_command; current_command := (None, None);
                                           upon (Ivar.read !ready_gui) (fun _ -> ready_gui := Ivar.create (); game_animation engine battle_buttons battle text
                                                                         (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img move_img text_buffer health_holders pokeanim1 pokeanim2 moveanim back_button ())
+                      | Random2p -> List.iter (fun s -> s#misc#hide ()) battle_buttons; current_screen := Battle (P2 ChooseMove); update_buttons engine move1 move2 move3 move4;
+                                    List.iter (fun s -> s#misc#show ()) [move1;move2;move3;move4;switch;back_button]; text_buffer#set_text "Player Two's Chance to Choose a Move.";
                       | _ -> failwith "Faulty Game Logic: Debug 01")
  | (Some _, Some _) -> current_screen := Battle Processing; List.iter (fun s -> s#misc#hide ()) battle_buttons; current_screen := Battle Processing; text_buffer#set_text "Both moves collected. Processing...";
                                           Ivar.fill !gui_ready !current_command; current_command := (None, None);
