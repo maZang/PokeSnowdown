@@ -10,12 +10,12 @@ open Info
   displayed.
 *)
 let busywait = let ctr = ref 0 in fun () -> ctr := 0;
-  for i = 1 to 250_000_000 do
+  for i = 1 to 200_000_000 do
     incr ctr
   done
 
 let busywait_small = let ctr = ref 0 in fun () -> ctr := 0;
-  for i = 1 to 3_000_000 do
+  for i = 1 to 2_000_000 do
     incr ctr
   done
 
@@ -89,6 +89,7 @@ let make_battle_screen ?packing () =
   (* The images to hold each pokemon initialized to default images*)
   let poke1_img = GMisc.image ~file:"../data/back-sprites/charizard.gif" () in
   let poke2_img = GMisc.image ~file:"../data/sprites/blaziken-mega.gif" () in
+  let move_img = GMisc.image ~file:"../data/fx/fairywisp.png" ~show:false () in
   (* The buttons that hold the moves of the pokemon with labels set to default
   values. The buttons are placed in the main_menu hbox*)
   let move1 = GButton.button ~label:"Move1" ~show:false () in
@@ -102,9 +103,10 @@ let make_battle_screen ?packing () =
   let poke3 = GButton.button ~label:"Poke3" ~show:false () in
   let poke4 = GButton.button ~label:"Poke4" ~show:false () in
   let poke5 = GButton.button ~label:"Poke5" ~show:false () in
-  (* animation boxes for the pokemon *)
+  (* animation boxes for the pokemon and moves *)
   let pokeanim1 = GPack.fixed ~width:screen_width ~height:(2 * screen_height/3) () in
   let pokeanim2 = GPack.fixed ~width:screen_width ~height:(2 * screen_height/3) () in
+  let moveanim = GPack.fixed ~width:screen_width ~height:(2 * screen_height/3) () in
   (* Initialize size and text of the health bars*)
   health_bar1#set_fraction 1.;
   health_bar1#set_text "Health";
@@ -116,8 +118,10 @@ let make_battle_screen ?packing () =
   (* Place pokemon in animation box *)
   pokeanim1#put poke1_img#coerce poke1x poke1y;
   pokeanim2#put poke2_img#coerce poke2x poke2y;
+  moveanim#put move_img#coerce 200 200;
   (* Place the images within the 4x4 table. Holds the pokemon as well as the
   health bars: TODO, figure out how to do animations *)
+  battle#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH moveanim#coerce;
   battle#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH pokeanim1#coerce;
   battle#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH pokeanim2#coerce;
   battle#attach ~left:0 ~top:3 ~right:2 ~bottom:4
@@ -127,9 +131,9 @@ let make_battle_screen ?packing () =
   battle#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH bg_img#coerce;
   (* Return all the objects created *)
   battle, text, bg_img, move1, move2, move3, move4, switch, poke1_img,
-  poke2_img, text_buffer, poke1, poke2, poke3, poke4, poke5,
+  poke2_img, move_img, text_buffer, poke1, poke2, poke3, poke4, poke5,
   (health_bar_holder1, health_bar_holder2, health_bar1, health_bar2), pokeanim1,
-  pokeanim2
+  pokeanim2, moveanim
 
 (* Make all the menu items for the game loading screen
   -- vbox holds all the game components
@@ -313,8 +317,8 @@ else
 let go_back engine (menu_holder, main_menu, battle_scren, one_player,
     two_player, no_player, random_1p, preset_1p, touranment,
     back_button, main_menu_bg, one_bg, load_screen) (battle, text, bg_img, move1, move2,
-    move3, move4, switch, poke1_img, poke2_img, text_buffer, poke1, poke2,
-    poke3, poke4, poke5, health_holders, pokeanim1, pokeanim2) battle_engine () =
+    move3, move4, switch, poke1_img, poke2_img, move_img, text_buffer, poke1, poke2,
+    poke3, poke4, poke5, health_holders, pokeanim1, pokeanim2, moveanim) battle_engine () =
 	(if !current_screen = Menu1P then
 		load_menu engine [one_player;two_player;no_player]
     [random_1p; preset_1p ;touranment; back_button] one_bg main_menu_bg
@@ -380,6 +384,45 @@ let rec string_from_stat s =
   | Speed -> "Speed"
   | Accuracy -> "Accuracy"
   | Evasion -> "Evasion"
+
+let rec getMoveString a =
+  match a with
+  | NormMove s -> DontMiss s
+  | Crit s -> getMoveString s
+  | SEff s -> getMoveString s
+  | NoEff s -> getMoveString s
+  | NoEffAll s -> DontMiss s
+  | StatBoostA (stat, i, s) -> getMoveString s
+  | StatAttackA (stat, i, s) -> getMoveString s
+  | HitMult (n, s) -> getMoveString s
+  | BurnMove s -> getMoveString s
+  | FreezeMove s -> getMoveString s
+  | ParaMove s -> getMoveString s
+  | MissMove s ->  Miss s
+  | Asleep -> SleepMiss
+  | Wake s -> getMoveString s
+  | FrozenSolid -> FrozenMiss
+  | Thaw s-> getMoveString s
+  | NoFreeze s -> getMoveString s
+  | NoBurn s -> getMoveString s
+  | NoPara s -> getMoveString s
+  | Para -> ParaMiss
+  | OHKill s -> getMoveString s
+  | FlinchA -> FlinchMiss
+  | PoisonMove s -> getMoveString s
+  | Recoil s -> getMoveString s
+  | BreakConfuse s -> getMoveString s
+  | Confused -> ConfuseMiss
+  | DrainA s-> getMoveString s
+  | ConfuseMoveA s -> getMoveString s
+  | UserFaintA s -> getMoveString s
+  | DrainSleepFail s -> DontMove
+  | BreakSub s -> getMoveString s
+  | SubDmg s -> getMoveString s
+  | ProtectedA s -> DontMiss s
+  | ChargingMove (s, n) -> DontMove
+  | SwitchOutA s -> getMoveString s
+  | Recharging s -> getMoveString s
 
 let rec getAttackString starter a =
   match a with
@@ -490,20 +533,50 @@ let rec getEndString starter s =
   | ReflectFade s -> getEndString starter s ^ starter ^ "'s Reflect has faded."
   | SunFade s-> getEndString starter s ^ "The sunlight has faded."
 
-let animate_physical_attack (animbox : GPack.fixed) img startx starty nextx nexty =
-  let incx = (nextx - startx) / 80 in
-  let incy = (nexty - starty) / 80 in
-  for i = 0 to 80 do
-    animbox#move img#coerce (startx + i * incx) (starty + i * incy);
-    busywait_small ()
-  done;
-  for i = 80 downto 1 do
-    animbox#move img#coerce (startx + i * incx) (starty + i * incy);
-    busywait_small ()
-  done
+let animate_attack (animbox : GPack.fixed) img startx starty nextx' nexty (moveanim : GPack.fixed) move_img attack=
+  let movestring = getMoveString attack in
+  match movestring with
+  | SleepMiss -> ()
+  | FrozenMiss -> ()
+  | ParaMiss -> ()
+  | FlinchMiss -> ()
+  | ConfuseMiss -> ()
+  | DontMove -> ()
+  | DontMiss s | Miss s ->
+    (let themove = Pokemon.getMoveFromString s in
+     let nextx = (if movestring = DontMiss s then nextx' else screen_width / 2) in
+      match themove.dmg_class with
+      | Physical ->
+        (let incx = (nextx - startx) / 80 in
+        let incy = (nexty - starty) / 80 in
+        for i = 0 to 80 do
+          animbox#move img#coerce (startx + i * incx) (starty + i * incy);
+          busywait_small ()
+        done;
+        move_img#set_file "../data/fx/leftclaw.png";
+        moveanim#move move_img#coerce nextx nexty;
+        move_img#misc#show ();
+        busywait ();
+        move_img#misc#hide ();
+        for i = 80 downto 1 do
+          animbox#move img#coerce (startx + i * incx) (starty + i * incy);
+          busywait_small ()
+        done)
+    | Special ->
+      (move_img#set_file ("../data/fx/" ^ (String.lowercase (Pokemon.string_of_element (Pokemon.getMoveFromString s).element)) ^ "wisp.png");
+      moveanim#move move_img#coerce startx starty;
+      move_img#misc#show ();
+      let incx = (nextx - startx) / 80 in
+      let incy = (nexty - starty) / 80 in
+      for i = 0 to 80 do
+        moveanim#move move_img#coerce (startx + i * incx) (starty + i * incy);
+        busywait_small ()
+      done;
+      move_img#misc#hide ())
+    | Status -> failwith "Faulty Game Logic: Debug 512")
 
 let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] (battle: GPack.table) text
-  (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img text_buffer (health_bar_holder1, health_bar_holder2, health_bar1, health_bar2)  pokeanim1 pokeanim2 back_button () =
+  (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img move_img text_buffer (health_bar_holder1, health_bar_holder2, health_bar1, health_bar2)  pokeanim1 pokeanim2 moveanim back_button () =
   Printf.printf "DEBUG %B %B\n%!" (Ivar.is_empty !gui_ready) !endTurnEarly;
   let battle_buttons = [move1; move2; move3; move4; switch; back_button] in
   List.iter (fun s -> s#misc#hide ()) battle_buttons;
@@ -514,8 +587,8 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
     upon (Ivar.read !ready_gui) (fun _ -> ready_gui := Ivar.create ();
     game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3;
     poke4; poke5; switch] battle text (battle_status, gui_ready, ready,
-    ready_gui) poke1_img poke2_img text_buffer (health_bar_holder1,
-    health_bar_holder2, health_bar1, health_bar2) pokeanim1 pokeanim2 back_button ()) in
+    ready_gui) poke1_img poke2_img move_img text_buffer (health_bar_holder1,
+    health_bar_holder2, health_bar1, health_bar2) pokeanim1 pokeanim2 moveanim back_button ()) in
   let updatehealth1 () =
     health_bar1#set_fraction (float_of_int (t1.current).curr_hp /. float_of_int (t1.current).bhp);
     health_bar1#set_text (string_of_int t1.current.curr_hp ^ "/" ^ string_of_int t1.current.bhp) in
@@ -559,13 +632,13 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
                    let atk_string = getAttackString t1.current.pokeinfo.name a in
                    let str_list = Str.split (Str.regexp "\.") atk_string in
                    List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
-                   animate_physical_attack pokeanim1 poke1_img poke1x poke1y poke2x poke2y;
+                   animate_attack pokeanim1 poke1_img poke1x poke1y poke2x poke2y moveanim move_img a;
                    updatehealth2 ()
   | Pl2 AttackMove a -> secondaryEffect := `P2;
                    let atk_string = getAttackString t2.current.pokeinfo.name a in
                    let str_list = Str.split (Str.regexp "\.") atk_string in
                    List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
-                   animate_physical_attack pokeanim2 poke2_img poke2x poke2y poke1x poke1y;
+                   animate_attack pokeanim2 poke2_img poke2x poke2y poke1x poke1y moveanim move_img a;
                    updatehealth1 ()
   | Pl1 Status s ->secondaryEffect := `P1;
                    let status_string = getStatusString t1.current.pokeinfo.name s in
@@ -620,14 +693,16 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
   | Pl1 AttackMove a -> secondaryEffect := `P1;
                    let atk_string = getAttackString t1.current.pokeinfo.name a in
                    let str_list = Str.split (Str.regexp "\.") atk_string in
-                   updatetools ();
                    List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
+                   animate_attack pokeanim1 poke1_img poke1x poke1y poke2x poke2y moveanim move_img a;
+                   updatetools ();
                    pre_process ()
   | Pl2 AttackMove a -> secondaryEffect := `P2;
                    let atk_string = getAttackString t2.current.pokeinfo.name a in
                    let str_list = Str.split (Str.regexp "\.") atk_string in
-                   updatetools ();
                    List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
+                   animate_attack pokeanim2 poke2_img poke2x poke2y poke1x poke1y moveanim move_img a;
+                   updatetools ();
                    pre_process ()
   | Pl1 Status s ->secondaryEffect := `P1;
                    let status_string = getStatusString t1.current.pokeinfo.name s in
@@ -663,7 +738,7 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
 
 
  let process_command engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text
-  (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img text_buffer health_holders pokeanim1 pokeanim2 back_button =
+  (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img move_img text_buffer health_holders pokeanim1 pokeanim2 moveanim back_button =
  let battle_buttons = [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch]  in
  match !current_command with
  | (None, None) -> failwith "Faulty Game Logic: Debug 03"
@@ -672,15 +747,15 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
                       | Random1p -> List.iter (fun s -> s#misc#hide ()) battle_buttons; current_screen := Battle Processing; text_buffer#set_text "Both moves collected. Processing...";
                                           Ivar.fill !gui_ready !current_command; current_command := (None, None);
                                           upon (Ivar.read !ready_gui) (fun _ -> ready_gui := Ivar.create (); game_animation engine battle_buttons battle text
-                                                                        (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img text_buffer health_holders pokeanim1 pokeanim2 back_button ())
+                                                                        (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img move_img text_buffer health_holders pokeanim1 pokeanim2 moveanim back_button ())
                       | _ -> failwith "Faulty Game Logic: Debug 01")
  | (Some _, Some _) -> current_screen := Battle Processing; List.iter (fun s -> s#misc#hide ()) battle_buttons; current_screen := Battle Processing; text_buffer#set_text "Both moves collected. Processing...";
                                           Ivar.fill !gui_ready !current_command; current_command := (None, None);
                                           upon (Ivar.read !ready_gui) (fun _ -> ready_gui := Ivar.create (); game_animation engine battle_buttons battle text
-                                                                        (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img text_buffer health_holders pokeanim1 pokeanim2 back_button ())
+                                                                        (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img move_img text_buffer health_holders pokeanim1 pokeanim2 moveanim back_button ())
 
 let poke_move_cmd button engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text
-  (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img text_buffer health_holders pokeanim1 pokeanim2 back_button () =
+  (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img move_img text_buffer health_holders pokeanim1 pokeanim2 moveanim back_button () =
   Printf.printf "Using a move!\n%!";
   let _ = match !current_command with
  | None, None -> current_command := (Some (UseAttack (button#label)), None)
@@ -688,14 +763,14 @@ let poke_move_cmd button engine [move1; move2; move3; move4; poke1; poke2; poke3
  | Some x, None -> current_command := Some x, Some (UseAttack button#label)
  | Some _, Some _ -> failwith "Faulty Game Logic: Debug 06" in
  process_command engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text
-  (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img text_buffer health_holders pokeanim1 pokeanim2 back_button
+  (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img move_img text_buffer health_holders pokeanim1 pokeanim2 moveanim back_button
 
  let switch_poke_cmd button engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text
-  (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img text_buffer health_holders pokeanim1 pokeanim2 back_button () =
+  (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img move_img text_buffer health_holders pokeanim1 pokeanim2 moveanim back_button () =
  Printf.printf "Switching Pokemon\n%!";
  let next () =
   process_command engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text
-  (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img text_buffer health_holders pokeanim1 pokeanim2 back_button in
+  (battle_status, gui_ready, ready, ready_gui) poke1_img poke2_img move_img text_buffer health_holders pokeanim1 pokeanim2 moveanim back_button in
  match !current_screen with
   | Battle (P1 BothFaint) ->
         (match get_game_status battle_status with
@@ -728,8 +803,8 @@ let main_gui engine battle_engine () =
 		back_button, main_menu_bg, one_bg, load_screen = menu in
   let battler = make_battle_screen ~packing:(battle_screen#add) ()
   in let battle, text, bg_img, move1, move2, move3, move4, switch,
-    poke1_img, poke2_img, text_buffer, poke1, poke2, poke3, poke4,
-    poke5, health_holders, pokeanim1, pokeanim2 = battler in
+    poke1_img, poke2_img, move_img, text_buffer, poke1, poke2, poke3, poke4,
+    poke5, health_holders, pokeanim1, pokeanim2, moveanim = battler in
   main_menu#pack move1#coerce; main_menu#pack move2#coerce;
   main_menu#pack move3#coerce; main_menu#pack move4#coerce;
   main_menu#pack switch#coerce; main_menu#pack poke1#coerce;
@@ -751,16 +826,16 @@ let main_gui engine battle_engine () =
   switch#connect#clicked ~callback:(switch_poke engine [poke1;poke2;poke3;
   poke4;poke5] [move1;move2;move3;move4;switch] back_button);
   (* Pokemon buttons *)
-  poke1#connect#clicked ~callback:(switch_poke_cmd poke1 engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text battle_engine poke1_img poke2_img text_buffer health_holders pokeanim1 pokeanim2 back_button);
-  poke2#connect#clicked ~callback:(switch_poke_cmd poke2 engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text battle_engine poke1_img poke2_img text_buffer health_holders pokeanim1 pokeanim2 back_button);
-  poke3#connect#clicked ~callback:(switch_poke_cmd poke3 engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text battle_engine poke1_img poke2_img text_buffer health_holders pokeanim1 pokeanim2 back_button);
-  poke4#connect#clicked ~callback:(switch_poke_cmd poke4 engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text battle_engine poke1_img poke2_img text_buffer health_holders pokeanim1 pokeanim2 back_button);
-  poke5#connect#clicked ~callback:(switch_poke_cmd poke5 engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text battle_engine poke1_img poke2_img text_buffer health_holders pokeanim1 pokeanim2 back_button);
+  poke1#connect#clicked ~callback:(switch_poke_cmd poke1 engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text battle_engine poke1_img poke2_img move_img text_buffer health_holders pokeanim1 pokeanim2 moveanim back_button);
+  poke2#connect#clicked ~callback:(switch_poke_cmd poke2 engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text battle_engine poke1_img poke2_img move_img text_buffer health_holders pokeanim1 pokeanim2 moveanim back_button);
+  poke3#connect#clicked ~callback:(switch_poke_cmd poke3 engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text battle_engine poke1_img poke2_img move_img text_buffer health_holders pokeanim1 pokeanim2 moveanim back_button);
+  poke4#connect#clicked ~callback:(switch_poke_cmd poke4 engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text battle_engine poke1_img poke2_img move_img text_buffer health_holders pokeanim1 pokeanim2 moveanim back_button);
+  poke5#connect#clicked ~callback:(switch_poke_cmd poke5 engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text battle_engine poke1_img poke2_img move_img text_buffer health_holders pokeanim1 pokeanim2 moveanim back_button);
   (* Move buttons *)
-  move1#connect#clicked ~callback:(poke_move_cmd move1 engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text battle_engine poke1_img poke2_img text_buffer health_holders pokeanim1 pokeanim2 back_button);
-  move2#connect#clicked ~callback:(poke_move_cmd move2 engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text battle_engine poke1_img poke2_img text_buffer health_holders pokeanim1 pokeanim2 back_button);
-  move3#connect#clicked ~callback:(poke_move_cmd move3 engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text battle_engine poke1_img poke2_img text_buffer health_holders pokeanim1 pokeanim2 back_button);
-  move4#connect#clicked ~callback:(poke_move_cmd move4 engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text battle_engine poke1_img poke2_img text_buffer health_holders pokeanim1 pokeanim2 back_button);
+  move1#connect#clicked ~callback:(poke_move_cmd move1 engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text battle_engine poke1_img poke2_img move_img text_buffer health_holders pokeanim1 pokeanim2 moveanim back_button);
+  move2#connect#clicked ~callback:(poke_move_cmd move2 engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text battle_engine poke1_img poke2_img move_img text_buffer health_holders pokeanim1 pokeanim2 moveanim back_button);
+  move3#connect#clicked ~callback:(poke_move_cmd move3 engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text battle_engine poke1_img poke2_img move_img text_buffer health_holders pokeanim1 pokeanim2 moveanim back_button);
+  move4#connect#clicked ~callback:(poke_move_cmd move4 engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text battle_engine poke1_img poke2_img move_img text_buffer health_holders pokeanim1 pokeanim2 moveanim back_button);
   window#connect#destroy ~callback:(quit engine ready);
   window#show ();
 	let thread = GtkThread.start () in ()

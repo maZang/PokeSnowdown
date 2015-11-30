@@ -15,3 +15,7 @@ val getElementEffect: element -> element -> float
 val getTestPoke: unit -> pokemon
 
 val getTestOpp: unit -> pokemon
+
+val getMoveFromString: string -> move
+
+val string_of_element: element -> string

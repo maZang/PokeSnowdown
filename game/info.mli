@@ -3,6 +3,8 @@ type battlemove = Poke of string | UseAttack of string | NoMove | FaintPoke of s
 
 type stat = Attack | Defense | SpecialAttack | SpecialDefense | Speed | Accuracy | Evasion
 
+type animattack = DontMiss of string | Miss of string | SleepMiss | FrozenMiss | ParaMiss | FlinchMiss | ConfuseMiss | DontMove
+
 type guiattack = NormMove of string | Crit of guiattack |
                   SEff of guiattack | NoEff of guiattack | HitMult of int * guiattack | BurnMove of guiattack | FreezeMove of guiattack | ParaMove of guiattack | MissMove of string | FrozenSolid |
                   Thaw of guiattack | NoFreeze of guiattack | NoBurn of guiattack | NoPara of guiattack | Para | OHKill of guiattack | ChargingMove of string * string | FlinchA |
