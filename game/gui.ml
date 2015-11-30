@@ -32,6 +32,22 @@ let poke2y = 80
 (* Initializes GtkMain*)
 let locale = GtkMain.Main.init ()
 
+
+let rec test_string n () =
+  match n with
+  | 0 -> []
+  | n -> (string_of_int n)::test_string (n-1) ()
+
+(* Global references to an object for easy destruction *)
+let selecttext = ref (GMisc.label ())
+let select1 = ref (GEdit.combo ~popdown_strings:(test_string 750 ()) ())
+let select2 = ref (GEdit.combo ~popdown_strings:(test_string 750 ()) ())
+let select3 = ref (GEdit.combo ~popdown_strings:(test_string 750 ()) ())
+let select4 = ref (GEdit.combo ~popdown_strings:(test_string 750 ()) ())
+let select5 = ref (GEdit.combo ~popdown_strings:(test_string 750 ()) ())
+let select6 = ref (GEdit.combo ~popdown_strings:(test_string 750 ()) ())
+let () = !select1#destroy (); !select2#destroy (); !select3#destroy ();
+          !select4#destroy (); !select5#destroy (); !select6#destroy ()
 (* Holds similar information to the engine, but acts differently in battle
   In battle, engine holds the current battle state, but current_screen holds
   the information on which player is selecting move/pokemon/etc...
@@ -85,7 +101,7 @@ let make_battle_screen ?packing () =
   (* The text buffer to hold the narration during the battle *)
   let text_buffer = GEdit.entry ~width:600 ~height:80
               ~text:"Player One's Turn To Move"
-    ~packing:(text#pack ~expand:true) ~editable:false () in
+    ~packing:(text#pack ~expand:true) ~editable:false ~show:false () in
   (* The images to hold each pokemon initialized to default images*)
   let poke1_img = GMisc.image ~file:"../data/back-sprites/charizard.gif" () in
   let poke2_img = GMisc.image ~file:"../data/sprites/blaziken-mega.gif" () in
@@ -179,7 +195,6 @@ let make_menu ?packing () =
   (* button7 is known as back_button outside of this function *)
 	let button7 = GButton.button ~label:"Back"
 		~packing:(hbox1#pack ~from:`END) () ~show:false in
-  let select1 = GEdit.combo ~popdown_strings:["hi";"bye"] ~packing:(hbox2#pack) ~show:false () in
   (* img is known as main_menu_bg outside of this code *)
   let img = GMisc.image ~file:"./gui_pics/main.gif" ~packing:(hbox2#pack)
     ~width:screen_width ~height:(5*screen_height /6) () in
@@ -299,6 +314,26 @@ let load_random  engine img load_screen battle text buttonhide buttonshow
               (battle_status, gui_ready, ready, ready_gui) Random2p main_menu battle_screen
               poke1_img poke2_img text_buffer health_holders ()
   | _ -> failwith "Faulty Game Logic: Debug 298"
+
+let load_preset engine img load_screen battle text buttonhide preset buttonshow
+  (battle_status, gui_ready, ready, ready_gui) main_menu (battle_screen : GPack.box)
+  poke1_img poke2_img text_buffer health_holders () =
+  (match !current_screen with
+    | Menu1P -> current_screen := Preset1PChoose;
+                List.iter (fun s -> s#misc#hide ()) buttonhide;
+                preset#set_label "Continue";
+                img#misc#hide ();
+                selecttext := GMisc.label ~text:"Choose your 6 Pokemon from the drop down menus." ~packing:(battle_screen#pack) ();
+                select1 := GEdit.combo ~popdown_strings:(test_string 750 ()) ~case_sensitive:false ~packing:(battle_screen#pack) ();
+                select2 := GEdit.combo ~popdown_strings:(test_string 750 ()) ~case_sensitive:false ~packing:(battle_screen#pack) ();
+                select3 := GEdit.combo ~popdown_strings:(test_string 750 ()) ~case_sensitive:false ~packing:(battle_screen#pack) ();
+                select4 := GEdit.combo ~popdown_strings:(test_string 750 ()) ~case_sensitive:false ~packing:(battle_screen#pack) ();
+                select5 := GEdit.combo ~popdown_strings:(test_string 750 ()) ~case_sensitive:false ~packing:(battle_screen#pack) ();
+                select6 := GEdit.combo ~popdown_strings:(test_string 750 ()) ~case_sensitive:false ~packing:(battle_screen#pack) ();
+                ()
+    | Menu2P -> ()
+    | _ -> failwith "Faulty Game Logic: Debug 314"
+  )
 
 let load_menu engine button_show button_hide img screen () =
 	if Ivar.is_empty (!engine) then
@@ -859,9 +894,14 @@ let main_gui engine battle_engine () =
  (* Back button *)
    back_button#connect#clicked
   ~callback:(go_back engine menu battler battle_engine);
-  (* Random 1p battle button *)
+  (* Random battle button *)
   random#connect#clicked ~callback:(load_random engine main_menu_bg load_screen
   battle text [random;preset;touranment] [move1; move2; move3; move4;
+  switch] battle_engine main_menu battle_screen poke1_img poke2_img
+  text_buffer health_holders);
+  (* Preset battle button *)
+  preset#connect#clicked ~callback:(load_preset engine main_menu_bg load_screen
+  battle text [random;touranment] preset [move1; move2; move3; move4;
   switch] battle_engine main_menu battle_screen poke1_img poke2_img
   text_buffer health_holders);
   (* Switch button *)
