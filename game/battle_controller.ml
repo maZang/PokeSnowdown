@@ -1292,7 +1292,19 @@ let handle_action state action1 action2 =
   match action1 with
   | Poke p' -> let p = if p' = "random" then getRandomPoke t1 else p' in
       (match action2 with
-      | Poke p -> failwith "unimplemented"
+      | Poke p2' -> let p2 = if p2' = "random" then getRandomPoke t2 else p2' in
+                    switchPokeHandler false p t1 w.terrain.side1;
+                    switchPokeHandler false p2 t2 w.terrain.side2;
+                    if (t1.current.curr_hp = 0) then
+                          if (t2.current.curr_hp = 0) then
+                            (m1 := Pl1 SFaint; m2 := Pl2 Faint)
+                          else
+                            (m1 := Pl1 SFaint; m2 := Pl2 FaintNext)
+                        else
+                          if (t2.current.curr_hp = 0) then
+                            (m1 := Pl2 SFaint; m1 := Pl1 FaintNext)
+                          else
+                            (m1 := Pl1 (SPoke p); m2 := Pl2 (SPoke p2))
       | UseAttack a -> switchPokeHandler false p t1 w.terrain.side1;
                        if (t1.current.curr_hp = 0) then
                         (m1 := Pl1 SFaint; m2 := Pl2 FaintNext)
@@ -1312,7 +1324,18 @@ let handle_action state action1 action2 =
       | _ -> failwith "Faulty Game Logic: Debug 444")
   | UseAttack a ->
       (match action2 with
-      | Poke p -> failwith "unimplemented"
+      | Poke p' -> let p  = if p' = "random" then getRandomPoke t2 else p' in
+                   switchPokeHandler false p t2 w.terrain.side2;
+                    (if (t2.current.curr_hp = 0) then
+                      (m1 := Pl2 SFaint; m2 := Pl1 FaintNext)
+                    else
+                      (let curr_move = findBattleMove t1.current.pokeinfo a in
+                      if curr_move.dmg_class = Status then
+                        (let newmove = status_move_handler t1 t2 (w, w.terrain.side1, w.terrain.side2) curr_move in
+                        m1 := Pl2 (SPoke p); m1 := Pl1 (Status newmove))
+                     else
+                      (let newmove = move_handler t1 t2 (w, w.terrain.side1, w.terrain.side2) curr_move in
+                      m1 := Pl2 (SPoke p); m2 := Pl1 (AttackMove newmove))))
       | UseAttack a' -> handle_two_moves t1 t2 w m1 m2 a a'
       | NoMove -> let curr_poke = t1.current in
                   let curr_move = findBattleMove curr_poke.pokeinfo a in
