@@ -127,6 +127,9 @@ let get_weather_amplifier w (move : move) =
                         | Water -> 0.5
                         | Fire -> 1.5
                         | _ -> 1.0)
+  | Rain _ -> (match move.element with
+                        | Water -> 1.5
+                        | Fire -> 0.5)
   | _ -> 1.0
 
 (* Damage calculation following the equation given by Bulbapedia.
@@ -1126,6 +1129,10 @@ let handle_preprocessing t1 t2 w m1 m2 =
                   (w.weather <- ClearSkies; SunFade descript)
               else
                   (w.weather <- Sun (n-1); descript)
+  | Rain n -> if n <= 0 then
+                  (w.weather <- ClearSkies; RainFade descript)
+              else
+                  (w.weather <- Rain (n-1); descript)
   | _ -> descript in
   let rec fix_terrain t acc descript =  function
   | (LightScreen n)::t' -> if n = 0 then
