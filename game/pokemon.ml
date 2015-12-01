@@ -157,6 +157,7 @@ let string_of_vola_status elm =
   | Substitute _ -> "Substitute"
   | Protected -> "Protect"
   | UsedProtect -> "Used Protect"
+  | RechargingStatus -> "Recharging"
 
 let string_of_poke_status (non, vola) =
   List.fold_left (fun acc s -> acc ^ ", " ^ string_of_vola_status s) (string_of_status non) vola
@@ -478,8 +479,6 @@ let getMoveFromString str =
   let power = match str with
             | "triple-kick" -> 20
             | "return" | "frustration" -> 102
-            | "hyper-beam" | "blast-burn" | "frenzy-plant" | "hydro-cannon"
-              | "roar-of-time" | "giga-impact" | "rock-wrecker" -> 120
             | _ ->  (try int_of_string powerstr with |_ -> 0) in
   let dmg_class = move |> member "dmg_class" |> to_string |> getDmgClass in
   let target = move |> member "target" |> to_string |> getTarget in
@@ -575,8 +574,8 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "fly"; move2 =
-  getMoveFromString "dragon-dance"; move3 = getMoveFromString "psych-up";
+  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "dragon-tail"; move2 =
+  getMoveFromString "dragon-dance"; move3 = getMoveFromString "whirlwind";
   move4 = getMoveFromString "will-o-wisp"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 0; special_defense = 135; ability="pixilate"; evs; nature; item}
 

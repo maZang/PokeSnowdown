@@ -686,7 +686,8 @@ let move_handler atk def wt move =
                           else
                            ()); secondary_effects t
     (* Moves that take a turn of recharge after use e.g. hyperbeam *)
-    | RechargeMove::t -> newmove := Recharging !newmove; secondary_effects t
+    | RechargeMove::t -> (atk.current.curr_status <- (fst atk.current.curr_status, RechargingStatus::(snd atk.current.curr_status));
+                          newmove := Recharging !newmove; secondary_effects t)
     (* Moves based upon weight are instead based on current health *)
     | WeightDamage::t ->
       (let base_power = def.current.curr_hp * 120 / def.current.bhp in

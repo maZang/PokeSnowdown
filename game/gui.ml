@@ -779,12 +779,20 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
   let update_current_command () =
     let charging1, s1 = findCharging (snd t1.current.curr_status) in
     let charging2, s2 = findCharging (snd t2.current.curr_status) in
+    let recharging1 = List.mem RechargingStatus (snd t1.current.curr_status) in
+    let recharging2 = List.mem RechargingStatus (snd t2.current.curr_status) in
     (if (charging1) then
       (current_command := (Some (UseAttack s1), snd !current_command))
     else if (charging2) then
       (current_command := (fst !current_command, Some (UseAttack s2)))
+    else if recharging1 then
+      (current_command := (Some NoMove, snd !current_command))
+    else if recharging2 then
+      (current_command := (fst !current_command, Some NoMove))
     else
-      ()) in
+      ());
+    (t1.current.curr_status <- (fst t1.current.curr_status, List.filter (fun s -> s <> RechargingStatus) (snd t1.current.curr_status)));
+    (t2.current.curr_status <- (fst t2.current.curr_status, List.filter (fun s -> s <> RechargingStatus) (snd t2.current.curr_status))) in
   let skipturn () =
     update_current_command ();
     match get_game_status battle_status with
@@ -803,7 +811,7 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
     (Ivar.fill !gui_ready (Some TurnEnd, Some TurnEnd); game_step ()) in
   let pre_process () =
     if !endTurnEarly then
-      (endTurnEarly := false; skipturn ())
+      (endTurnEarly := false; turn_end ())
     else
       (Ivar.fill !gui_ready (Some Preprocess, Some Preprocess);
       game_step ()) in
@@ -877,7 +885,7 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
                     updatehealth1 ()
   | _ -> failwith "unimplements");
   if !endTurnEarly then
-    (endTurnEarly := false; skipturn ())
+    (endTurnEarly := false; turn_end ())
   else
   (match !m2 with
   | Pl1 AttackMove a -> secondaryEffect := `P1;
