@@ -413,6 +413,7 @@ let getSecondaryEffect str = match str with
   | "morning-sun" | "synthesis" | "moonlight" -> [SunHeal]
   | "water-spout" | "eruption" -> [MaxHealthDmg]
   | "sunny-day" -> [SunnyDay]
+  | "false-swipe" -> [FalseSwipe]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -489,8 +490,8 @@ let getTestPoke () =
   let nature = Bold in
   let item = Leftovers in
   {name="gardevoir-mega"; element=[Psychic]; move1= getMoveFromString "leaf-storm"; move2 =
-  getMoveFromString "solar-beam"; move3 = getMoveFromString "bounce";
-  move4 = getMoveFromString "grass-knot"; hp = 68; attack = 85; special_attack = 165; defense = 65;
+  getMoveFromString "solar-beam"; move3 = getMoveFromString "flamethrower";
+  move4 = getMoveFromString "false-swipe"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
 
 let getTestOpp () =

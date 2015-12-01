@@ -730,6 +730,11 @@ let move_handler atk def wt move =
                       secondary_effects t
     (* Moves that never miss are handled elsewhere *)
     | NeverMiss::t -> secondary_effects t
+    (* Move that leaves the opponent with 1 HP *)
+    | FalseSwipe::t -> (if (def.current.curr_hp = 0) then
+                          (def.current.curr_hp <- 1;
+                          newmove := (FalseSwipeA !newmove))
+                       else (); secondary_effects t)
     (* Moves that force a switch out *)
     | ForceSwitch::t -> newmove := SwitchOutA !newmove; secondary_effects t
     (* Base case *)
