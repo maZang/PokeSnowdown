@@ -344,6 +344,7 @@ let getSecondaryEffect str = match str with
   | "skull-bash" -> [ChargeMove "It tucked its head in."; StageBoost [(Defense, 1)]]
   | "dig" -> [ChargeMove "It went slightly underground"]
   | "dive" -> [ChargeMove "It went underwater somehow"]
+  | "bounce" -> [ChargeMove "It bounced up high"; ParaChance]
   | "swords-dance" -> [StageBoost [(Attack, 2)]]
   | "charm" -> [StageAttack [(Attack, 2)]]
   | "meditate" | "sharpen" | "metal-claw" -> [StageBoost [(Attack, 1)]]
