@@ -127,6 +127,9 @@ let get_weather_amplifier w (move : move) =
                         | Water -> 0.5
                         | Fire -> 1.5
                         | _ -> 1.0)
+  | Rain _ -> (match move.element with
+                        | Water -> 1.5
+                        | Fire -> 0.5)
   | _ -> 1.0
 
 (* Damage calculation following the equation given by Bulbapedia.
@@ -1052,8 +1055,9 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
                      secondary_effects t
     (* Sunny Day*)
     | SunnyDay::t -> (match w with
-                    | Sun _| HarshSun _ -> ()
-                    | _ -> wt.weather <- Sun 5; secondary_effects t)
+                    | Sun _ | HarshSun _ -> ()
+                    | _ -> wt.weather <- Sun 5; newmove := SunnyDayS !newmove;
+                    secondary_effects t)
     (* Cures burns, paralysis, poison*)
     | Refresh::t -> (match atk.current.curr_status with
                     | (Poisoned, x) -> atk.current.curr_status <- (NoNon, x)
@@ -1094,6 +1098,10 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
         | (true, false) -> secondary_effects ((StageBoost[(Defense,1)])::t)
         | (false, true) -> secondary_effects ((StageAttack[(Defense,-1)])::t)
         | _ -> ()); secondary_effects t
+    | RainDance::t -> (match w with
+                    | Rain _ | HeavyRain _ -> ()
+                    | _ -> wt.weather <- Rain 5; newmove := RainDanceS !newmove;
+                    secondary_effects t)
     | [] -> ()
   in
   let hit, reason = hitMoveDueToStatus atk (`NoAdd !newmove) in
@@ -1133,7 +1141,7 @@ let remove_some_status bp =
                 newvola' in
   match nonvola with
   | Toxic n -> bp.curr_status <- (Toxic (n + 1), newvola)
-  | Sleep n -> bp.curr_status <- (Sleep (n-1), newvola)
+  | Sleep n -> bp.curr_status <- (Sleep (n - 1), newvola)
   | _ -> bp.curr_status <- (nonvola, newvola)
 (* Called after the turn ends; Decrements sleep counter; checks if Pokemon
    faints; etc... Note Pl1 always faints before Pl2*)
@@ -1159,6 +1167,10 @@ let handle_preprocessing t1 t2 w m1 m2 =
                   (w.weather <- ClearSkies; SunFade descript)
               else
                   (w.weather <- Sun (n-1); descript)
+  | Rain n -> if n <= 0 then
+                  (w.weather <- ClearSkies; RainFade descript)
+              else
+                  (w.weather <- Rain (n-1); descript)
   | _ -> descript in
   let rec fix_terrain t acc descript =  function
   | (LightScreen n)::t' -> if n = 0 then
