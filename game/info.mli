@@ -20,7 +20,7 @@ type guistatus = StatBoost of stat * int * guistatus | NormStatus of string | Th
                    Fail of string | SpikesS of guistatus | BurnStatus of guistatus | HealBellS of guistatus | RefreshS of guistatus | PsychUpS of guistatus
 
 type endMove = BurnDmg | BreakBurn | BreakFreeze  | BreakPara  | BreakPoison | PoisonDmg | LeechDmg of endMove | LeechHeal of endMove | Base | LightScreenFade of endMove |
-               ReflectFade of endMove | SunFade of endMove
+               ReflectFade of endMove | SunFade of endMove | RainFade of endMove
 
 type guimove = SPoke of string | AttackMove of guiattack | Faint | NoAction | Continue | Next | Status of guistatus | EndMove of endMove | FaintNext | SFaint
 
@@ -49,7 +49,7 @@ type secondary_effects = MultHit of int | StageBoost of (stat * int) list | IncC
                          ForceSwitch | FlinchMove | StageAttack of (stat * int) list | RecoilMove | PoisonChance | PutToSleep | ConfuseOpp | ConstantDmg of int | RechargeMove |
                          WeightDamage | DrainMove | LeechSeed | ChargeInSunlight of string | ToxicChance | StageBoostSunlight of (stat * int) list | Recovery | LightScreenMake
                          | Haze | ReflectMake | UserFaint | NeverMiss | DrainMoveSleep | VariableDamage | Rest | SuperFang | SubstituteMake | Flail | Protect | BellyDrum
-                         | Spikes | HealBell | SunHeal | MaxHealthDmg | SunnyDay | FalseSwipe | Refresh | PsychUp | RandStageBoost
+                         | Spikes | HealBell | SunHeal | MaxHealthDmg | SunnyDay | FalseSwipe | Refresh | PsychUp | RandStageBoost | RainDance
 
 type move = {name:string; priority: int; target: target; dmg_class: dmg_class;
     mutable power:int; effect_chance: int; accuracy: int; element: element;

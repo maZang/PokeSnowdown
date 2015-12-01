@@ -420,11 +420,8 @@ let getSecondaryEffect str = match str with
   | "sunny-day" -> [SunnyDay]
   | "refresh" -> [Refresh]
   | "false-swipe" | "hold-back" -> [FalseSwipe]
-<<<<<<< HEAD
   | "psych-up" -> [PsychUp]
-=======
   | "acupressure" -> [RandStageBoost]
->>>>>>> 99d7e000834e1ba54b85c5accca5775fda35f4e5
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;

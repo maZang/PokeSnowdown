@@ -587,6 +587,7 @@ let rec getEndString starter s =
   | LightScreenFade s -> getEndString starter s ^ starter ^ "'s Light Screen has faded."
   | ReflectFade s -> getEndString starter s ^ starter ^ "'s Reflect has faded."
   | SunFade s-> getEndString starter s ^ "The sunlight has faded."
+  | RainFade s -> getEndString starter s ^ "The rain has faded."
 
 let animate_attack (animbox : GPack.fixed) img startx starty nextx' nexty (moveanim : GPack.fixed) move_img attack=
   let movestring = getMoveString attack in
