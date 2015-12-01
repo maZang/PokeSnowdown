@@ -414,6 +414,7 @@ let getSecondaryEffect str = match str with
   | "water-spout" | "eruption" -> [MaxHealthDmg]
   | "sunny-day" -> [SunnyDay]
   | "false-swipe" -> [FalseSwipe]
+  | "refresh" -> [Refresh]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -490,7 +491,7 @@ let getTestPoke () =
   let nature = Bold in
   let item = Leftovers in
   {name="gardevoir-mega"; element=[Psychic]; move1= getMoveFromString "leaf-storm"; move2 =
-  getMoveFromString "solar-beam"; move3 = getMoveFromString "flamethrower";
+  getMoveFromString "solar-beam"; move3 = getMoveFromString "refresh";
   move4 = getMoveFromString "false-swipe"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
 
@@ -499,9 +500,9 @@ let getTestOpp () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gallade-mega"; element=[Psychic]; move1= getMoveFromString "pound"; move2 =
-  getMoveFromString "pound"; move3 = getMoveFromString "pound";
-  move4 = getMoveFromString "pound"; hp = 68; attack = 85; special_attack = 165; defense = 65;
+  {name="gallade-mega"; element=[Psychic]; move1= getMoveFromString "will-o-wisp"; move2 =
+  getMoveFromString "will-o-wisp"; move3 = getMoveFromString "will-o-wisp";
+  move4 = getMoveFromString "will-o-wisp"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
 
 let getPokeToolTip t =

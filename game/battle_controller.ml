@@ -1044,6 +1044,13 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
     | SunnyDay::t -> (match w with
                     | Sun _| HarshSun _ -> ()
                     | _ -> wt.weather <- Sun 5; secondary_effects t)
+    (* Cures burns, paralysis, poison*)
+    | Refresh::t -> (match atk.current.curr_status with
+                    | (Poisoned, x) -> atk.current.curr_status <- (NoNon, x)
+                    | (Toxic _, x) -> atk.current.curr_status <- (NoNon, x)
+                    | (Paralysis, x) -> atk.current.curr_status <- (NoNon, x)
+                    | (Burn, x) -> atk.current.curr_status <- (NoNon, x)
+                    | _ -> ()); newmove := RefreshS !newmove; secondary_effects t
     | [] -> ()
   in
   let hit, reason = hitMoveDueToStatus atk (`NoAdd !newmove) in
