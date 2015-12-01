@@ -474,6 +474,7 @@ let rec getMoveString a =
   | ChargingMove (s, n) -> DontMove
   | SwitchOutA s -> getMoveString s
   | Recharging s -> getMoveString s
+  | FalseSwipeA s -> getMoveString s
 
 let rec getAttackString starter a =
   match a with
@@ -514,6 +515,7 @@ let rec getAttackString starter a =
   | BreakSub s -> getAttackString starter s ^ starter ^ " has broken the opponent's substitute."
   | SubDmg s -> getAttackString starter s ^ "The opponent's substitute took the damage instead."
   | ProtectedA s -> starter ^ " used " ^ s ^ " but opponent protected itself."
+  | FalseSwipeA s -> getAttackString starter s ^ "The opponent cannot go below 1 HP"
   | ChargingMove (s, n) -> (match !secondaryEffect with
                              | `P1 -> current_command := (Some (UseAttack n), snd !current_command)
                              |`P2 -> current_command := (fst !current_command, Some (UseAttack n))); starter ^ " is charging up." ^ s
