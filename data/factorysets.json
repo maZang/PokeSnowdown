@@ -1,7 +1,7 @@
 {
   "unlocked": 6,
-  "pokemon": [
-  {
+  "pokemon": [ "alakazam", "azumarill", "klefki", "charizard", "sylveon", "serperior"],
+  "alakazam": {
     "name": "alakazam",
     "moves": [
       "psychic",
@@ -21,7 +21,7 @@
       "speed": "252"
     }
   },
-  {
+  "azumarill": {
     "name": "azumarill",
     "moves": [
       "play-rough",
@@ -41,7 +41,7 @@
       "speed": "84"
     }
   },
-  {
+  "klefki": {
     "name": "klefki",
     "moves": [
       "spikes",
@@ -61,7 +61,7 @@
       "speed": "0"
     }
   },
-  {
+  "charizard": {
     "name": "charizard",
     "moves": [
       "dragon-dance",
@@ -81,7 +81,7 @@
       "speed": "252"
     }
   },
-  {
+  "sylveon": {
     "name": "sylveon",
     "moves": [
       "hyper-voice",
@@ -101,7 +101,7 @@
       "speed": "16"
     }
   },
-  {
+  "serperior": {
     "name": "serperior",
     "moves": [
       "leaf-storm",
@@ -120,5 +120,5 @@
       "special-defense": "4",
       "speed": "252"
     }
-  } ]
+  }
 }
