@@ -1,8 +1,15 @@
-(*
-COMPILE WITH:
-ocamlfind ocamlc -g -thread -package lablgtk2 -package async -package yojson -package str -linkpkg info.mli pokemon.mli gui.mli battle_controller.mli game.mli pokemon.ml ai.ml gui.ml battle_controller.ml game.ml  -o game
-ocamlfind ocamlc -g -thread -package lablgtk2 -package async -package yojson -linkpkg info.mli pokemon.mli gui.mli battle_controller.mli game.mli pokemon.ml gui.ml battle_controller.ml game.ml  -custom -o game.exe
-Bottom one is for exe file
+(* COMPILE COMMANDS (bottom one is for executable file):
+ocamlfind ocamlc -g -thread
+ -package lablgtk2 -package async -package yojson -package str
+ -linkpkg info.mli pokemon.mli gui.mli battle_controller.mli game.mli pokemon.ml
+          ai.ml gui.ml battle_controller.ml game.ml
+ -o game
+
+ocamlfind ocamlc -g -thread
+ -package lablgtk2 -package async -package yojson -package str
+ -linkpkg info.mli pokemon.mli gui.mli battle_controller.mli game.mli pokemon.ml
+          ai.ml gui.ml battle_controller.ml game.ml
+ -custom -o game.exe
 *)
 open Async.Std
 open Info
