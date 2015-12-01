@@ -1,6 +1,4 @@
 {
-  "unlocked": 6,
-  "pokemon": [ "alakazam", "azumarill", "klefki", "charizard", "sylveon", "serperior"],
   "alakazam": {
     "name": "alakazam",
     "moves": [
@@ -71,7 +69,7 @@
     ],
     "ability": "blaze",
     "nature": "jolly",
-    "item": "charizarditex",
+    "item": "life orb",
     "evs": {
       "hp": "0",
       "attack": "252",
@@ -120,5 +118,7 @@
       "special-defense": "4",
       "speed": "252"
     }
-  }
+  },
+  "unlocked": 6,
+  "pokemon": [ "alakazam", "azumarill", "klefki", "charizard", "sylveon", "serperior"]
 }

@@ -20,7 +20,36 @@ let num_pokemon_total = 721
 let unlocked_pokemon () = open_json "factorysets"
 
 let unlocked_poke_string_list () =
-  List.map (to_string) (unlocked_pokemon () |> member "pokemon" |> to_list |> filter_member "name")
+  List.map (to_string) (unlocked_pokemon () |> member "pokemon" |> to_list)
+
+let getNatureFromString str =
+  match str with
+  | "hardy" -> Hardy
+  | "lonely" -> Lonely
+  | "adamant" -> Adamant
+  | "naughty" -> Naughty
+  | "brave" -> Brave
+  | "bold" -> Bold
+  | "docile" -> Docile
+  | "impish" -> Impish
+  | "lax" -> Lax
+  | "relaxed" -> Relaxed
+  | "modest" -> Modest
+  | "mild" -> Mild
+  | "bashful" -> Bashful
+  | "rash" -> Rash
+  | "quiet" -> Quiet
+  | "calm" -> Calm
+  | "gentle" -> Gentle
+  | "careful" -> Careful
+  | "quirky" -> Quirky
+  | "sassy" -> Sassy
+  | "timid" -> Timid
+  | "hasty" -> Hasty
+  | "jolly" -> Jolly
+  | "naive" -> Naive
+  | "serious" -> Serious
+  | _ -> failwith "Does not occur"
 
 let getRandomNature () =
   match Random.int 25 with
@@ -59,6 +88,14 @@ let string_of_item item =
   | ChoiceSpecs -> "ChoiceSpecs"
   | CharizarditeX -> "CharizarditeX"
   | Nothing -> "NO ITEM"
+
+let getItemFromString str =
+  match str with
+  | "life orb" -> LifeOrb
+  | "choice band" -> ChoiceBand
+  | "leftovers" -> Leftovers
+  | "choice specs" -> ChoiceSpecs
+  | _ -> failwith "Does not occur"
 
 let getRandomItem () =
   match Random.int 4 with
@@ -491,6 +528,40 @@ let getRandomPokemon () =
   let move3 = !move3s |> getMoveFromString in
   let move4 = !move4s |> getMoveFromString in
   {name = randomPokeName; element; move1 ; move2; move3 ; move4 ; hp;
+  attack; defense; special_defense; special_attack; speed; ability; evs;
+  nature; item}
+
+let getPresetPokemon str =
+  let presetjson = unlocked_pokemon () in
+  let poke = poke_json |> member str in
+  let presetpoke = presetjson |> member str in
+  let ev_helper str =
+    presetpoke |> member "evs" |> member str |> to_string |> int_of_string in
+  let element_string = poke |> member "type" |> to_list|> filter_string in
+  let element = List.map getElement element_string in
+  let moveslist = List.map (to_string) (presetpoke |> member "moves" |> to_list) in
+  let hp = poke |> member "stats" |> member "hp" |> to_string |> int_of_string in
+  let attack = poke |> member "stats" |> member "attack" |> to_string |> int_of_string in
+  let defense = poke |> member "stats" |> member "defense" |> to_string
+            |> int_of_string in
+  let special_defense = poke |> member "stats" |> member "special-defense"
+            |> to_string |> int_of_string in
+  let special_attack = poke |> member "stats" |> member "special-attack"
+            |> to_string |> int_of_string in
+  let speed = poke |> member "stats" |> member "speed" |> to_string
+            |> int_of_string in
+  let ability = presetpoke |> member "ability" |> to_string in
+  let evs = {attack = ev_helper "attack"; defense = ev_helper "defense";
+            special_attack = ev_helper "special-attack"; special_defense =
+            ev_helper "special-defense"; speed = ev_helper "speed";
+            hp = ev_helper "hp"} in
+  let nature = getNatureFromString (presetpoke |> member "nature" |> to_string) in
+  let item = getItemFromString (presetpoke |> member "item" |> to_string) in
+  let move1 = getMoveFromString (List.hd moveslist) in
+  let move2 = getMoveFromString (List.nth moveslist 1) in
+  let move3 = getMoveFromString (List.nth moveslist 2) in
+  let move4 = getMoveFromString (List.nth moveslist 3) in
+  {name = str; element; move1 ; move2; move3 ; move4 ; hp;
   attack; defense; special_defense; special_attack; speed; ability; evs;
   nature; item}
 

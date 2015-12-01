@@ -12,6 +12,12 @@ val unlocked_poke_string_list : unit -> string list
  *)
 val getRandomPokemon : unit -> pokemon
 
+(* [getRandomPokemon str] returns an unlocked pokemon, filled with its own
+ *   abilities and initialized with the appropriate characteristics
+ * (moves, etc.), loading from a json file
+ *)
+val getPresetPokemon : string -> pokemon
+
 (* [getPokeToolTip t] returns a string containing relevant tool-tip information
  *  (stats, etc.) for team t's current Pokemon.
  *
