@@ -9,9 +9,7 @@ let getRandomMove (poke:battle_poke) : string =
   | 3 -> poke.pokeinfo.move4.name
   | _ -> failwith "Does not occur"
 
-(* Randomly choose a pokemon given a list of alive pokemon.
- * Btw, doesn't work if if list is empty,
- * what should I do if no alive pokemon Matt? *)
+(* Randomly choose a pokemon given a list of alive pokemon. *)
 let replaceDead (lst:battle_poke list) : string =
   let n = Random.int (List.length lst) in
     (List.nth lst n).pokeinfo.name
@@ -28,10 +26,10 @@ let has_advantage (elst1:element list) (elst2:element list) : bool =
   in
   helper elst1 >= 2.
 
-(* [replaceDead2] returns the string name of the first pokemon in the list of
- * alive pokemon [alivelst] that has a type advantage against the opposing
- * pokemon [poke]. If there are no such pokemon, one is randomly chosen
- * from the list [alivelst].
+(* [replaceDead2] returns the string name of the first pokemon in the
+ * non-empty list of alive pokemon [alivelst] that has a type advantage
+ * against the opposing pokemon [poke]. If there are no such pokemon, one
+ * is randomly chosen from the list [alivelst].
  *)
 let replaceDead2 (poke:battle_poke) (alivelst:battle_poke list) : string =
   let rec helper = function
@@ -42,5 +40,4 @@ let replaceDead2 (poke:battle_poke) (alivelst:battle_poke list) : string =
           h.pokeinfo.name
         else helper t
   in
-  if (alivelst = []) then failwith "No Pokemon Left. IDK what to do here"
-  else helper alivelst
+  helper alivelst

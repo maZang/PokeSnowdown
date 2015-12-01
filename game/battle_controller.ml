@@ -9,7 +9,7 @@ let pokeIV = 31
 let get_game_status engine =
   match Deferred.peek (Ivar.read !engine) with
   | Some v -> v
-  | None -> failwith "Faultly game logic"
+  | None -> failwith "Faulty game logic"
 
 (* Decode the instructions sent by the gui *)
 let unpack opt =
@@ -1300,7 +1300,7 @@ let switchPokeHandler faint nextpoke t ter1 =
 let handle_action state action1 action2 =
   let t1, t2, w, m1, m2 = match get_game_status state with
     | Battle InGame (t1, t2, w, m1, m2) -> t1, t2, w, m1, m2
-    | _ -> failwith "Fauly Game Logic" in
+    | _ -> failwith "Faulty Game Logic" in
   match action1 with
   | Poke p' -> let p = if p' = "random" then getRandomPoke t1 else p' in
       (match action2 with
