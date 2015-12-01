@@ -33,7 +33,7 @@ let poke2y = 80
 let locale = GtkMain.Main.init ()
 
 (* randomize battle background *)
-let bg_string = ref ("../data/backgrounds/bg-volcanocave.jpg")
+let bg_string = ref ("../data/backgrounds/bg-volcanocave.png")
 
 let rec test_string n () =
   match n with
@@ -59,6 +59,26 @@ let current_screen = ref MainMenu
 
 (* Holds information on the moves/commands of players*)
 let current_command = ref (None, None)
+
+(* Changes the bg of the game match *)
+let getRandomBg () =
+  let base_string = "../data/backgrounds/" in
+  match Random.int 15 with
+  | 0 -> bg_string := base_string ^ "bg-beach.png"
+  | 1 -> bg_string := base_string ^ "bg-beachshore.png"
+  | 2 -> bg_string := base_string ^ "bg-city.png"
+  | 3 -> bg_string := base_string ^ "bg-dampcave.png"
+  | 4 -> bg_string := base_string ^ "bg-deepsea.png"
+  | 5 -> bg_string := base_string ^ "bg-desert.png"
+  | 6 -> bg_string := base_string ^ "bg-earthycave.png"
+  | 7 -> bg_string := base_string ^ "bg-forest.png"
+  | 8 -> bg_string := base_string ^ "bg-icecave.png"
+  | 9 -> bg_string := base_string ^ "bg-meadow.png"
+  | 10 -> bg_string := base_string ^ "bg-mountain.png"
+  | 11 -> bg_string := base_string ^ "bg-river.png"
+  | 12 -> bg_string := base_string ^ "bg-route.png"
+  | 13 -> bg_string := base_string ^ "bg-thunderplains.png"
+  | 14 -> bg_string := base_string ^ "bg-volcanocave.png"
 
 (* Returns the current status of the game. Called when sure it will be used*)
 let get_game_status engine =
@@ -230,7 +250,7 @@ let make_menu ?packing () =
 
     NOTE SOME PARAMS MIGHT BE NOT USED AS OF NOW
 *)
-let load_battle_screen engine img battle text buttonhide buttonshow
+let load_battle_screen engine img bg_img battle text buttonhide buttonshow
   (battle_status, gui_ready) poke1_img poke2_img text_buffer
   (_, _, health_bar1, health_bar2) () =
   (* get the components of button show to manipulate *)
@@ -241,6 +261,7 @@ let load_battle_screen engine img battle text buttonhide buttonshow
     | _ -> failwith "Impossible" in
   let poke1 = (team1.current).pokeinfo.name in
   let poke2 = (team2.current).pokeinfo.name in
+  getRandomBg (); bg_img#set_file !bg_string;
   img#misc#hide (); battle#misc#show (); text#misc#show ();
   (* hide and show necessary buttons *)
   List.iter (fun s -> s#misc#hide ()) buttonhide;
@@ -286,7 +307,7 @@ After the callback is initiated, the battle information is read and the battle
 is loaded.Then
 engine -- Battle InGame
 *)
-let load_battle_load engine img load_screen battle text buttonhide buttonshow
+let load_battle_load engine img bg_img load_screen battle text buttonhide buttonshow
   (battle_status, gui_ready, ready, ready_gui) mode main_menu battle_screen
   poke1_img poke2_img text_buffer health_holders () =
   (* wait for engine to be filled by the battle controller *)
@@ -301,26 +322,26 @@ let load_battle_load engine img load_screen battle text buttonhide buttonshow
           (main_menu#misc#show ();
           battle_screen#misc#show ();
           load_screen#misc#hide ();
-          load_battle_screen engine img battle text buttonhide buttonshow
+          load_battle_screen engine img bg_img battle text buttonhide buttonshow
           (battle_status, gui_ready) poke1_img poke2_img
           text_buffer health_holders ())
       | _ -> load_helper ()) in load_helper())
   else
     ()
 
-let load_random  engine img load_screen battle text buttonhide buttonshow
+let load_random  engine img bg_img load_screen battle text buttonhide buttonshow
   (battle_status, gui_ready, ready, ready_gui) main_menu battle_screen
   poke1_img poke2_img text_buffer health_holders () =
   match !current_screen with
-  | Menu1P ->  load_battle_load engine img load_screen battle text buttonhide buttonshow
+  | Menu1P ->  load_battle_load engine img bg_img load_screen battle text buttonhide buttonshow
               (battle_status, gui_ready, ready, ready_gui) Random1p main_menu battle_screen
               poke1_img poke2_img text_buffer health_holders ()
-  | Menu2P -> load_battle_load engine img load_screen battle text buttonhide buttonshow
+  | Menu2P -> load_battle_load engine img bg_img load_screen battle text buttonhide buttonshow
               (battle_status, gui_ready, ready, ready_gui) Random2p main_menu battle_screen
               poke1_img poke2_img text_buffer health_holders ()
   | _ -> failwith "Faulty Game Logic: Debug 298"
 
-let load_preset engine img load_screen battle text buttonhide preset buttonshow
+let load_preset engine img bg_img load_screen battle text buttonhide preset buttonshow
   (battle_status, gui_ready, ready, ready_gui) main_menu (battle_screen : GPack.box)
   poke1_img poke2_img text_buffer health_holders () =
   (match !current_screen with
@@ -677,6 +698,8 @@ let getWeatherString w =
   match w with
   | Sun _ -> "../data/fx/weather-sun.png"
   | Rain _ -> "../data/fx/weather-rain.png"
+  | Hail _ -> "../data/fx/weather-hail.png"
+  | SandStorm _ -> "../data/fx/weather-sandstorm.png"
   | _ -> !bg_string
 
 let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] (battle: GPack.table) text
@@ -932,12 +955,12 @@ let main_gui engine battle_engine () =
    back_button#connect#clicked
   ~callback:(go_back engine menu battler battle_engine);
   (* Random battle button *)
-  random#connect#clicked ~callback:(load_random engine main_menu_bg load_screen
+  random#connect#clicked ~callback:(load_random engine main_menu_bg bg_img load_screen
   battle text [random;preset;touranment] [move1; move2; move3; move4;
   switch] battle_engine main_menu battle_screen poke1_img poke2_img
   text_buffer health_holders);
   (* Preset battle button *)
-  preset#connect#clicked ~callback:(load_preset engine main_menu_bg load_screen
+  preset#connect#clicked ~callback:(load_preset engine main_menu_bg bg_img load_screen
   battle text [random;touranment] preset [move1; move2; move3; move4;
   switch] battle_engine main_menu battle_screen poke1_img poke2_img
   text_buffer health_holders);

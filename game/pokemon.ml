@@ -572,8 +572,8 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "flower-shield"; move2 =
-  getMoveFromString "bubble"; move3 = getMoveFromString "psych-up";
+  {name="gardevoir-mega"; element=[Ice;Steel]; move1= getMoveFromString "hail"; move2 =
+  getMoveFromString "sandstorm"; move3 = getMoveFromString "psych-up";
   move4 = getMoveFromString "false-swipe"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
 
