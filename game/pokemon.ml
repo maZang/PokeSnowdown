@@ -17,6 +17,11 @@ let poke_arr = open_json "pokemonlist"
 let move_json = open_json "moves"
 let num_pokemon_total = 721
 
+let unlocked_pokemon () = open_json "factorysets"
+
+let unlocked_poke_string_list () =
+  List.map (to_string) (unlocked_pokemon () |> member "pokemon" |> to_list |> filter_member "name")
+
 let getRandomNature () =
   match Random.int 25 with
   | 0 -> Hardy
@@ -415,7 +420,11 @@ let getSecondaryEffect str = match str with
   | "sunny-day" -> [SunnyDay]
   | "refresh" -> [Refresh]
   | "false-swipe" | "hold-back" -> [FalseSwipe]
+<<<<<<< HEAD
   | "psych-up" -> [PsychUp]
+=======
+  | "acupressure" -> [RandStageBoost]
+>>>>>>> 99d7e000834e1ba54b85c5accca5775fda35f4e5
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;

@@ -838,6 +838,16 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
                   secondary_effects ((StageBoost t')::t)
               )
           )
+    (* RandStageBoost randomly boosts a stat *)
+    | RandStageBoost::t ->
+        (match Random.int 7 with
+        | 0 -> secondary_effects (StageBoost[(Attack,2)]::t)
+        | 1 -> secondary_effects (StageBoost[(Defense,2)]::t)
+        | 2 -> secondary_effects (StageBoost[(SpecialAttack,2)]::t)
+        | 3 -> secondary_effects (StageBoost[(SpecialDefense,2)]::t)
+        | 4 -> secondary_effects (StageBoost[(Speed,2)]::t)
+        | 5 -> secondary_effects (StageBoost[(Accuracy,2)]::t)
+        | 6 -> secondary_effects (StageBoost[(Evasion,2)]::t)); secondary_effects t
     (* Move that forces a switch out *)
     | ForceSwitch::t -> newmove := SwitchOut !newmove; secondary_effects t
     (* Move that lowers stat of opponent *)
