@@ -423,6 +423,7 @@ let getSecondaryEffect str = match str with
   | "psych-up" -> [PsychUp]
   | "acupressure" -> [RandStageBoost]
   | "guard-split" -> [GuardSplit]
+  | "flower-shield" -> [FlowerShield]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;

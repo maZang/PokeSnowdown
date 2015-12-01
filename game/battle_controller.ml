@@ -1086,6 +1086,14 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
                     newmove := PsychUpS !newmove; secondary_effects t)
     (* Guard Split averages the user's Defense and Special Defense stats with those of the target Pokémon. *)
     | GuardSplit::t -> ()
+    (* Flower Shield raises the Defense stat of all Grass-type Pokémon in the battle by one stage. *)
+    | FlowerShield::t ->
+        (match ((List.mem Grass atk.current.pokeinfo.element),
+              (List.mem Grass def.current.pokeinfo.element)) with
+        | (true, true) -> secondary_effects ((StageBoost[(Defense,1)])::(StageAttack[(Defense,-1)])::t)
+        | (true, false) -> secondary_effects ((StageBoost[(Defense,1)])::t)
+        | (false, true) -> secondary_effects ((StageAttack[(Defense,-1)])::t)
+        | _ -> ()); secondary_effects t
     | [] -> ()
   in
   let hit, reason = hitMoveDueToStatus atk (`NoAdd !newmove) in
