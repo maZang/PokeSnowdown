@@ -368,7 +368,7 @@ let getSecondaryEffect str = match str with
   | "bubble-beam" | "bubble" | "powder-snow" | "icy-wind" -> [StageAttack [(Speed, 1)]]
   | "hyper-beam"| "blast-burn" | "frenzy-plant" | "hydro-cannon"
       | "roar-of-time" | "giga-impact" | "rock-wrecker"  -> [RechargeMove]
-  | "low-kick" -> [WeightDamage]
+  | "low-kick" | "grass-knot" -> [WeightDamage]
   | "seismic-toss" | "night-shade" -> [ConstantDmg 100]
   | "absorb" | "mega-drain" | "leech-life" | "giga-drain" -> [DrainMove]
   | "leech-seed" -> [LeechSeed]
@@ -489,7 +489,7 @@ let getTestPoke () =
   let item = Leftovers in
   {name="gardevoir-mega"; element=[Psychic]; move1= getMoveFromString "leaf-storm"; move2 =
   getMoveFromString "solar-beam"; move3 = getMoveFromString "flamethrower";
-  move4 = getMoveFromString "rock-wrecker"; hp = 68; attack = 85; special_attack = 165; defense = 65;
+  move4 = getMoveFromString "grass-knot"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
 
 let getTestOpp () =
