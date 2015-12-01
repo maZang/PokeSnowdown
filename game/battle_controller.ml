@@ -127,6 +127,9 @@ let get_weather_amplifier w (move : move) =
                         | Water -> 0.5
                         | Fire -> 1.5
                         | _ -> 1.0)
+  | Rain _ -> (match move.element with
+                        | Water -> 1.5
+                        | Fire -> 0.5)
   | _ -> 1.0
 
 (* Damage calculation following the equation given by Bulbapedia.
@@ -1061,6 +1064,29 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
                     | (Paralysis, x) -> atk.current.curr_status <- (NoNon, x)
                     | (Burn, x) -> atk.current.curr_status <- (NoNon, x)
                     | _ -> ()); newmove := RefreshS !newmove; secondary_effects t
+    (* Copies changes to target's stats and replicate to user *)
+    | PsychUp::t -> (let i1 = fst def.stat_enhance.attack in
+                    let i2 = fst def.stat_enhance.defense in
+                    let i3 = fst def.stat_enhance.speed in
+                    let i4 = fst def.stat_enhance.special_attack in
+                    let i5 = fst def.stat_enhance.special_defense in
+                    let i6 = fst def.stat_enhance.evasion in
+                    let i7 = fst def.stat_enhance.accuracy in
+                    let f1 = snd atk.stat_enhance.attack in
+                    let f2 = snd atk.stat_enhance.defense in
+                    let f3 = snd atk.stat_enhance.speed in
+                    let f4 = snd atk.stat_enhance.special_attack in
+                    let f5 = snd atk.stat_enhance.special_defense in
+                    let f6 = snd atk.stat_enhance.evasion in
+                    let f7 = snd atk.stat_enhance.accuracy in
+                    atk.stat_enhance.attack <- (i1,f1);
+                    atk.stat_enhance.defense <- (i2,f2);
+                    atk.stat_enhance.speed <- (i3,f3);
+                    atk.stat_enhance.special_attack <- (i4,f4);
+                    atk.stat_enhance.special_defense <- (i5,f5);
+                    atk.stat_enhance.evasion <- (i6,f6);
+                    atk.stat_enhance.accuracy <- (i7,f7);
+                    newmove := PsychUpS !newmove; secondary_effects t)
     | [] -> ()
   in
   let hit, reason = hitMoveDueToStatus atk (`NoAdd !newmove) in
@@ -1126,6 +1152,10 @@ let handle_preprocessing t1 t2 w m1 m2 =
                   (w.weather <- ClearSkies; SunFade descript)
               else
                   (w.weather <- Sun (n-1); descript)
+  | Rain n -> if n <= 0 then
+                  (w.weather <- ClearSkies; RainFade descript)
+              else
+                  (w.weather <- Rain (n-1); descript)
   | _ -> descript in
   let rec fix_terrain t acc descript =  function
   | (LightScreen n)::t' -> if n = 0 then

@@ -567,6 +567,7 @@ let rec getStatusString starter s =
   | HealBellS s -> getStatusString starter s ^ starter ^ " has healed itself and its allies of status ailments."
   | RefreshS s -> getStatusString starter s ^ starter ^ " has healed itself of any burns, poisons, paralysis."
   | Fail s -> starter ^ " used " ^ s ^ " but it failed."
+  | PsychUpS s -> getStatusString starter s ^ starter ^ " has copied opponent's status changes."
   | SwitchOut s -> (match !secondaryEffect with
                     | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
                     | `P2 -> current_command := (Some (Poke "random"), Some NoMove));
@@ -586,6 +587,7 @@ let rec getEndString starter s =
   | LightScreenFade s -> getEndString starter s ^ starter ^ "'s Light Screen has faded."
   | ReflectFade s -> getEndString starter s ^ starter ^ "'s Reflect has faded."
   | SunFade s-> getEndString starter s ^ "The sunlight has faded."
+  | RainFade s -> getEndString starter s ^ "The rain has faded."
 
 let animate_attack (animbox : GPack.fixed) img startx starty nextx' nexty (moveanim : GPack.fixed) move_img attack=
   let movestring = getMoveString attack in
