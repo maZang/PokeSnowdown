@@ -141,7 +141,7 @@ let make_battle_screen ?packing () =
      () in
   (* The text buffer to hold the narration during the battle *)
   let text_buffer = GEdit.entry ~width:600 ~height:80
-              ~text:"Player One's Turn To Move"
+              ~text:"Player One's Turn To Move. Press Space Bar to continue text commands."
     ~packing:(text#pack ~expand:true) ~editable:false () in
   (* The images to hold each pokemon initialized to default images*)
   let poke1_img = GMisc.image ~file:"../data/back-sprites/charizard.gif" () in
