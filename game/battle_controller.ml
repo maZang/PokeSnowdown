@@ -1100,7 +1100,7 @@ let remove_some_status bp =
                 newvola' in
   match nonvola with
   | Toxic n -> bp.curr_status <- (Toxic (n + 1), newvola)
-  | Sleep n -> bp.curr_status <- (Sleep (n-1), newvola)
+  | Sleep n -> bp.curr_status <- (Sleep (n - 1), newvola)
   | _ -> bp.curr_status <- (nonvola, newvola)
 (* Called after the turn ends; Decrements sleep counter; checks if Pokemon
    faints; etc... Note Pl1 always faints before Pl2*)
