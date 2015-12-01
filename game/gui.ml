@@ -94,14 +94,14 @@ let make_battle_screen ?packing () =
   let health_bar2 = GRange.progress_bar
                           ~packing:(health_bar_holder2#pack ~expand:false) () in
   (* Holder to hold the text buffer *)
-  let text = GPack.hbox ?packing ~height: (1 * screen_height / 6) () in
+  let text = GPack.hbox ?packing ~height: (1 * screen_height / 6) ~show:false () in
   (* Background image of the battle: TODO RANDOMIZE BACKGROUND *)
   let bg_img = GMisc.image ~file:"../data/backgrounds/bg-volcanocave.jpg"
      () in
   (* The text buffer to hold the narration during the battle *)
   let text_buffer = GEdit.entry ~width:600 ~height:80
               ~text:"Player One's Turn To Move"
-    ~packing:(text#pack ~expand:true) ~editable:false ~show:false () in
+    ~packing:(text#pack ~expand:true) ~editable:false () in
   (* The images to hold each pokemon initialized to default images*)
   let poke1_img = GMisc.image ~file:"../data/back-sprites/charizard.gif" () in
   let poke2_img = GMisc.image ~file:"../data/sprites/blaziken-mega.gif" () in
