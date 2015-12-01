@@ -155,6 +155,9 @@ let damageCalculation t1 t2 (w,ter1, ter2) move =
       (match findLightScreen !ter2 with
       | true -> 2.0
       | false -> 1.0) *.
+      (match w with
+      | SandStorm _ -> if (List.mem Rock t2.current.pokeinfo.element) then 1.5 else 1.0
+      | _ -> 1.0) *.
       float_of_int t2.current.bspecial_defense *.
       getStageAD (fst t2.stat_enhance.special_defense) *.
       (snd t2.stat_enhance.special_defense)
@@ -1090,15 +1093,26 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
                     newmove := PsychUpS !newmove; secondary_effects t)
     (* Flower Shield raises the Defense stat of all Grass-type Pokémon in the battle by one stage. *)
     | FlowerShield::t ->
-        (match ((List.mem Grass atk.current.pokeinfo.element),
+        ((match ((List.mem Grass atk.current.pokeinfo.element),
               (List.mem Grass def.current.pokeinfo.element)) with
         | (true, true) -> secondary_effects ((StageBoost[(Defense,1)])::(StageAttack[(Defense,-1)])::t)
         | (true, false) -> secondary_effects ((StageBoost[(Defense,1)])::t)
         | (false, true) -> secondary_effects ((StageAttack[(Defense,-1)])::t)
-        | _ -> ()); secondary_effects t
-    | RainDance::t -> (match w with
+        | _ -> ()); secondary_effects t)
+    (* For the move rain dance *)
+    | RainDance::t -> ((match w with
                     | Rain _ | HeavyRain _ -> ()
-                    | _ -> wt.weather <- Rain 5; newmove := RainDanceS !newmove;
+                    | _ -> (wt.weather <- Rain 5; newmove := RainDanceS !newmove));
+                    secondary_effects t)
+    (* For the move sand storm *)
+    | SandStormMake::t -> ((match w with
+                    | SandStorm _ -> ()
+                    | _ -> (wt.weather <- SandStorm 5; newmove := SandStormS !newmove));
+                    secondary_effects t)
+    (* For the move hail *)
+    | HailMake::t -> ((match w with
+                    | Hail _ -> ()
+                    | _ -> (wt.weather <- Hail 5; newmove := HailS !newmove));
                     secondary_effects t)
     | [] -> ()
   in
@@ -1169,6 +1183,34 @@ let handle_preprocessing t1 t2 w m1 m2 =
                   (w.weather <- ClearSkies; RainFade descript)
               else
                   (w.weather <- Rain (n-1); descript)
+  | SandStorm n -> if n <= 0 then
+                    (w.weather <- ClearSkies; SandStormFade descript)
+                   else
+                    (w.weather <- (SandStorm (n-1));
+                    match (List.mem Rock t1.current.pokeinfo.element || List.mem Ground t1.current.pokeinfo.element || List.mem Steel t1.current.pokeinfo.element),
+                          (List.mem Rock t2.current.pokeinfo.element || List.mem Ground t2.current.pokeinfo.element || List.mem Steel t2.current.pokeinfo.element) with
+                    | (false, false) -> (t1.current.curr_hp <- t1.current.curr_hp - t1.current.bhp/16;
+                                      t2.current.curr_hp <- t2.current.curr_hp - t2.current.bhp/16;
+                                      SandBuffetB descript)
+                    | (false, true) -> (t1.current.curr_hp <- t1.current.curr_hp - t1.current.bhp/16;
+                                      SandBuffet1 descript)
+                    | (true, false) -> (t2.current.curr_hp <- t2.current.curr_hp - t2.current.bhp/16;
+                                      SandBuffet2 descript)
+                    | (true, true) -> descript)
+  | Hail n -> if n <= 0 then
+                (w.weather <- ClearSkies; HailFade descript)
+              else
+                (w.weather <- (Hail (n-1));
+                match (List.mem Ice t1.current.pokeinfo.element), (List.mem Ice t2.current.pokeinfo.element) with
+                | (false, false) -> (t1.current.curr_hp <- t1.current.curr_hp - t1.current.bhp/16;
+                                    t2.current.curr_hp <- t2.current.curr_hp - t2.current.bhp/16;
+                                    HailBuffetB descript)
+                | (false, true) -> (t1.current.curr_hp <- t1.current.curr_hp - t1.current.bhp/16;
+                                    HailBuffet1 descript)
+                | (true, false) -> (t2.current.curr_hp <- t2.current.curr_hp - t2.current.bhp/16;
+                                    HailBuffet2 descript)
+                | (true, true) -> descript )
+
   | _ -> descript in
   let rec fix_terrain t acc descript =  function
   | (LightScreen n)::t' -> if n = 0 then

@@ -461,6 +461,8 @@ let getSecondaryEffect str = match str with
   | "acupressure" -> [RandStageBoost]
   | "flower-shield" -> [FlowerShield]
   | "rain-dance" -> [RainDance]
+  | "sandstorm" -> [SandStormMake]
+  | "hail" -> [HailMake]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;

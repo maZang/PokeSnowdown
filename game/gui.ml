@@ -583,6 +583,8 @@ let rec getStatusString starter s =
   | PsychUpS s -> getStatusString starter s ^ starter ^ " has copied opponent's status changes."
   | SunnyDayS s -> getStatusString starter s ^ starter ^ " has called out the sun."
   | RainDanceS s -> getStatusString starter s ^ starter ^ " has called out the rain."
+  | SandStormS s -> getStatusString starter s ^ starter ^ " has created a large sandstorm."
+  | HailS s -> getStatusString starter s ^ starter ^ " has made large pellets of hail fall down."
   | SwitchOut s -> (match !secondaryEffect with
                     | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
                     | `P2 -> current_command := (Some (Poke "random"), Some NoMove));
@@ -603,6 +605,14 @@ let rec getEndString starter s =
   | ReflectFade s -> getEndString starter s ^ starter ^ "'s Reflect has faded."
   | SunFade s-> getEndString starter s ^ "The sunlight has faded."
   | RainFade s -> getEndString starter s ^ "The rain has faded."
+  | SandStormFade s -> getEndString starter s ^ "The sandstorm has faded."
+  | SandBuffetB s -> getEndString starter s ^ "Both Pokemon got buffeted by the sandstorm."
+  | SandBuffet1 s -> getEndString starter s ^ "Player one got buffeted by the sandstorm."
+  | SandBuffet2 s -> getEndString starter s ^ "Player two got buffeted by the sandstorm"
+  | HailFade s -> getEndString starter s ^ "The hail has faded."
+  | HailBuffetB s -> getEndString starter s ^ "Both Pokemon get hit by the hail."
+  | HailBuffet1 s -> getEndString starter s ^ "Player one gets hit by the hail."
+  | HailBuffet2 s -> getEndString starter s ^ "Player two gets hit by the hail."
 
 let animate_attack (animbox : GPack.fixed) img startx starty nextx' nexty (moveanim : GPack.fixed) move_img attack=
   let movestring = getMoveString attack in

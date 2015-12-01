@@ -18,10 +18,11 @@ type guistatus = StatBoost of stat * int * guistatus | NormStatus of string | Th
                   | BadPoisonStatus of guistatus | HealHealth of guistatus | LightScreenS of guistatus | HazeS of guistatus | ReflectS of guistatus | RestS of guistatus
                   | SubBlock of guistatus | SubFail of guistatus | SubMake of guistatus | ProtectedS of string | ProtectS of guistatus | ProtectFail of guistatus |
                    Fail of string | SpikesS of guistatus | BurnStatus of guistatus | HealBellS of guistatus | RefreshS of guistatus | PsychUpS of guistatus | SunnyDayS of guistatus |
-                   RainDanceS of guistatus
+                   RainDanceS of guistatus | SandStormS of guistatus | HailS of guistatus
 
 type endMove = BurnDmg | BreakBurn | BreakFreeze  | BreakPara  | BreakPoison | PoisonDmg | LeechDmg of endMove | LeechHeal of endMove | Base | LightScreenFade of endMove |
-               ReflectFade of endMove | SunFade of endMove | RainFade of endMove
+               ReflectFade of endMove | SunFade of endMove | RainFade of endMove | SandStormFade of endMove | SandBuffetB of endMove | SandBuffet1 of endMove |
+               SandBuffet2 of endMove | HailFade of endMove | HailBuffetB of endMove | HailBuffet1 of endMove | HailBuffet2 of endMove
 
 type guimove = SPoke of string | AttackMove of guiattack | Faint | NoAction | Continue | Next | Status of guistatus | EndMove of endMove | FaintNext | SFaint
 
@@ -50,7 +51,8 @@ type secondary_effects = MultHit of int | StageBoost of (stat * int) list | IncC
                          ForceSwitch | FlinchMove | StageAttack of (stat * int) list | RecoilMove | PoisonChance | PutToSleep | ConfuseOpp | ConstantDmg of int | RechargeMove |
                          WeightDamage | DrainMove | LeechSeed | ChargeInSunlight of string | ToxicChance | StageBoostSunlight of (stat * int) list | Recovery | LightScreenMake
                          | Haze | ReflectMake | UserFaint | NeverMiss | DrainMoveSleep | VariableDamage | Rest | SuperFang | SubstituteMake | Flail | Protect | BellyDrum
-                         | Spikes | HealBell | SunHeal | MaxHealthDmg | SunnyDay | FalseSwipe | Refresh | PsychUp | RandStageBoost | FlowerShield | RainDance
+                         | Spikes | HealBell | SunHeal | MaxHealthDmg | SunnyDay | FalseSwipe | Refresh | PsychUp | RandStageBoost | FlowerShield | RainDance | SandStormMake
+                         | HailMake
 
 type move = {name:string; priority: int; target: target; dmg_class: dmg_class;
     mutable power:int; effect_chance: int; accuracy: int; element: element;
