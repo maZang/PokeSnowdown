@@ -15,7 +15,7 @@ let busywait = let ctr = ref 0 in fun () -> ctr := 0;
   done
 
 let busywait_small = let ctr = ref 0 in fun () -> ctr := 0;
-  for i = 1 to 1_000_000 do
+  for i = 1 to 800_000 do
     incr ctr
   done
 
