@@ -17,6 +17,11 @@ let poke_arr = open_json "pokemonlist"
 let move_json = open_json "moves"
 let num_pokemon_total = 721
 
+let unlocked_pokemon () = open_json "factorysets"
+
+let unlocked_poke_string_list () =
+  List.map (to_string) (unlocked_pokemon () |> member "pokemon" |> to_list |> filter_member "name")
+
 let getRandomNature () =
   match Random.int 25 with
   | 0 -> Hardy

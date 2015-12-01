@@ -1,6 +1,7 @@
 open Info
 
 (*This module is responsible for getting valid pokemon *)
+val unlocked_poke_string_list: unit -> string list
 
 val getRandomPokemon: unit -> pokemon
 
