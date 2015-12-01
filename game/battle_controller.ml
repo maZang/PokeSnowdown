@@ -314,6 +314,7 @@ let hitMoveDueToStatus atk moveDescript =
       | Protected::t -> helperVolaStatus t moveDescript'
       | UsedProtect::t -> helperVolaStatus t moveDescript'
       | (ForcedMoveNoSwitch _)::t -> helperVolaStatus t moveDescript'
+      | (ForcedMove _)::t -> helperVolaStatus t moveDescript'
       | _ -> failwith "unimplemented" in
   let nvola, vola = atk.current.curr_status in
   match nvola with
@@ -1119,6 +1120,25 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
                     | Hail _ -> ()
                     | _ -> (wt.weather <- Hail 5; newmove := HailS !newmove));
                     secondary_effects t)
+    | (Encore n)::t -> let rec findForcedMove = function
+                        | (ForcedMove _)::t -> true
+                        | h::t -> findForcedMove t
+                        | [] -> false in
+                       let containsMove poke str  =
+                        poke.pokeinfo.move1.name = str ||
+                        poke.pokeinfo.move2.name = str ||
+                        poke.pokeinfo.move3.name = str ||
+                        poke.pokeinfo.move4.name = str in
+                      let prevmove = if wt.terrain.side1 == t1 then !prevmove2 else
+                                     if wt.terrain.side2 == t2 then !prevmove1 else
+                                      failwith "Faulty Game Logic: Debug 1135" in
+                      (if findForcedMove (snd def.current.curr_status) then (newmove := EncoreFail)
+                      else if containsMove def.current prevmove then
+                        (def.current.curr_status <- (fst def.current.curr_status, (ForcedMove (n, prevmove))::(snd def.current.curr_status));
+                        newmove := EncoreS !newmove; secondary_effects t)
+                      else
+                        (newmove := EncoreFail)
+                      )
     | [] -> ()
   in
   let hit, reason = hitMoveDueToStatus atk (`NoAdd !newmove) in

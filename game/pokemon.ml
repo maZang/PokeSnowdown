@@ -146,7 +146,8 @@ let string_of_vola_status elm =
   | Protected -> "Protect"
   | UsedProtect -> "Used Protect"
   | RechargingStatus -> "Recharging"
-  | ForcedMoveNoSwitch (n, s) -> "Forced to use: " ^  s
+  | ForcedMove (n, s) -> "Forced to use: " ^ s
+  | ForcedMoveNoSwitch (n, s) -> "Locked into: " ^  s
 
 let string_of_poke_status (non, vola) =
   List.fold_left (fun acc s -> acc ^ ", " ^ string_of_vola_status s) (string_of_status non) vola
@@ -456,6 +457,7 @@ let getSecondaryEffect str = match str with
   | "dragon-dance" -> [StageBoost [(Attack,1);(Speed,1)]]
   | "bulk-up" -> [StageBoost [(Attack,1);(Defense,1)]]
   | "blaze-kick" -> [IncCrit 1; BurnChance]
+  | "encore" -> [Encore 3]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -564,7 +566,7 @@ let getTestPoke () =
   let nature = Bold in
   let item = Leftovers in
   {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "fly"; move2 =
-  getMoveFromString "dragon-dance"; move3 = getMoveFromString "whirlwind";
+  getMoveFromString "dragon-dance"; move3 = getMoveFromString "encore";
   move4 = getMoveFromString "will-o-wisp"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 0; special_defense = 135; ability="pixilate"; evs; nature; item}
 
@@ -573,8 +575,8 @@ let getTestOpp () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gallade-mega"; element=[Grass]; move1= getMoveFromString "swords-dance"; move2 =
-  getMoveFromString "swords-dance"; move3 = getMoveFromString "swords-dance";
+  {name="gallade-mega"; element=[Grass]; move1= getMoveFromString "fly"; move2 =
+  getMoveFromString "swords-dance"; move3 = getMoveFromString "sonic-boom";
   move4 = getMoveFromString "swords-dance"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
 

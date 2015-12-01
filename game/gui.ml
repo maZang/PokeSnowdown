@@ -639,6 +639,8 @@ let rec getStatusString starter s =
   | RainDanceS s -> getStatusString starter s ^ starter ^ " has called out the rain."
   | SandStormS s -> getStatusString starter s ^ starter ^ " has created a large sandstorm."
   | HailS s -> getStatusString starter s ^ starter ^ " has made large pellets of hail fall down."
+  | EncoreS s -> getStatusString starter s ^ starter ^ " has trapped the opponent in an encore."
+  | EncoreFail -> starter ^ " used encore but it failed."
   | SwitchOut s -> (match !secondaryEffect with
                     | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
                     | `P2 -> current_command := (Some (Poke "random"), Some NoMove));
