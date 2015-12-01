@@ -425,7 +425,7 @@ let getSecondaryEffect str = match str with
   | "double-team" -> [StageBoost [(Evasion, 1)]]
   | "minimize" -> [StageBoost [(Evasion, 2)]]
   | "harden" | "withdraw" | "defense-curl" | "steel-wing" -> [StageBoost [(Defense, 1)]]
-  | "barrier" | "acid-armor"  -> [StageBoost [(Defense, 2)]]
+  | "barrier" | "acid-armor" | "iron-defense" -> [StageBoost [(Defense, 2)]]
   | "calm-mind" -> [StageBoost [(SpecialDefense, 1); (SpecialAttack, 1)]]
   | "leaf-storm" -> [StageBoost [(SpecialAttack, -2)]]
   | "recover" | "soft-boiled" | "milk-drink" | "roost" -> [Recovery]
@@ -463,6 +463,8 @@ let getSecondaryEffect str = match str with
   | "rain-dance" -> [RainDance]
   | "sandstorm" -> [SandStormMake]
   | "hail" -> [HailMake]
+  | "dragon-dance" -> [StageBoost [(Attack,1);(Speed,1)]]
+  | "bulk-up" -> [StageBoost [(Attack,1);(Defense,1)]]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -572,10 +574,10 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "flower-shield"; move2 =
-  getMoveFromString "bubble"; move3 = getMoveFromString "psych-up";
+  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "extreme-speed"; move2 =
+  getMoveFromString "dragon-dance"; move3 = getMoveFromString "psych-up";
   move4 = getMoveFromString "false-swipe"; hp = 68; attack = 85; special_attack = 165; defense = 65;
-  speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
+  speed = 0; special_defense = 135; ability="pixilate"; evs; nature; item}
 
 let getTestOpp () =
   let evs = {attack = 0; defense =  255; special_attack= 0; special_defense= 255;
