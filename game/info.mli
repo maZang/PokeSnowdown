@@ -109,7 +109,7 @@ type trainer_team = {mutable current: battle_poke; mutable alive: battle_poke li
 one turn, the one with the Poke standing the latest wins *)
 type outcome = WinnerP1 | WinnerP2
 
-type battle_mode = Random1p | Random2p
+type battle_mode = Random1p | Random2p | Preset1p of pokemon list
 
 type screen = SwitchPoke | ChooseMove | Faint | BothFaint
 

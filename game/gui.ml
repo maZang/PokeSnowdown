@@ -368,15 +368,28 @@ let load_preset engine img bg_img load_screen battle text buttonhide preset butt
                 preset#set_label "Continue";
                 img#misc#hide ();
                 selecttext := GMisc.label ~text:"Choose your 6 Pokemon from the drop down menus." ~packing:(battle_screen#pack) ();
-                select1 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~value_in_list:true ~allow_empty:false ~packing:(battle_screen#pack) ();
-                select2 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~value_in_list:true ~allow_empty:false ~packing:(battle_screen#pack) ();
-                select3 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~value_in_list:true ~allow_empty:false ~packing:(battle_screen#pack) ();
-                select4 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~value_in_list:true ~allow_empty:false ~packing:(battle_screen#pack) ();
-                select5 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~value_in_list:true ~allow_empty:false ~packing:(battle_screen#pack) ();
-                select6 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~value_in_list:true ~allow_empty:false ~packing:(battle_screen#pack) ();
+                select1 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
+                select2 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
+                select3 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
+                select4 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
+                select5 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
+                select6 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
                 selectimg#misc#show ();
                 ()
     | Menu2P -> ()
+    | Preset1PChoose -> try (
+                          let poke1 = Pokemon.getPresetPokemon (!select1#entry#text) in
+                          let poke2 = Pokemon.getPresetPokemon (!select2#entry#text) in
+                          let poke3 = Pokemon.getPresetPokemon (!select3#entry#text) in
+                          let poke4 = Pokemon.getPresetPokemon (!select4#entry#text) in
+                          let poke5 = Pokemon.getPresetPokemon (!select5#entry#text) in
+                          let poke6 = Pokemon.getPresetPokemon (!select6#entry#text) in
+                          load_battle_load engine img bg_img load_screen battle text buttonhide buttonshow
+                          (battle_status, gui_ready, ready, ready_gui) Random1p main_menu battle_screen
+                          poke1_img poke2_img text_buffer health_holders ()
+                      ) with _ -> let error_win = GWindow.message_dialog ~message:"Error in your Pokemon selection. Try making sure everything is spelled correctly."
+                                  ~buttons:GWindow.Buttons.close  ~message_type:`ERROR () in ignore(error_win#connect#close ~callback:(error_win#destroy));
+                                  ignore (error_win#connect#response ~callback:(fun s -> error_win#destroy ())); error_win#show ()
     | _ -> failwith "Faulty Game Logic: Debug 314"
   )
 
