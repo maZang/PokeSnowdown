@@ -324,12 +324,12 @@ let load_preset engine img load_screen battle text buttonhide preset buttonshow
                 preset#set_label "Continue";
                 img#misc#hide ();
                 selecttext := GMisc.label ~text:"Choose your 6 Pokemon from the drop down menus." ~packing:(battle_screen#pack) ();
-                select1 := GEdit.combo ~popdown_strings:(test_string 750 ()) ~case_sensitive:false ~packing:(battle_screen#pack) ();
-                select2 := GEdit.combo ~popdown_strings:(test_string 750 ()) ~case_sensitive:false ~packing:(battle_screen#pack) ();
-                select3 := GEdit.combo ~popdown_strings:(test_string 750 ()) ~case_sensitive:false ~packing:(battle_screen#pack) ();
-                select4 := GEdit.combo ~popdown_strings:(test_string 750 ()) ~case_sensitive:false ~packing:(battle_screen#pack) ();
-                select5 := GEdit.combo ~popdown_strings:(test_string 750 ()) ~case_sensitive:false ~packing:(battle_screen#pack) ();
-                select6 := GEdit.combo ~popdown_strings:(test_string 750 ()) ~case_sensitive:false ~packing:(battle_screen#pack) ();
+                select1 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~packing:(battle_screen#pack) ();
+                select2 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~packing:(battle_screen#pack) ();
+                select3 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~packing:(battle_screen#pack) ();
+                select4 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~packing:(battle_screen#pack) ();
+                select5 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~packing:(battle_screen#pack) ();
+                select6 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~packing:(battle_screen#pack) ();
                 ()
     | Menu2P -> ()
     | _ -> failwith "Faulty Game Logic: Debug 314"
@@ -567,6 +567,7 @@ let rec getStatusString starter s =
   | HealBellS s -> getStatusString starter s ^ starter ^ " has healed itself and its allies of status ailments."
   | RefreshS s -> getStatusString starter s ^ starter ^ " has healed itself of any burns, poisons, paralysis."
   | Fail s -> starter ^ " used " ^ s ^ " but it failed."
+  | PsychUpS s -> getStatusString starter s ^ starter ^ " has copied opponent's status changes."
   | SwitchOut s -> (match !secondaryEffect with
                     | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
                     | `P2 -> current_command := (Some (Poke "random"), Some NoMove));
