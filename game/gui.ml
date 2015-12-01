@@ -9,10 +9,10 @@ open Info
 (* Wait function to allow GUI to wait for some animations/text to be
   displayed.
 *)
-let busywait = let ctr = ref 0 in fun () -> ctr := 0;
+(* let busywait = let ctr = ref 0 in fun () -> ctr := 0;
   for i = 1 to 100_000_000 do
     incr ctr
-  done
+  done *)
 
 let busywait_small = let ctr = ref 0 in fun () -> ctr := 0;
   for i = 1 to 800_000 do
@@ -28,6 +28,15 @@ let poke1x = 120
 let poke1y = 165
 let poke2x = 450
 let poke2y = 80
+
+(* used for user input *)
+let continue = ref false
+
+let busywait () =
+  while not !continue do
+    ()
+  done;
+  continue := false
 
 (* Initializes GtkMain*)
 let locale = GtkMain.Main.init ()
@@ -56,6 +65,15 @@ let () = !select1#destroy (); !select2#destroy (); !select3#destroy ();
   the information on which player is selecting move/pokemon/etc...
 *)
 let current_screen = ref MainMenu
+
+
+let space_press s =
+  if GdkEvent.Key.keyval s = 32 then
+    match !current_screen with
+    | Battle _ -> continue := true; true
+    | _ -> false
+  else
+    false
 
 (* Holds information on the moves/commands of players*)
 let current_command = ref (None, None)
@@ -658,7 +676,9 @@ let animate_attack (animbox : GPack.fixed) img startx starty nextx' nexty (movea
         move_img#set_file "../data/fx/leftclaw.png";
         moveanim#move move_img#coerce nextx nexty;
         move_img#misc#show ();
-        busywait ();
+        for l = 1 to 10 do
+          busywait_small ()
+        done;
         move_img#misc#hide ();
         for i = 80 downto 1 do
           animbox#move img#coerce (startx + i * incx) (starty + i * incy);
@@ -711,7 +731,7 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
     | Battle InGame (t1, t2, w, m1, m2) -> t1, t2, w, m1, m2
     | _ -> failwith "Fauly Game Logic: Debug 05" in
   let game_step () =
-    bg_img#set_file (getWeatherString w.weather);
+    bg_img#set_file (getWeatherString w.weather); continue := false;
     upon (Ivar.read !ready_gui) (fun _ -> ready_gui := Ivar.create ();
     game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3;
     poke4; poke5; switch] battle text (battle_status, gui_ready, ready,
@@ -979,5 +999,6 @@ let main_gui engine battle_engine () =
   move3#connect#clicked ~callback:(poke_move_cmd move3 engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text battle_engine bg_img poke1_img poke2_img move_img text_buffer health_holders pokeanim1 pokeanim2 moveanim back_button);
   move4#connect#clicked ~callback:(poke_move_cmd move4 engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text battle_engine bg_img poke1_img poke2_img move_img text_buffer health_holders pokeanim1 pokeanim2 moveanim back_button);
   window#connect#destroy ~callback:(quit engine ready);
+  window#event#connect#key_press ~callback:(space_press);
   window#show ();
 	let thread = GtkThread.start () in ()
