@@ -52,7 +52,7 @@ type secondary_effects = MultHit of int | StageBoost of (stat * int) list | IncC
                          WeightDamage | DrainMove | LeechSeed | ChargeInSunlight of string | ToxicChance | StageBoostSunlight of (stat * int) list | Recovery | LightScreenMake
                          | Haze | ReflectMake | UserFaint | NeverMiss | DrainMoveSleep | VariableDamage | Rest | SuperFang | SubstituteMake | Flail | Protect | BellyDrum
                          | Spikes | HealBell | SunHeal | MaxHealthDmg | SunnyDay | FalseSwipe | Refresh | PsychUp | RandStageBoost | FlowerShield | RainDance | SandStormMake
-                         | HailMake
+                         | HailMake | Encore
 
 type move = {name:string; priority: int; target: target; dmg_class: dmg_class;
     mutable power:int; effect_chance: int; accuracy: int; element: element;
@@ -74,10 +74,9 @@ type weather_terrain = {mutable weather: weather; terrain: terrain}
 type non_volatile_status = Burn | Freeze | Paralysis | Poisoned | Toxic of int | Sleep of int |
                           NoNon
 
-type volatile_status =  Confusion of int | Curse | Embargo | Encore | Flinch | HealBlock
-	| Identification | Infatuation | Nightmare | Trapped | PerishSong | Leeched
-	| Taunt | Levitate | Torment | Charge of string | Substitute of int | Protected | UsedProtect
-  | RechargingStatus
+type volatile_status =  Confusion of int | Flinch | Leeched
+	| Charge | Substitute of int | Protected | UsedProtect
+  | RechargingStatus | ForcedMove of int * string | ForcedMoveNoSwitch of int * string
 
 type status = non_volatile_status * volatile_status list
 

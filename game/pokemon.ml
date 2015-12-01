@@ -139,25 +139,14 @@ let string_of_status elm =
 let string_of_vola_status elm =
   match elm with
   | Confusion _-> "Confusion"
-  | Curse -> "Curse"
-  | Embargo -> "Embargo"
-  | Encore -> "Encore"
   | Flinch -> "Flinch"
-  | HealBlock -> "HealBlock"
-  | Identification -> "Identification"
-  | Infatuation -> "Infatuation"
-  | Nightmare -> "Nightmare"
-  | Trapped -> "Trapped"
-  | PerishSong -> "PerishSong"
   | Leeched -> "Leeched"
-  | Taunt -> "Taunt"
-  | Torment -> "Torment"
-  | Levitate -> "Levitate"
-  | Charge s-> "Charging " ^ s
+  | Charge -> "Charging"
   | Substitute _ -> "Substitute"
   | Protected -> "Protect"
   | UsedProtect -> "Used Protect"
   | RechargingStatus -> "Recharging"
+  | ForcedMoveNoSwitch (n, s) -> "Forced to use: " ^  s
 
 let string_of_poke_status (non, vola) =
   List.fold_left (fun acc s -> acc ^ ", " ^ string_of_vola_status s) (string_of_status non) vola
@@ -574,7 +563,7 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "dragon-tail"; move2 =
+  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "fly"; move2 =
   getMoveFromString "dragon-dance"; move3 = getMoveFromString "whirlwind";
   move4 = getMoveFromString "will-o-wisp"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 0; special_defense = 135; ability="pixilate"; evs; nature; item}

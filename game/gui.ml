@@ -737,10 +737,10 @@ let getWeatherString w =
   | SandStorm _ -> "../data/fx/weather-sandstorm.png"
   | _ -> !bg_string
 
-let rec findCharging lst =
+let rec findForcedMove lst =
   match lst with
-  | (Charge s)::_ -> (true, s)
-  | h::t -> findCharging t
+  | (ForcedMoveNoSwitch (_,s))::_ -> (true, s)
+  | h::t -> findForcedMove t
   | [] -> (false, "")
 
 let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] (battle: GPack.table) text
@@ -777,8 +777,8 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
     health_bar2#misc#set_tooltip_text (Pokemon.getPokeToolTip t2);
     updatehealth1 (); updatehealth2 () in
   let update_current_command () =
-    let charging1, s1 = findCharging (snd t1.current.curr_status) in
-    let charging2, s2 = findCharging (snd t2.current.curr_status) in
+    let charging1, s1 = findForcedMove (snd t1.current.curr_status) in
+    let charging2, s2 = findForcedMove (snd t2.current.curr_status) in
     let recharging1 = List.mem RechargingStatus (snd t1.current.curr_status) in
     let recharging2 = List.mem RechargingStatus (snd t2.current.curr_status) in
     (if (charging1) then
