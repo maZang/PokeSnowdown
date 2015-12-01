@@ -17,6 +17,11 @@ let poke_arr = open_json "pokemonlist"
 let move_json = open_json "moves"
 let num_pokemon_total = 721
 
+let unlocked_pokemon () = open_json "factorysets"
+
+let unlocked_poke_string_list () =
+  List.map (to_string) (unlocked_pokemon () |> member "pokemon" |> to_list |> filter_member "name")
+
 let getRandomNature () =
   match Random.int 25 with
   | 0 -> Hardy
@@ -415,6 +420,7 @@ let getSecondaryEffect str = match str with
   | "sunny-day" -> [SunnyDay]
   | "refresh" -> [Refresh]
   | "false-swipe" | "hold-back" -> [FalseSwipe]
+  | "acupressure" -> [RandStageBoost]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -491,7 +497,7 @@ let getTestPoke () =
   let nature = Bold in
   let item = Leftovers in
   {name="gardevoir-mega"; element=[Psychic]; move1= getMoveFromString "leaf-storm"; move2 =
-  getMoveFromString "solar-beam"; move3 = getMoveFromString "refresh";
+  getMoveFromString "solar-beam"; move3 = getMoveFromString "acupressure";
   move4 = getMoveFromString "false-swipe"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
 
