@@ -394,7 +394,7 @@ let getSecondaryEffect str = match str with
   | "whirlwind" | "roar" | "dragon-tail" -> [ForceSwitch]
   | "stomp" | "rolling-kick" | "headbutt" | "bite" | "bone-club" | "waterfall"
     | "rock-slide" | "hyper-fang" | "twister" -> [FlinchMove]
-  | "double-kick" | "gear-grind" | "bonemerang"  -> [MultHit 2]
+  | "double-kick" | "gear-grind" | "bonemerang" | "double-hit" -> [MultHit 2]
   | "sand-attack" | "smokescreen" | "kinesis" | "flash" |
       "mud-slap" | "octazooka"-> [StageAttack [(Accuracy, 1)]]
   | "take-down" | "double-edge" | "submission" -> [RecoilMove]
@@ -574,7 +574,7 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "extreme-speed"; move2 =
+  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "double-hit"; move2 =
   getMoveFromString "dragon-dance"; move3 = getMoveFromString "psych-up";
   move4 = getMoveFromString "false-swipe"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 0; special_defense = 135; ability="pixilate"; evs; nature; item}
