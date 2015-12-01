@@ -465,6 +465,7 @@ let getSecondaryEffect str = match str with
   | "hail" -> [HailMake]
   | "dragon-dance" -> [StageBoost [(Attack,1);(Speed,1)]]
   | "bulk-up" -> [StageBoost [(Attack,1);(Defense,1)]]
+  | "blaze-kick" -> [IncCrit 1; BurnChance]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -574,7 +575,7 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "double-hit"; move2 =
+  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "blaze-kick"; move2 =
   getMoveFromString "dragon-dance"; move3 = getMoveFromString "psych-up";
   move4 = getMoveFromString "false-swipe"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 0; special_defense = 135; ability="pixilate"; evs; nature; item}
