@@ -1555,11 +1555,24 @@ let rec main_controller_random2p engine gui_ready ready ready_gui =
   let () = engine := Ivar.create (); Ivar.fill !engine battle in
   main_loop_2p engine gui_ready ready ready_gui ()
 
+let rec main_controller_preset1p engine gui_ready ready ready_gui t =
+  let stat_enhance = {attack=(0,1.); defense=(0,1.); speed=(0,1.);
+      special_attack=(0,1.); special_defense=(0,1.); evasion=(0,1.);
+      accuracy=(0,1.)} in
+  let team1' = List.map getBattlePoke t in
+  let team1 = {current = List.hd team1'; alive = List.tl team1'; dead = [];
+                  stat_enhance} in
+  let team2 = getRandomTeam () in
+  let battle = initialize_battle team1 team2 in
+  let () = engine := Ivar.create (); Ivar.fill !engine battle in
+  main_loop_1p engine gui_ready ready ready_gui ()
+
 (* Initialize controller -- called by Game.ml *)
 let initialize_controller (engine, battle_engine) =
   let battle_status, gui_ready, ready, ready_gui = battle_engine in
     Printf.printf "Initializing battle\n%!";
   upon (Ivar.read !battle_status) (fun s -> match s with
-    | Random1p -> (main_controller_random1p engine gui_ready ready ready_gui);
-    | Random2p -> (main_controller_random2p engine gui_ready ready ready_gui));
+    | Random1p -> (main_controller_random1p engine gui_ready ready ready_gui)
+    | Random2p -> (main_controller_random2p engine gui_ready ready ready_gui)
+    | Preset1p t -> (main_controller_preset1p engine gui_ready ready ready_gui t));
   ()

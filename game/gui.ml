@@ -384,8 +384,12 @@ let load_preset engine img bg_img load_screen battle text buttonhide preset butt
                           let poke4 = Pokemon.getPresetPokemon (!select4#entry#text) in
                           let poke5 = Pokemon.getPresetPokemon (!select5#entry#text) in
                           let poke6 = Pokemon.getPresetPokemon (!select6#entry#text) in
+                          selectimg#misc#hide (); !selecttext#destroy (); preset#misc#hide ();
+                          !select1#destroy (); !select2#destroy (); !select3#destroy ();
+                          !select4#destroy (); !select5#destroy (); !select6#destroy ();
+                          preset#set_label "Preset Battle";
                           load_battle_load engine img bg_img load_screen battle text buttonhide buttonshow
-                          (battle_status, gui_ready, ready, ready_gui) Random1p main_menu battle_screen
+                          (battle_status, gui_ready, ready, ready_gui) (Preset1p [poke1;poke2;poke3;poke4;poke5;poke6]) main_menu battle_screen
                           poke1_img poke2_img text_buffer health_holders ()
                       ) with _ -> let error_win = GWindow.message_dialog ~message:"Error in your Pokemon selection. Try making sure everything is spelled correctly."
                                   ~buttons:GWindow.Buttons.close  ~message_type:`ERROR () in ignore(error_win#connect#close ~callback:(error_win#destroy));
@@ -770,7 +774,7 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
     updatehealth1 (); updatehealth2 () in
   let skipturn () =
     match get_game_status battle_status with
-    | Random1p -> (match !current_command with
+    | Random1p | Preset1p _ -> (match !current_command with
                   | (None, _) -> text_buffer#set_text (Pokemon.string_of_weather w.weather); List.iter (fun s -> s#misc#show ()) battle_buttons; current_screen := Battle (P1 ChooseMove); update_buttons engine move1 move2 move3 move4
                   | _ -> Ivar.fill !gui_ready !current_command; current_command := (None, None); game_step ())
     | Random2p -> (match !current_command with
@@ -835,14 +839,14 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
   | Pl2 Faint -> if List.length t2.dead = 5 then (text_buffer#set_text "Player One wins!"; current_screen := Battle (P1 ChooseMove); back_button#misc#show ()) else
                   (text_buffer#set_text "Player Two Pokemon has fainted. Choosing a new Pokemon.";
                  (match get_game_status battle_status with
-                 | Random1p -> busywait (); current_command := (Some (NoMove), Some (FaintPoke ""));
+                 | Random1p | Preset1p _ -> busywait (); current_command := (Some (NoMove), Some (FaintPoke ""));
                                simple_move()
                  | _ -> failwith "Faulty Game Logic: Debug 007"))
   | Pl2 SFaint ->if List.length t2.dead = 5 then (text_buffer#set_text "Player One wins!"; current_screen := Battle (P1 ChooseMove); back_button#misc#show ()) else
                  (poke2_img#set_file ("../data/sprites/" ^ t2.current.pokeinfo.name ^ ".gif");
                  text_buffer#set_text (t2.current.pokeinfo.name ^ " has fainted. Choosing a new Pokemon.");
                  (match get_game_status battle_status with
-                 | Random1p -> busywait (); current_command := (Some (NoMove), Some (FaintPoke ""));
+                 | Random1p | Preset1p _ -> busywait (); current_command := (Some (NoMove), Some (FaintPoke ""));
                                simple_move()
                  | _ -> failwith "Faulty Game Logic: Debug 007"))
   | Pl1 EndMove x -> let txt = getEndString t1.current.pokeinfo.name x in
@@ -882,7 +886,7 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
                    pre_process ()
   | Pl1 Faint -> text_buffer#set_text "Player One Pokemon has fainted. Choosing a new Pokemon.";
                   (match get_game_status battle_status with
-                  | Random1p -> busywait (); updatetools (); current_screen := Battle (P1 Faint);
+                  | Random1p | Preset1p _ -> busywait (); updatetools (); current_screen := Battle (P1 Faint);
                                 switch_poke engine [poke1;poke2;poke3;poke4;poke5] [move1;move2;
                                 move3;move4;switch] back_button ()
                   | _ -> failwith "Faulty Game Logic: Debug 008"
@@ -906,7 +910,7 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
  match !current_command with
  | (None, None) -> failwith "Faulty Game Logic: Debug 03"
  | (Some _, None) -> (match get_game_status battle_status with
-                      | Random1p -> List.iter (fun s -> s#misc#hide ()) battle_buttons; current_screen := Battle Processing; text_buffer#set_text "Both moves collected. Processing...";
+                      | Random1p | Preset1p _-> List.iter (fun s -> s#misc#hide ()) battle_buttons; current_screen := Battle Processing; text_buffer#set_text "Both moves collected. Processing...";
                                           Ivar.fill !gui_ready !current_command; current_command := (None, None);
                                           upon (Ivar.read !ready_gui) (fun _ -> ready_gui := Ivar.create (); game_animation engine battle_buttons battle text
                                                                         (battle_status, gui_ready, ready, ready_gui) bg_img poke1_img poke2_img move_img text_buffer health_holders pokeanim1 pokeanim2 moveanim back_button ())
