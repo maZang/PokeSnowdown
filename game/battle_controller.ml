@@ -285,7 +285,7 @@ let hitMoveDueToStatus atk moveDescript =
   let rec helperVolaStatus lst moveDescript' =
     match lst with
       | [] -> (true, moveDescript')
-      | Charge::t -> helperVolaStatus t moveDescript'
+      | Charge _::t -> helperVolaStatus t moveDescript'
       | Flinch::t -> (false, `Flinch)
       | (Confusion n)::t ->
             (* n cannot be less than 0 -- invariant *)
@@ -385,14 +385,14 @@ let hitAttack atk def (w,t1,t2) (move : move) damage moveDescript =
       (false, MissMove move.name) in
   let need_charge, charge_string = need_charge_attack move.secondary in
   if need_charge then
-    if List.mem Charge (snd atk.current.curr_status) then
+    if List.mem (Charge move.name) (snd atk.current.curr_status) then
       let volatile_list =
-        List.filter (fun s -> not (s = Charge)) (snd atk.current.curr_status) in
+        List.filter (fun s -> not (s = Charge move.name)) (snd atk.current.curr_status) in
       atk.current.curr_status <- (fst atk.current.curr_status, volatile_list);
       hit_move ()
     else
       (atk.current.curr_status <-
-        (fst atk.current.curr_status, Charge::(snd atk.current.curr_status));
+        (fst atk.current.curr_status, (Charge move.name)::(snd atk.current.curr_status));
       (false, ChargingMove (charge_string, move.name)))
   else
     hit_move ()

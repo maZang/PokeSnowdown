@@ -153,7 +153,7 @@ let string_of_vola_status elm =
   | Taunt -> "Taunt"
   | Torment -> "Torment"
   | Levitate -> "Levitate"
-  | Charge -> "Charging"
+  | Charge s-> "Charging " ^ s
   | Substitute _ -> "Substitute"
   | Protected -> "Protect"
   | UsedProtect -> "Used Protect"
@@ -575,9 +575,9 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "blaze-kick"; move2 =
+  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "fly"; move2 =
   getMoveFromString "dragon-dance"; move3 = getMoveFromString "psych-up";
-  move4 = getMoveFromString "false-swipe"; hp = 68; attack = 85; special_attack = 165; defense = 65;
+  move4 = getMoveFromString "will-o-wisp"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 0; special_defense = 135; ability="pixilate"; evs; nature; item}
 
 let getTestOpp () =

@@ -76,7 +76,7 @@ type non_volatile_status = Burn | Freeze | Paralysis | Poisoned | Toxic of int |
 
 type volatile_status =  Confusion of int | Curse | Embargo | Encore | Flinch | HealBlock
 	| Identification | Infatuation | Nightmare | Trapped | PerishSong | Leeched
-	| Taunt | Levitate | Torment | Charge | Substitute of int | Protected | UsedProtect
+	| Taunt | Levitate | Torment | Charge of string | Substitute of int | Protected | UsedProtect
 
 type status = non_volatile_status * volatile_status list
 
