@@ -422,6 +422,8 @@ let getSecondaryEffect str = match str with
   | "false-swipe" | "hold-back" -> [FalseSwipe]
   | "psych-up" -> [PsychUp]
   | "acupressure" -> [RandStageBoost]
+  | "flower-shield" -> [FlowerShield]
+  | "rain-dance" -> [RainDance]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -497,8 +499,8 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Psychic]; move1= getMoveFromString "leaf-storm"; move2 =
-  getMoveFromString "solar-beam"; move3 = getMoveFromString "psych-up";
+  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "flower-shield"; move2 =
+  getMoveFromString "bubble"; move3 = getMoveFromString "psych-up";
   move4 = getMoveFromString "false-swipe"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
 
@@ -507,7 +509,7 @@ let getTestOpp () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gallade-mega"; element=[Psychic]; move1= getMoveFromString "swords-dance"; move2 =
+  {name="gallade-mega"; element=[Grass]; move1= getMoveFromString "swords-dance"; move2 =
   getMoveFromString "swords-dance"; move3 = getMoveFromString "swords-dance";
   move4 = getMoveFromString "swords-dance"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}

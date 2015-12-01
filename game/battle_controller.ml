@@ -1055,8 +1055,9 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
                      secondary_effects t
     (* Sunny Day*)
     | SunnyDay::t -> (match w with
-                    | Sun _| HarshSun _ -> ()
-                    | _ -> wt.weather <- Sun 5; secondary_effects t)
+                    | Sun _ | HarshSun _ -> ()
+                    | _ -> wt.weather <- Sun 5; newmove := SunnyDayS !newmove;
+                    secondary_effects t)
     (* Cures burns, paralysis, poison*)
     | Refresh::t -> (match atk.current.curr_status with
                     | (Poisoned, x) -> atk.current.curr_status <- (NoNon, x)
@@ -1087,6 +1088,18 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
                     atk.stat_enhance.evasion <- (i6,f6);
                     atk.stat_enhance.accuracy <- (i7,f7);
                     newmove := PsychUpS !newmove; secondary_effects t)
+    (* Flower Shield raises the Defense stat of all Grass-type Pokémon in the battle by one stage. *)
+    | FlowerShield::t ->
+        (match ((List.mem Grass atk.current.pokeinfo.element),
+              (List.mem Grass def.current.pokeinfo.element)) with
+        | (true, true) -> secondary_effects ((StageBoost[(Defense,1)])::(StageAttack[(Defense,-1)])::t)
+        | (true, false) -> secondary_effects ((StageBoost[(Defense,1)])::t)
+        | (false, true) -> secondary_effects ((StageAttack[(Defense,-1)])::t)
+        | _ -> ()); secondary_effects t
+    | RainDance::t -> (match w with
+                    | Rain _ | HeavyRain _ -> ()
+                    | _ -> wt.weather <- Rain 5; newmove := RainDanceS !newmove;
+                    secondary_effects t)
     | [] -> ()
   in
   let hit, reason = hitMoveDueToStatus atk (`NoAdd !newmove) in
