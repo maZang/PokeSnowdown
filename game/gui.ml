@@ -515,7 +515,7 @@ let rec getAttackString starter a =
   | BreakSub s -> getAttackString starter s ^ starter ^ " has broken the opponent's substitute."
   | SubDmg s -> getAttackString starter s ^ "The opponent's substitute took the damage instead."
   | ProtectedA s -> starter ^ " used " ^ s ^ " but opponent protected itself."
-  | FalseSwipeA s -> getAttackString starter s ^ "The opponent cannot go below 1 HP"
+  | FalseSwipeA s -> getAttackString starter s ^ "The opponent cannot go below 1 HP."
   | ChargingMove (s, n) -> (match !secondaryEffect with
                              | `P1 -> current_command := (Some (UseAttack n), snd !current_command)
                              |`P2 -> current_command := (fst !current_command, Some (UseAttack n))); starter ^ " is charging up." ^ s
@@ -565,6 +565,7 @@ let rec getStatusString starter s =
   | ProtectFail s-> getStatusString starter s ^ starter ^ " has failed to protect itself."
   | SpikesS s -> getStatusString starter s ^ starter ^ " has depositied a layer of spikes."
   | HealBellS s -> getStatusString starter s ^ starter ^ " has healed itself and its allies of status ailments."
+  | RefreshS s -> getStatusString starter s ^ starter ^ " has healed itself of any burns, poisons, paralysis."
   | Fail s -> starter ^ " used " ^ s ^ " but it failed."
   | SwitchOut s -> (match !secondaryEffect with
                     | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
