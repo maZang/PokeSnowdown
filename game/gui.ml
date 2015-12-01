@@ -785,10 +785,12 @@ let rec game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3; 
     let recharging2 = List.mem RechargingStatus (snd t2.current.curr_status) in
     (if (charging1) then
       (current_command := (Some (UseAttack s1), snd !current_command))
-    else if (charging2) then
-      (current_command := (fst !current_command, Some (UseAttack s2)))
     else if recharging1 then
       (current_command := (Some NoMove, snd !current_command))
+    else
+      ());
+    (if (charging2) then
+      (current_command := (fst !current_command, Some (UseAttack s2)))
     else if recharging2 then
       (current_command := (fst !current_command, Some NoMove))
     else

@@ -441,6 +441,7 @@ let getSecondaryEffect str = match str with
   | "belly-drum" -> [BellyDrum]
   | "spikes" -> [Spikes]
   | "swagger" -> [StageAttack [(Attack, -2)]; ConfuseOpp]
+  | "flatter" -> [StageAttack [(SpecialAttack, -1)]; ConfuseOpp]
   | "heal-bell" | "aromatherapy" -> [HealBell]
   | "sweet-scent" -> [StageAttack [(Evasion, 2)]]
   | "morning-sun" | "synthesis" | "moonlight" -> [SunHeal]
@@ -458,6 +459,7 @@ let getSecondaryEffect str = match str with
   | "bulk-up" -> [StageBoost [(Attack,1);(Defense,1)]]
   | "blaze-kick" -> [IncCrit 1; BurnChance]
   | "encore" -> [Encore 3]
+  | "pain-split" -> [PainSplit]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -565,8 +567,8 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "fly"; move2 =
-  getMoveFromString "dragon-dance"; move3 = getMoveFromString "encore";
+  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "flatter"; move2 =
+  getMoveFromString "dragon-dance"; move3 = getMoveFromString "pain-split";
   move4 = getMoveFromString "will-o-wisp"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 0; special_defense = 135; ability="pixilate"; evs; nature; item}
 

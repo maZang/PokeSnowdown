@@ -1139,6 +1139,10 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
                       else
                         (newmove := EncoreFail)
                       )
+    | PainSplit::t -> let half_health = (atk.current.curr_hp + def.current.curr_hp)/2 in
+                      atk.current.curr_hp <- min atk.current.bhp half_health;
+                      def.current.curr_hp <- min def.current.bhp half_health;
+                      secondary_effects t
     | [] -> ()
   in
   let hit, reason = hitMoveDueToStatus atk (`NoAdd !newmove) in
@@ -1167,7 +1171,7 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
     else
       newreason)
   else
-    reason'
+    (atk.current.curr_status <- (fst atk.current.curr_status, List.filter (fun s -> s <> Charge) (snd atk.current.curr_status)); reason')
 
 let rec filterNonvola lst = match lst with
   (* Confusion decremented in hit move due to status *)
@@ -1246,7 +1250,6 @@ let handle_preprocessing t1 t2 w m1 m2 =
                 | (true, false) -> (t2.current.curr_hp <- t2.current.curr_hp - t2.current.bhp/16;
                                     HailBuffet2 descript)
                 | (true, true) -> descript )
-
   | _ -> descript in
   let rec fix_terrain t acc descript =  function
   | (LightScreen n)::t' -> if n = 0 then
