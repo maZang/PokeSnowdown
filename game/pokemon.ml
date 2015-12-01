@@ -488,7 +488,7 @@ let getTestPoke () =
   let nature = Bold in
   let item = Leftovers in
   {name="gardevoir-mega"; element=[Psychic]; move1= getMoveFromString "leaf-storm"; move2 =
-  getMoveFromString "solar-beam"; move3 = getMoveFromString "flamethrower";
+  getMoveFromString "solar-beam"; move3 = getMoveFromString "bounce";
   move4 = getMoveFromString "grass-knot"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
 
