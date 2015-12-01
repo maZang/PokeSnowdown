@@ -415,6 +415,7 @@ let getSecondaryEffect str = match str with
   | "sunny-day" -> [SunnyDay]
   | "refresh" -> [Refresh]
   | "false-swipe" | "hold-back" -> [FalseSwipe]
+  | "acupressure" -> [RandStageBoost]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -491,7 +492,7 @@ let getTestPoke () =
   let nature = Bold in
   let item = Leftovers in
   {name="gardevoir-mega"; element=[Psychic]; move1= getMoveFromString "leaf-storm"; move2 =
-  getMoveFromString "solar-beam"; move3 = getMoveFromString "refresh";
+  getMoveFromString "solar-beam"; move3 = getMoveFromString "acupressure";
   move4 = getMoveFromString "false-swipe"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
 
