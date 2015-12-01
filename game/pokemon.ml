@@ -412,7 +412,7 @@ let getSecondaryEffect str = match str with
   | "morning-sun" | "synthesis" | "moonlight" -> [SunHeal]
   | "water-spout" | "eruption" -> [MaxHealthDmg]
   | "sunny-day" -> [SunnyDay]
-  | "false-swipe" -> [FalseSwipe]
+  | "false-swipe" | "hold-back" -> [FalseSwipe]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
