@@ -350,7 +350,7 @@ let getSecondaryEffect str = match str with
   | "meditate" | "sharpen" | "metal-claw" -> [StageBoost [(Attack, 1)]]
   | "whirlwind" | "roar" | "dragon-tail" -> [ForceSwitch]
   | "stomp" | "rolling-kick" | "headbutt" | "bite" | "bone-club" | "waterfall"
-    | "rock-slide" | "hyper-fang" -> [FlinchMove]
+    | "rock-slide" | "hyper-fang" | "twister" -> [FlinchMove]
   | "double-kick" | "gear-grind" | "bonemerang"  -> [MultHit 2]
   | "sand-attack" | "smokescreen" | "kinesis" | "flash" |
       "mud-slap" | "octazooka"-> [StageAttack [(Accuracy, 1)]]
