@@ -348,7 +348,7 @@ let getSecondaryEffect str = match str with
   | "freeze-shock" -> [ChargeMove "Charging"; ParaChance]
   | "swords-dance" -> [StageBoost [(Attack, 2)]]
   | "charm" -> [StageAttack [(Attack, 2)]]
-  | "meditate" | "sharpen" | "metal-claw" -> [StageBoost [(Attack, 1)]]
+  | "meditate" | "sharpen" | "metal-claw" | "howl" -> [StageBoost [(Attack, 1)]]
   | "whirlwind" | "roar" | "dragon-tail" -> [ForceSwitch]
   | "stomp" | "rolling-kick" | "headbutt" | "bite" | "bone-club" | "waterfall"
     | "rock-slide" | "hyper-fang" | "twister" -> [FlinchMove]
