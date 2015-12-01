@@ -48,6 +48,7 @@ let select3 = ref (GEdit.combo ~popdown_strings:(test_string 750 ()) ())
 let select4 = ref (GEdit.combo ~popdown_strings:(test_string 750 ()) ())
 let select5 = ref (GEdit.combo ~popdown_strings:(test_string 750 ()) ())
 let select6 = ref (GEdit.combo ~popdown_strings:(test_string 750 ()) ())
+let selectimg = GMisc.image ~file:"../data/backgrounds/PokemonLogo.png" ~show:false ()
 let () = !select1#destroy (); !select2#destroy (); !select3#destroy ();
           !select4#destroy (); !select5#destroy (); !select6#destroy ()
 (* Holds similar information to the engine, but acts differently in battle
@@ -203,6 +204,8 @@ let make_menu ?packing () =
   (* load_screen is a gif that plays before battle (during initialization)*)
   let load_screen = GMisc.image ~file:"../data/backgrounds/background.gif"
     ~show:false ~packing:(vbox#pack) () in
+  (* put in logo but hide it *)
+  hbox2#pack selectimg#coerce;
   (* Return all objects created *)
   (vbox, hbox1, hbox2, button1, button2, button3, button4,
 		button5, button6, button7, img, load_screen)
@@ -326,12 +329,13 @@ let load_preset engine img load_screen battle text buttonhide preset buttonshow
                 preset#set_label "Continue";
                 img#misc#hide ();
                 selecttext := GMisc.label ~text:"Choose your 6 Pokemon from the drop down menus." ~packing:(battle_screen#pack) ();
-                select1 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~packing:(battle_screen#pack) ();
-                select2 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~packing:(battle_screen#pack) ();
-                select3 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~packing:(battle_screen#pack) ();
-                select4 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~packing:(battle_screen#pack) ();
-                select5 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~packing:(battle_screen#pack) ();
-                select6 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~packing:(battle_screen#pack) ();
+                select1 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~value_in_list:true ~allow_empty:false ~packing:(battle_screen#pack) ();
+                select2 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~value_in_list:true ~allow_empty:false ~packing:(battle_screen#pack) ();
+                select3 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~value_in_list:true ~allow_empty:false ~packing:(battle_screen#pack) ();
+                select4 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~value_in_list:true ~allow_empty:false ~packing:(battle_screen#pack) ();
+                select5 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~value_in_list:true ~allow_empty:false ~packing:(battle_screen#pack) ();
+                select6 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~value_in_list:true ~allow_empty:false ~packing:(battle_screen#pack) ();
+                selectimg#misc#show ();
                 ()
     | Menu2P -> ()
     | _ -> failwith "Faulty Game Logic: Debug 314"
@@ -368,13 +372,13 @@ else
   ()
 
 let go_back engine (menu_holder, main_menu, battle_scren, one_player,
-    two_player, no_player, random_1p, preset_1p, touranment,
+    two_player, no_player, random, preset, touranment,
     back_button, main_menu_bg, load_screen) (battle, text, bg_img, move1, move2,
     move3, move4, switch, poke1_img, poke2_img, move_img, text_buffer, poke1, poke2,
     poke3, poke4, poke5, health_holders, pokeanim1, pokeanim2, moveanim) battle_engine () =
 	(if !current_screen = Menu1P || !current_screen = Menu2P || !current_screen = Menu0P then
 		load_menu engine [one_player;two_player;no_player]
-    [random_1p; preset_1p ;touranment; back_button] main_menu_bg
+    [random; preset ;touranment; back_button] main_menu_bg
     MainMenu ());
   if (match !current_screen with
     | Battle (P1 ChooseMove)-> true
@@ -390,8 +394,15 @@ let go_back engine (menu_holder, main_menu, battle_scren, one_player,
     else
       current_screen := Battle (P2 ChooseMove));
   if (!current_screen = Battle Processing) then
-    let battle_status, gui_ready, ready, ready_gui = battle_engine in
-    Printf.printf "DID I FILL IT %B\n%!" (Ivar.is_full !gui_ready); ()
+    (let battle_status, gui_ready, ready, ready_gui = battle_engine in
+    Printf.printf "DID I FILL IT %B\n%!" (Ivar.is_full !gui_ready));
+  if (!current_screen = Preset1PChoose) then
+    (preset#set_label "Preset Battle";
+    selectimg#misc#hide (); main_menu_bg#misc#show (); !selecttext#destroy ();
+    !select1#destroy (); !select2#destroy (); !select3#destroy ();
+    !select4#destroy (); !select5#destroy (); !select6#destroy ();
+    load_menu engine [random; back_button] [] main_menu_bg Menu1P ());
+  ()
 
 let switch_poke engine [poke1;poke2;poke3;poke4;poke5] [move1;move2;
   move3;move4;switch] back_button () =
