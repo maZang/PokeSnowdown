@@ -1088,8 +1088,6 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
                     atk.stat_enhance.evasion <- (i6,f6);
                     atk.stat_enhance.accuracy <- (i7,f7);
                     newmove := PsychUpS !newmove; secondary_effects t)
-    (* Guard Split averages the user's Defense and Special Defense stats with those of the target Pokémon. *)
-    | GuardSplit::t -> ()
     (* Flower Shield raises the Defense stat of all Grass-type Pokémon in the battle by one stage. *)
     | FlowerShield::t ->
         (match ((List.mem Grass atk.current.pokeinfo.element),
