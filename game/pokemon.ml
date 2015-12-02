@@ -366,7 +366,7 @@ let getSecondaryEffect str = match str with
   | "double-slap" | "comet-punch" | "fury-attack" | "pin-missile" |
       "spike-cannon" | "barrage" | "fury-swipes" | "bone-rush" -> [RandMultHit]
   | "fire-punch" | "ember" | "flamethrower" | "fire-blast" |
-        "flame-wheel" | "will-o-wisp" -> [BurnChance]
+        "flame-wheel" | "will-o-wisp" | "blue-flare" | "lava-plume" -> [BurnChance]
   | "ice-punch" | "ice-beam" | "blizzard" -> [FreezeChance]
   | "thunder-punch" | "body-slam" | "stun-spore" | "thunder-shock"
     | "thunderbolt" | "thunder-wave" | "thunder" | "lick" | "glare"
@@ -419,6 +419,7 @@ let getSecondaryEffect str = match str with
   | "barrier" | "acid-armor" | "iron-defense" -> [StageBoost [(Defense, 2)]]
   | "calm-mind" -> [StageBoost [(SpecialDefense, 1); (SpecialAttack, 1)]]
   | "leaf-storm" -> [StageBoost [(SpecialAttack, -2)]]
+  | "work-up" -> [StageBoost [(Attack, 1); (SpecialAttack, 1)]]
   | "recover" | "soft-boiled" | "milk-drink" | "roost" -> [Recovery]
   | "light-screen" -> [LightScreenMake]
   | "haze" -> [Haze]
@@ -463,6 +464,7 @@ let getSecondaryEffect str = match str with
   | "superpower" -> [StageBoost [(Attack,-1);(Defense,-1)]]
   | "thrash" | "outrage" | "petal-dance" -> [SelfEncore]
   | "mirror-move" | "copycat" -> [CopyPrevMove]
+  | "fire-fang" -> [BurnChance; FlinchMove]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -570,7 +572,7 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "flatter"; move2 =
+  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "work-up"; move2 =
   getMoveFromString "superpower"; move3 = getMoveFromString "copycat";
   move4 = getMoveFromString "will-o-wisp"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 0; special_defense = 135; ability="pixilate"; evs; nature; item}
