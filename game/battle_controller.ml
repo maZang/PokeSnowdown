@@ -690,6 +690,19 @@ let move_handler atk def wt move =
                             newmove := ConfuseMoveA !newmove)))
                           else
                            ()); secondary_effects t
+    (* Moves that confuse the user *)
+    | ConfuseUser::t -> (let confuse_turns = Random.int 4 + 1 in
+                            let novola , x = atk.current.curr_status in
+                            let rec check_for_confusion = function
+                            | [] -> false
+                            | (Confusion _)::t -> true
+                            | h::t -> check_for_confusion t in
+                            (if check_for_confusion x then
+                              ()
+                            else
+                            (atk.current.curr_status <-
+                              (novola, (Confusion confuse_turns)::x);
+                            newmove := ConfuseUserA !newmove))); secondary_effects t
     (* Moves that take a turn of recharge after use e.g. hyperbeam *)
     | RechargeMove::t -> (atk.current.curr_status <- (fst atk.current.curr_status, RechargingStatus::(snd atk.current.curr_status));
                           newmove := Recharging !newmove; secondary_effects t)
@@ -750,6 +763,19 @@ let move_handler atk def wt move =
     (* Moves that force a switch out *)
     | ForceSwitch::t -> newmove := SwitchOutA !newmove; secondary_effects t
     (* Base case *)
+    | SelfEncore::t ->  let rec findForcedMove = function
+                        | (ForcedMoveNoSwitch (n,_))::t ->(true, n)
+                        | h::t -> findForcedMove t
+                        | [] -> (false,0) in
+                        let found, num = findForcedMove (snd atk.current.curr_status) in
+                        if found then
+                          (if num = 0 then
+                            (secondary_effects (ConfuseUser::t))
+                          else
+                            ())
+                        else
+                          ( let n = Random.int 2 + 1 in
+                            atk.current.curr_status <- (fst atk.current.curr_status, (ForcedMoveNoSwitch (n, move.name))::(snd atk.current.curr_status)))
     | [] -> ()
     in
   let hit, reason = hitMoveDueToStatus atk (`NoAdd !newmove) in
@@ -1130,7 +1156,7 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
                         poke.pokeinfo.move3.name = str ||
                         poke.pokeinfo.move4.name = str in
                       let prevmove = if wt.terrain.side1 == t1 then !prevmove2 else
-                                     if wt.terrain.side2 == t2 then !prevmove1 else
+                                     if wt.terrain.side1 == t2 then !prevmove1 else
                                       failwith "Faulty Game Logic: Debug 1135" in
                       (if findForcedMove (snd def.current.curr_status) then (newmove := EncoreFail)
                       else if containsMove def.current prevmove then
@@ -1143,6 +1169,17 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
                       atk.current.curr_hp <- min atk.current.bhp half_health;
                       def.current.curr_hp <- min def.current.bhp half_health;
                       secondary_effects t
+    (* dangerous secondary move with no other additional secondary effects *)
+    | CopyPrevMove::[] -> let prevmove = if wt.terrain.side1 == t1 then !prevmove2 else
+                         if wt.terrain.side1 == t2 then !prevmove1 else
+                         failwith "Faulty Game Logic: Debug 1135" in
+                         let validmove = try (let move' = getMoveFromString prevmove in not (List.mem CopyPrevMove move'.secondary)) with _ -> false in
+                         if validmove then
+                          (let move' = getMoveFromString prevmove in match move'.dmg_class with
+                          | Status -> newmove := CopyPrevMoveS (status_move_handler atk def (wt, t1, t2) move')
+                          | _ ->  newmove := CopyPrevMoveA (move_handler atk def (wt, t1, t2) move'))
+                          else
+                            (newmove := CopyFail)
     | [] -> ()
   in
   let hit, reason = hitMoveDueToStatus atk (`NoAdd !newmove) in

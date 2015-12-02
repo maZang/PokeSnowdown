@@ -544,6 +544,7 @@ let rec getMoveString a =
   | SwitchOutA s -> getMoveString s
   | Recharging s -> getMoveString s
   | FalseSwipeA s -> getMoveString s
+  | ConfuseUserA s -> getMoveString s
 
 let rec getAttackString starter a =
   match a with
@@ -586,6 +587,7 @@ let rec getAttackString starter a =
   | ProtectedA s -> starter ^ " used " ^ s ^ " but opponent protected itself."
   | FalseSwipeA s -> getAttackString starter s ^ "The opponent cannot go below 1 HP."
   | ChargingMove (s, n) -> starter ^ " is charging up." ^ s
+  | ConfuseUserA s -> getAttackString starter s ^ starter ^ " has confused itself."
   | SwitchOutA s -> (match !secondaryEffect with
                     | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
                     | `P2 -> current_command := (Some (Poke "random"), Some NoMove));
@@ -641,6 +643,9 @@ let rec getStatusString starter s =
   | HailS s -> getStatusString starter s ^ starter ^ " has made large pellets of hail fall down."
   | EncoreS s -> getStatusString starter s ^ starter ^ " has trapped the opponent in an encore."
   | EncoreFail -> starter ^ " used encore but it failed."
+  | CopyPrevMoveS s -> starter ^ " copied the opponent's move." ^ getStatusString starter s
+  | CopyPrevMoveA s -> starter ^ " copied the opponent's move." ^ getAttackString starter s
+  | CopyFail -> starter ^ " tried to copy the previous move but failed."
   | SwitchOut s -> (match !secondaryEffect with
                     | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
                     | `P2 -> current_command := (Some (Poke "random"), Some NoMove));
