@@ -66,19 +66,28 @@ let () = !select1#destroy (); !select2#destroy (); !select3#destroy ();
 *)
 let current_screen = ref MainMenu
 
-let x = ref 160
-let y = ref 200
+(* PUT THIS IN ANOTHER FILE LATER  *)
+(* ---------------------------------------------------------------------------*)
+let x = ref 7
+let y = ref 5
+
+let obstacle_coordinates = [(0,0);(0,1);(0,2);(0,3);(0,4);(0,5);(0,6);(0,7);
+                       (14,0);(14,1);(14,2);(14,3);(14,4);(14,5);(14,6);(14,7);
+                       (0,0);(1,0);(2,0);(3,0);(4,0);(5,0);(6,0);(7,0);(8,0);
+                       (9,0);(10,0);(11,0);(12,0);(13,0);(14,0);(0,7);(1,7);
+                       (2,7);(3,7);(4,7);(5,7);(6,7);(7,7);(8,7);(9,7);(10,7);
+                       (11,7);(12,7);(13,7);(14,7)]
 
 let spriteanim = GPack.fixed ~width:screen_width ~height:(2 * screen_height/3) ()
 let bossanim = GPack.fixed ~width:screen_width ~height:(2 * screen_height/3) ()
 let tilemap = GMisc.image ~file:"../data/tournament/tilemap.png" ()
 (* 600 x 320 *)
 let gameBoard = GPack.table ~rows:4 ~columns: 4 ~height: (2* screen_height/3) ~width:screen_width  ()
-let sprite = GMisc.image ~file:"../data/fx/ghostwisp.png" ()
-let boss = GMisc.image ~file:"../data/fx/flyingwisp.png" ()
-let () =  (spriteanim#put sprite#coerce 160 200; bossanim#put boss#coerce 160 100;
-           gameBoard#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH bossanim#coerce;
+let sprite = GMisc.image ~file:"../data/tournament/Player/Up.png" ()
+let boss = GMisc.image ~file:"../data/tournament/NPC/ProfOak.png" ()
+let () =  (spriteanim#put sprite#coerce (40 * !x) (40 * !y); bossanim#put boss#coerce 280 60;
            gameBoard#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH spriteanim#coerce;
+           gameBoard#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH bossanim#coerce;
            gameBoard#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH tilemap#coerce)
 
 let handle_key_press s =
@@ -89,12 +98,15 @@ let handle_key_press s =
                         | 32 -> continue := true; true
                         | _ -> false)
   | Tourney -> (match key with
-                | 119 -> y := !y - 10; spriteanim#move sprite#coerce !x !y; true
-                | 115 -> y := !y + 10; spriteanim#move sprite#coerce !x !y; true
-                | 100 -> x := !x + 10; spriteanim#move sprite#coerce !x !y; true
-                | 97 -> x := !x - 10; spriteanim#move sprite#coerce !x !y; true
+                | 119 -> y := !y - 1; spriteanim#move sprite#coerce (40 * !x) (40 * !y); true
+                | 115 -> y := !y + 1; spriteanim#move sprite#coerce (40 * !x) (40 * !y); true
+                | 100 -> x := !x + 1; spriteanim#move sprite#coerce (40 * !x) (40 * !y); true
+                | 97 -> x := !x - 1; spriteanim#move sprite#coerce (40 * !x) (40 * !y); true
                 | _ -> false )
   | _ -> false
+
+(* ---------------------------------------------------------------------------*)
+
 
 (* Holds information on the moves/commands of players*)
 let current_command = ref (None, None)
