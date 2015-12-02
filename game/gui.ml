@@ -66,6 +66,9 @@ let () = !select1#destroy (); !select2#destroy (); !select3#destroy ();
 *)
 let current_screen = ref MainMenu
 
+let x = ref 160
+let y = ref 200
+
 let spriteanim = GPack.fixed ~width:screen_width ~height:(2 * screen_height/3) ()
 let bossanim = GPack.fixed ~width:screen_width ~height:(2 * screen_height/3) ()
 let tilemap = GMisc.image ~file:"../data/tournament/tilemap.jpg" ()
@@ -77,13 +80,20 @@ let () =  (spriteanim#put sprite#coerce 160 200; bossanim#put boss#coerce 160 10
            gameBoard#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH spriteanim#coerce;
            gameBoard#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH tilemap#coerce)
 
-let space_press s =
-  if GdkEvent.Key.keyval s = 32 then
-    match !current_screen with
-    | Battle _ -> continue := true; true
-    | _ -> false
-  else
-    false
+let handle_key_press s =
+  let key = GdkEvent.Key.keyval s in
+  Printf.printf "Key value pressed: %d\n%!" key;
+  match !current_screen with
+  | Battle InGame _ -> (match key with
+                        | 32 -> continue := true; true
+                        | _ -> false)
+  | Tourney -> (match key with
+                | 119 -> y := !y - 10; spriteanim#move sprite#coerce !x !y; true
+                | 115 -> y := !y + 10; spriteanim#move sprite#coerce !x !y; true
+                | 100 -> x := !x + 10; spriteanim#move sprite#coerce !x !y; true
+                | 97 -> x := !x - 10; spriteanim#move sprite#coerce !x !y; true
+                | _ -> false )
+  | _ -> false
 
 (* Holds information on the moves/commands of players*)
 let current_command = ref (None, None)
@@ -1088,6 +1098,6 @@ let main_gui engine battle_engine () =
   ignore(move3#connect#clicked ~callback:(poke_move_cmd move3 engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text battle_engine bg_img poke1_img poke2_img move_img text_buffer health_holders pokeanim1 pokeanim2 moveanim back_button));
   ignore(move4#connect#clicked ~callback:(poke_move_cmd move4 engine [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] battle text battle_engine bg_img poke1_img poke2_img move_img text_buffer health_holders pokeanim1 pokeanim2 moveanim back_button));
   ignore(window#connect#destroy ~callback:(quit engine ready));
-  ignore(window#event#connect#key_press ~callback:(space_press));
+  ignore(window#event#connect#key_press ~callback:(handle_key_press));
   window#show ();
 	let _ = GtkThread.start () in ()
