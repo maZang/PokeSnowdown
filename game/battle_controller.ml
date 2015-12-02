@@ -1615,11 +1615,8 @@ let handle_action state action1 action2 =
 
 (* Main loop for 1 player -- gets input from AI *)
 let rec main_loop_1p engine gui_ready ready ready_gui () =
-  let t1 = match get_game_status engine with
-    | Battle InGame (t1, _, _, _, _) -> t1
-    | _ -> failwith "Faulty Game Logic" in
-  let t2 = match get_game_status engine with
-    | Battle InGame (_, t2, _, _, _) -> t2
+  let t1, t2 = match get_game_status engine with
+    | Battle InGame (t1, t2, _, _, _) -> t1, t2
     | _ -> failwith "Faulty Game Logic" in
   upon (Ivar.read !gui_ready) (* Replace NoMove with ai move later *)
     (fun (cmd1, cmd2) -> let c1 = unpack cmd1 in
