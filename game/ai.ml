@@ -49,4 +49,4 @@ let replaceDead2 (poke : battle_poke) (alivelst : battle_poke list) : string =
                 h.pokeinfo.name
               else helper t
   in
-    helper   alivelst
+    helper alivelst
