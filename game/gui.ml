@@ -71,7 +71,8 @@ let y = ref 200
 
 let spriteanim = GPack.fixed ~width:screen_width ~height:(2 * screen_height/3) ()
 let bossanim = GPack.fixed ~width:screen_width ~height:(2 * screen_height/3) ()
-let tilemap = GMisc.image ~file:"../data/tournament/tilemap.jpg" ()
+let tilemap = GMisc.image ~file:"../data/tournament/tilemap.png" ()
+(* 600 x 320 *)
 let gameBoard = GPack.table ~rows:4 ~columns: 4 ~height: (2* screen_height/3) ~width:screen_width  ()
 let sprite = GMisc.image ~file:"../data/fx/ghostwisp.png" ()
 let boss = GMisc.image ~file:"../data/fx/flyingwisp.png" ()
