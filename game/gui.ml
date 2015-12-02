@@ -81,7 +81,14 @@ let obstacle_coordinates = [(0,0);(0,1);(0,2);(0,3);(0,4);(0,5);(0,6);(0,7);
                        (0,0);(1,0);(2,0);(3,0);(4,0);(5,0);(6,0);(7,0);(8,0);
                        (9,0);(10,0);(11,0);(12,0);(13,0);(14,0);(0,7);(1,7);
                        (2,7);(3,7);(4,7);(5,7);(6,7);(7,7);(8,7);(9,7);(10,7);
-                       (11,7);(12,7);(13,7);(14,7)]
+                       (11,7);(12,7);(13,7);(14,7);
+                       (* People obstacles*)
+                       (7,1)]
+
+let profOakQuotes = ["Welcome to Pokemon Snowdown.";
+                    "You may pick one of the two trainers to face.";
+                    "Look at the enemy trainers closely to discern what type of Pokemon they use.";
+                    "You will have the option of choosing your Pokemon after you make your selection."]
 
 let spriteanim = GPack.fixed ~width:screen_width ~height:(2 * screen_height/3) ()
 let bossanim = GPack.fixed ~width:screen_width ~height:(2 * screen_height/3) ()
@@ -89,15 +96,18 @@ let tilemap = GMisc.image ~file:"../data/tournament/tilemap.png" ()
 (* 600 x 320 *)
 let gameBoard = GPack.table ~rows:4 ~columns: 4 ~height: (2* screen_height/3) ~width:screen_width  ()
 let sprite = GMisc.image ~file:"../data/tournament/Player/Down.png" ()
+let gameText = GEdit.entry ~width:600 ~height:80
+              ~text:"Use W,A,S,D to move. Press H to interact with Prof. Oak and space bar to talk." ~editable:false ()
 let boss = GMisc.image ~file:"../data/tournament/NPC/ProfOak.png" ()
 let () =  (spriteanim#put sprite#coerce (40 * !x) (40 * !y); bossanim#put boss#coerce 280 60;
            gameBoard#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH spriteanim#coerce;
            gameBoard#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH bossanim#coerce;
            gameBoard#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH tilemap#coerce)
 
-type gameMovement = Up | Down | Left | Right
+type gameMovement = Up | Down | Left | Right | Interact
 
 let move_ivar = ref (Ivar.create ())
+let playerDirection = ref Down
 
 let rec move_up () =
   (if List.mem (!x, !y - 1) obstacle_coordinates then
@@ -114,7 +124,7 @@ let rec move_up () =
       busywait_player ()
     done;
     sprite#set_file "../data/tournament/Player/Up.png";
-    y := !y - 1))
+    y := !y - 1)); playerDirection := Up
 
 let rec move_down () =
   (if List.mem (!x, !y + 1) obstacle_coordinates then
@@ -131,7 +141,7 @@ let rec move_down () =
       busywait_player ()
     done;
     sprite#set_file "../data/tournament/Player/Down.png";
-    y := !y + 1))
+    y := !y + 1)); playerDirection := Down
 
 let rec move_right () =
   (if List.mem (!x + 1, !y) obstacle_coordinates then
@@ -148,7 +158,7 @@ let rec move_right () =
       busywait_player ()
     done;
     sprite#set_file "../data/tournament/Player/Right.png";
-    x := !x + 1))
+    x := !x + 1)); playerDirection := Right
 
 let rec move_left () =
   (if List.mem (!x - 1, !y) obstacle_coordinates then
@@ -165,14 +175,20 @@ let rec move_left () =
       busywait_player ()
     done;
     sprite#set_file "../data/tournament/Player/Left.png";
-    x := !x - 1))
+    x := !x - 1)); playerDirection := Left
+
+let talk () =
+  match (!x, !y) with
+  | (7,2) -> if !playerDirection = Up then (List.iter (fun s -> gameText#set_text s; busywait ()) profOakQuotes; gameText#set_text "Use W,A,S,D to move. Press H to interact with Prof. Oak and space bar to talk.")   else ()
+  | _ -> ()
 
 let rec move () =
   upon (Ivar.read !move_ivar) (fun s -> (match s with
   | Up -> move_up ()
   | Down -> move_down ()
   | Left -> move_left ()
-  | Right -> move_right ()); move_ivar := Ivar.create (); move ())
+  | Right -> move_right ()
+  | Interact -> talk ()); move_ivar := Ivar.create (); move ())
 
 let handle_key_press s =
   let key = GdkEvent.Key.keyval s in
@@ -187,6 +203,8 @@ let handle_key_press s =
                 | 115 -> Ivar.fill_if_empty !move_ivar Down; true
                 | 100 -> Ivar.fill_if_empty !move_ivar Right; true
                 | 97 -> Ivar.fill_if_empty !move_ivar Left; true
+                | 104 -> Ivar.fill_if_empty !move_ivar Interact; true
+                | 32 -> continue := true; true
                 | _ -> false )
   | _ -> false
 
@@ -473,7 +491,7 @@ let load_tournament engine img bg_img load_screen battle text buttonhide buttons
   (battle_status, gui_ready, ready, ready_gui) main_menu (battle_screen : GPack.box)
   poke1_img poke2_img text_buffer health_holders () =
   current_screen := Tourney; List.iter (fun s -> s#misc#hide ()) buttonhide;
-  img#misc#hide (); battle_screen#pack gameBoard#coerce
+  img#misc#hide (); battle_screen#pack gameBoard#coerce; battle_screen#pack gameText#coerce
 
 let load_random  engine img bg_img load_screen battle text buttonhide buttonshow
   (battle_status, gui_ready, ready, ready_gui) main_menu battle_screen
@@ -554,7 +572,7 @@ let load_main_menu_from_battle engine one_player two_player no_player button_hid
 else
   ()
 
-let go_back engine (menu_holder, main_menu, battle_scren, one_player,
+let go_back engine (menu_holder, main_menu, battle_screen, one_player,
     two_player, no_player, random, preset, touranment,
     back_button, main_menu_bg, load_screen) (battle, text, bg_img, move1, move2,
     move3, move4, switch, poke1_img, poke2_img, move_img, text_buffer, poke1, poke2,
@@ -585,6 +603,10 @@ let go_back engine (menu_holder, main_menu, battle_scren, one_player,
     !select1#destroy (); !select2#destroy (); !select3#destroy ();
     !select4#destroy (); !select5#destroy (); !select6#destroy ();
     load_menu engine [random; back_button] [] main_menu_bg Menu1P ());
+  if (!current_screen = Tourney) then
+    (current_screen := Menu1P; battle_screen#remove gameBoard#coerce;
+      battle_screen#remove gameText#coerce; main_menu_bg#misc#show ();
+      random#misc#show (); preset#misc#show (); touranment#misc#show ());
   ()
 
 let switch_poke engine pokebuttons battlebuttons back_button () =
