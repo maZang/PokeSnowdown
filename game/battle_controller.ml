@@ -132,7 +132,8 @@ let get_weather_amplifier w (move : move) =
                         | _ -> 1.0)
   | Rain _ -> (match move.element with
                         | Water -> 1.5
-                        | Fire -> 0.5)
+                        | Fire -> 0.5
+                        | _ -> 1.0)
   | _ -> 1.0
 
 (* Damage calculation following the equation given by Bulbapedia.
@@ -164,7 +165,7 @@ let damageCalculation t1 t2 (w,ter1, ter2) move =
       float_of_int t2.current.bspecial_defense *.
       getStageAD (fst t2.stat_enhance.special_defense) *.
       (snd t2.stat_enhance.special_defense)
-    | _ -> failwith "Faulty Game Logic: Debug 44" in
+    | Status -> failwith "Faulty Game Logic: Debug 44" in
   let attack = match move.dmg_class with
     | Physical ->
       float_of_int t1.current.battack *.
@@ -173,7 +174,8 @@ let damageCalculation t1 t2 (w,ter1, ter2) move =
     | Special ->
       float_of_int t1.current.bspecial_attack *.
       getStageAD (fst t1.stat_enhance.special_attack) *.
-      (snd t1.stat_enhance.special_attack) in
+      (snd t1.stat_enhance.special_attack)
+    | Status -> failwith "Faulty Game Logic: Debug 178" in
   let crit_bool, crit  = getCrit t1.current move in
   let type_mod = List.fold_left (fun acc x -> acc *. getElementEffect
       move.element x) 1. t2.current.pokeinfo.element in
@@ -438,7 +440,8 @@ let rec link_multmove_descript m1 m2 =
       | NormMove s -> HitMult (n+1, x)
       | Crit v -> link_multmove_descript v (HitMult(n, Crit x))
       | SEff v -> link_multmove_descript v (HitMult(n, SEff v))
-      | NoEff v -> link_multmove_descript v (HitMult (n, NoEff x)))
+      | NoEff v -> link_multmove_descript v (HitMult (n, NoEff x))
+      | _ -> failwith "Faulty Game Logic: Debug 444")
   | x -> link_multmove_descript m1 (HitMult (1, x))
 
 (* Handles the moves that deal damage *)
@@ -777,6 +780,7 @@ let move_handler atk def wt move =
                           ( let n = Random.int 2 + 1 in
                             atk.current.curr_status <- (fst atk.current.curr_status, (ForcedMoveNoSwitch (n, move.name))::(snd atk.current.curr_status)))
     | [] -> ()
+    | _ -> failwith "Faulty Game Logic: Debug 783"
     in
   let hit, reason = hitMoveDueToStatus atk (`NoAdd !newmove) in
   let rec decompose reason =
@@ -885,7 +889,8 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
         | 3 -> secondary_effects (StageBoost[(SpecialDefense,2)]::t)
         | 4 -> secondary_effects (StageBoost[(Speed,2)]::t)
         | 5 -> secondary_effects (StageBoost[(Accuracy,2)]::t)
-        | 6 -> secondary_effects (StageBoost[(Evasion,2)]::t)); secondary_effects t
+        | 6 -> secondary_effects (StageBoost[(Evasion,2)]::t)
+        | _ -> failwith "Does Not Happen"); secondary_effects t
     (* Move that forces a switch out *)
     | ForceSwitch::t -> newmove := SwitchOut !newmove; secondary_effects t
     (* Move that lowers stat of opponent *)
@@ -1181,6 +1186,7 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
                           else
                             (newmove := CopyFail)
     | [] -> ()
+    | _ -> failwith "Faulty Game Logic: Debug 1188"
   in
   let hit, reason = hitMoveDueToStatus atk (`NoAdd !newmove) in
   let rec decompose reason =
@@ -1605,6 +1611,7 @@ let handle_action state action1 action2 =
   | TurnEnd -> (match action2 with
                   | TurnEnd -> handle_next_turn t1 t2 w m1 m2
                   | _ -> failwith "Faulty Game Logic: Debug 276")
+  | AIMove -> failwith "unimplemented"
 
 (* Main loop for 1 player -- gets input from AI *)
 let rec main_loop_1p engine gui_ready ready ready_gui () =

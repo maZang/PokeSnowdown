@@ -5,6 +5,11 @@ ocamlfind ocamlc -g -thread
           ai.ml gui.ml battle_controller.ml game.ml
  -o game
 
+OR
+
+cs3110 compile -thread -p lablgtk2,async,yojson,str game.ml
+
+
 ocamlfind ocamlc -g -thread
  -package lablgtk2 -package async -package yojson -package str
  -linkpkg info.mli pokemon.mli gui.mli battle_controller.mli game.mli pokemon.ml
