@@ -190,9 +190,9 @@ let rec move_left () =
 
 let talk tournament =
   match (!x, !y) with
-  | (7,1) -> if !playerDirection = Up then (List.iter (fun s -> gameText#set_text s; busywait ()) profOakQuotes; current_screen := TourneyChoose; tournament#clicked ()) else ()
-  | (4,1) -> if !playerDirection = Up then (List.iter (fun s -> gameText#set_text s; busywait ()) opp1Quotes; current_screen := TourneyChoose; tournament#clicked ()) else ()
-  | (10,1) -> if !playerDirection = Up then (List.iter (fun s -> gameText#set_text s; busywait ()) opp2Quotes; current_screen := TourneyChoose; tournament#clicked ()) else ()
+  | (7,1) -> if !playerDirection = Up then (List.iter (fun s -> gameText#set_text s; busywait ()) profOakQuotes; gameText#set_text "Use W,A,S,D to move. Press H to interact with Prof. Oak and space bar to talk.") else ()
+  | (4,1) -> if !playerDirection = Up then (List.iter (fun s -> gameText#set_text s; busywait ()) opp1Quotes; tournament#clicked ()) else ()
+  | (10,1) -> if !playerDirection = Up then (List.iter (fun s -> gameText#set_text s; busywait ()) opp2Quotes; tournament#clicked ()) else ()
   | _ -> ()
 
 let rec move () =
@@ -201,7 +201,7 @@ let rec move () =
   | Down -> move_down ()
   | Left -> move_left ()
   | Right -> move_right ()
-  | Interact -> talk tournament; move_ivar := Ivar.create ()); move ())
+  | Interact -> talk tournament); move_ivar := Ivar.create (); move ())
 
 let handle_key_press tournament s =
   let key = GdkEvent.Key.keyval s in
