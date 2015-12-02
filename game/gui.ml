@@ -66,8 +66,16 @@ let () = !select1#destroy (); !select2#destroy (); !select3#destroy ();
 *)
 let current_screen = ref MainMenu
 
-let gameBoard = ref ( GPack.table ~rows:4 ~columns: 4 ())
-let () = !gameBoard#destroy ()
+let spriteanim = GPack.fixed ~width:screen_width ~height:(2 * screen_height/3) ()
+let bossanim = GPack.fixed ~width:screen_width ~height:(2 * screen_height/3) ()
+let tilemap = GMisc.image ~file:"../data/tournament/tilemap.jpg" ()
+let gameBoard = GPack.table ~rows:4 ~columns: 4 ~height: (2* screen_height/3) ~width:screen_width  ()
+let sprite = GMisc.image ~file:"../data/fx/ghostwisp.png" ()
+let boss = GMisc.image ~file:"../data/fx/flyingwisp.png" ()
+let () =  (spriteanim#put sprite#coerce 160 200; bossanim#put boss#coerce 160 100;
+           gameBoard#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH bossanim#coerce;
+           gameBoard#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH spriteanim#coerce;
+           gameBoard#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH tilemap#coerce)
 
 let space_press s =
   if GdkEvent.Key.keyval s = 32 then
@@ -351,6 +359,12 @@ let load_battle_load engine img bg_img load_screen battle text buttonhide button
       | _ -> load_helper ()) in load_helper())
   else
     ()
+
+let load_tournament engine img bg_img load_screen battle text buttonhide buttonshow
+  (battle_status, gui_ready, ready, ready_gui) main_menu (battle_screen : GPack.box)
+  poke1_img poke2_img text_buffer health_holders () =
+  current_screen := Tourney; List.iter (fun s -> s#misc#hide ()) buttonhide;
+  img#misc#hide (); battle_screen#pack gameBoard#coerce
 
 let load_random  engine img bg_img load_screen battle text buttonhide buttonshow
   (battle_status, gui_ready, ready, ready_gui) main_menu battle_screen
@@ -1052,6 +1066,11 @@ let main_gui engine battle_engine () =
   (* Preset battle button *)
   ignore(preset#connect#clicked ~callback:(load_preset engine main_menu_bg bg_img load_screen
   battle text [random;touranment] preset [move1; move2; move3; move4;
+  switch] battle_engine main_menu battle_screen poke1_img poke2_img
+  text_buffer health_holders));
+  (* tourney battle button *)
+  ignore(touranment#connect#clicked ~callback:(load_tournament engine main_menu_bg bg_img load_screen
+  battle text [random;preset;touranment] [move1; move2; move3; move4;
   switch] battle_engine main_menu battle_screen poke1_img poke2_img
   text_buffer health_holders));
   (* Switch button *)
