@@ -117,4 +117,4 @@ type screen = SwitchPoke | ChooseMove | Faint | BothFaint
 
 type battle_state = InGame of trainer_team * trainer_team * weather_terrain * playerMove ref * playerMove ref | Loading | P1 of screen| P2 of screen | Processing
 
-type game_state = MainMenu | Menu1P | Quit | Battle of battle_state | Menu2P | Menu0P | Preset1PChoose | Tourney
+type game_state = MainMenu | Menu1P | Quit | Battle of battle_state | Menu2P | Menu0P | Preset1PChoose | Tourney | TourneyChoose
