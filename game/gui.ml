@@ -66,6 +66,8 @@ let () = !select1#destroy (); !select2#destroy (); !select3#destroy ();
 *)
 let current_screen = ref MainMenu
 
+let gameBoard = ref ( GPack.table ~rows:4 ~columns: 4 ())
+let () = !gameBoard#destroy ()
 
 let space_press s =
   if GdkEvent.Key.keyval s = 32 then
