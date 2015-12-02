@@ -19,6 +19,11 @@ let busywait_small = let ctr = ref 0 in fun () -> ctr := 0;
     incr ctr
   done
 
+let busywait_player = let ctr = ref 0 in fun () -> ctr := 0;
+  for i = 1 to 200_000 do
+    incr ctr
+  done
+
 (* Screen width and height parameters *)
 let screen_width = 600
 let screen_height= 480
@@ -83,28 +88,109 @@ let bossanim = GPack.fixed ~width:screen_width ~height:(2 * screen_height/3) ()
 let tilemap = GMisc.image ~file:"../data/tournament/tilemap.png" ()
 (* 600 x 320 *)
 let gameBoard = GPack.table ~rows:4 ~columns: 4 ~height: (2* screen_height/3) ~width:screen_width  ()
-let sprite = GMisc.image ~file:"../data/tournament/Player/Up.png" ()
+let sprite = GMisc.image ~file:"../data/tournament/Player/Down.png" ()
 let boss = GMisc.image ~file:"../data/tournament/NPC/ProfOak.png" ()
 let () =  (spriteanim#put sprite#coerce (40 * !x) (40 * !y); bossanim#put boss#coerce 280 60;
            gameBoard#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH spriteanim#coerce;
            gameBoard#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH bossanim#coerce;
            gameBoard#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH tilemap#coerce)
 
+type gameMovement = Up | Down | Left | Right
+
+let move_ivar = ref (Ivar.create ())
+
+let rec move_up () =
+  (if List.mem (!x, !y - 1) obstacle_coordinates then
+    (sprite#set_file "../data/tournament/Player/Up.png")
+  else
+    (sprite#set_file "../data/tournament/Player/Up1.png";
+    for i = 0 to 20 do
+      spriteanim#move sprite#coerce (40 * !x) (40 * !y - i);
+      busywait_player ()
+    done;
+    sprite#set_file "../data/tournament/Player/Up2.png";
+    for i = 20 to 40 do
+      spriteanim#move sprite#coerce (40 * !x) (40 * !y - i);
+      busywait_player ()
+    done;
+    sprite#set_file "../data/tournament/Player/Up.png";
+    y := !y - 1))
+
+let rec move_down () =
+  (if List.mem (!x, !y + 1) obstacle_coordinates then
+    (sprite#set_file "../data/tournament/Player/Down.png")
+  else
+    (sprite#set_file "../data/tournament/Player/Down1.png";
+    for i = 0 to 20 do
+      spriteanim#move sprite#coerce (40 * !x) (40 * !y + i);
+      busywait_player ()
+    done;
+    sprite#set_file "../data/tournament/Player/Down2.png";
+    for i = 20 to 40 do
+      spriteanim#move sprite#coerce (40 * !x) (40 * !y + i);
+      busywait_player ()
+    done;
+    sprite#set_file "../data/tournament/Player/Down.png";
+    y := !y + 1))
+
+let rec move_right () =
+  (if List.mem (!x + 1, !y) obstacle_coordinates then
+    (sprite#set_file "../data/tournament/Player/Right.png")
+  else
+    (sprite#set_file "../data/tournament/Player/Right1.png";
+    for i = 0 to 20 do
+      spriteanim#move sprite#coerce (40 * !x + i) (40 * !y);
+      busywait_player ()
+    done;
+    sprite#set_file "../data/tournament/Player/Right2.png";
+    for i = 20 to 40 do
+      spriteanim#move sprite#coerce (40 * !x + i) (40 * !y);
+      busywait_player ()
+    done;
+    sprite#set_file "../data/tournament/Player/Right.png";
+    x := !x + 1))
+
+let rec move_left () =
+  (if List.mem (!x - 1, !y) obstacle_coordinates then
+    (sprite#set_file "../data/tournament/Player/Left.png")
+  else
+    (sprite#set_file "../data/tournament/Player/Left1.png";
+    for i = 0 to 20 do
+      spriteanim#move sprite#coerce (40 * !x - i) (40 * !y);
+      busywait_player ()
+    done;
+    sprite#set_file "../data/tournament/Player/Left2.png";
+    for i = 20 to 40 do
+      spriteanim#move sprite#coerce (40 * !x - i) (40 * !y);
+      busywait_player ()
+    done;
+    sprite#set_file "../data/tournament/Player/Left.png";
+    x := !x - 1))
+
+let rec move () =
+  upon (Ivar.read !move_ivar) (fun s -> (match s with
+  | Up -> move_up ()
+  | Down -> move_down ()
+  | Left -> move_left ()
+  | Right -> move_right ()); move_ivar := Ivar.create (); move ())
+
 let handle_key_press s =
   let key = GdkEvent.Key.keyval s in
   Printf.printf "Key value pressed: %d\n%!" key;
   match !current_screen with
-  | Battle InGame _ -> (match key with
+  | Battle Loading -> false
+  | Battle _ -> (match key with
                         | 32 -> continue := true; true
                         | _ -> false)
   | Tourney -> (match key with
-                | 119 -> y := !y - 1; spriteanim#move sprite#coerce (40 * !x) (40 * !y); true
-                | 115 -> y := !y + 1; spriteanim#move sprite#coerce (40 * !x) (40 * !y); true
-                | 100 -> x := !x + 1; spriteanim#move sprite#coerce (40 * !x) (40 * !y); true
-                | 97 -> x := !x - 1; spriteanim#move sprite#coerce (40 * !x) (40 * !y); true
+                | 119 -> Ivar.fill_if_empty !move_ivar Up; true
+                | 115 -> Ivar.fill_if_empty !move_ivar Down; true
+                | 100 -> Ivar.fill_if_empty !move_ivar Right; true
+                | 97 -> Ivar.fill_if_empty !move_ivar Left; true
                 | _ -> false )
   | _ -> false
 
+let () = move ()
 (* ---------------------------------------------------------------------------*)
 
 
