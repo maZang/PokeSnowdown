@@ -5,3 +5,4 @@
 a.out
 *.cmo
 *.cmi
+_build
