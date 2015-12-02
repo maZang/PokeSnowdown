@@ -1621,7 +1621,7 @@ let rec main_loop_1p engine gui_ready ready ready_gui () =
   upon (Ivar.read !gui_ready) (* Replace NoMove with ai move later *)
     (fun (cmd1, cmd2) -> let c1 = unpack cmd1 in
                          let c2 = match (unpack cmd2) with
-                          | AIMove -> UseAttack (Ai.getRandomMove t2.current)
+                          | AIMove -> UseAttack (Ai.getBetterMove t2.current)
                           | NoMove -> NoMove
                           | UseAttack s -> UseAttack s
                           | Preprocess -> Preprocess

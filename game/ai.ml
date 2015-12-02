@@ -12,6 +12,28 @@ let getRandomMove (poke : battle_poke) : string =
   | 3 -> poke.pokeinfo.move4.name
   | _ -> failwith "Does not occur." (* Here to satisfy the compiler >:( *)
 
+(* Calculate weight of a move by it's accuracy and power *)
+let calculateMoveWeights (pmove: move) : int =
+  (pmove.accuracy * pmove.power) / 100
+
+(* Usually the picks the better move (one with a greater weight). If all moves
+ * are status moves, then randomly pick a status move. Doesn't pick a status
+ * move if there is at least 1 non-status move. *)
+let getBetterMove (poke : battle_poke) : string =
+  let m1 = calculateMoveWeights poke.pokeinfo.move1 in
+  let m2 = calculateMoveWeights poke.pokeinfo.move2 in
+  let m3 = calculateMoveWeights poke.pokeinfo.move3 in
+  let m4 = calculateMoveWeights poke.pokeinfo.move4 in
+  let total = m1+m2+m3+m4 in
+  if total=0 then getRandomMove poke
+  else
+    (let randum = Random.int total in
+    if (randum < m1) then poke.pokeinfo.move1.name
+    else if (randum >= m1 && randum < (m1+m2)) then poke.pokeinfo.move2.name
+    else if (randum >= (m1+m2) && randum < (m1+m2+m3))
+         then poke.pokeinfo.move3.name
+    else poke.pokeinfo.move4.name)
+
 (* [replaceDead lst] randomly chooses a Pokemon given a list lst of alive ones.
  *
  *  - [lst] is a list of currently-alive battle Pokemon.
