@@ -465,6 +465,8 @@ let getSecondaryEffect str = match str with
   | "thrash" | "outrage" | "petal-dance" -> [SelfEncore]
   | "mirror-move" | "copycat" -> [CopyPrevMove]
   | "fire-fang" -> [BurnChance; FlinchMove]
+  | "tail-glow" -> [StageBoost [(SpecialAttack, 3)]]
+  | "cotton-guard" -> [StageBoost [(Defense, 3)]]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
