@@ -397,7 +397,8 @@ let getDmgClass str =
 
 let getSecondaryEffect str = match str with
   | "karate-chop" | "razor-leaf" | "crabhammer" | "slash" | "aeroblast"
-    | "cross-chop" | "air-cutter" | "stone-edge" -> [IncCrit 1]
+    | "cross-chop" | "air-cutter" | "stone-edge" | "attack-order" | "drill-run"
+    | "leaf-blade" | "night-slash" | "psycho-cut" | "shadow-claw" | "spacial-rend" -> [IncCrit 1]
   | "double-slap" | "comet-punch" | "fury-attack" | "pin-missile" |
       "spike-cannon" | "barrage" | "fury-swipes" | "bone-rush" |
       "bullet-seed" -> [RandMultHit]
@@ -520,6 +521,7 @@ let getSecondaryEffect str = match str with
   | "captivate" | "eerie-impulse" -> [StageAttack [(SpecialAttack, 2)]]
   | "fake-tears" -> [StageAttack [(SpecialDefense, 2)]]
   | "knock-off" -> [KnockOff]
+  | "frost-breath" | "storm-throw" -> [IncCrit 3]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
