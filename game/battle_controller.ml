@@ -5,11 +5,6 @@ open Pokemon
 (* All pokemon IVs in this game will be max at 31 *)
 let pokeIV = 31
 
-let prevmove1 = ref ""
-let prevmove2 = ref ""
-let prevpoke1 = ref (getBattlePoke (getTestPoke ()))
-let prevpoke2 = ref (getBattlePoke (getTestPoke ()))
-
 (* Peeks into the Ivar for the game state *)
 let get_game_status engine =
   match Deferred.peek (Ivar.read !engine) with
@@ -67,6 +62,12 @@ let getBattlePoke poke =
   {pokeinfo = poke; curr_hp = bhp; curr_status = (NoNon, []);
   curr_item = poke.item; bhp; battack; bdefense; bspecial_attack;
   bspecial_defense; bspeed}
+
+(* Used for some secondary conditions *)
+let prevmove1 = ref ""
+let prevmove2 = ref ""
+let prevpoke1 = ref (getBattlePoke (getTestPoke ()))
+let prevpoke2 = ref (getBattlePoke (getTestPoke ()))
 
 (* Initializes the game state *)
 let initialize_battle team1 team2 =

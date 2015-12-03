@@ -28,7 +28,7 @@ let updatePokemonFields pokename move1 move2 move3 move4 ability nature item hpe
                       ("special-defense", `String (string_of_int spdefevs));
                       ("speed", `String (string_of_int speedevs))])
         | _ -> raise FaultyGameSave)
-  | _ -> raise FaultyGameSave
+  | _-> raise BadFieldOption
 
 let createSavePokeEdit pokename move1 move2 move3 move4 ability nature item hpevs atkevs defevs spatkevs spdefevs speedevs =
   let prevSave = unlocked_pokemon () in

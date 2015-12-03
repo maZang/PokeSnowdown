@@ -569,7 +569,7 @@ let load_random  engine img bg_img load_screen battle text buttonhide buttonshow
               poke1_img poke2_img text_buffer health_holders ()
   | _ -> failwith "Faulty Game Logic: Debug 298"
 
-let load_poke_edit engine img bg_img load_screen battle text buttonhide poke_edit
+let load_poke_edit engine img bg_img load_screen battle text buttonhide (poke_edit : GButton.button)
   buttonshow (battle_status, gui_ready, ready, ready_gui) main_menu (battle_screen : GPack.box)
   poke1_img poke2_img text_buffer health_holders () =
   match !current_screen with
@@ -602,7 +602,7 @@ let load_poke_edit engine img bg_img load_screen battle text buttonhide poke_edi
                       !select6#entry#set_text (Pokemon.string_of_nature poke.nature);
                       select7 := GEdit.combo ~popdown_strings:(Pokemon.item_list) ~case_sensitive:false ~allow_empty:false ~packing:(pokedit_combos#pack ~expand:true) ();
                       !select7#entry#set_text (Pokemon.string_of_item poke.item);
-                      poke_edit#set_label "Save";
+                      poke_edit#set_label ("Save " ^ pokename);
                       hp_evs#set_adjustment (GData.adjustment ~upper:252. ~page_size:0. ~value:(float_of_int poke.evs.hp) ());
                       atk_evs#set_adjustment (GData.adjustment ~upper:252. ~page_size:0. ~value:(float_of_int poke.evs.attack) ());
                       def_evs#set_adjustment (GData.adjustment ~upper:252. ~page_size:0. ~value:(float_of_int poke.evs.defense) ());
@@ -613,9 +613,19 @@ let load_poke_edit engine img bg_img load_screen battle text buttonhide poke_edi
                 ) with _ -> let error_win = GWindow.message_dialog ~message:"Error in your Pokemon selection. Try making sure everything is spelled correctly."
                                   ~buttons:GWindow.Buttons.close  ~message_type:`ERROR () in ignore(error_win#connect#close ~callback:(error_win#destroy));
                                   ignore (error_win#connect#response ~callback:(fun s -> error_win#destroy ())); error_win#show ())
-  | PokeEditor -> (
-
-                  )
+  | PokeEditor -> (try (let pokename = String.sub poke_edit#label 5 (String.length poke_edit#label - 5) in
+                  Save.createSavePokeEdit pokename !select1#entry#text !select2#entry#text
+                    !select3#entry#text !select4#entry#text !select5#entry#text !select6#entry#text
+                    !select7#entry#text (int_of_float hp_evs#adjustment#value) (int_of_float atk_evs#adjustment#value)
+                    (int_of_float def_evs#adjustment#value) (int_of_float special_attack_evs#adjustment#value) (int_of_float special_defense_evs#adjustment#value)
+                    (int_of_float speed_evs#adjustment#value)) with | err ->  (let message = match err with
+                                  | Save.FaultyGameSave -> "Corrupted Save File."
+                                  | Save.BadFieldOption -> "Error in Moves/Items/Ability/Nature. Make sure everything is spelled correctly."
+                                  | Save.BadEVInput -> "The maximum EVs can add up to is 510."
+                                  | _ -> "Unknown Error" in
+                                  let error_win = GWindow.message_dialog ~message:message
+                                  ~buttons:GWindow.Buttons.close  ~message_type:`ERROR () in ignore(error_win#connect#close ~callback:(error_win#destroy));
+                                  ignore (error_win#connect#response ~callback:(fun s -> error_win#destroy ())); error_win#show ()))
   | _ -> failwith "Faulty Game Logic: Debug 550"
 
 let load_preset engine img bg_img load_screen battle text buttonhide preset buttonshow
