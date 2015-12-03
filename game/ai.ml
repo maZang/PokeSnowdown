@@ -1,6 +1,6 @@
 open Info
 
-(* [getRandomMove poke] gets the name of a random move for the Pokemon poke.
+(* [getRandomMove poke] gets the name of a random move for the Pokemon [poke].
  *
  *  - [poke] is a battle Pokemon.
  *)
@@ -34,41 +34,50 @@ let getBetterMove (poke : battle_poke) : string =
          then poke.pokeinfo.move3.name
     else poke.pokeinfo.move4.name)
 
-(* [replaceDead lst] randomly chooses a Pokemon given a list lst of alive ones.
+(* [replaceDead lst] randomly chooses a Pokemon given a list [lst] of alive
+ * ones.
  *
  *  - [lst] is a list of currently-alive battle Pokemon.
  *)
 let replaceDead (lst : battle_poke list) : string =
   let n = Random.int (List.length lst) in (List.nth lst n).pokeinfo.name
 
-(* [has_advantage elst1 elst2] checks whether the element of the Pokemon elst1
- *  has a type advantage against the element of the opposing Pokemon elst2.
+(* [get_advantage_value elst1 elst2] returns the float value representing
+ * the type advantage of the element of the Pokemon [elst1] against the element
+ * of the opposing Pokemon [elst2].
  *
  *  - [elst1] is a list of up to two element types for Pokemon 1.
  *  - [elst2] is a list of up to two element types for Pokemon 2.
  *)
-let has_advantage (elst1 : element list) (elst2 : element list) : bool =
+let get_advantage_value (elst1:element list) (elst2:element list) : float =
   let rec helper = function
     | [] -> 1.
     | h::t -> (List.fold_left (fun acc x -> acc *. Pokemon.getElementEffect h x)
                 1. elst2) *. (helper t)
   in
-    helper elst1 >= 2.
+    helper elst1
 
-(* [replaceDead2 poke alivelst] returns the string name of the first Pokemon in
- *  the non-empty list of alive pokemon alivelst that has a type advantage
- *  against the opposing Pokemon poke. If there are no such Pokemon, one is
- *  randomly chosen.
+(* [replaceBetterDead poke alivelst] returns the string name of the first
+ * Pokemon in the non-empty list of alive pokemon [alivelst] that has the
+ * maximum type advantage against the opposing Pokemon [poke].
  *
  *  - [poke] is a battle Pokemon to be compared against.
  *  - [alivelst] is a list of battle Pokemon.
  *)
-let replaceDead2 (poke : battle_poke) (alivelst : battle_poke list) : string =
-  let rec helper = function
-    | [] -> let n = Random.int (List.length alivelst) in
-              (List.nth alivelst n).pokeinfo.name
-    | h::t -> if (has_advantage h.pokeinfo.element poke.pokeinfo.element) then
-                h.pokeinfo.name
-              else helper t
+let replaceBetterDead (poke:battle_poke) (alivelst:battle_poke list) : string =
+  let type2 = poke.pokeinfo.element in
+  let rec get_poke_max_advantage p maxv = function
+    | [] -> p
+    | h::t ->
+        let type1 = h.pokeinfo.element in
+        let currv = get_advantage_value type1 type2 in
+        if (currv > maxv) then get_poke_max_advantage h currv t
+        else get_poke_max_advantage p maxv t
   in
-    helper alivelst
+  match alivelst with
+  | [] -> failwith "Precondition Violated!"
+  | h::t ->
+      let type1 = h.pokeinfo.element in
+      let currv = get_advantage_value type1 type2 in
+      let bestpoke = get_poke_max_advantage h currv t in
+      bestpoke.pokeinfo.name
