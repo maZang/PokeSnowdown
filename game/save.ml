@@ -21,6 +21,7 @@ let updatePokemonFields pokename move1 move2 move3 move4 ability nature item hpe
         | "ability" -> ("ability", `String ability)
         | "nature" -> ("nature", `String nature)
         | "item" -> ("item", `String item)
+        | "name" -> ("item", `String pokename)
         | "evs" -> ("evs", `Assoc [("hp", `String (string_of_int hpevs));
                       ("attack", `String (string_of_int atkevs));
                       ("defense", `String (string_of_int defevs));
@@ -28,7 +29,7 @@ let updatePokemonFields pokename move1 move2 move3 move4 ability nature item hpe
                       ("special-defense", `String (string_of_int spdefevs));
                       ("speed", `String (string_of_int speedevs))])
         | _ -> raise FaultyGameSave)
-  | _-> raise BadFieldOption
+  | _ -> raise BadFieldOption
 
 let createSavePokeEdit pokename move1 move2 move3 move4 ability nature item hpevs atkevs defevs spatkevs spdefevs speedevs =
   let prevSave = unlocked_pokemon () in
