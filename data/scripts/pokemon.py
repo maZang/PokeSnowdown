@@ -142,7 +142,7 @@ def generate_pokemon_json ():
 		move_list = [] 
 		if (row["pokemon_id"] in pokemon_move):
 			move_list = pokemon_move[row["pokemon_id"]]
-		if move_dict[row["move_id"]] not in move_list:	
+		if move_dict[row["move_id"]] not in move_list:
 			move_list.append(move_dict[row["move_id"]])
 			pokemon_move[row["pokemon_id"]] = move_list
 	#final pokemon dict 
