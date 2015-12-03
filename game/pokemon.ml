@@ -421,7 +421,7 @@ let getSecondaryEffect str = match str with
   | "dragon-rage" -> [ConstantDmg 40]
   | "toxic" -> [ToxicChance]
   | "agility" -> [StageBoost [(Speed, 2)]]
-  | "screech" -> [StageAttack [(Defense, -2)]]
+  | "screech" -> [StageAttack [(Defense, 2)]]
   | "double-team" -> [StageBoost [(Evasion, 1)]]
   | "minimize" -> [StageBoost [(Evasion, 2)]]
   | "harden" | "withdraw" | "defense-curl" | "steel-wing" -> [StageBoost [(Defense, 1)]]
@@ -478,7 +478,6 @@ let getSecondaryEffect str = match str with
   | "thunder-fang" -> [ParaChance; FlinchMove]
   | "tail-glow" -> [StageBoost [(SpecialAttack, 3)]]
   | "cotton-guard" -> [StageBoost [(Defense, 3)]]
-  | "ancient-power" -> [StageBoost [(Attack, 1);(Defense, 1);(SpecialAttack, 1);(SpecialDefense, 1);(Speed, 1)]]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
