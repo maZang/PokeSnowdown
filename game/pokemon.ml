@@ -369,7 +369,7 @@ let getDmgClass str =
 
 let getSecondaryEffect str = match str with
   | "karate-chop" | "razor-leaf" | "crabhammer" | "slash" | "aeroblast"
-    | "cross-chop" | "air-cutter" -> [IncCrit 1]
+    | "cross-chop" | "air-cutter" | "stone-edge" -> [IncCrit 1]
   | "double-slap" | "comet-punch" | "fury-attack" | "pin-missile" |
       "spike-cannon" | "barrage" | "fury-swipes" | "bone-rush" -> [RandMultHit]
   | "fire-punch" | "ember" | "flamethrower" | "fire-blast" |
@@ -391,23 +391,21 @@ let getSecondaryEffect str = match str with
     | "feather-dance" -> [StageAttack [(Attack, 2)]]
   | "meditate" | "sharpen" | "metal-claw" | "howl" -> [StageBoost [(Attack, 1)]]
   | "whirlwind" | "roar" | "dragon-tail" -> [ForceSwitch]
-  | "stomp" | "rolling-kick" | "headbutt" | "bite" | "bone-club" | "waterfall"
-    | "rock-slide" | "hyper-fang" | "twister" | "zen-headbutt" | "steamroller"
-    | "heart-stamp" | "iron-head" | "needle-arm" -> [FlinchMove]
   | "double-kick" | "gear-grind" | "bonemerang" | "double-hit" -> [MultHit 2]
   | "sand-attack" | "smokescreen" | "kinesis" | "flash"
     | "mud-slap" | "octazooka" | "leaf-tornado" -> [StageAttack [(Accuracy, 1)]]
   | "take-down" | "double-edge" | "submission" -> [RecoilMove]
   | "tail-whip" | "leer" | "iron-tail" | "crunch" -> [StageAttack [(Defense, 1)]]
-  | "poison-sting" | "poison-powder" | "smog" | "sludge" |
-      "poison-gas" | "sludge-bomb" -> [PoisonChance]
+  | "poison-sting" | "poison-powder" | "smog" | "sludge" | "poison-gas"
+    | "sludge-bomb" | "poison-jab" | "gunk-shot" | "sludge-wave" -> [PoisonChance]
+  | "cross-poison" | "poison-tail" -> [PoisonChance; IncCrit 1]
   | "twineedle" -> [MultHit 2; PoisonChance]
   | "growl" | "aurora-beam" -> [StageAttack [(Attack, 1)]]
   | "sing" | "sleep-powder" | "hypnosis" | "lovely-kiss" | "spore" | "dark-void"
     | "grass-whistle" -> [PutToSleep]
   | "supersonic" | "psybeam" | "confusion" | "confuse-ray" | "dizzy-punch"
     | "sweet-kiss" | "dynamic-punch" | "water-pulse" | "hurricane" | "chatter"
-    | "rock-climb" | "secret-power" | "signal-beam" | "teeter-dance" -> [ConfuseOpp]
+    | "rock-climb" | "signal-beam" | "teeter-dance" -> [ConfuseOpp]
   | "sonic-boom" -> [ConstantDmg 20]
   | "acid" | "psychic" | "shadow-ball" | "flash-cannon" -> [StageAttack [(SpecialDefense, 1)]]
   | "bubble-beam" | "bubble" | "powder-snow" | "icy-wind" -> [StageAttack [(Speed, 1)]]
@@ -421,7 +419,6 @@ let getSecondaryEffect str = match str with
   | "solar-beam" -> [ChargeInSunlight "Need sunlight to charge faster!"]
   | "string-shot" | "cotton-spore" | "scary-face" -> [StageAttack [(Speed, 2)]]
   | "dragon-rage" -> [ConstantDmg 40]
-  | "toxic" -> [ToxicChance]
   | "agility" -> [StageBoost [(Speed, 2)]]
   | "screech" -> [StageAttack [(Defense, 2)]]
   | "double-team" -> [StageBoost [(Evasion, 1)]]
@@ -478,9 +475,15 @@ let getSecondaryEffect str = match str with
   | "mirror-move" | "copycat" -> [CopyPrevMove]
   | "fire-fang" -> [BurnChance; FlinchMove]
   | "thunder-fang" -> [ParaChance; FlinchMove]
+  | "ice-fang" -> [FreezeChance; FlinchMove]
+  | "poison-fang" | "toxic" -> [ToxicChance]
   | "tail-glow" -> [StageBoost [(SpecialAttack, 3)]]
   | "cotton-guard" -> [StageBoost [(Defense, 3)]]
-  | "waterfall" | "extrasensory" | "dark-pulse" | "iron-head"-> [FlinchMove]
+  | "waterfall" | "extrasensory" | "dark-pulse" | "iron-head"
+    | "astonish" | "air-slash" | "bite" | "bone-club" | "dragon-rush"
+    | "headbutt" | "heart-stamp" | "hyper-fang" | "icicle-crash"
+    | "needle-arm" | "rock-slide" | "rolling-kick" | "steamroller"
+    | "stomp" | "zen-headbutt" -> [FlinchMove]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
