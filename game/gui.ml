@@ -584,7 +584,7 @@ let load_poke_edit engine img bg_img load_screen battle text buttonhide poke_edi
   | PokeEdit -> (try (let pokename = !select1#entry#text in
                       let poke = Pokemon.getPresetPokemon pokename in
                       let move_lst = Pokemon.getAllMoves pokename in
-                      let abil_lst = Pokemon.getAllMoves pokename in
+                      let abil_lst = Pokemon.getAllAbilities pokename in
                       !select1#destroy (); !selecttext#set_text ("Now editing " ^ pokename ^ "! Your current values are already loaded in.");
                       editimg#set_file ("../data/sprites/" ^ pokename ^ ".gif");
                       battle_screen#pack pokedit_screen#coerce;
@@ -613,7 +613,9 @@ let load_poke_edit engine img bg_img load_screen battle text buttonhide poke_edi
                 ) with _ -> let error_win = GWindow.message_dialog ~message:"Error in your Pokemon selection. Try making sure everything is spelled correctly."
                                   ~buttons:GWindow.Buttons.close  ~message_type:`ERROR () in ignore(error_win#connect#close ~callback:(error_win#destroy));
                                   ignore (error_win#connect#response ~callback:(fun s -> error_win#destroy ())); error_win#show ())
-  | PokeEditor -> ()
+  | PokeEditor -> (
+
+                  )
   | _ -> failwith "Faulty Game Logic: Debug 550"
 
 let load_preset engine img bg_img load_screen battle text buttonhide preset buttonshow

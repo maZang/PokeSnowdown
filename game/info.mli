@@ -60,8 +60,7 @@ type move = {name:string; priority: int; target: target; dmg_class: dmg_class;
     mutable power:int; effect_chance: int; accuracy: int; element: element;
     description: string; secondary: secondary_effects list}
 
-type item = Nothing | Leftovers | ChoiceBand | LifeOrb | CharizarditeX |
-            ChoiceSpecs
+type item = Nothing | Leftovers | ChoiceBand | LifeOrb | ChoiceSpecs
 
 type terrain_element = LightScreen of int | Reflect of int | Spikes of int
 

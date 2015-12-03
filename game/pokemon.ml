@@ -117,12 +117,11 @@ let getRandomNature () =
 
 let string_of_item item =
   match item with
-  | Leftovers -> "Leftovers"
-  | ChoiceBand -> "ChoiceBand"
-  | LifeOrb -> "LifeOrb"
-  | ChoiceSpecs -> "ChoiceSpecs"
-  | CharizarditeX -> "CharizarditeX"
-  | Nothing -> "NO ITEM"
+  | Leftovers -> "leftovers"
+  | ChoiceBand -> "choice band"
+  | LifeOrb -> "life orb"
+  | ChoiceSpecs -> "choice specs"
+  | Nothing -> "nothing"
 
 let getItemFromString str =
   match str with
@@ -130,6 +129,7 @@ let getItemFromString str =
   | "choice band" -> ChoiceBand
   | "leftovers" -> Leftovers
   | "choice specs" -> ChoiceSpecs
+  | "nothing" -> Nothing
   | _ -> failwith "Does not occur"
 
 let getRandomItem () =

@@ -8,6 +8,9 @@ val item_list: string list
 (* nature list is a list of valid natures for a pokemon *)
 val nature_list: string list
 
+(* gets the unlocked pokemon json save file *)
+val unlocked_pokemon: unit -> Yojson.Basic.json
+
 (* [unlocked_poke_string_list ()] generates a string list of Pokemon by reading
  *  data from a JSON file.
  *)
@@ -89,3 +92,7 @@ val string_of_element : element -> string
 *  can learn
 *)
 val getAllMoves : string -> string list
+
+(* [getAllAbilities] returns a string list containing all the abilities a
+* Pokemon can have *)
+val getAllAbilities: string -> string list
