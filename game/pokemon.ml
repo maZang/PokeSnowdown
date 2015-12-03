@@ -402,7 +402,7 @@ let getSecondaryEffect str = match str with
       "spike-cannon" | "barrage" | "fury-swipes" | "bone-rush" -> [RandMultHit]
   | "fire-punch" | "ember" | "flamethrower" | "fire-blast" |
         "flame-wheel" | "will-o-wisp" | "blue-flare" | "lava-plume" -> [BurnChance]
-  | "ice-punch" | "ice-beam" | "blizzard" -> [FreezeChance]
+  | "ice-punch" | "ice-beam" | "blizzard" | "powder-snow" -> [FreezeChance]
   | "thunder-punch" | "body-slam" | "stun-spore" | "thunder-shock"
     | "thunderbolt" | "thunder-wave" | "thunder" | "lick" | "glare"
     | "zap-cannon" | "spark" | "dragon-breath" | "nuzzle" | "secret-power" -> [ParaChance]
@@ -415,15 +415,15 @@ let getSecondaryEffect str = match str with
   | "bounce" -> [ChargeMove "It bounced up high"; ParaChance]
   | "freeze-shock" -> [ChargeMove "Charging"; ParaChance]
   | "swords-dance" -> [StageBoost [(Attack, 2)]]
-  | "captivate" | "charm" | "eerie-impulse" | "fake-tears"
-    | "feather-dance" -> [StageAttack [(Attack, 2)]]
+  | "charm" | "feather-dance" -> [StageAttack [(Attack, 2)]]
   | "meditate" | "sharpen" | "metal-claw" | "howl" -> [StageBoost [(Attack, 1)]]
   | "whirlwind" | "roar" | "dragon-tail" -> [ForceSwitch]
   | "double-kick" | "gear-grind" | "bonemerang" | "double-hit" -> [MultHit 2]
   | "sand-attack" | "smokescreen" | "kinesis" | "flash"
-    | "mud-slap" | "octazooka" | "leaf-tornado" -> [StageAttack [(Accuracy, 1)]]
-  | "take-down" | "double-edge" | "submission" -> [RecoilMove]
-  | "tail-whip" | "leer" | "iron-tail" | "crunch" -> [StageAttack [(Defense, 1)]]
+    | "mud-slap" | "octazooka" | "leaf-tornado" | "mud-bomb" -> [StageAttack [(Accuracy, 1)]]
+  | "take-down" | "double-edge" | "submission" | "brave-bird" -> [RecoilMove]
+  | "tail-whip" | "leer" | "iron-tail" | "crunch"
+    | "rock-smash" | "razor-shell" | "crush-claw" -> [StageAttack [(Defense, 1)]]
   | "poison-sting" | "poison-powder" | "smog" | "sludge" | "poison-gas"
     | "sludge-bomb" | "poison-jab" | "gunk-shot" | "sludge-wave" -> [PoisonChance]
   | "cross-poison" | "poison-tail" -> [PoisonChance; IncCrit 1]
@@ -440,8 +440,9 @@ let getSecondaryEffect str = match str with
     | "needle-arm" | "rock-slide" | "rolling-kick" | "steamroller"
     | "stomp" | "zen-headbutt" -> [FlinchMove]
   | "sonic-boom" -> [ConstantDmg 20]
-  | "acid" | "psychic" | "shadow-ball" | "flash-cannon" -> [StageAttack [(SpecialDefense, 1)]]
-  | "bubble-beam" | "bubble" | "powder-snow" | "icy-wind" -> [StageAttack [(Speed, 1)]]
+  | "acid" | "psychic" | "shadow-ball" | "flash-cannon" | "bug-buzz"
+    | "energy-ball" | "focus-blast" | "earth-power" -> [StageAttack [(SpecialDefense, 1)]]
+  | "bubble-beam" | "bubble" | "icy-wind" | "mud-shot" | "electroweb" -> [StageAttack [(Speed, 1)]]
   | "hyper-beam"| "blast-burn" | "frenzy-plant" | "hydro-cannon"
       | "roar-of-time" | "giga-impact" | "rock-wrecker"  -> [RechargeMove]
   | "low-kick" | "grass-knot" -> [WeightDamage]
@@ -512,6 +513,9 @@ let getSecondaryEffect str = match str with
   | "poison-fang" | "toxic" -> [ToxicChance]
   | "tail-glow" -> [StageBoost [(SpecialAttack, 3)]]
   | "cotton-guard" -> [StageBoost [(Defense, 3)]]
+  | "tickle" -> [StageAttack [(Attack,1);(Defense,1)]]
+  | "captivate" | "eerie-impulse" -> [StageAttack [(SpecialAttack, 2)]]
+  | "fake-tears" -> [StageAttack [(SpecialDefense, 2)]]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -625,7 +629,7 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Psychic]; move1= getMoveFromString "slack-off"; move2 =
+  {name="gardevoir-mega"; element=[Psychic]; move1= getMoveFromString "brave-bird"; move2 =
   getMoveFromString "psycho-boost"; move3 = getMoveFromString "leaf-tornado";
   move4 = getMoveFromString "flamethrower"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 0; special_defense = 135; ability="pixilate"; evs; nature; item}

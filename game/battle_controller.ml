@@ -546,7 +546,7 @@ let move_handler atk def wt move =
     (* Recoil moves deal certain damage to the user *)
     | RecoilMove::t ->
         newmove := Recoil !newmove;
-        atk.current.curr_hp <- atk.current.curr_hp - !damage / 4
+        atk.current.curr_hp <- max 0 (atk.current.curr_hp - !damage / 4)
     (* Chance of poisoning the opponent *)
     | PoisonChance::t ->
         let randnum = Random.int 100 in
