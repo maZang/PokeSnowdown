@@ -62,7 +62,8 @@ let select3 = ref (GEdit.combo ~popdown_strings:(test_string 750 ()) ())
 let select4 = ref (GEdit.combo ~popdown_strings:(test_string 750 ()) ())
 let select5 = ref (GEdit.combo ~popdown_strings:(test_string 750 ()) ())
 let select6 = ref (GEdit.combo ~popdown_strings:(test_string 750 ()) ())
-let selectimg = GMisc.image ~file:"../data/backgrounds/PokemonLogo.png" ~show:false ()
+let selectimg = GMisc.image ~file:"../data/backgrounds/PokemonLogo.png" ()
+let editimg = GMisc.image ~file:"../data/backgrounds/pokeedit.jpg" ()
 let () = !select1#destroy (); !select2#destroy (); !select3#destroy ();
           !select4#destroy (); !select5#destroy (); !select6#destroy ()
 (* Holds similar information to the engine, but acts differently in battle
@@ -396,8 +397,6 @@ let make_menu ?packing () =
   (* load_screen is a gif that plays before battle (during initialization)*)
   let load_screen = GMisc.image ~file:"../data/backgrounds/background.gif"
     ~show:false ~packing:(vbox#pack) () in
-  (* put in logo but hide it *)
-  hbox2#pack selectimg#coerce;
   (* Return all objects created *)
   (vbox, hbox1, hbox2, button1, button2, button3, button4,
 		button5, button6, button7, button8, img, load_screen)
@@ -507,7 +506,7 @@ let load_tournament engine img bg_img load_screen battle text buttonhide buttons
   (battle_status, gui_ready, ready, ready_gui) main_menu (battle_screen : GPack.box)
   poke1_img poke2_img text_buffer health_holders () =
   let tournament = match buttonhide with
-    | [_;_;tournament] -> tournament
+    | [_;_;tournament;_] -> tournament
     | _ -> failwith "Faulty Game Logic: Debug 508" in
   match !current_screen with
   | Menu1P -> (current_screen := Tourney; List.iter (fun s -> s#misc#hide ()) buttonhide;
@@ -524,7 +523,7 @@ let load_tournament engine img bg_img load_screen battle text buttonhide buttons
                 select4 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
                 select5 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
                 select6 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
-                selectimg#misc#show ();
+                battle_screen#pack selectimg#coerce;
                 ())
   | TourneyChoose -> ()
   | _ -> failwith "Faulty Game Logic: Debug 524"
@@ -552,6 +551,7 @@ let load_poke_edit engine img bg_img load_screen battle text buttonhide poke_edi
               poke_edit#set_label "Continue";
               img#misc#hide ();
               select1 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
+              battle_screen#pack editimg#coerce;
               ()
   | _ -> failwith "Faulty Game Logic: Debug 550"
 
@@ -570,7 +570,7 @@ let load_preset engine img bg_img load_screen battle text buttonhide preset butt
                 select4 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
                 select5 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
                 select6 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
-                selectimg#misc#show ();
+                battle_screen#pack selectimg#coerce;
                 ())
     | Menu2P -> ()
     | Preset1PChoose -> (try (
@@ -580,7 +580,7 @@ let load_preset engine img bg_img load_screen battle text buttonhide preset butt
                           let poke4 = Pokemon.getPresetPokemon (!select4#entry#text) in
                           let poke5 = Pokemon.getPresetPokemon (!select5#entry#text) in
                           let poke6 = Pokemon.getPresetPokemon (!select6#entry#text) in
-                          selectimg#misc#hide (); !selecttext#destroy (); preset#misc#hide ();
+                          battle_screen#remove selectimg#coerce; !selecttext#destroy (); preset#misc#hide ();
                           !select1#destroy (); !select2#destroy (); !select3#destroy ();
                           !select4#destroy (); !select5#destroy (); !select6#destroy ();
                           preset#set_label "Preset Battle";
@@ -649,21 +649,28 @@ let go_back engine (menu_holder, main_menu, battle_screen, one_player,
     Printf.printf "DID I FILL IT %B\n%!" (Ivar.is_full !gui_ready));
   if (!current_screen = Preset1PChoose) then
     (preset#set_label "Preset Battle";
-    selectimg#misc#hide (); main_menu_bg#misc#show (); !selecttext#destroy ();
+    battle_screen#remove selectimg#coerce; main_menu_bg#misc#show (); !selecttext#destroy ();
     !select1#destroy (); !select2#destroy (); !select3#destroy ();
     !select4#destroy (); !select5#destroy (); !select6#destroy ();
-    load_menu engine [random; back_button] [] main_menu_bg Menu1P ());
+    load_menu engine [random; touranment; poke_edit] [] main_menu_bg Menu1P ());
   if (!current_screen = Tourney) then
     (current_screen := Menu1P; battle_screen#remove gameBoard#coerce;
       battle_screen#remove gameText#coerce; main_menu_bg#misc#show ();
-      random#misc#show (); preset#misc#show (); touranment#misc#show ());
+      random#misc#show (); preset#misc#show (); poke_edit#misc#show ();
+      touranment#misc#show ());
   if (!current_screen = TourneyChoose) then
     (current_screen := Menu1P;
     touranment#set_label "Tournament";
-    selectimg#misc#hide (); main_menu_bg#misc#show (); !selecttext#destroy ();
+    battle_screen#remove selectimg#coerce; main_menu_bg#misc#show (); !selecttext#destroy ();
     !select1#destroy (); !select2#destroy (); !select3#destroy ();
     !select4#destroy (); !select5#destroy (); !select6#destroy ();
     load_menu engine [random; preset ; poke_edit] [] main_menu_bg Menu1P ());
+  if (!current_screen = PokeEdit) then
+    (current_screen := Menu1P;
+    poke_edit#set_label "Poke Editor";
+    battle_screen#remove editimg#coerce; main_menu_bg#misc#show ();
+    !selecttext#destroy (); !select1#destroy ();
+    load_menu engine [random;touranment;preset] [] main_menu_bg Menu1P ());
   ()
 
 let switch_poke engine pokebuttons battlebuttons back_button () =
