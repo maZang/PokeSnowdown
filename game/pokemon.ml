@@ -409,7 +409,7 @@ let getSecondaryEffect str = match str with
     | "sweet-kiss" | "dynamic-punch" | "water-pulse" | "hurricane" | "chatter"
     | "rock-climb" | "secret-power" | "signal-beam" | "teeter-dance" -> [ConfuseOpp]
   | "sonic-boom" -> [ConstantDmg 20]
-  | "acid" | "psychic" | "shadow-ball" -> [StageAttack [(SpecialDefense, 1)]]
+  | "acid" | "psychic" | "shadow-ball" | "flash-cannon" -> [StageAttack [(SpecialDefense, 1)]]
   | "bubble-beam" | "bubble" | "powder-snow" | "icy-wind" -> [StageAttack [(Speed, 1)]]
   | "hyper-beam"| "blast-burn" | "frenzy-plant" | "hydro-cannon"
       | "roar-of-time" | "giga-impact" | "rock-wrecker"  -> [RechargeMove]
@@ -480,6 +480,7 @@ let getSecondaryEffect str = match str with
   | "thunder-fang" -> [ParaChance; FlinchMove]
   | "tail-glow" -> [StageBoost [(SpecialAttack, 3)]]
   | "cotton-guard" -> [StageBoost [(Defense, 3)]]
+  | "waterfall" | "extrasensory" | "dark-pulse" | "iron-head"-> [FlinchMove]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
