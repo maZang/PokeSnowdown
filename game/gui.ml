@@ -553,9 +553,13 @@ let load_poke_edit engine img bg_img load_screen battle text buttonhide poke_edi
               select1 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
               battle_screen#pack editimg#coerce;
               ()
-  | PokeEdit -> (try (let poke = Pokemon.getPresetPokemon (!select1#entry#text) in
-                      let move_lst = Pokemon.getAllMoves (!select1#entry#text) in
-
+  | PokeEdit -> (try (let pokename = !select1#entry#text in
+                      let poke = Pokemon.getPresetPokemon pokename in
+                      let move_lst = Pokemon.getAllMoves pokename in
+                      let abil_lst = Pokemon.getAllMoves pokename in
+                      !select1#destroy (); !selecttext#set_text ("Now editing " ^ pokename ^ "!");
+                      editimg#set_file ("../data/sprites/" ^ pokename ^ ".gif");
+                      select1 := GEdit.combo ~popdown_strings:(move_lst) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
                   ()
                 ) with _ -> let error_win = GWindow.message_dialog ~message:"Error in your Pokemon selection. Try making sure everything is spelled correctly."
                                   ~buttons:GWindow.Buttons.close  ~message_type:`ERROR () in ignore(error_win#connect#close ~callback:(error_win#destroy));

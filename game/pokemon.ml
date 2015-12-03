@@ -501,7 +501,10 @@ let getMoveFromString str =
   element; description; secondary}
 
 let getAllMoves poke =
-  List.map (to_string) (poke_json |> member poke |> to_list)
+  List.map (to_string) (poke_json |> member poke |> member "moves" |> to_list)
+
+let getAllAbilities poke =
+  List.map (to_string) (poke_json |> member poke |> member "ability" |> to_list)
 
 let getRandomPokemon () =
   let randomPokeName = poke_arr |>

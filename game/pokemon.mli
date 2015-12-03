@@ -80,4 +80,4 @@ val string_of_element : element -> string
 (* [getAllMoves poke] returns a move list containing all the moves a Pokemon
 *  can learn
 *)
-val getAllMoves : string -> move list
+val getAllMoves : string -> string list
