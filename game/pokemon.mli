@@ -21,11 +21,18 @@ val unlocked_poke_string_list : unit -> string list
  *)
 val getRandomPokemon : unit -> pokemon
 
-(* [getRandomPokemon str] returns an unlocked pokemon, filled with its own
+(* [getPresetPokemon str] returns an unlocked pokemon, filled with its own
  *   abilities and initialized with the appropriate characteristics
  * (moves, etc.), loading from a json file
  *)
-val getPresetPokemon : string -> pokemon
+val getPresetPokemon : ?pjson:Yojson.Basic.json -> string -> pokemon
+
+(* [getRandomPreset str] returns a random unlocked pokemon, filled with its own
+ *   abilities and initialized with the appropriate characteristics
+ * (moves, etc.), loading from a json file
+ *)
+
+val getRandomPreset : ?pjson:Yojson.Basic.json -> unit -> pokemon
 
 (* Turns the nature variant to a string
 *)

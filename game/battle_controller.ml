@@ -76,13 +76,17 @@ let initialize_battle team1 team2 =
     (team1, team2, {weather = ClearSkies; terrain = {side1= ref []; side2= ref []}}, ref (Pl1 NoAction), ref (Pl2 NoAction)))
 
 (* Gets a random team of pokemon for initialization *)
-let getRandomTeam () =
+let getRandomTeam mode =
+  let randFunc = match mode with
+  | `Random -> getRandomPokemon
+  | `Preset -> fun () -> getRandomPreset ()
+  | `Tournament -> getRandomPreset ~pjson:(Tournament.getJson ()) in
   let stat_enhance = {attack=(0,1.); defense=(0,1.); speed=(0,1.);
       special_attack=(0,1.); special_defense=(0,1.); evasion=(0,1.);
       accuracy=(0,1.)} in
-  {current = (getBattlePoke(getRandomPokemon ()));
+  {current = (getBattlePoke(randFunc ()));
   dead =[]; alive = (List.map getBattlePoke
-  (List.map getRandomPokemon [();();();();()])); stat_enhance}
+  (List.map randFunc [();();();();()])); stat_enhance}
 
 (* This function returns the accuracy/evasion bonus given by the stages.
    Pre-condition: num is between -6 and 6
@@ -1653,16 +1657,16 @@ let rec main_loop_2p engine gui_ready ready ready_gui () =
 
 (* Main controller for random one player *)
 let rec main_controller_random1p engine gui_ready ready ready_gui=
-  let team1 = getRandomTeam () in
-  let team2 = getRandomTeam () in
+  let team1 = getRandomTeam `Random in
+  let team2 = getRandomTeam `Random in
   let battle = initialize_battle team1 team2 in
   let () = engine := Ivar.create (); Ivar.fill !engine battle in
   main_loop_1p engine gui_ready ready ready_gui ()
 
 (* Main controller for random two player *)
 let rec main_controller_random2p engine gui_ready ready ready_gui =
-  let team1 = getRandomTeam () in
-  let team2 = getRandomTeam () in
+  let team1 = getRandomTeam `Random in
+  let team2 = getRandomTeam `Random in
   let battle = initialize_battle team1 team2 in
   let () = engine := Ivar.create (); Ivar.fill !engine battle in
   main_loop_2p engine gui_ready ready ready_gui ()
@@ -1674,7 +1678,19 @@ let rec main_controller_preset1p engine gui_ready ready ready_gui t =
   let team1' = List.map getBattlePoke t in
   let team1 = {current = List.hd team1'; alive = List.tl team1'; dead = [];
                   stat_enhance} in
-  let team2 = getRandomTeam () in
+  let team2 = getRandomTeam `Preset in
+  let battle = initialize_battle team1 team2 in
+  let () = engine := Ivar.create (); Ivar.fill !engine battle in
+  main_loop_1p engine gui_ready ready ready_gui ()
+
+let rec main_controller_tourn engine gui_ready ready ready_gui t =
+  let stat_enhance = {attack=(0,1.); defense=(0,1.); speed=(0,1.);
+      special_attack=(0,1.); special_defense=(0,1.); evasion=(0,1.);
+      accuracy=(0,1.)} in
+  let team1' = List.map getBattlePoke t in
+  let team1 = {current = List.hd team1'; alive = List.tl team1'; dead = [];
+                  stat_enhance} in
+  let team2 = getRandomTeam `Tournament in
   let battle = initialize_battle team1 team2 in
   let () = engine := Ivar.create (); Ivar.fill !engine battle in
   main_loop_1p engine gui_ready ready ready_gui ()
@@ -1686,5 +1702,6 @@ let initialize_controller (engine, battle_engine) =
   upon (Ivar.read !battle_status) (fun s -> match s with
     | Random1p -> (main_controller_random1p engine gui_ready ready ready_gui)
     | Random2p -> (main_controller_random2p engine gui_ready ready ready_gui)
+    | TournBattle t -> (main_controller_tourn engine gui_ready ready ready_gui t)
     | Preset1p t -> (main_controller_preset1p engine gui_ready ready ready_gui t));
   ()

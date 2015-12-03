@@ -4,6 +4,7 @@ type enemy = RoughNeck | Beauty | BugCatcher | CampNerd | DragonTamer | Falkner 
 
 let enemy1 = ref Beauty
 let enemy2 = ref Falkner
+let selectedEnemy = ref Falkner
 
 let profOakQuotes = ["Welcome to Pokemon Snowdown.";
                     "You may pick one of the two trainers to face.";
@@ -115,7 +116,8 @@ let getQuotes enm =
   | Psychic -> psychicQuotes
   | Youngster -> youngsterQuotes
 
-let opp1Quotes () = getQuotes !enemy1
+let opp1Quotes () = selectedEnemy := !enemy1; getQuotes !enemy1
 
+let opp2Quotes () = selectedEnemy := !enemy2; getQuotes !enemy2
 
-let opp2Quotes () = getQuotes !enemy2
+let getJson () = Yojson.Basic.from_file ("../data/tournament/NPCjson/baldman.json")

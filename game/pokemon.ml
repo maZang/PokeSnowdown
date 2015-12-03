@@ -596,10 +596,10 @@ let getRandomPokemon () =
   attack; defense; special_defense; special_attack; speed; ability; evs;
   nature; item}
 
-let getPresetPokemon str =
-  let presetjson = unlocked_pokemon () in
+let getPresetPokemon ?pjson:(pjson=unlocked_pokemon ()) str =
+  Printf.printf "%s\n%!" str;
   let poke = poke_json |> member str in
-  let presetpoke = presetjson |> member str in
+  let presetpoke = pjson |> member str in
   let ev_helper str =
     presetpoke |> member "evs" |> member str |> to_string |> int_of_string in
   let element_string = poke |> member "type" |> to_list|> filter_string in
@@ -629,6 +629,11 @@ let getPresetPokemon str =
   {name = str; element; move1 ; move2; move3 ; move4 ; hp;
   attack; defense; special_defense; special_attack; speed; ability; evs;
   nature; item}
+
+let getRandomPreset ?pjson:(pjson=unlocked_pokemon ()) () =
+ let full_list = List.map (to_string) (pjson |> member "pokemon" |> to_list) in
+ let rand = Random.int (List.length full_list) in
+ getPresetPokemon ~pjson:pjson (List.nth full_list rand)
 
 let getTestPoke () =
   let evs = {attack = 0; defense =  255; special_attack= 0; special_defense= 255;
