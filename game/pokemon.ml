@@ -429,7 +429,8 @@ let getSecondaryEffect str = match str with
   | "calm-mind" -> [StageBoost [(SpecialDefense, 1); (SpecialAttack, 1)]]
   | "leaf-storm" -> [StageBoost [(SpecialAttack, -2)]]
   | "work-up" -> [StageBoost [(Attack, 1); (SpecialAttack, 1)]]
-  | "recover" | "soft-boiled" | "milk-drink" | "roost" -> [Recovery]
+  | "recover" | "soft-boiled" | "milk-drink" | "roost" | "heal-order"
+    | "slack-off" -> [Recovery]
   | "light-screen" -> [LightScreenMake]
   | "haze" -> [Haze]
   | "reflect" -> [ReflectMake]
