@@ -49,13 +49,11 @@ let replaceDead (lst : battle_poke list) : string =
  *  - [elst1] is a list of up to two element types for Pokemon 1.
  *  - [elst2] is a list of up to two element types for Pokemon 2.
  *)
-let get_advantage_value (elst1:element list) (elst2:element list) : float =
-  let rec helper = function
-    | [] -> 1.
-    | h::t -> (List.fold_left (fun acc x -> acc *. Pokemon.getElementEffect h x)
-                1. elst2) *. (helper t)
-  in
-  helper elst1
+let rec get_advantage_value (elst1:element list) (elst2:element list) : float =
+  match elst1 with
+  | [] -> 1.
+  | h::t -> (List.fold_left (fun acc x -> acc *. Pokemon.getElementEffect h x)
+                1. elst2) *. (get_advantage_value t elst2)
 
 (* [replaceBetterDead poke alivelst] returns the string name of the first
  * Pokemon in the non-empty list of alive pokemon [alivelst] that has the
