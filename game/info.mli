@@ -76,7 +76,7 @@ type non_volatile_status = Burn | Freeze | Paralysis | Poisoned | Toxic of int |
                           NoNon
 
 type volatile_status =  Confusion of int | Flinch | Leeched
-	| Charge | Substitute of int | Protected | UsedProtect
+  | Charge | Substitute of int | Protected | UsedProtect
   | RechargingStatus | ForcedMove of int * string | ForcedMoveNoSwitch of int * string
 
 type status = non_volatile_status * volatile_status list
