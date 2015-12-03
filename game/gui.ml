@@ -553,6 +553,11 @@ let load_poke_edit engine img bg_img load_screen battle text buttonhide poke_edi
               select1 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
               battle_screen#pack editimg#coerce;
               ()
+  | PokeEdit -> (try (let poke = Pokemon.getPresetPokemon (!select1#entry#text) in
+                  ()
+                ) with _ -> let error_win = GWindow.message_dialog ~message:"Error in your Pokemon selection. Try making sure everything is spelled correctly."
+                                  ~buttons:GWindow.Buttons.close  ~message_type:`ERROR () in ignore(error_win#connect#close ~callback:(error_win#destroy));
+                                  ignore (error_win#connect#response ~callback:(fun s -> error_win#destroy ())); error_win#show ())
   | _ -> failwith "Faulty Game Logic: Debug 550"
 
 let load_preset engine img bg_img load_screen battle text buttonhide preset buttonshow
