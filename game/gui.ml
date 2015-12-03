@@ -1,5 +1,6 @@
 open Async.Std
 open Info
+open Tournament
 
 (*
   Communication Details:
@@ -111,17 +112,6 @@ let obstacle_coordinates = [(0,0);(0,1);(0,2);(0,3);(0,4);(0,5);(0,6);(0,7);
                        (9,0);(10,0);(11,0);(12,0);(13,0);(14,0);(0,7);(1,7);
                        (2,7);(3,7);(4,7);(5,7);(6,7);(7,7);(8,7);(9,7);(10,7);
                        (11,7);(12,7);(13,7);(14,7)]
-
-let profOakQuotes = ["Welcome to Pokemon Snowdown.";
-                    "You may pick one of the two trainers to face.";
-                    "Look at the enemy trainers closely to discern what type of Pokemon they use.";
-                    "You will have the option of choosing your Pokemon after you make your selection."]
-
-let opp1Quotes = ["I am Chirag's mom.";
-                    "You will regret choosing me."]
-
-let opp2Quotes = ["Hello there.";
-                    "I am."]
 
 let spriteanim = GPack.fixed ~width:screen_width ~height:(2 * screen_height/3) ()
 let bossanim = GPack.fixed ~width:screen_width ~height:(2 * screen_height/3) ()
