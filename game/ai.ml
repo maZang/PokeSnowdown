@@ -55,7 +55,7 @@ let get_advantage_value (elst1:element list) (elst2:element list) : float =
     | h::t -> (List.fold_left (fun acc x -> acc *. Pokemon.getElementEffect h x)
                 1. elst2) *. (helper t)
   in
-    helper elst1
+  helper elst1
 
 (* [replaceBetterDead poke alivelst] returns the string name of the first
  * Pokemon in the non-empty list of alive pokemon [alivelst] that has the
