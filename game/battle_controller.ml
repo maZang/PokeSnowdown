@@ -1401,14 +1401,14 @@ let handle_two_moves t1 t2 w m1 m2 a1 a2 =
             if (List.mem ForceSwitch curr_move.secondary) then
               (m1 := Pl1(Status newmove); m2 := Pl2 NoAction)
             else
-              prevmove2 := a2;
+              (prevmove2 := a2;
               (match curr_move'.dmg_class with
                (* case where Player 2 uses a Status Move *)
               | Status -> let newmove' = status_move_handler t2 t1 (w, w.terrain.side2, w.terrain.side1) curr_move' in
                   m1 := Pl1 (Status newmove); m2 := Pl2 (Status newmove')
               (* case where Player 2 uses a Special/Physical Move *)
                | _ -> let newmove' = move_handler t2 t1 (w, w.terrain.side2, w.terrain.side1) curr_move' in
-                  m1 := Pl1 (Status newmove); m2 := Pl2 (AttackMove newmove'))
+                  m1 := Pl1 (Status newmove); m2 := Pl2 (AttackMove newmove')))
     (* Case where Player 1 uses a Physical/Special Move *)
     | _ -> let newmove = move_handler t1 t2 (w, w.terrain.side1, w.terrain.side2) curr_move in
            (* Case where second pokemon faints before getting to move *)
@@ -1416,7 +1416,7 @@ let handle_two_moves t1 t2 w m1 m2 a1 a2 =
               (m1 := Pl1 (AttackMove newmove); m2 := Pl2 NoAction)
            (* Case where second pokemon is still alive *)
            else
-              prevmove2 := a2;
+              (prevmove2 := a2;
               (match curr_move'.dmg_class with
               (* Case where Player 2 uses a Status Move *)
               | Status -> let newmove' = status_move_handler t2 t1 (w, w.terrain.side2, w.terrain.side1) curr_move' in
@@ -1426,7 +1426,7 @@ let handle_two_moves t1 t2 w m1 m2 a1 a2 =
               | _      -> let newmove' = move_handler t2 t1 (w, w.terrain.side2, w.terrain.side1) curr_move' in
                           m1 := Pl1 (AttackMove newmove);
                           m2 := Pl2 (AttackMove newmove')
-              )
+              ))
     )
   (* Case for where Player 2 is faster *)
   else (
@@ -1444,9 +1444,9 @@ let handle_two_moves t1 t2 w m1 m2 a1 a2 =
                   m1 := Pl2 (Status newmove); m2 := Pl1 (AttackMove newmove'))
     | _ -> let newmove = move_handler t2 t1 (w, w.terrain.side2, w.terrain.side1) curr_move' in
            if (p1poke.curr_hp = 0 || List.mem ForceSwitch curr_move'.secondary) then
-              (m1 := Pl2 (AttackMove newmove); m2 := Pl1 NoAction)
+              (Printf.printf "POKEMON FAINTED\n%!";m1 := Pl2 (AttackMove newmove); m2 := Pl1 NoAction)
            else
-              prevmove1 := a1;
+              (prevmove1 := a1;
               (match curr_move.dmg_class with
               | Status -> let newmove' = status_move_handler t1 t2 (w, w.terrain.side1, w.terrain.side2) curr_move in
                           m1 := Pl2 (AttackMove newmove);
@@ -1454,7 +1454,7 @@ let handle_two_moves t1 t2 w m1 m2 a1 a2 =
               | _      -> let newmove'= move_handler t1 t2 (w, w.terrain.side1, w.terrain.side2) curr_move in
                           m1 := Pl2 (AttackMove newmove);
                           m2 := Pl1 (AttackMove newmove')
-              )
+              ))
     )
 
 let getEntryHazardDmg t ter1=
