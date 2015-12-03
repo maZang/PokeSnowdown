@@ -1,4 +1,44 @@
 {
+	"azumarill": {
+    "name": "azumarill",
+    "moves": [
+      "play-rough",
+      "waterfall",
+      "aqua-jet",
+      "knock-off"
+    ],
+    "ability": "huge-power",
+    "nature": "adamant",
+    "item": "choice band",
+    "evs": {
+      "hp": "172",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "84"
+    }
+  },
+  "clefable": {
+    "name": "clefable",
+    "moves": [
+      "calm-mind",
+      "moonblast",
+      "soft-boiled",
+      "thunder-wave"
+    ],
+    "ability": "magic-guard",
+    "nature": "calm",
+    "item": "leftovers",
+    "evs": {
+      "hp": "252",
+      "attack": "0",
+      "special-attack": "0",
+      "defense": "172",
+      "special-defense": "84",
+      "speed": "0"
+    }
+  },
 	"num-wins": 0,
 	"pokemon": [ "azumarill", "clefable", "cloyster", "darmanitan", "diancie", "donphan", "forretress", "galvantula", "gardevoir", "heliolisk", "infernape", "klefki", "krookodile", "mamoswine", "sylveon" ]
 }
