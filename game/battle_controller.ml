@@ -1621,12 +1621,12 @@ let rec main_loop_1p engine gui_ready ready ready_gui () =
   upon (Ivar.read !gui_ready) (* Replace NoMove with ai move later *)
     (fun (cmd1, cmd2) -> let c1 = unpack cmd1 in
                          let c2 = match (unpack cmd2) with
-                          | AIMove -> UseAttack (Ai.getBetterMove t2.current)
+                          | AIMove -> UseAttack (Ai.get_move_better t2.current)
                           | NoMove -> NoMove
                           | UseAttack s -> UseAttack s
                           | Preprocess -> Preprocess
                           | Poke s -> Poke s
-                          | FaintPoke _ -> FaintPoke (Ai.replaceBetterDead t1.current t2.alive)
+                          | FaintPoke _ -> FaintPoke (Ai.replace_dead_better t1.current t2.alive)
                           | TurnEnd -> TurnEnd in
                          let () = handle_action engine c1 c2 in
                          gui_ready := Ivar.create ();
