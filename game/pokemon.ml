@@ -419,7 +419,7 @@ let getSecondaryEffect str = match str with
   | "freeze-shock" -> [ChargeMove "Charging"; ParaChance]
   | "swords-dance" -> [StageBoost [(Attack, 2)]]
   | "charm" | "feather-dance" -> [StageAttack [(Attack, 2)]]
-  | "meditate" | "sharpen" | "metal-claw" | "howl" -> [StageBoost [(Attack, 1)]]
+  | "meditate" | "sharpen" | "metal-claw" | "howl" | "meteor-mash" -> [StageBoost [(Attack, 1)]]
   | "whirlwind" | "roar" | "dragon-tail" -> [ForceSwitch]
   | "double-kick" | "gear-grind" | "bonemerang" | "double-hit" -> [MultHit 2]
   | "sand-attack" | "smokescreen" | "kinesis" | "flash"
@@ -522,6 +522,7 @@ let getSecondaryEffect str = match str with
   | "fake-tears" -> [StageAttack [(SpecialDefense, 2)]]
   | "knock-off" -> [KnockOff]
   | "frost-breath" | "storm-throw" -> [IncCrit 3]
+  | "hone-claws" -> [StageBoost [(Attack,1);(Accuracy,1)]]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -635,9 +636,9 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Psychic]; move1= getMoveFromString "storm-throw"; move2 =
+  {name="gardevoir-mega"; element=[Psychic]; move1= getMoveFromString "meteor-mash"; move2 =
   getMoveFromString "spacial-rend"; move3 = getMoveFromString "leaf-tornado";
-  move4 = getMoveFromString "knock-off"; hp = 68; attack = 85; special_attack = 165; defense = 65;
+  move4 = getMoveFromString "hone-claws"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 0; special_defense = 135; ability="pixilate"; evs; nature; item}
 
 let getTestOpp () =
