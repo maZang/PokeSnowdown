@@ -145,6 +145,15 @@ def generate_pokemon_json ():
 		if move_dict[row["move_id"]] not in move_list:
 			move_list.append(move_dict[row["move_id"]])
 			pokemon_move[row["pokemon_id"]] = move_list
+	#fix move_dict to include pre-evolution moves
+	csvfile = open("../pokemon_species.csv")
+	csvfile.seek(0)
+	next(csvfile)
+	fieldnames = ("id", "identifier", "gen_id", "evovles_from_id", "evo_chain", "color_id", "shape_id", "habitat_id", "gender_rate", "capture_rate", "base_happiness")
+	reader = csv.DictReader(csvfile, fieldnames)
+	for row in reader:
+		if (row['evovles_from_id'] != ''):
+			pokemon_move[row["id"]] = list(set(pokemon_move[row["id"]]) | set (pokemon_move[row["evovles_from_id"]]))
 	#final pokemon dict 
 	pokemon = {} 
 	csvfile = open("../pokemon.csv")
