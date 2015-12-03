@@ -1328,7 +1328,7 @@ let poke_move_cmd button engine buttons battle text
  match !current_screen with
   | Battle (P1 BothFaint) ->
         (match get_game_status battle_status with
-        | Random1p | Preset1p _ -> current_command := (Some (FaintPoke (button#label)), Some (FaintPoke "")); next ()
+        | Random1p | Preset1p _ | TournBattle _ -> current_command := (Some (FaintPoke (button#label)), Some (FaintPoke "")); next ()
         (* In two player, you would call switch_poke command again *)
         | _ -> failwith "Faulty Game Logic: Debug 616")
   | Battle (P1 Faint) -> current_command := (Some (FaintPoke (button#label)), snd !current_command); next ()

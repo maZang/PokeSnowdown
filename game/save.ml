@@ -61,6 +61,12 @@ let convertPokeToJson poke =
                           ("special-defense", `String (string_of_int poke.evs.special_defense));
                           ("speed", `String (string_of_int poke.evs.speed))]))]
 
+let rec addToUnlocked pokename lst =
+  match lst with
+  | (s, `List x)::t -> if s = "pokemon" then (s, `List ((`String pokename)::x))::t else (s, `List x)::(addToUnlocked pokename t)
+  | (s, x)::t -> ((s, x)::(addToUnlocked pokename t))
+  | _ -> raise FaultyGameSave
+
 let rec incPrevSave key lst =
   match lst with
   | (s, `Int n)::t -> if key = s then (s, `Int (n+1))::t else (s, `Int n)::(incPrevSave key t)
@@ -75,7 +81,7 @@ let addPoke str =
     let json_of_poke = convertPokeToJson poke in
     let prevSave = unlocked_pokemon () in
     let newSave = match prevSave with
-    |`Assoc lst -> let lst' = incPrevSave "unlocked" lst in
+    |`Assoc lst -> let lst' = addToUnlocked str (incPrevSave "unlocked" lst) in
                   `Assoc (lst' @ Yojson.Basic.Util.to_assoc json_of_poke)
     | _ -> raise FaultyGameSave in
     Yojson.Basic.to_file "../data/factorysets.json" newSave)
