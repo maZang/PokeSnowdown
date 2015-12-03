@@ -57,8 +57,7 @@ let rec get_advantage_value (elst1:element list) (elst2:element list) : float =
 
 (* [replace_dead_better poke alivelst] returns the string name of the first
  * Pokemon in the non-empty list of alive Pokemon [alivelst] that has the
- * maximum type advantage against the opposing Pokemon [poke]. If there are
- * no alive Pokemon with a type advantage, a Pokemon is chosen randomly.
+ * maximum type advantage against the opposing Pokemon [poke].
  *
  *  - [poke] is a battle Pokemon to be compared against.
  *  - [alivelst] is a list of battle Pokemon.
@@ -66,7 +65,7 @@ let rec get_advantage_value (elst1:element list) (elst2:element list) : float =
 let replace_dead_better (poke:battle_poke) (alivelst:battle_poke list) : string =
   let type2 = poke.pokeinfo.element in
   let rec get_poke_max_advantage p maxv = function
-    | [] -> (p,maxv)
+    | [] -> p
     | h::t ->
         let type1 = h.pokeinfo.element in
         let currv = get_advantage_value type1 type2 in
@@ -78,6 +77,5 @@ let replace_dead_better (poke:battle_poke) (alivelst:battle_poke list) : string 
   | h::t ->
       let type1 = h.pokeinfo.element in
       let currv = get_advantage_value type1 type2 in
-      let bestpokemax = get_poke_max_advantage h currv t in
-      if (snd bestpokemax > 1.) then (fst bestpokemax).pokeinfo.name
-      else replace_dead_random alivelst
+      let bestpoke = get_poke_max_advantage h currv t in
+      bestpoke.pokeinfo.name
