@@ -522,6 +522,7 @@ let getSecondaryEffect str = match str with
   | "knock-off" -> [KnockOff]
   | "frost-breath" | "storm-throw" -> [IncCrit 3]
   | "hone-claws" -> [StageBoost [(Attack,1);(Accuracy,1)]]
+  | "ominous-wind" -> [ChanceStageBoost]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -635,9 +636,9 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Psychic]; move1= getMoveFromString "meteor-mash"; move2 =
-  getMoveFromString "spacial-rend"; move3 = getMoveFromString "leaf-tornado";
-  move4 = getMoveFromString "hone-claws"; hp = 68; attack = 85; special_attack = 165; defense = 65;
+  {name="gardevoir-mega"; element=[Psychic]; move1= getMoveFromString "ominous-wind"; move2 =
+  getMoveFromString "acupressure"; move3 = getMoveFromString "leaf-tornado";
+  move4 = getMoveFromString "hone-claws"; hp = 98; attack = 85; special_attack = 165; defense = 65;
   speed = 0; special_defense = 135; ability="pixilate"; evs; nature; item}
 
 let getTestOpp () =
