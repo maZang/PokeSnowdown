@@ -1087,7 +1087,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
                   (text_buffer#set_text "Player One Pokemon has fainted. Choosing a new Pokemon.";
                   (match !m2 with
                   | Pl2 Faint -> current_screen := Battle (P1 BothFaint)
-                  | _ -> current_screen := Battle (P1 Faint));
+                  | _ -> current_screen := Battle (P1 Faint); current_command := (fst !current_command, Some NoMove));
                   busywait (); updatetools ();
                   switch_poke engine [poke1;poke2;poke3;poke4;poke5] [move1;move2;
                   move3;move4;switch] back_button ())
