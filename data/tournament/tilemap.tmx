@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="15" height="8" tilewidth="40" tileheight="40" nextobjectid="1">
+ <tileset firstgid="1" name="bw_citrine_tileset__resized_by_chimcharsfireworkd-d3rcwpe (1)" tilewidth="40" tileheight="40" tilecount="3840">
+  <image source="../bw_citrine_tileset__resized_by_chimcharsfireworkd-d3rcwpe (1).png" trans="000000" width="320" height="19200"/>
+ </tileset>
+ <tileset firstgid="3841" name="allsprites" tilewidth="32" tileheight="32" tilecount="6048">
+  <image source="allsprites.png" trans="000000" width="1024" height="6048"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="15" height="8">
+  <data encoding="base64" compression="zlib">
+   eJzdz6cBACAQxdBbhWIohmIo+89FVvgW8URknJl5BEQ4oRMyCqrYDR0DU+yFjYMrtvL3w+8DeD0VwQ==
+  </data>
+ </layer>
+ <layer name="Tile Layer 2" width="15" height="8">
+  <data encoding="base64" compression="zlib">
+   eJyd0bsOAUEUxvFT7GY9CCpU1lshCkTpUVAhiN0oUCFqiXvc47qP4T+xwhQaX/JLJmfO18w0RKSJFjKmSAFF8/e5hDIqSNJJIY1gQCSEMNqWiAPX0udVOjXUkaWTQx4R7qKIoUunh76lz9t0HLgIySdx7mwkMKAzxMjS5++oXvSrO8HUEJlhjgWWWGFtvHY6/q7q2aJnw84WO+xxwBEnQ99TPfV+KmN/dmbngituuOMB76vr+X+SMeWvqP96AuycMnM=
+  </data>
+ </layer>
+ <layer name="Tile Layer 3" width="15" height="8">
+  <data encoding="base64" compression="zlib">
+   eJxLZWBgSAPidAbSQS4Q5wFxPon6VIG4FIjLgLicRL26JKpHBqZQehsFZhAL9uOR62TDr7cLi3w3GwRPZEOwseFJSGwQAAA9iQ5k
+  </data>
+ </layer>
+ <layer name="Tile Layer 4" width="15" height="8">
+  <data encoding="base64" compression="zlib">
+   eJxjYCAfqFGgV49MfapAbEamXl0G8t0M0keum0H6yHUzSJ8dmXpB+gDC8wJt
+  </data>
+ </layer>
+</map>

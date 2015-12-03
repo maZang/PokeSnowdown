@@ -42,6 +42,7 @@ let busywait () =
   while not !continue do
     ()
   done;
+  busywait_player ();
   continue := false
 
 (* Initializes GtkMain*)
@@ -124,8 +125,8 @@ let sprite = GMisc.image ~file:"../data/tournament/Player/Down.png" ()
 let gameText = GEdit.entry ~width:600 ~height:80
               ~text:"Use W,A,S,D to move. Press H to interact with Prof. Oak and space bar to talk." ~editable:false ()
 let boss = GMisc.image ~file:"../data/tournament/NPC/ProfOak.png" ()
-let opp1 = GMisc.image ~file:"../data/tournament/NPC/Beauty.png" ()
-let opp2 = GMisc.image ~file:"../data/tournament/NPC/Falkner.png" ()
+let opp1 = GMisc.image ~file:"../data/tournament/NPC/dragontamer.png" ()
+let opp2 = GMisc.image ~file:"../data/tournament/NPC/psychic.png" ()
 let () =  (spriteanim#put sprite#coerce (40 * !x) (40 * !y); bossanim#put boss#coerce 280 20;
            opp1anim#put opp1#coerce 160 20; opp2anim#put opp2#coerce 400 20;
            gameBoard#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH spriteanim#coerce;
@@ -210,8 +211,8 @@ let rec move_left () =
 let talk tournament =
   match (!x, !y) with
   | (7,1) -> if !playerDirection = Up then (List.iter (fun s -> gameText#set_text s; busywait ()) profOakQuotes; gameText#set_text "Use W,A,S,D to move. Press H to interact with Prof. Oak and space bar to talk.") else ()
-  | (4,1) -> if !playerDirection = Up then (List.iter (fun s -> gameText#set_text s; busywait ()) opp1Quotes; tournament#clicked ()) else ()
-  | (10,1) -> if !playerDirection = Up then (List.iter (fun s -> gameText#set_text s; busywait ()) opp2Quotes; tournament#clicked ()) else ()
+  | (4,1) -> if !playerDirection = Up then (List.iter (fun s -> gameText#set_text s; busywait ()) (opp1Quotes ()); tournament#clicked ()) else ()
+  | (10,1) -> if !playerDirection = Up then (List.iter (fun s -> gameText#set_text s; busywait ()) (opp2Quotes ()); tournament#clicked ()) else ()
   | _ -> ()
 
 let rec move () =
@@ -527,8 +528,12 @@ let load_tournament engine img bg_img load_screen battle text buttonhide buttons
     | [_;_;tournament;_] -> tournament
     | _ -> failwith "Faulty Game Logic: Debug 508" in
   match !current_screen with
-  | Menu1P -> (current_screen := Tourney; List.iter (fun s -> s#misc#hide ()) buttonhide;
-              img#misc#hide (); battle_screen#pack gameBoard#coerce; battle_screen#pack gameText#coerce)
+  | Menu1P -> (gameText#set_text "Use W,A,S,D to move. Press H to interact with Prof. Oak and space bar to talk.";
+              current_screen := Tourney; List.iter (fun s -> s#misc#hide ()) buttonhide;
+              img#misc#hide ();
+              opp1#set_file ("../data/tournament/NPC/" ^ (getRandomOpp1 ()) ^ ".png");
+              opp2#set_file ("../data/tournament/NPC/" ^ (getRandomOpp2 ()) ^ ".png");
+              battle_screen#pack gameBoard#coerce; battle_screen#pack gameText#coerce)
   | Tourney -> (current_screen := TourneyChoose;
                 tournament#set_label "Continue";
                 tournament#misc#show ();
