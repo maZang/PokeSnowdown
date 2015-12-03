@@ -391,7 +391,8 @@ let getSecondaryEffect str = match str with
   | "meditate" | "sharpen" | "metal-claw" | "howl" -> [StageBoost [(Attack, 1)]]
   | "whirlwind" | "roar" | "dragon-tail" -> [ForceSwitch]
   | "stomp" | "rolling-kick" | "headbutt" | "bite" | "bone-club" | "waterfall"
-    | "rock-slide" | "hyper-fang" | "twister" -> [FlinchMove]
+    | "rock-slide" | "hyper-fang" | "twister" | "zen-headbutt" | "steamroller"->
+    | "heart-stamp" | "iron-head" | "needle-arm" -> [FlinchMove]
   | "double-kick" | "gear-grind" | "bonemerang" | "double-hit" -> [MultHit 2]
   | "sand-attack" | "smokescreen" | "kinesis" | "flash" |
       "mud-slap" | "octazooka"-> [StageAttack [(Accuracy, 1)]]
@@ -401,7 +402,8 @@ let getSecondaryEffect str = match str with
       "poison-gas" | "sludge-bomb" -> [PoisonChance]
   | "twineedle" -> [MultHit 2; PoisonChance]
   | "growl" | "aurora-beam" -> [StageAttack [(Attack, 1)]]
-  | "sing" | "sleep-powder" | "hypnosis" | "lovely-kiss" | "spore" -> [PutToSleep]
+  | "sing" | "sleep-powder" | "hypnosis" | "lovely-kiss" | "spore" | "dark-void"
+    | "grass-whistle" -> [PutToSleep]
   | "supersonic" | "psybeam" | "confusion" | "confuse-ray" | "dizzy-punch"
     | "sweet-kiss" | "dynamic-punch" | "water-pulse" -> [ConfuseOpp]
   | "sonic-boom" -> [ConstantDmg 20]
@@ -472,6 +474,7 @@ let getSecondaryEffect str = match str with
   | "thrash" | "outrage" | "petal-dance" -> [SelfEncore]
   | "mirror-move" | "copycat" -> [CopyPrevMove]
   | "fire-fang" -> [BurnChance; FlinchMove]
+  | "thunder-fang" -> [ParaChance; FlinchMove]
   | "tail-glow" -> [StageBoost [(SpecialAttack, 3)]]
   | "cotton-guard" -> [StageBoost [(Defense, 3)]]
   | _ -> []
