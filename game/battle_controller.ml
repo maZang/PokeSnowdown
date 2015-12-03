@@ -1568,10 +1568,8 @@ let handle_action state action1 action2 =
       | _ -> failwith "Faulty Game Logic: Debug 449")
   | NoMove -> (match action2 with
               | FaintPoke p ->
-                  let prevPoke = t2.current in
-                  let switchPoke, restPoke = findBattlePoke t2.alive p in
-                  t2.current <- switchPoke; t2.dead <- prevPoke::t2.dead;
-                  t2.alive <- restPoke; m1 := Pl2 (SPoke p);
+                  switchPokeHandler true p t2 w.terrain.side2;
+                  m1 := Pl2 (SPoke p);
                   m2 := Pl1 Next
               | Poke p' -> let p = if p' = "random" then getRandomPoke t2
                           else p' in
