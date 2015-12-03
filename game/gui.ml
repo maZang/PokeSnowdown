@@ -1,5 +1,6 @@
 open Async.Std
 open Info
+open Tournament
 
 (*
   Communication Details:
@@ -111,17 +112,6 @@ let obstacle_coordinates = [(0,0);(0,1);(0,2);(0,3);(0,4);(0,5);(0,6);(0,7);
                        (9,0);(10,0);(11,0);(12,0);(13,0);(14,0);(0,7);(1,7);
                        (2,7);(3,7);(4,7);(5,7);(6,7);(7,7);(8,7);(9,7);(10,7);
                        (11,7);(12,7);(13,7);(14,7)]
-
-let profOakQuotes = ["Welcome to Pokemon Snowdown.";
-                    "You may pick one of the two trainers to face.";
-                    "Look at the enemy trainers closely to discern what type of Pokemon they use.";
-                    "You will have the option of choosing your Pokemon after you make your selection."]
-
-let opp1Quotes = ["I am Chirag's mom.";
-                    "You will regret choosing me."]
-
-let opp2Quotes = ["Hello there.";
-                    "I am."]
 
 let spriteanim = GPack.fixed ~width:screen_width ~height:(2 * screen_height/3) ()
 let bossanim = GPack.fixed ~width:screen_width ~height:(2 * screen_height/3) ()
@@ -389,33 +379,33 @@ let make_battle_screen ?packing () =
 *)
 let make_menu ?packing () =
   (* vbox is known as menu_holder outside of this function *)
-	let vbox = GPack.vbox ?packing () in
+  let vbox = GPack.vbox ?packing () in
   (* hbox1 is known as main_menu outside of this function *)
-	let hbox1 = GPack.hbox ~homogeneous:true ~packing:(vbox#pack) ~height:
+  let hbox1 = GPack.hbox ~homogeneous:true ~packing:(vbox#pack) ~height:
     (screen_height/6) ()in
   (* hbox2 is known as battle_screen outside of this function *)
-	let hbox2 = GPack.vbox ~packing:(vbox#pack) () in
+  let hbox2 = GPack.vbox ~packing:(vbox#pack) () in
   (* button1 is known as one_player outside of this function*)
-	let button1 = GButton.button ~label:"1-Player"
-		~packing:(hbox1#pack ~expand:true ~fill:true) () in
+  let button1 = GButton.button ~label:"1-Player"
+    ~packing:(hbox1#pack ~expand:true ~fill:true) () in
   (* button2 is known as two_player outside of this function*)
-	let button2 = GButton.button ~label:"2-Player"
-		~packing:(hbox1#pack ~expand:true ~fill:true) () in
+  let button2 = GButton.button ~label:"2-Player"
+    ~packing:(hbox1#pack ~expand:true ~fill:true) () in
   (* button3 is known as no_player outside of this function *)
-	let button3 = GButton.button ~label:"No Player"
-		~packing:(hbox1#pack ~expand:true ~fill:true) ()  in
+  let button3 = GButton.button ~label:"No Player"
+    ~packing:(hbox1#pack ~expand:true ~fill:true) ()  in
   (* button4 is known as random outside of this function *)
-	let button4 = GButton.button ~label:"Random Battle"
-		~packing:(hbox1#pack ~expand:true ~fill:true) ~show:false () in
+  let button4 = GButton.button ~label:"Random Battle"
+    ~packing:(hbox1#pack ~expand:true ~fill:true) ~show:false () in
   (* button5 is known as preset outside of this function *)
-	let button5 = GButton.button ~label:"Preset Battle"
-		~packing:(hbox1#pack ~expand:true ~fill:true) ~show:false () in
+  let button5 = GButton.button ~label:"Preset Battle"
+    ~packing:(hbox1#pack ~expand:true ~fill:true) ~show:false () in
   (* button6 is known as tournament outside of this function *)
-	let button6 = GButton.button ~label:"Tournament"
-		~packing:(hbox1#pack ~expand:true ~fill:true) ~show:false () in
+  let button6 = GButton.button ~label:"Tournament"
+    ~packing:(hbox1#pack ~expand:true ~fill:true) ~show:false () in
   (* button7 is known as back_button outside of this function *)
-	let button7 = GButton.button ~label:"Back"
-		~packing:(hbox1#pack ~from:`END) () ~show:false in
+  let button7 = GButton.button ~label:"Back"
+    ~packing:(hbox1#pack ~from:`END) () ~show:false in
   (* button 8 is known as poke_edit outside of this function *)
   let button8 = GButton.button ~label:"Poke-Editor"
     ~packing:(hbox1#pack ~expand:true ~fill:true) ~show: false () in
@@ -427,7 +417,7 @@ let make_menu ?packing () =
     ~show:false ~packing:(vbox#pack) () in
   (* Return all objects created *)
   (vbox, hbox1, hbox2, button1, button2, button3, button4,
-		button5, button6, button7, button8, img, load_screen)
+    button5, button6, button7, button8, img, load_screen)
 
 (* This is called once to load the battle screen . The game states will be
   engine -- Battle InGame _
@@ -618,7 +608,11 @@ let load_poke_edit engine img bg_img load_screen battle text buttonhide (poke_ed
                     !select3#entry#text !select4#entry#text !select5#entry#text !select6#entry#text
                     !select7#entry#text (int_of_float hp_evs#adjustment#value) (int_of_float atk_evs#adjustment#value)
                     (int_of_float def_evs#adjustment#value) (int_of_float special_attack_evs#adjustment#value) (int_of_float special_defense_evs#adjustment#value)
-                    (int_of_float speed_evs#adjustment#value)) with | err ->  (let message = match err with
+                    (int_of_float speed_evs#adjustment#value);
+                    let success_win = GWindow.message_dialog ~message:"Save successful!"
+                                  ~buttons:GWindow.Buttons.close  ~message_type:`INFO () in ignore(success_win#connect#close ~callback:(success_win#destroy));
+                                  ignore (success_win#connect#response ~callback:(fun s -> success_win#destroy ())); success_win#show ())
+                   with | err ->  (let message = match err with
                                   | Save.FaultyGameSave -> "Corrupted Save File."
                                   | Save.BadFieldOption -> "Error in Moves/Items/Ability/Nature. Make sure everything is spelled correctly."
                                   | Save.BadEVInput -> "The maximum EVs can add up to is 510."
@@ -666,8 +660,8 @@ let load_preset engine img bg_img load_screen battle text buttonhide preset butt
     | _ -> failwith "Faulty Game Logic: Debug 314")
 
 let load_menu engine button_show button_hide img screen () =
-	if Ivar.is_empty (!engine) then
-		(List.iter (fun s -> s#misc#hide ()) button_hide;
+  if Ivar.is_empty (!engine) then
+    (List.iter (fun s -> s#misc#hide ()) button_hide;
     List.iter (fun s -> s#misc#show ()) button_show;
     current_screen := screen; (match screen with
     | Menu1P -> img#set_file "./gui_pics/1p.jpg"
@@ -675,8 +669,8 @@ let load_menu engine button_show button_hide img screen () =
     | Menu0P -> img#set_file "./gui_pics/nop.jpg"
     | MainMenu -> img#set_file "./gui_pics/main.gif"
     | _ -> failwith "Faulty Game Logic: Debug 307"); Ivar.fill !engine screen)
-	else
-		()
+  else
+    ()
 
 let load_main_menu_from_battle engine one_player two_player no_player button_hide
  main_menu_bg battle text (battle_status, gui_ready, ready, ready_gui) () =
@@ -700,8 +694,8 @@ let go_back engine (menu_holder, main_menu, battle_screen, one_player,
     poke_edit, main_menu_bg, load_screen) (battle, text, bg_img, move1, move2,
     move3, move4, switch, poke1_img, poke2_img, move_img, text_buffer, poke1, poke2,
     poke3, poke4, poke5, health_holders, pokeanim1, pokeanim2, moveanim) battle_engine () =
-	(if !current_screen = Menu1P || !current_screen = Menu2P || !current_screen = Menu0P then
-		load_menu engine [one_player;two_player;no_player]
+  (if !current_screen = Menu1P || !current_screen = Menu2P || !current_screen = Menu0P then
+    load_menu engine [one_player;two_player;no_player]
     [random; preset ;touranment; poke_edit; back_button] main_menu_bg
     MainMenu ());
   if (match !current_screen with
@@ -1305,16 +1299,16 @@ let quit engine ready () =
 
 (* The main gui *)
 let main_gui engine battle_engine () =
-	let window = GWindow.window ~width: screen_width ~height: screen_height
-		~title: "Pokemon Snowdown" ~resizable:false () in
-	(* menu = menu_holder, main_menu, one_player, two_player, no_player,
-		one_player_menu, random_1p, preset_1p, touranment, buffer_area,
-		back_button *)
+  let window = GWindow.window ~width: screen_width ~height: screen_height
+    ~title: "Pokemon Snowdown" ~resizable:false () in
+  (* menu = menu_holder, main_menu, one_player, two_player, no_player,
+    one_player_menu, random_1p, preset_1p, touranment, buffer_area,
+    back_button *)
   let battle_status, gui_ready, ready, ready_gui = battle_engine in
-	let menu = make_menu ~packing:(window#add) () in
-	let menu_holder, main_menu, battle_screen, one_player,
-		two_player, no_player, random, preset, touranment,
-		back_button, poke_edit, main_menu_bg, load_screen = menu in
+  let menu = make_menu ~packing:(window#add) () in
+  let menu_holder, main_menu, battle_screen, one_player,
+    two_player, no_player, random, preset, touranment,
+    back_button, poke_edit, main_menu_bg, load_screen = menu in
   let battler = make_battle_screen ~packing:(battle_screen#add) ()
   in let battle, text, bg_img, move1, move2, move3, move4, switch,
     poke1_img, poke2_img, move_img, text_buffer, poke1, poke2, poke3, poke4,
@@ -1325,7 +1319,7 @@ let main_gui engine battle_engine () =
   main_menu#pack poke2#coerce; main_menu#pack poke3#coerce;
   main_menu#pack poke4#coerce; main_menu#pack poke5#coerce;
   (* One player Button *)
-	ignore(one_player#connect#clicked ~callback:(load_menu engine [random;preset;
+  ignore(one_player#connect#clicked ~callback:(load_menu engine [random;preset;
   touranment;poke_edit;back_button] [one_player; two_player;no_player]
   main_menu_bg Menu1P));
   (* Two player button *)
@@ -1374,4 +1368,4 @@ let main_gui engine battle_engine () =
   ignore(window#connect#destroy ~callback:(quit engine ready));
   ignore(window#event#connect#key_press ~callback:(handle_key_press touranment));
   window#show ();
-	let _ = GtkThread.start () in ()
+  let _ = GtkThread.start () in ()

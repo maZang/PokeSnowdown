@@ -2,7 +2,7 @@
 ocamlfind ocamlc -g -thread
  -package lablgtk2 -package async -package yojson -package str
  -linkpkg info.mli pokemon.mli gui.mli battle_controller.mli game.mli pokemon.ml
-          ai.ml gui.ml battle_controller.ml game.ml
+          ai.ml save.ml gui.ml battle_controller.ml game.ml
  -o game
 
 OR

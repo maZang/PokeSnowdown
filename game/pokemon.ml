@@ -397,13 +397,13 @@ let getDmgClass str =
 
 let getSecondaryEffect str = match str with
   | "karate-chop" | "razor-leaf" | "crabhammer" | "slash" | "aeroblast"
-    | "cross-chop" | "air-cutter" | "stone-edge" -> [IncCrit 1]
-  | "double-slap" | "comet-punch" | "fury-attack" | "pin-missile" |
-      "spike-cannon" | "barrage" | "fury-swipes" | "bone-rush" |
-      "bullet-seed" -> [RandMultHit]
-  | "fire-punch" | "ember" | "flamethrower" | "fire-blast" |
-        "flame-wheel" | "will-o-wisp" | "blue-flare" | "lava-plume" |
-        "heat-wave" -> [BurnChance]
+    | "cross-chop" | "air-cutter" | "stone-edge" | "attack-order" | "drill-run"
+    | "leaf-blade" | "night-slash" | "psycho-cut" | "shadow-claw" | "spacial-rend" -> [IncCrit 1]
+  | "double-slap" | "comet-punch" | "fury-attack" | "pin-missile"
+    | "spike-cannon" | "barrage" | "fury-swipes" | "bone-rush"
+    | "bullet-seed" -> [RandMultHit]
+  | "fire-punch" | "ember" | "flamethrower" | "fire-blast" | "flame-wheel"
+    | "will-o-wisp" | "blue-flare" | "lava-plume" | "heat-wave" -> [BurnChance]
   | "ice-punch" | "ice-beam" | "blizzard" | "powder-snow" -> [FreezeChance]
   | "thunder-punch" | "body-slam" | "stun-spore" | "thunder-shock"
     | "thunderbolt" | "thunder-wave" | "thunder" | "lick" | "glare"
@@ -418,7 +418,7 @@ let getSecondaryEffect str = match str with
   | "freeze-shock" -> [ChargeMove "Charging"; ParaChance]
   | "swords-dance" -> [StageBoost [(Attack, 2)]]
   | "charm" | "feather-dance" -> [StageAttack [(Attack, 2)]]
-  | "meditate" | "sharpen" | "metal-claw" | "howl" -> [StageBoost [(Attack, 1)]]
+  | "meditate" | "sharpen" | "metal-claw" | "howl" | "meteor-mash" -> [StageBoost [(Attack, 1)]]
   | "whirlwind" | "roar" | "dragon-tail" -> [ForceSwitch]
   | "double-kick" | "gear-grind" | "bonemerang" | "double-hit" -> [MultHit 2]
   | "sand-attack" | "smokescreen" | "kinesis" | "flash"
@@ -441,21 +441,25 @@ let getSecondaryEffect str = match str with
     | "headbutt" | "heart-stamp" | "hyper-fang" | "icicle-crash"
     | "needle-arm" | "rock-slide" | "rolling-kick" | "steamroller"
     | "stomp" | "zen-headbutt" -> [FlinchMove]
-  | "sonic-boom" -> [ConstantDmg 20]
   | "acid" | "psychic" | "shadow-ball" | "flash-cannon" | "bug-buzz"
     | "energy-ball" | "focus-blast" | "earth-power" -> [StageAttack [(SpecialDefense, 1)]]
   | "mist-ball" -> [StageAttack [(SpecialAttack, 1)]]
   | "bubble-beam" | "bubble" | "icy-wind" | "mud-shot" | "electroweb" -> [StageAttack [(Speed, 1)]]
   | "hyper-beam"| "blast-burn" | "frenzy-plant" | "hydro-cannon"
       | "roar-of-time" | "giga-impact" | "rock-wrecker"  -> [RechargeMove]
+  | "swift" | "feint-attack" | "vital-throw" | "aerial-ace" | "magnet-bomb"
+    | "shock-wave" | "magical-leaf" | "shadow-punch" -> [NeverMiss]
+  | "recover" | "soft-boiled" | "milk-drink" | "roost" | "heal-order"
+    | "slack-off" -> [Recovery]
   | "low-kick" | "grass-knot" -> [WeightDamage]
+  | "sonic-boom" -> [ConstantDmg 20]
+  | "dragon-rage" -> [ConstantDmg 40]
   | "seismic-toss" | "night-shade" -> [ConstantDmg 100]
   | "absorb" | "mega-drain" | "leech-life" | "giga-drain" -> [DrainMove]
   | "leech-seed" -> [LeechSeed]
   | "growth" -> [StageBoostSunlight [(Attack, 1); (SpecialAttack, 1)]]
   | "solar-beam" -> [ChargeInSunlight "Need sunlight to charge faster!"]
   | "string-shot" | "cotton-spore" | "scary-face" -> [StageAttack [(Speed, 2)]]
-  | "dragon-rage" -> [ConstantDmg 40]
   | "agility" -> [StageBoost [(Speed, 2)]]
   | "screech" -> [StageAttack [(Defense, 2)]]
   | "double-team" -> [StageBoost [(Evasion, 1)]]
@@ -465,14 +469,10 @@ let getSecondaryEffect str = match str with
   | "calm-mind" -> [StageBoost [(SpecialDefense, 1); (SpecialAttack, 1)]]
   | "overheat" | "draco-meteor" | "leaf-storm" | "psycho-boost" -> [StageBoost [(SpecialAttack, -2)]]
   | "work-up" -> [StageBoost [(Attack, 1); (SpecialAttack, 1)]]
-  | "recover" | "soft-boiled" | "milk-drink" | "roost" | "heal-order"
-    | "slack-off" -> [Recovery]
   | "light-screen" -> [LightScreenMake]
   | "haze" -> [Haze]
   | "reflect" -> [ReflectMake]
   | "self-destruct" | "explosion" -> [UserFaint]
-  | "swift" | "feint-attack" | "vital-throw" | "aerial-ace" | "magnet-bomb"
-      | "shock-wave" | "magical-leaf" | "shadow-punch" -> [NeverMiss]
   | "amnesia" -> [StageBoost [(SpecialDefense, 2)]]
   | "nasty-plot" -> [StageBoost [(SpecialAttack, 2)]]
   | "dream-eater" -> [DrainMoveSleep]
@@ -520,6 +520,8 @@ let getSecondaryEffect str = match str with
   | "captivate" | "eerie-impulse" -> [StageAttack [(SpecialAttack, 2)]]
   | "fake-tears" -> [StageAttack [(SpecialDefense, 2)]]
   | "knock-off" -> [KnockOff]
+  | "frost-breath" | "storm-throw" -> [IncCrit 3]
+  | "hone-claws" -> [StageBoost [(Attack,1);(Accuracy,1)]]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -633,9 +635,9 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Psychic]; move1= getMoveFromString "brave-bird"; move2 =
-  getMoveFromString "psycho-boost"; move3 = getMoveFromString "leaf-tornado";
-  move4 = getMoveFromString "knock-off"; hp = 68; attack = 85; special_attack = 165; defense = 65;
+  {name="gardevoir-mega"; element=[Psychic]; move1= getMoveFromString "meteor-mash"; move2 =
+  getMoveFromString "spacial-rend"; move3 = getMoveFromString "leaf-tornado";
+  move4 = getMoveFromString "hone-claws"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 0; special_defense = 135; ability="pixilate"; evs; nature; item}
 
 let getTestOpp () =
