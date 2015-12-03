@@ -368,8 +368,8 @@ let getDmgClass str =
   | _ -> failwith "Not a valid damage class"
 
 let getSecondaryEffect str = match str with
-  | "karate-chop" | "razor-leaf" | "crabhammer" | "slash" | "aeroblast" |
-      "cross-chop" -> [IncCrit 1]
+  | "karate-chop" | "razor-leaf" | "crabhammer" | "slash" | "aeroblast"
+    | "cross-chop" | "air-cutter" -> [IncCrit 1]
   | "double-slap" | "comet-punch" | "fury-attack" | "pin-missile" |
       "spike-cannon" | "barrage" | "fury-swipes" | "bone-rush" -> [RandMultHit]
   | "fire-punch" | "ember" | "flamethrower" | "fire-blast" |
