@@ -618,7 +618,11 @@ let load_poke_edit engine img bg_img load_screen battle text buttonhide (poke_ed
                     !select3#entry#text !select4#entry#text !select5#entry#text !select6#entry#text
                     !select7#entry#text (int_of_float hp_evs#adjustment#value) (int_of_float atk_evs#adjustment#value)
                     (int_of_float def_evs#adjustment#value) (int_of_float special_attack_evs#adjustment#value) (int_of_float special_defense_evs#adjustment#value)
-                    (int_of_float speed_evs#adjustment#value)) with | err ->  (let message = match err with
+                    (int_of_float speed_evs#adjustment#value);
+                    let success_win = GWindow.message_dialog ~message:"Save successful!"
+                                  ~buttons:GWindow.Buttons.close  ~message_type:`INFO () in ignore(success_win#connect#close ~callback:(success_win#destroy));
+                                  ignore (success_win#connect#response ~callback:(fun s -> success_win#destroy ())); success_win#show ())
+                   with | err ->  (let message = match err with
                                   | Save.FaultyGameSave -> "Corrupted Save File."
                                   | Save.BadFieldOption -> "Error in Moves/Items/Ability/Nature. Make sure everything is spelled correctly."
                                   | Save.BadEVInput -> "The maximum EVs can add up to is 510."

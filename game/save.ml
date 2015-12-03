@@ -21,7 +21,7 @@ let updatePokemonFields pokename move1 move2 move3 move4 ability nature item hpe
         | "ability" -> ("ability", `String ability)
         | "nature" -> ("nature", `String nature)
         | "item" -> ("item", `String item)
-        | "name" -> ("item", `String pokename)
+        | "name" -> ("name", `String pokename)
         | "evs" -> ("evs", `Assoc [("hp", `String (string_of_int hpevs));
                       ("attack", `String (string_of_int atkevs));
                       ("defense", `String (string_of_int defevs));
@@ -43,4 +43,4 @@ let createSavePokeEdit pokename move1 move2 move3 move4 ability nature item hpev
   let newSave = match prevSave with
   | `Assoc lst -> `Assoc (create_new_save lst)
   | _ -> raise FaultyGameSave in
-  Yojson.Basic.to_file "../data/factorysets1.json" newSave
+  Yojson.Basic.to_file "../data/factorysets.json" newSave
