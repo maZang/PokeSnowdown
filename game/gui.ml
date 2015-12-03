@@ -1177,7 +1177,8 @@ let rec game_animation engine buttons (battle: GPack.table) text
                   busywait (); updatetools ();
                   switch_poke engine [poke1;poke2;poke3;poke4;poke5] [move1;move2;
                   move3;move4;switch] back_button ())
-  | Pl1 Faint ->  if List.length t1.dead = 5 then (text_buffer#set_text "Player Two wins!"; current_screen := Battle (P1 ChooseMove); back_button#misc#show ()) else
+  | Pl1 Faint ->  if List.length t1.dead = 5 then (text_buffer#set_text "Player Two wins!";
+                  current_screen := Battle (P1 ChooseMove); back_button#misc#show ()) else
                   (text_buffer#set_text "Player One Pokemon has fainted. Choosing a new Pokemon.";
                   (match !m2 with
                   | Pl2 Faint -> current_screen := Battle (P1 BothFaint)
@@ -1185,7 +1186,10 @@ let rec game_animation engine buttons (battle: GPack.table) text
                   busywait (); updatetools ();
                   switch_poke engine [poke1;poke2;poke3;poke4;poke5] [move1;move2;
                   move3;move4;switch] back_button ())
-  | Pl2 Faint -> if List.length t2.dead = 5 then (text_buffer#set_text "Player One wins!"; current_screen := Battle (P1 ChooseMove); back_button#misc#show ()) else
+  | Pl2 Faint -> if List.length t2.dead = 5 then (text_buffer#set_text "Player One wins!";
+                  (match get_game_status battle_status with
+                      | TournBattle _ -> ()
+                      | _ -> ()); current_screen := Battle (P1 ChooseMove); back_button#misc#show ()) else
                   (text_buffer#set_text "Player Two Pokemon has fainted. Choosing a new Pokemon.";
                  (match get_game_status battle_status with
                  | Random1p | Preset1p _ | TournBattle _ -> busywait (); current_command := ((if fst !current_command = None then Some (NoMove) else fst !current_command), Some (FaintPoke ""));
@@ -1194,7 +1198,10 @@ let rec game_animation engine buttons (battle: GPack.table) text
                               current_command := (Some NoMove, snd !current_command);
                               switch_poke engine [poke1;poke2;poke3;poke4;poke5] [move1;move2;
                               move3;move4;switch] back_button ()))
-  | Pl2 SFaint ->if List.length t2.dead = 5 then (text_buffer#set_text "Player One wins!"; current_screen := Battle (P1 ChooseMove); back_button#misc#show ()) else
+  | Pl2 SFaint ->if List.length t2.dead = 5 then (text_buffer#set_text "Player One wins!";
+                  (match get_game_status battle_status with
+                      | TournBattle _ -> ()
+                      | _ -> ()); current_screen := Battle (P1 ChooseMove); back_button#misc#show ()) else
                  (poke2_img#set_file ("../data/sprites/" ^ t2.current.pokeinfo.name ^ ".gif");
                  text_buffer#set_text (t2.current.pokeinfo.name ^ " has fainted. Choosing a new Pokemon.");
                  (match get_game_status battle_status with

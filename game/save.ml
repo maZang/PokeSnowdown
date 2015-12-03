@@ -1,4 +1,5 @@
 open Pokemon
+open Info
 
 exception FaultyGameSave
 exception BadFieldOption
@@ -44,3 +45,19 @@ let createSavePokeEdit pokename move1 move2 move3 move4 ability nature item hpev
   | `Assoc lst -> `Assoc (create_new_save lst)
   | _ -> raise FaultyGameSave in
   Yojson.Basic.to_file "../data/factorysets.json" newSave
+
+let convertPokeToJson poke =
+  `Assoc [("name", `String poke.name);
+          ("moves", `List [`String poke.move1.name; `String poke.move2.name;
+          `String poke.move3.name; `String poke.move4.name]);
+          ("ability", `String poke.ability);
+          ("nature", `String (string_of_nature poke.nature));
+          ("item", `String (string_of_item poke.item));
+          ("evs", (`Assoc [("hp", `String (string_of_int poke.evs.hp));
+                          ("attack", `String (string_of_int poke.evs.attack));
+                          ("defense", `String (string_of_int poke.evs.defense));
+                          ("special-attack", `String (string_of_int poke.evs.special_attack));
+                          ("special-defense", `String (string_of_int poke.evs.special_defense));
+                          ("speed", `String (string_of_int poke.evs.speed))]))]
+
+let addPoke str = ()
