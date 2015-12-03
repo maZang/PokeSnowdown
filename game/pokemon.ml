@@ -601,9 +601,9 @@ let getTestOpp () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gallade-mega"; element=[Grass]; move1= getMoveFromString "swords-dance"; move2 =
-  getMoveFromString "poison-sting"; move3 = getMoveFromString "splash";
-  move4 = getMoveFromString "splash"; hp = 68; attack = 85; special_attack = 165; defense = 65;
+  {name="gallade-mega"; element=[Grass]; move1= getMoveFromString "flamethrower"; move2 =
+  getMoveFromString "earthquake"; move3 = getMoveFromString "slack-off";
+  move4 = getMoveFromString "harden"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
 
 let getPokeToolTip t =

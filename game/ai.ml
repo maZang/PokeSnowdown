@@ -13,24 +13,33 @@ let get_move_random (poke : battle_poke) : string =
   | _ -> failwith "Does not occur." (* Here to satisfy the compiler >:( *)
 
 (* Calculate weight of a move by it's accuracy and power *)
-let calculate_move_weights (pmove: move) : int =
+let calculate_move_weights (pmove : move) : int =
   (pmove.accuracy * pmove.power) / 100
 
+(* Assign status moves a weight, 15% of the old total. *)
+let assign_status_weight (weight : int) (total : int) : int =
+  if weight = 0 then (int_of_float (0.15 *. float_of_int (total)))
+  else weight
+
 (* Usually the picks the better move (one with a greater weight). If all moves
- * are status moves, then randomly pick a status move. Doesn't pick a status
- * move if there is at least 1 non-status move. *)
+ * are status moves, then randomly pick a status move. *)
 let get_move_better (poke : battle_poke) : string =
   let m1 = calculate_move_weights poke.pokeinfo.move1 in
   let m2 = calculate_move_weights poke.pokeinfo.move2 in
   let m3 = calculate_move_weights poke.pokeinfo.move3 in
   let m4 = calculate_move_weights poke.pokeinfo.move4 in
   let total = m1+m2+m3+m4 in
-  if total=0 then get_move_random poke
+  if total = 0 then get_move_random poke
   else
-    (let randnum = Random.int total in
-    if (randnum < m1) then poke.pokeinfo.move1.name
-    else if (randnum >= m1 && randnum < (m1+m2)) then poke.pokeinfo.move2.name
-    else if (randnum >= (m1+m2) && randnum < (m1+m2+m3))
+    (let w1 = assign_status_weight m1 total in
+    let w2 = assign_status_weight m2 total in
+    let w3 = assign_status_weight m3 total in
+    let w4 = assign_status_weight m4 total in
+    let newtotal = w1+w2+w3+w4 in
+    let randnum = Random.int newtotal in
+    if (randnum < w1) then poke.pokeinfo.move1.name
+    else if (randnum >= w1 && randnum < (w1+w2)) then poke.pokeinfo.move2.name
+    else if (randnum >= (w1+w2) && randnum < (w1+w2+w3))
          then poke.pokeinfo.move3.name
     else poke.pokeinfo.move4.name)
 
