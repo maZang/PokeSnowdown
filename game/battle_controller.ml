@@ -1151,6 +1151,7 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
                     | Hail _ -> ()
                     | _ -> (wt.weather <- Hail 5; newmove := HailS !newmove));
                     secondary_effects t)
+    (* For the move encore *)
     | (Encore n)::t -> let rec findForcedMove = function
                         | (ForcedMove _)::t -> true
                         | h::t -> findForcedMove t
@@ -1170,6 +1171,7 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
                       else
                         (newmove := EncoreFail)
                       )
+    (* For the move pain split *)
     | PainSplit::t -> let half_health = (atk.current.curr_hp + def.current.curr_hp)/2 in
                       atk.current.curr_hp <- min atk.current.bhp half_health;
                       def.current.curr_hp <- min def.current.bhp half_health;
