@@ -54,6 +54,32 @@ let rec test_string n () =
   | 0 -> []
   | n -> (string_of_int n)::test_string (n-1) ()
 
+(* Global references to Poke-edit for fast and memory low destruction*)
+let pokedit_screen = GPack.hbox ()
+let pokedit_labels = GPack.vbox ~packing:(pokedit_screen#pack)()
+let pokedit_combos = GPack.vbox ~packing:(pokedit_screen#pack)()
+let pokedit_labels2 = GPack.vbox ~packing:(pokedit_screen#pack)()
+let pokedit_scale = GPack.vbox ~packing:(pokedit_screen#pack) ~width:170 ()
+let label1 = GMisc.label ~text:"Move 1" ~height:16 ~ypad:5 ~xpad:15 ~packing:(pokedit_labels#pack ~expand:true) ()
+let label2 = GMisc.label ~text:"Move 2" ~height:16 ~ypad:5 ~xpad:15 ~packing:(pokedit_labels#pack ~expand:true) ()
+let label3 = GMisc.label ~text:"Move 3" ~height:16 ~ypad:5 ~xpad:15 ~packing:(pokedit_labels#pack ~expand:true) ()
+let label4 = GMisc.label ~text:"Move 4" ~height:16 ~ypad:5 ~xpad:15 ~packing:(pokedit_labels#pack ~expand:true) ()
+let label5 = GMisc.label ~text:"Ability" ~height:16 ~ypad:5 ~xpad:15 ~packing:(pokedit_labels#pack ~expand:true) ()
+let label6 = GMisc.label ~text:"Nature" ~height:16 ~ypad:5 ~xpad:15 ~packing:(pokedit_labels#pack ~expand:true) ()
+let label7 = GMisc.label ~text:"Item" ~height:16 ~ypad:5 ~xpad:15 ~packing:(pokedit_labels#pack ~expand:true) ()
+let label8 = GMisc.label ~text:"HP EVs" ~height:16 ~ypad:8 ~xpad:15 ~packing:(pokedit_labels2#pack ~expand:true) ()
+let label9 = GMisc.label ~text:"Attack EVs" ~height:16 ~ypad:8 ~xpad:15 ~packing:(pokedit_labels2#pack ~expand:true) ()
+let label10 = GMisc.label ~text:"Defense EVs" ~height:16 ~ypad:8 ~xpad:15 ~packing:(pokedit_labels2#pack ~expand:true) ()
+let label11 = GMisc.label ~text:"Special Attack EVs" ~height:16 ~ypad:8 ~xpad:15 ~packing:(pokedit_labels2#pack ~expand:true) ()
+let label12 = GMisc.label ~text:"Special Defense EVs" ~height:16 ~ypad:8 ~xpad:15 ~packing:(pokedit_labels2#pack ~expand:true) ()
+let label13 = GMisc.label ~text:"Speed EVs" ~height:16 ~ypad:8 ~xpad:15 ~packing:(pokedit_labels2#pack ~expand:true) ()
+let hp_evs = GRange.scale `HORIZONTAL ~digits:0 ~adjustment:(GData.adjustment ~upper:252. ~page_size:0. ()) ~draw_value:true ~packing:(pokedit_scale#pack ~expand:true) ()
+let atk_evs = GRange.scale `HORIZONTAL ~digits:0 ~adjustment:(GData.adjustment ~upper:252. ~page_size:0. ()) ~draw_value:true ~packing:(pokedit_scale#pack ~expand:true) ()
+let def_evs = GRange.scale `HORIZONTAL ~digits:0 ~adjustment:(GData.adjustment ~upper:252. ~page_size:0. ()) ~draw_value:true ~packing:(pokedit_scale#pack ~expand:true) ()
+let special_attack_evs = GRange.scale `HORIZONTAL ~digits:0 ~adjustment:(GData.adjustment ~upper:252. ~page_size:0. ()) ~draw_value:true ~packing:(pokedit_scale#pack ~expand:true) ()
+let special_defense_evs = GRange.scale `HORIZONTAL ~digits:0 ~adjustment:(GData.adjustment ~upper:252. ~page_size:0. ()) ~draw_value:true ~packing:(pokedit_scale#pack ~expand:true) ()
+let speed_evs = GRange.scale `HORIZONTAL ~digits:0 ~adjustment:(GData.adjustment ~upper:252. ~page_size:0. ()) ~draw_value:true ~packing:(pokedit_scale#pack ~expand:true) ()
+
 (* Global references to an object for easy destruction *)
 let selecttext = ref (GMisc.label ())
 let select1 = ref (GEdit.combo ~popdown_strings:(test_string 750 ()) ())
@@ -62,10 +88,12 @@ let select3 = ref (GEdit.combo ~popdown_strings:(test_string 750 ()) ())
 let select4 = ref (GEdit.combo ~popdown_strings:(test_string 750 ()) ())
 let select5 = ref (GEdit.combo ~popdown_strings:(test_string 750 ()) ())
 let select6 = ref (GEdit.combo ~popdown_strings:(test_string 750 ()) ())
+let select7 = ref (GEdit.combo ~popdown_strings:(test_string 750 ()) ())
 let selectimg = GMisc.image ~file:"../data/backgrounds/PokemonLogo.png" ()
 let editimg = GMisc.image ~file:"../data/backgrounds/pokeedit.jpg" ()
 let () = !select1#destroy (); !select2#destroy (); !select3#destroy ();
-          !select4#destroy (); !select5#destroy (); !select6#destroy ()
+          !select4#destroy (); !select5#destroy (); !select6#destroy ();
+          !select7#destroy ()
 (* Holds similar information to the engine, but acts differently in battle
   In battle, engine holds the current battle state, but current_screen holds
   the information on which player is selecting move/pokemon/etc...
@@ -551,19 +579,41 @@ let load_poke_edit engine img bg_img load_screen battle text buttonhide poke_edi
               poke_edit#set_label "Continue";
               img#misc#hide ();
               select1 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
-              battle_screen#pack editimg#coerce;
+              editimg#set_file "../data/backgrounds/pokeedit.jpg"; battle_screen#pack editimg#coerce;
               ()
   | PokeEdit -> (try (let pokename = !select1#entry#text in
                       let poke = Pokemon.getPresetPokemon pokename in
                       let move_lst = Pokemon.getAllMoves pokename in
                       let abil_lst = Pokemon.getAllMoves pokename in
-                      !select1#destroy (); !selecttext#set_text ("Now editing " ^ pokename ^ "!");
+                      !select1#destroy (); !selecttext#set_text ("Now editing " ^ pokename ^ "! Your current values are already loaded in.");
                       editimg#set_file ("../data/sprites/" ^ pokename ^ ".gif");
-                      select1 := GEdit.combo ~popdown_strings:(move_lst) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
+                      battle_screen#pack pokedit_screen#coerce;
+                      select1 := GEdit.combo ~popdown_strings:(move_lst) ~case_sensitive:false ~allow_empty:false ~packing:(pokedit_combos#pack ~expand:true) ();
+                      !select1#entry#set_text poke.move1.name;
+                      select2 := GEdit.combo ~popdown_strings:(move_lst) ~case_sensitive:false ~allow_empty:false ~packing:(pokedit_combos#pack ~expand:true) ();
+                      !select2#entry#set_text poke.move2.name;
+                      select3 := GEdit.combo ~popdown_strings:(move_lst) ~case_sensitive:false ~allow_empty:false ~packing:(pokedit_combos#pack ~expand:true) ();
+                      !select3#entry#set_text poke.move3.name;
+                      select4 := GEdit.combo ~popdown_strings:(move_lst) ~case_sensitive:false ~allow_empty:false ~packing:(pokedit_combos#pack ~expand:true) ();
+                      !select4#entry#set_text poke.move4.name;
+                      select5 := GEdit.combo ~popdown_strings:(abil_lst) ~case_sensitive:false ~allow_empty:false ~packing:(pokedit_combos#pack ~expand:true) ();
+                      !select5#entry#set_text poke.ability;
+                      select6 := GEdit.combo ~popdown_strings:(Pokemon.nature_list) ~case_sensitive:false ~allow_empty:false ~packing:(pokedit_combos#pack ~expand:true) ();
+                      !select6#entry#set_text (Pokemon.string_of_nature poke.nature);
+                      select7 := GEdit.combo ~popdown_strings:(Pokemon.item_list) ~case_sensitive:false ~allow_empty:false ~packing:(pokedit_combos#pack ~expand:true) ();
+                      !select7#entry#set_text (Pokemon.string_of_item poke.item);
+                      poke_edit#set_label "Save";
+                      hp_evs#set_adjustment (GData.adjustment ~upper:252. ~page_size:0. ~value:(float_of_int poke.evs.hp) ());
+                      atk_evs#set_adjustment (GData.adjustment ~upper:252. ~page_size:0. ~value:(float_of_int poke.evs.attack) ());
+                      def_evs#set_adjustment (GData.adjustment ~upper:252. ~page_size:0. ~value:(float_of_int poke.evs.defense) ());
+                      special_attack_evs#set_adjustment (GData.adjustment ~upper:252. ~page_size:0. ~value:(float_of_int poke.evs.special_attack) ());
+                      special_defense_evs#set_adjustment (GData.adjustment ~upper:252. ~page_size:0. ~value:(float_of_int poke.evs.special_defense) ());
+                      speed_evs#set_adjustment (GData.adjustment ~upper:252. ~page_size:0. ~value:(float_of_int poke.evs.speed) ()); current_screen := PokeEditor;
                   ()
                 ) with _ -> let error_win = GWindow.message_dialog ~message:"Error in your Pokemon selection. Try making sure everything is spelled correctly."
                                   ~buttons:GWindow.Buttons.close  ~message_type:`ERROR () in ignore(error_win#connect#close ~callback:(error_win#destroy));
                                   ignore (error_win#connect#response ~callback:(fun s -> error_win#destroy ())); error_win#show ())
+  | PokeEditor -> ()
   | _ -> failwith "Faulty Game Logic: Debug 550"
 
 let load_preset engine img bg_img load_screen battle text buttonhide preset buttonshow
@@ -681,6 +731,15 @@ let go_back engine (menu_holder, main_menu, battle_screen, one_player,
     poke_edit#set_label "Poke Editor";
     battle_screen#remove editimg#coerce; main_menu_bg#misc#show ();
     !selecttext#destroy (); !select1#destroy ();
+    load_menu engine [random;touranment;preset] [] main_menu_bg Menu1P ());
+  if (!current_screen = PokeEditor) then
+    (current_screen := Menu1P;
+    poke_edit#set_label "Poke Editor";
+    battle_screen#remove pokedit_screen#coerce;
+    !select1#destroy (); !select2#destroy (); !select3#destroy ();
+    !select4#destroy (); !select5#destroy (); !select6#destroy ();
+    !select7#destroy (); !selecttext#destroy (); main_menu_bg#misc#show ();
+    battle_screen#remove editimg#coerce;
     load_menu engine [random;touranment;preset] [] main_menu_bg Menu1P ());
   ()
 

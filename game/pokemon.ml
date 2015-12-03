@@ -58,6 +58,34 @@ let getNatureFromString str =
   | "serious" -> Serious
   | _ -> failwith "Does not occur"
 
+let string_of_nature nature =
+  match nature with
+  | Hardy -> "hardy"
+  | Lonely -> "lonely"
+  | Adamant -> "adamant"
+  | Naughty -> "naughty"
+  | Brave -> "brave"
+  | Bold -> "bold"
+  | Docile -> "docile"
+  | Impish -> "impish"
+  | Lax -> "lax"
+  | Relaxed -> "relaxed"
+  | Modest -> "modest"
+  | Mild -> "mild"
+  | Bashful -> "bashful"
+  | Rash -> "rash"
+  | Quiet -> "quiet"
+  | Calm -> "calm"
+  | Gentle -> "gentle"
+  | Careful -> "careful"
+  | Quirky -> "quirky"
+  | Sassy -> "sassy"
+  | Timid -> "timid"
+  | Hasty -> "hasty"
+  | Jolly -> "jolly"
+  | Naive -> "naive"
+  | Serious -> "serious"
+
 let getRandomNature () =
   match Random.int 25 with
   | 0 -> Hardy
@@ -515,7 +543,7 @@ let getMoveFromString str =
   element; description; secondary}
 
 let getAllMoves poke =
-  List.map (to_string) (poke_json |> member poke |> member "moves" |> to_list)
+  List.fast_sort compare (List.map (to_string) (poke_json |> member poke |> member "moves" |> to_list))
 
 let getAllAbilities poke =
   List.map (to_string) (poke_json |> member poke |> member "ability" |> to_list)

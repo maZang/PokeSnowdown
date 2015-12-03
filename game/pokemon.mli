@@ -24,6 +24,14 @@ val getRandomPokemon : unit -> pokemon
  *)
 val getPresetPokemon : string -> pokemon
 
+(* Turns the nature variant to a string
+*)
+val string_of_nature: nature -> string
+
+(* Turns the item variant to a string
+*)
+val string_of_item: item -> string
+
 (* [getPokeToolTip t] returns a string containing relevant tool-tip information
  *  (stats, etc.) for team t's current Pokemon.
  *
