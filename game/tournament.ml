@@ -121,3 +121,9 @@ let opp1Quotes () = selectedEnemy := !enemy1; getQuotes !enemy1
 let opp2Quotes () = selectedEnemy := !enemy2; getQuotes !enemy2
 
 let getJson () = Yojson.Basic.from_file ("../data/tournament/NPCjson/baldman.json")
+
+let unlockPokemon () =
+  let open Yojson.Basic.Util in
+  let unlock_list = List.map (to_string) (getJson () |> member "unlockable" |> to_list) in
+  let rand = Random.int (List.length unlock_list) in
+  Save.addPoke (List.nth unlock_list rand)
