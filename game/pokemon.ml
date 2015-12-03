@@ -522,7 +522,7 @@ let getSecondaryEffect str = match str with
   | "knock-off" -> [KnockOff]
   | "frost-breath" | "storm-throw" -> [IncCrit 3]
   | "hone-claws" -> [StageBoost [(Attack,1);(Accuracy,1)]]
-  | "ominous-wind" -> [ChanceStageBoost]
+  | "ominous-wind" | "silver-wind" | "ancient-power" -> [ChanceStageBoost]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
