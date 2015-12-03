@@ -299,6 +299,5 @@
       "speed": "252"
     }
   },
-	"num-wins": 0,
 	"pokemon": [ "absol", "ampharos", "arcanine", "beedrill", "chandelure", "chesnaught", "cobalion", "cresselia", "gengar", "nidoking", "nidoqueen", "sableye", "tyranitar", "venusaur", "weavile" ]
 }
