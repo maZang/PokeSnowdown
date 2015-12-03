@@ -387,7 +387,8 @@ let getSecondaryEffect str = match str with
   | "bounce" -> [ChargeMove "It bounced up high"; ParaChance]
   | "freeze-shock" -> [ChargeMove "Charging"; ParaChance]
   | "swords-dance" -> [StageBoost [(Attack, 2)]]
-  | "charm" -> [StageAttack [(Attack, 2)]]
+  | "captivate" | "charm" | "eerie-impulse" | "fake-tears"
+    | "feather-dance" -> [StageAttack [(Attack, 2)]]
   | "meditate" | "sharpen" | "metal-claw" | "howl" -> [StageBoost [(Attack, 1)]]
   | "whirlwind" | "roar" | "dragon-tail" -> [ForceSwitch]
   | "stomp" | "rolling-kick" | "headbutt" | "bite" | "bone-club" | "waterfall"
