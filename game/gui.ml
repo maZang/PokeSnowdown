@@ -387,6 +387,9 @@ let make_menu ?packing () =
   (* button7 is known as back_button outside of this function *)
 	let button7 = GButton.button ~label:"Back"
 		~packing:(hbox1#pack ~from:`END) () ~show:false in
+  (* button 8 is known as poke_edit outside of this function *)
+  let button8 = GButton.button ~label:"Poke-Editor"
+    ~packing:(hbox1#pack ~expand:true ~fill:true) ~show: false () in
   (* img is known as main_menu_bg outside of this code *)
   let img = GMisc.image ~file:"./gui_pics/main.gif" ~packing:(hbox2#pack)
     ~width:screen_width ~height:(5*screen_height /6) () in
@@ -397,7 +400,7 @@ let make_menu ?packing () =
   hbox2#pack selectimg#coerce;
   (* Return all objects created *)
   (vbox, hbox1, hbox2, button1, button2, button3, button4,
-		button5, button6, button7, img, load_screen)
+		button5, button6, button7, button8, img, load_screen)
 
 (* This is called once to load the battle screen . The game states will be
   engine -- Battle InGame _
@@ -539,6 +542,19 @@ let load_random  engine img bg_img load_screen battle text buttonhide buttonshow
               poke1_img poke2_img text_buffer health_holders ()
   | _ -> failwith "Faulty Game Logic: Debug 298"
 
+let load_poke_edit engine img bg_img load_screen battle text buttonhide poke_edit
+  buttonshow (battle_status, gui_ready, ready, ready_gui) main_menu (battle_screen : GPack.box)
+  poke1_img poke2_img text_buffer health_holders () =
+  match !current_screen with
+  | Menu1P -> current_screen := PokeEdit;
+              List.iter (fun s -> s#misc#hide ()) buttonhide;
+              selecttext := GMisc.label ~text:"Choose One of Your Unlocked Pokemon to Edit:" ~packing:(battle_screen#pack) ();
+              poke_edit#set_label "Continue";
+              img#misc#hide ();
+              select1 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
+              ()
+  | _ -> failwith "Faulty Game Logic: Debug 550"
+
 let load_preset engine img bg_img load_screen battle text buttonhide preset buttonshow
   (battle_status, gui_ready, ready, ready_gui) main_menu (battle_screen : GPack.box)
   poke1_img poke2_img text_buffer health_holders () =
@@ -607,13 +623,13 @@ else
   ()
 
 let go_back engine (menu_holder, main_menu, battle_screen, one_player,
-    two_player, no_player, random, preset, touranment,
-    back_button, main_menu_bg, load_screen) (battle, text, bg_img, move1, move2,
+    two_player, no_player, random, preset, touranment, back_button,
+    poke_edit, main_menu_bg, load_screen) (battle, text, bg_img, move1, move2,
     move3, move4, switch, poke1_img, poke2_img, move_img, text_buffer, poke1, poke2,
     poke3, poke4, poke5, health_holders, pokeanim1, pokeanim2, moveanim) battle_engine () =
 	(if !current_screen = Menu1P || !current_screen = Menu2P || !current_screen = Menu0P then
 		load_menu engine [one_player;two_player;no_player]
-    [random; preset ;touranment; back_button] main_menu_bg
+    [random; preset ;touranment; poke_edit; back_button] main_menu_bg
     MainMenu ());
   if (match !current_screen with
     | Battle (P1 ChooseMove)-> true
@@ -641,6 +657,13 @@ let go_back engine (menu_holder, main_menu, battle_screen, one_player,
     (current_screen := Menu1P; battle_screen#remove gameBoard#coerce;
       battle_screen#remove gameText#coerce; main_menu_bg#misc#show ();
       random#misc#show (); preset#misc#show (); touranment#misc#show ());
+  if (!current_screen = TourneyChoose) then
+    (current_screen := Menu1P;
+    touranment#set_label "Tournament";
+    selectimg#misc#hide (); main_menu_bg#misc#show (); !selecttext#destroy ();
+    !select1#destroy (); !select2#destroy (); !select3#destroy ();
+    !select4#destroy (); !select5#destroy (); !select6#destroy ();
+    load_menu engine [random; preset ; poke_edit] [] main_menu_bg Menu1P ());
   ()
 
 let switch_poke engine pokebuttons battlebuttons back_button () =
@@ -1200,7 +1223,7 @@ let main_gui engine battle_engine () =
 	let menu = make_menu ~packing:(window#add) () in
 	let menu_holder, main_menu, battle_screen, one_player,
 		two_player, no_player, random, preset, touranment,
-		back_button, main_menu_bg, load_screen = menu in
+		back_button, poke_edit, main_menu_bg, load_screen = menu in
   let battler = make_battle_screen ~packing:(battle_screen#add) ()
   in let battle, text, bg_img, move1, move2, move3, move4, switch,
     poke1_img, poke2_img, move_img, text_buffer, poke1, poke2, poke3, poke4,
@@ -1212,8 +1235,8 @@ let main_gui engine battle_engine () =
   main_menu#pack poke4#coerce; main_menu#pack poke5#coerce;
   (* One player Button *)
 	ignore(one_player#connect#clicked ~callback:(load_menu engine [random;preset;
-  touranment;back_button] [one_player; two_player;no_player] main_menu_bg
-  Menu1P));
+  touranment;poke_edit;back_button] [one_player; two_player;no_player]
+  main_menu_bg Menu1P));
   (* Two player button *)
   ignore(two_player#connect#clicked ~callback:(load_menu engine [random;preset;
   back_button] [one_player; two_player; no_player] main_menu_bg Menu2P));
@@ -1225,19 +1248,24 @@ let main_gui engine battle_engine () =
   ~callback:(go_back engine menu battler battle_engine));
   (* Random battle button *)
   ignore(random#connect#clicked ~callback:(load_random engine main_menu_bg bg_img load_screen
-  battle text [random;preset;touranment] [move1; move2; move3; move4;
+  battle text [random;preset;touranment;poke_edit] [move1; move2; move3; move4;
   switch] battle_engine main_menu battle_screen poke1_img poke2_img
   text_buffer health_holders));
   (* Preset battle button *)
   ignore(preset#connect#clicked ~callback:(load_preset engine main_menu_bg bg_img load_screen
-  battle text [random;touranment] preset [move1; move2; move3; move4;
+  battle text [random;touranment;poke_edit] preset [move1; move2; move3; move4;
   switch] battle_engine main_menu battle_screen poke1_img poke2_img
   text_buffer health_holders));
   (* tourney battle button *)
   ignore(touranment#connect#clicked ~callback:(load_tournament engine main_menu_bg bg_img load_screen
-  battle text [random;preset;touranment] [move1; move2; move3; move4;
+  battle text [random;preset;touranment;poke_edit] [move1; move2; move3; move4;
   switch] battle_engine main_menu battle_screen poke1_img poke2_img
   text_buffer health_holders));
+  (* poke edit button *)
+  ignore(poke_edit#connect#clicked ~callback:(load_poke_edit engine main_menu_bg
+  bg_img load_screen battle text [random;preset;touranment] poke_edit
+  [move1; move2; move3; move4; switch] battle_engine main_menu battle_screen
+  poke1_img poke2_img text_buffer health_holders));
   (* Switch button *)
   ignore(switch#connect#clicked ~callback:(switch_poke engine [poke1;poke2;poke3;
   poke4;poke5] [move1;move2;move3;move4;switch] back_button));
