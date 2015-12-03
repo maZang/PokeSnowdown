@@ -395,8 +395,8 @@ let getSecondaryEffect str = match str with
     | "rock-slide" | "hyper-fang" | "twister" | "zen-headbutt" | "steamroller"
     | "heart-stamp" | "iron-head" | "needle-arm" -> [FlinchMove]
   | "double-kick" | "gear-grind" | "bonemerang" | "double-hit" -> [MultHit 2]
-  | "sand-attack" | "smokescreen" | "kinesis" | "flash" |
-      "mud-slap" | "octazooka"-> [StageAttack [(Accuracy, 1)]]
+  | "sand-attack" | "smokescreen" | "kinesis" | "flash"
+    | "mud-slap" | "octazooka" | "leaf-tornado" -> [StageAttack [(Accuracy, 1)]]
   | "take-down" | "double-edge" | "submission" -> [RecoilMove]
   | "tail-whip" | "leer" | "iron-tail" | "crunch" -> [StageAttack [(Defense, 1)]]
   | "poison-sting" | "poison-powder" | "smog" | "sludge" |
@@ -406,7 +406,8 @@ let getSecondaryEffect str = match str with
   | "sing" | "sleep-powder" | "hypnosis" | "lovely-kiss" | "spore" | "dark-void"
     | "grass-whistle" -> [PutToSleep]
   | "supersonic" | "psybeam" | "confusion" | "confuse-ray" | "dizzy-punch"
-    | "sweet-kiss" | "dynamic-punch" | "water-pulse" -> [ConfuseOpp]
+    | "sweet-kiss" | "dynamic-punch" | "water-pulse" | "hurricane" | "chatter"
+    | "rock-climb" | "secret-power" | "signal-beam" | "teeter-dance" -> [ConfuseOpp]
   | "sonic-boom" -> [ConstantDmg 20]
   | "acid" | "psychic" | "shadow-ball" -> [StageAttack [(SpecialDefense, 1)]]
   | "bubble-beam" | "bubble" | "powder-snow" | "icy-wind" -> [StageAttack [(Speed, 1)]]
@@ -428,7 +429,7 @@ let getSecondaryEffect str = match str with
   | "harden" | "withdraw" | "defense-curl" | "steel-wing" -> [StageBoost [(Defense, 1)]]
   | "barrier" | "acid-armor" | "iron-defense" -> [StageBoost [(Defense, 2)]]
   | "calm-mind" -> [StageBoost [(SpecialDefense, 1); (SpecialAttack, 1)]]
-  | "leaf-storm" -> [StageBoost [(SpecialAttack, -2)]]
+  | "overheat" | "draco-meteor" | "leaf-storm" | "psycho-boost" -> [StageBoost [(SpecialAttack, -2)]]
   | "work-up" -> [StageBoost [(Attack, 1); (SpecialAttack, 1)]]
   | "recover" | "soft-boiled" | "milk-drink" | "roost" | "heal-order"
     | "slack-off" -> [Recovery]
@@ -593,7 +594,7 @@ let getTestPoke () =
   let nature = Bold in
   let item = Leftovers in
   {name="gardevoir-mega"; element=[Psychic]; move1= getMoveFromString "slack-off"; move2 =
-  getMoveFromString "psychic"; move3 = getMoveFromString "crunch";
+  getMoveFromString "psycho-boost"; move3 = getMoveFromString "leaf-tornado";
   move4 = getMoveFromString "flamethrower"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 0; special_defense = 135; ability="pixilate"; evs; nature; item}
 
