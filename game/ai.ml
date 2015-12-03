@@ -1,10 +1,10 @@
 open Info
 
-(* [getRandomMove poke] gets the name of a random move for the Pokemon [poke].
+(* [get_move_random poke] gets the name of a random move for the Pokemon [poke].
  *
  *  - [poke] is a battle Pokemon.
  *)
-let getRandomMove (poke : battle_poke) : string =
+let get_move_random (poke : battle_poke) : string =
   match Random.int 4 with
   | 0 -> poke.pokeinfo.move1.name
   | 1 -> poke.pokeinfo.move2.name
@@ -13,33 +13,33 @@ let getRandomMove (poke : battle_poke) : string =
   | _ -> failwith "Does not occur." (* Here to satisfy the compiler >:( *)
 
 (* Calculate weight of a move by it's accuracy and power *)
-let calculateMoveWeights (pmove: move) : int =
+let calculate_move_weights (pmove: move) : int =
   (pmove.accuracy * pmove.power) / 100
 
 (* Usually the picks the better move (one with a greater weight). If all moves
  * are status moves, then randomly pick a status move. Doesn't pick a status
  * move if there is at least 1 non-status move. *)
-let getBetterMove (poke : battle_poke) : string =
-  let m1 = calculateMoveWeights poke.pokeinfo.move1 in
-  let m2 = calculateMoveWeights poke.pokeinfo.move2 in
-  let m3 = calculateMoveWeights poke.pokeinfo.move3 in
-  let m4 = calculateMoveWeights poke.pokeinfo.move4 in
+let get_move_better (poke : battle_poke) : string =
+  let m1 = calculate_move_weights poke.pokeinfo.move1 in
+  let m2 = calculate_move_weights poke.pokeinfo.move2 in
+  let m3 = calculate_move_weights poke.pokeinfo.move3 in
+  let m4 = calculate_move_weights poke.pokeinfo.move4 in
   let total = m1+m2+m3+m4 in
-  if total=0 then getRandomMove poke
+  if total=0 then get_move_random poke
   else
-    (let randum = Random.int total in
-    if (randum < m1) then poke.pokeinfo.move1.name
-    else if (randum >= m1 && randum < (m1+m2)) then poke.pokeinfo.move2.name
-    else if (randum >= (m1+m2) && randum < (m1+m2+m3))
+    (let randnum = Random.int total in
+    if (randnum < m1) then poke.pokeinfo.move1.name
+    else if (randnum >= m1 && randnum < (m1+m2)) then poke.pokeinfo.move2.name
+    else if (randnum >= (m1+m2) && randnum < (m1+m2+m3))
          then poke.pokeinfo.move3.name
     else poke.pokeinfo.move4.name)
 
-(* [replaceDead lst] randomly chooses a Pokemon given a list [lst] of alive
- * ones.
+(* [replace_dead_random lst] randomly chooses a Pokemon given a non-empty
+ * list [lst] of alive ones.
  *
  *  - [lst] is a list of currently-alive battle Pokemon.
  *)
-let replaceDead (lst : battle_poke list) : string =
+let replace_dead_random (lst : battle_poke list) : string =
   let n = Random.int (List.length lst) in (List.nth lst n).pokeinfo.name
 
 (* [get_advantage_value elst1 elst2] returns the float value representing
@@ -55,17 +55,18 @@ let rec get_advantage_value (elst1:element list) (elst2:element list) : float =
   | h::t -> (List.fold_left (fun acc x -> acc *. Pokemon.getElementEffect h x)
                 1. elst2) *. (get_advantage_value t elst2)
 
-(* [replaceBetterDead poke alivelst] returns the string name of the first
- * Pokemon in the non-empty list of alive pokemon [alivelst] that has the
- * maximum type advantage against the opposing Pokemon [poke].
+(* [replace_dead_better poke alivelst] returns the string name of the first
+ * Pokemon in the non-empty list of alive Pokemon [alivelst] that has the
+ * maximum type advantage against the opposing Pokemon [poke]. If there are
+ * no alive Pokemon with a type advantage, a Pokemon is chosen randomly.
  *
  *  - [poke] is a battle Pokemon to be compared against.
  *  - [alivelst] is a list of battle Pokemon.
  *)
-let replaceBetterDead (poke:battle_poke) (alivelst:battle_poke list) : string =
+let replace_dead_better (poke:battle_poke) (alivelst:battle_poke list) : string =
   let type2 = poke.pokeinfo.element in
   let rec get_poke_max_advantage p maxv = function
-    | [] -> p
+    | [] -> (p,maxv)
     | h::t ->
         let type1 = h.pokeinfo.element in
         let currv = get_advantage_value type1 type2 in
@@ -77,5 +78,6 @@ let replaceBetterDead (poke:battle_poke) (alivelst:battle_poke list) : string =
   | h::t ->
       let type1 = h.pokeinfo.element in
       let currv = get_advantage_value type1 type2 in
-      let bestpoke = get_poke_max_advantage h currv t in
-      bestpoke.pokeinfo.name
+      let bestpokemax = get_poke_max_advantage h currv t in
+      if (snd bestpokemax > 1.) then (fst bestpokemax).pokeinfo.name
+      else replace_dead_random alivelst
