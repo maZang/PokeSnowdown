@@ -4,6 +4,7 @@ open Info
 exception FaultyGameSave
 exception BadFieldOption
 exception BadEVInput
+exception OwnPokemonAlready
 
 let updatePokemonFields pokename move1 move2 move3 move4 ability nature item hpevs atkevs defevs spatkevs spdefevs speedevs key=
   let move_lst = getAllMoves pokename in
@@ -60,4 +61,21 @@ let convertPokeToJson poke =
                           ("special-defense", `String (string_of_int poke.evs.special_defense));
                           ("speed", `String (string_of_int poke.evs.speed))]))]
 
-let addPoke str = ()
+let rec incPrevSave key lst =
+  match lst with
+  | (s, `Int n)::t -> if key = s then (s, `Int (n+1))::t else (s, `Int n)::(incPrevSave key t)
+  | (s, x)::t -> ((s,x)::(incPrevSave key t))
+  | _ -> raise FaultyGameSave
+
+let addPoke str =
+  if List.mem str (unlocked_poke_string_list ()) then
+    raise OwnPokemonAlready
+  else
+    (let poke = generatePokemon str in
+    let json_of_poke = convertPokeToJson poke in
+    let prevSave = unlocked_pokemon () in
+    let newSave = match prevSave with
+    |`Assoc lst -> let lst' = incPrevSave "unlocked" lst in
+                  `Assoc (lst' @ Yojson.Basic.Util.to_assoc json_of_poke)
+    | _ -> raise FaultyGameSave in
+    Yojson.Basic.to_file "../data/factorysets.json" newSave)

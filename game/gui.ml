@@ -1188,7 +1188,16 @@ let rec game_animation engine buttons (battle: GPack.table) text
                   move3;move4;switch] back_button ())
   | Pl2 Faint -> if List.length t2.dead = 5 then (text_buffer#set_text "Player One wins!";
                   (match get_game_status battle_status with
-                      | TournBattle _ -> ()
+                      | TournBattle _ -> (try (let newpoke = unlockPokemon () in let success_win = GWindow.message_dialog ~message:("Unlocked " ^ newpoke)
+                                          ~buttons:GWindow.Buttons.close  ~message_type:`INFO () in ignore(success_win#connect#close ~callback:(success_win#destroy));
+                                          ignore (success_win#connect#response ~callback:(fun s -> success_win#destroy ())); success_win#show ())
+                                          with | err ->  (let message = match err with
+                                              | Save.FaultyGameSave -> "Corrupted Save File."
+                                              | Save.OwnPokemonAlready -> "You already own the unlocked Pokemon. Better luck next time."
+                                              | _ -> "Unknown Error" in
+                                          let error_win = GWindow.message_dialog ~message:message
+                                          ~buttons:GWindow.Buttons.close  ~message_type:`ERROR () in ignore(error_win#connect#close ~callback:(error_win#destroy));
+                                          ignore (error_win#connect#response ~callback:(fun s -> error_win#destroy ())); error_win#show ()))
                       | _ -> ()); current_screen := Battle (P1 ChooseMove); back_button#misc#show ()) else
                   (text_buffer#set_text "Player Two Pokemon has fainted. Choosing a new Pokemon.";
                  (match get_game_status battle_status with
@@ -1200,7 +1209,16 @@ let rec game_animation engine buttons (battle: GPack.table) text
                               move3;move4;switch] back_button ()))
   | Pl2 SFaint ->if List.length t2.dead = 5 then (text_buffer#set_text "Player One wins!";
                   (match get_game_status battle_status with
-                      | TournBattle _ -> ()
+                      | TournBattle _ -> (try (let newpoke = unlockPokemon () in let success_win = GWindow.message_dialog ~message:("Unlocked " ^ newpoke)
+                                          ~buttons:GWindow.Buttons.close  ~message_type:`INFO () in ignore(success_win#connect#close ~callback:(success_win#destroy));
+                                          ignore (success_win#connect#response ~callback:(fun s -> success_win#destroy ())); success_win#show ())
+                                          with | err ->  (let message = match err with
+                                              | Save.FaultyGameSave -> "Corrupted Save File."
+                                              | Save.OwnPokemonAlready -> "You already own the unlocked Pokemon. Better luck next time."
+                                              | _ -> "Unknown Error" in
+                                          let error_win = GWindow.message_dialog ~message:message
+                                          ~buttons:GWindow.Buttons.close  ~message_type:`ERROR () in ignore(error_win#connect#close ~callback:(error_win#destroy));
+                                          ignore (error_win#connect#response ~callback:(fun s -> error_win#destroy ())); error_win#show ()))
                       | _ -> ()); current_screen := Battle (P1 ChooseMove); back_button#misc#show ()) else
                  (poke2_img#set_file ("../data/sprites/" ^ t2.current.pokeinfo.name ^ ".gif");
                  text_buffer#set_text (t2.current.pokeinfo.name ^ " has fainted. Choosing a new Pokemon.");

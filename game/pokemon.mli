@@ -16,6 +16,9 @@ val unlocked_pokemon: unit -> Yojson.Basic.json
  *)
 val unlocked_poke_string_list : unit -> string list
 
+(* [generatePokemon str] generates the pokemon [str] with random attributes*)
+val generatePokemon: string -> pokemon
+
 (* [getRandomPokemon ()] returns a random Pokemon, filled with its own abilities
  *  and initialized with the appropriate characteristics (moves, etc.).
  *)

@@ -555,10 +555,8 @@ let getAllMoves poke =
 let getAllAbilities poke =
   List.map (to_string) (poke_json |> member poke |> member "ability" |> to_list)
 
-let getRandomPokemon () =
-  let randomPokeName = poke_arr |>
-    member (string_of_int (Random.int num_pokemon_total + 1)) |> to_string in
-  let randomPoke = poke_json |> member randomPokeName in
+let generatePokemon str =
+  let randomPoke = poke_json |> member str in
   let element_string = randomPoke |> member "type" |> to_list|> filter_string in
   let element = List.map getElement element_string in
   let moves = randomPoke |> member "moves" |> to_list in
@@ -593,9 +591,14 @@ let getRandomPokemon () =
   let move2 = !move2s |> getMoveFromString in
   let move3 = !move3s |> getMoveFromString in
   let move4 = !move4s |> getMoveFromString in
-  {name = randomPokeName; element; move1 ; move2; move3 ; move4 ; hp;
+  {name = str; element; move1 ; move2; move3 ; move4 ; hp;
   attack; defense; special_defense; special_attack; speed; ability; evs;
   nature; item}
+
+let getRandomPokemon () =
+  let randomPokeName = poke_arr |>
+    member (string_of_int (Random.int num_pokemon_total + 1)) |> to_string in
+  generatePokemon randomPokeName
 
 let getPresetPokemon ?pjson:(pjson=unlocked_pokemon ()) str =
   Printf.printf "%s\n%!" str;

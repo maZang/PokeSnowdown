@@ -126,4 +126,5 @@ let unlockPokemon () =
   let open Yojson.Basic.Util in
   let unlock_list = List.map (to_string) (getJson () |> member "unlockable" |> to_list) in
   let rand = Random.int (List.length unlock_list) in
-  Save.addPoke (List.nth unlock_list rand)
+  let poke_to_unlock = List.nth unlock_list rand in
+  Save.addPoke poke_to_unlock; poke_to_unlock
