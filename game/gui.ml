@@ -42,6 +42,7 @@ let busywait () =
   while not !continue do
     ()
   done;
+  busywait_player ();
   continue := false
 
 (* Initializes GtkMain*)
@@ -210,8 +211,8 @@ let rec move_left () =
 let talk tournament =
   match (!x, !y) with
   | (7,1) -> if !playerDirection = Up then (List.iter (fun s -> gameText#set_text s; busywait ()) profOakQuotes; gameText#set_text "Use W,A,S,D to move. Press H to interact with Prof. Oak and space bar to talk.") else ()
-  | (4,1) -> if !playerDirection = Up then (List.iter (fun s -> gameText#set_text s; busywait ()) opp1Quotes; tournament#clicked ()) else ()
-  | (10,1) -> if !playerDirection = Up then (List.iter (fun s -> gameText#set_text s; busywait ()) opp2Quotes; tournament#clicked ()) else ()
+  | (4,1) -> if !playerDirection = Up then (List.iter (fun s -> gameText#set_text s; busywait ()) (opp1Quotes ()); tournament#clicked ()) else ()
+  | (10,1) -> if !playerDirection = Up then (List.iter (fun s -> gameText#set_text s; busywait ()) (opp2Quotes ()); tournament#clicked ()) else ()
   | _ -> ()
 
 let rec move () =
