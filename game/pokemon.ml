@@ -399,14 +399,16 @@ let getSecondaryEffect str = match str with
   | "karate-chop" | "razor-leaf" | "crabhammer" | "slash" | "aeroblast"
     | "cross-chop" | "air-cutter" | "stone-edge" -> [IncCrit 1]
   | "double-slap" | "comet-punch" | "fury-attack" | "pin-missile" |
-      "spike-cannon" | "barrage" | "fury-swipes" | "bone-rush" -> [RandMultHit]
+      "spike-cannon" | "barrage" | "fury-swipes" | "bone-rush" |
+      "bullet-seed" -> [RandMultHit]
   | "fire-punch" | "ember" | "flamethrower" | "fire-blast" |
-        "flame-wheel" | "will-o-wisp" | "blue-flare" | "lava-plume" -> [BurnChance]
+        "flame-wheel" | "will-o-wisp" | "blue-flare" | "lava-plume" |
+        "heat-wave" -> [BurnChance]
   | "ice-punch" | "ice-beam" | "blizzard" | "powder-snow" -> [FreezeChance]
   | "thunder-punch" | "body-slam" | "stun-spore" | "thunder-shock"
     | "thunderbolt" | "thunder-wave" | "thunder" | "lick" | "glare"
     | "zap-cannon" | "spark" | "dragon-breath" | "nuzzle" | "secret-power" -> [ParaChance]
-  | "guillotine" | "horn-drill" | "fissure"-> [OHKO]
+  | "guillotine" | "horn-drill" | "fissure" | "sheer-cold" -> [OHKO]
   | "razor-wind" -> [ChargeMove "It made a whirlwind!"]
   | "fly" -> [ChargeMove "It flew up into the air."]
   | "skull-bash" -> [ChargeMove "It tucked its head in."; StageBoost [(Defense, 1)]]
@@ -442,6 +444,7 @@ let getSecondaryEffect str = match str with
   | "sonic-boom" -> [ConstantDmg 20]
   | "acid" | "psychic" | "shadow-ball" | "flash-cannon" | "bug-buzz"
     | "energy-ball" | "focus-blast" | "earth-power" -> [StageAttack [(SpecialDefense, 1)]]
+  | "mist-ball" -> StageAttack [(SpecialAttack, 1)]
   | "bubble-beam" | "bubble" | "icy-wind" | "mud-shot" | "electroweb" -> [StageAttack [(Speed, 1)]]
   | "hyper-beam"| "blast-burn" | "frenzy-plant" | "hydro-cannon"
       | "roar-of-time" | "giga-impact" | "rock-wrecker"  -> [RechargeMove]
@@ -516,6 +519,7 @@ let getSecondaryEffect str = match str with
   | "tickle" -> [StageAttack [(Attack,1);(Defense,1)]]
   | "captivate" | "eerie-impulse" -> [StageAttack [(SpecialAttack, 2)]]
   | "fake-tears" -> [StageAttack [(SpecialDefense, 2)]]
+  | "knock-off" -> [KnockOff]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -631,7 +635,7 @@ let getTestPoke () =
   let item = Leftovers in
   {name="gardevoir-mega"; element=[Psychic]; move1= getMoveFromString "brave-bird"; move2 =
   getMoveFromString "psycho-boost"; move3 = getMoveFromString "leaf-tornado";
-  move4 = getMoveFromString "flamethrower"; hp = 68; attack = 85; special_attack = 165; defense = 65;
+  move4 = getMoveFromString "knock-off"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 0; special_defense = 135; ability="pixilate"; evs; nature; item}
 
 let getTestOpp () =

@@ -835,6 +835,7 @@ let rec getMoveString a =
   | Recharging s -> getMoveString s
   | FalseSwipeA s -> getMoveString s
   | ConfuseUserA s -> getMoveString s
+  | KnockedOff (_, s) -> getMoveString s
 
 let rec getAttackString starter a =
   match a with
@@ -878,6 +879,7 @@ let rec getAttackString starter a =
   | FalseSwipeA s -> getAttackString starter s ^ "The opponent cannot go below 1 HP."
   | ChargingMove (s, n) -> starter ^ " is charging up." ^ s
   | ConfuseUserA s -> getAttackString starter s ^ starter ^ " has confused itself."
+  | KnockedOff (item, s) -> getAttackString starter s ^ starter ^ " has knocked off the opponent's " ^ (Pokemon.string_of_item item)
   | SwitchOutA s -> (match !secondaryEffect with
                     | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
                     | `P2 -> current_command := (Some (Poke "random"), Some NoMove));

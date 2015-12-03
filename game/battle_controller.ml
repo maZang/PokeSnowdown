@@ -7,6 +7,8 @@ let pokeIV = 31
 
 let prevmove1 = ref ""
 let prevmove2 = ref ""
+let prevpoke1 = ref (getBattlePoke (getTestPoke ()))
+let prevpoke2 = ref (getBattlePoke (getTestPoke ()))
 
 (* Peeks into the Ivar for the game state *)
 let get_game_status engine =
@@ -779,6 +781,12 @@ let move_handler atk def wt move =
                         else
                           ( let n = Random.int 2 + 1 in
                             atk.current.curr_status <- (fst atk.current.curr_status, (ForcedMoveNoSwitch (n, move.name))::(snd atk.current.curr_status)))
+    (* For the move knock off *)
+    | KnockOff::t -> (match def.current.curr_item with
+                      | Nothing -> secondary_effects t
+                      | _ -> def.current.curr_hp <- max 0 (def.current.curr_hp - !damage/2);
+                             newmove := KnockedOff (def.current.curr_item, !newmove);
+                             def.current.curr_item <- Nothing; secondary_effects t)
     | [] -> ()
     | _ -> failwith "Faulty Game Logic: Debug 783"
     in

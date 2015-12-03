@@ -3,6 +3,8 @@ type battlemove = Poke of string | UseAttack of string | NoMove | FaintPoke of s
 
 type stat = Attack | Defense | SpecialAttack | SpecialDefense | Speed | Accuracy | Evasion
 
+type item = Nothing | Leftovers | ChoiceBand | LifeOrb | ChoiceSpecs
+
 type animattack = DontMiss of string | Miss of string | SleepMiss | FrozenMiss | ParaMiss | FlinchMiss | ConfuseMiss | DontMove
 
 type guiattack = NormMove of string | Crit of guiattack |
@@ -11,7 +13,7 @@ type guiattack = NormMove of string | Crit of guiattack |
                   Recoil of guiattack | PoisonMove of guiattack | Asleep | Wake of guiattack | Confused | BreakConfuse of guiattack | StatAttackA of stat * int * guiattack
                   | ConfuseMoveA of guiattack | Recharging of guiattack | DrainA of guiattack | UserFaintA of guiattack | NoEffAll of string | DrainSleepFail of string
                   | BreakSub of guiattack | SubDmg of guiattack | ProtectedA of string | StatBoostA of stat * int * guiattack | SwitchOutA of guiattack | FalseSwipeA of guiattack
-                  | ConfuseUserA of guiattack
+                  | ConfuseUserA of guiattack | KnockedOff of item * guiattack
 
 type guistatus = StatBoost of stat * int * guistatus | NormStatus of string | ThawS of guistatus | FrozenSolidS | MissStatus of string | NoFreezeS of guistatus | NoBurnS of guistatus |
                   NoParaS of guistatus | ParaS | SwitchOut of guistatus | FlinchS | StatAttack of stat * int * guistatus | AsleepS | WakeS of guistatus | MakeSleep of guistatus
@@ -54,13 +56,11 @@ type secondary_effects = MultHit of int | StageBoost of (stat * int) list | IncC
                          WeightDamage | DrainMove | LeechSeed | ChargeInSunlight of string | ToxicChance | StageBoostSunlight of (stat * int) list | Recovery | LightScreenMake
                          | Haze | ReflectMake | UserFaint | NeverMiss | DrainMoveSleep | VariableDamage | Rest | SuperFang | SubstituteMake | Flail | Protect | BellyDrum
                          | Spikes | HealBell | SunHeal | MaxHealthDmg | SunnyDay | FalseSwipe | Refresh | PsychUp | RandStageBoost | FlowerShield | RainDance | SandStormMake
-                         | HailMake | Encore of int | PainSplit | SelfEncore | ConfuseUser | CopyPrevMove
+                         | HailMake | Encore of int | PainSplit | SelfEncore | ConfuseUser | CopyPrevMove | KnockOff
 
 type move = {name:string; priority: int; target: target; dmg_class: dmg_class;
     mutable power:int; effect_chance: int; accuracy: int; element: element;
     description: string; secondary: secondary_effects list}
-
-type item = Nothing | Leftovers | ChoiceBand | LifeOrb | ChoiceSpecs
 
 type terrain_element = LightScreen of int | Reflect of int | Spikes of int
 
