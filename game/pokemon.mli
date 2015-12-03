@@ -2,6 +2,12 @@ open Info
 
 (* This module is responsible for getting valid Pokemon. *)
 
+(* item list is a list of valid items for a pokemon *)
+val item_list: string list
+
+(* nature list is a list of valid natures for a pokemon *)
+val nature_list: string list
+
 (* [unlocked_poke_string_list ()] generates a string list of Pokemon by reading
  *  data from a JSON file.
  *)
@@ -70,3 +76,8 @@ val getMoveFromString : string -> move
  *  - [elm] is a Pokemon element type (e.g. fire, grass, etc.).
  *)
 val string_of_element : element -> string
+
+(* [getAllMoves poke] returns a move list containing all the moves a Pokemon
+*  can learn
+*)
+val getAllMoves : string -> move list

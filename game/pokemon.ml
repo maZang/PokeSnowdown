@@ -19,6 +19,13 @@ let num_pokemon_total = 721
 
 let unlocked_pokemon () = open_json "factorysets"
 
+let nature_list =  ["hardy"; "lonely";"adamant";"naughty";"brave";"bold";"docile";
+  "impish";"lax";"relaxed";"modest";"mild";"bashful";"rash";"quiet";"calm";"gentle";
+  "careful";"quirky";"sassy";"timid";"hasty";"jolly";"naive";"serious"]
+
+let item_list = ["Leftovers";"ChoiceBand";"LifeOrb";"ChoiceSpecs";"CharizarditeX"
+  ;"NO ITEM"]
+
 let unlocked_poke_string_list () =
   List.map (to_string) (unlocked_pokemon () |> member "pokemon" |> to_list)
 
@@ -492,6 +499,9 @@ let getMoveFromString str =
   let secondary = getSecondaryEffect str in
   {name = str; priority; target; dmg_class; power; effect_chance; accuracy;
   element; description; secondary}
+
+let getAllMoves poke =
+  List.map (to_string) (poke_json |> member poke |> to_list)
 
 let getRandomPokemon () =
   let randomPokeName = poke_arr |>

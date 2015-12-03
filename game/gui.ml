@@ -554,6 +554,8 @@ let load_poke_edit engine img bg_img load_screen battle text buttonhide poke_edi
               battle_screen#pack editimg#coerce;
               ()
   | PokeEdit -> (try (let poke = Pokemon.getPresetPokemon (!select1#entry#text) in
+                      let move_lst = Pokemon.getAllMoves (!select1#entry#text) in
+
                   ()
                 ) with _ -> let error_win = GWindow.message_dialog ~message:"Error in your Pokemon selection. Try making sure everything is spelled correctly."
                                   ~buttons:GWindow.Buttons.close  ~message_type:`ERROR () in ignore(error_win#connect#close ~callback:(error_win#destroy));
