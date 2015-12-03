@@ -377,7 +377,7 @@ let getSecondaryEffect str = match str with
   | "ice-punch" | "ice-beam" | "blizzard" -> [FreezeChance]
   | "thunder-punch" | "body-slam" | "stun-spore" | "thunder-shock"
     | "thunderbolt" | "thunder-wave" | "thunder" | "lick" | "glare"
-    | "zap-cannon" | "spark" | "dragon-breath" | "nuzzle"-> [ParaChance]
+    | "zap-cannon" | "spark" | "dragon-breath" | "nuzzle" | "secret-power" -> [ParaChance]
   | "guillotine" | "horn-drill" | "fissure"-> [OHKO]
   | "razor-wind" -> [ChargeMove "It made a whirlwind!"]
   | "fly" -> [ChargeMove "It flew up into the air."]
@@ -406,6 +406,11 @@ let getSecondaryEffect str = match str with
   | "supersonic" | "psybeam" | "confusion" | "confuse-ray" | "dizzy-punch"
     | "sweet-kiss" | "dynamic-punch" | "water-pulse" | "hurricane" | "chatter"
     | "rock-climb" | "signal-beam" | "teeter-dance" -> [ConfuseOpp]
+  | "waterfall" | "extrasensory" | "dark-pulse" | "iron-head"
+    | "astonish" | "air-slash" | "bite" | "bone-club" | "dragon-rush"
+    | "headbutt" | "heart-stamp" | "hyper-fang" | "icicle-crash"
+    | "needle-arm" | "rock-slide" | "rolling-kick" | "steamroller"
+    | "stomp" | "zen-headbutt" -> [FlinchMove]
   | "sonic-boom" -> [ConstantDmg 20]
   | "acid" | "psychic" | "shadow-ball" | "flash-cannon" -> [StageAttack [(SpecialDefense, 1)]]
   | "bubble-beam" | "bubble" | "powder-snow" | "icy-wind" -> [StageAttack [(Speed, 1)]]
@@ -479,11 +484,6 @@ let getSecondaryEffect str = match str with
   | "poison-fang" | "toxic" -> [ToxicChance]
   | "tail-glow" -> [StageBoost [(SpecialAttack, 3)]]
   | "cotton-guard" -> [StageBoost [(Defense, 3)]]
-  | "waterfall" | "extrasensory" | "dark-pulse" | "iron-head"
-    | "astonish" | "air-slash" | "bite" | "bone-club" | "dragon-rush"
-    | "headbutt" | "heart-stamp" | "hyper-fang" | "icicle-crash"
-    | "needle-arm" | "rock-slide" | "rolling-kick" | "steamroller"
-    | "stomp" | "zen-headbutt" -> [FlinchMove]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
