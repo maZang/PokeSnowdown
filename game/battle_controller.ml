@@ -1436,12 +1436,12 @@ let handle_two_moves t1 t2 w m1 m2 a1 a2 =
             if (List.mem ForceSwitch curr_move'.secondary) then
              (m1 := Pl2 (Status newmove); m2 := Pl1 NoAction)
             else
-            prevmove1 := a1;
+            (prevmove1 := a1;
             (match curr_move.dmg_class with
             | Status -> let newmove' = status_move_handler t1 t2 (w, w.terrain.side1, w.terrain.side2) curr_move in
                   m1 := Pl2 (Status newmove); m2 := Pl1 (Status newmove')
             | _ -> let newmove' = move_handler t1 t2 (w, w.terrain.side1, w.terrain.side2) curr_move in
-                  m1 := Pl2 (Status newmove); m2 := Pl1 (AttackMove newmove'))
+                  m1 := Pl2 (Status newmove); m2 := Pl1 (AttackMove newmove')))
     | _ -> let newmove = move_handler t2 t1 (w, w.terrain.side2, w.terrain.side1) curr_move' in
            if (p1poke.curr_hp = 0 || List.mem ForceSwitch curr_move'.secondary) then
               (Printf.printf "POKEMON FAINTED\n%!";m1 := Pl2 (AttackMove newmove); m2 := Pl1 NoAction)
