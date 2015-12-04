@@ -61,7 +61,7 @@ let getBattlePoke poke =
   (* Returns the new battle pokemon as a record *)
   {pokeinfo = poke; curr_hp = bhp; curr_status = (NoNon, []);
   curr_item = poke.item; bhp; battack; bdefense; bspecial_attack;
-  bspecial_defense; bspeed}
+  bspecial_defense; bspeed; curr_abil = poke.ability}
 
 (* Used for some secondary conditions *)
 let prevmove1 = ref ""
@@ -325,7 +325,8 @@ let hitMoveDueToStatus atk moveDescript move =
       | (ForcedMoveNoSwitch _)::t -> helperVolaStatus t moveDescript'
       | (ForcedMove _)::t -> helperVolaStatus t moveDescript'
       | (Taunt _)::t -> helperVolaStatus t moveDescript'
-      | _ -> failwith "unimplemented" in
+      | (PartialTrapping _)::t -> helperVolaStatus t moveDescript'
+      | (RechargingStatus)::t -> helperVolaStatus t moveDescript' in
   let nvola, vola = atk.current.curr_status in
   match nvola with
   | Freeze -> if List.mem Ice atk.current.pokeinfo.element then (
@@ -794,6 +795,14 @@ let move_handler atk def wt move =
         let damage' = int_of_float fdamage' in
         def.current.curr_hp <- max 0 (def.current.curr_hp - damage' + !damage));
         secondary_effects t
+    (* Beat Up *)
+    | BeatUp::t ->
+      (let base_power =  (List.length atk.alive  + 1 ) * 20 in
+        move.power <- base_power;
+        let moveDescript', fdamage' = damageCalculation atk def weather move in
+        let damage' = int_of_float fdamage' in
+        def.current.curr_hp <- max 0 (def.current.curr_hp - damage' + !damage));
+        secondary_effects t
     (* Moves that drain health *)
     | DrainMove::t ->
       let heal = !damage / 2 in
@@ -854,6 +863,25 @@ let move_handler atk def wt move =
                       else
                         (def.current.curr_hp <- def.current.curr_hp + !damage;
                           newmove := SleepAttackFail move.name)
+    (* for the trapping moves *)
+    | CausePartialTrapping::t -> let rec findPartialTrapping = function
+                                  | (PartialTrapping (s, _))::t -> if s = move.name then true else findPartialTrapping t
+                                  | h::t -> findPartialTrapping t
+                                  | [] -> false in
+                                if findPartialTrapping (snd def.current.curr_status) then
+                                  ()
+                                else
+                                  (let turns = Random.int 3 + 2 in
+                                  def.current.curr_status <- (fst def.current.curr_status, (PartialTrapping (move.name, turns))::(snd def.current.curr_status));
+                                  newmove := TrappingMove !newmove)
+      (* moves that double in power *)
+    | DoublePower::t -> (match move.name with
+                | "brine" -> if def.current.curr_hp * 2 <= def.current.bhp then def.current.curr_hp <- max 0 (def.current.curr_hp - !damage) else ()
+                | "hex" ->  if fst atk.current.curr_status = NoNon then () else def.current.curr_hp <- max 0 (def.current.curr_hp - !damage)
+                | "venoshock" -> (match (fst atk.current.curr_status) with
+                                  | Poisoned | Toxic _ -> def.current.curr_hp <- max 0 (def.current.curr_hp - !damage)
+                                  | _ -> ())
+                | _ -> ())
     | [] -> ()
     | _ -> failwith "Faulty Game Logic: Debug 783"
     in
@@ -1366,6 +1394,7 @@ let rec filterNonvola lst = match lst with
   | (ForcedMove (n, s))::t -> if n = 0 then filterNonvola t else (ForcedMove ((n-1), s))::(filterNonvola t)
   | (Taunt n)::t -> if n = 0 then filterNonvola t else (Taunt (n-1))::(filterNonvola t)
   | (ForcedMoveNoSwitch (n, s))::t -> if n <= 0 then filterNonvola t else (ForcedMoveNoSwitch (n-1,s))::(filterNonvola t)
+  | (PartialTrapping (s, n))::t -> if n <= 0 then filterNonvola t else (PartialTrapping (s, (n-1)))::(filterNonvola t)
 
 let remove_some_status bp =
   let nonvola, vola = bp.curr_status in
@@ -1451,6 +1480,9 @@ let handle_preprocessing t1 t2 w m1 m2 =
           fix_vstatus t1 t2 (LeechDmg descript1) (LeechHeal descript2) t)
         else
           fix_vstatus t1 t2 descript1 descript2 t
+  | (PartialTrapping (s, n))::t ->
+        (t1.current.curr_hp <- t1.current.curr_hp - t1.current.bhp / 8;
+        fix_vstatus t1 t2 (TrapDamage (s, descript1)) (descript2) t)
   | (Taunt 0)::t -> fix_vstatus t1 t2 (TauntFade descript1) descript2 t
   | h::t -> fix_vstatus t1 t2 descript1 descript2 t in
   let fix_nstatus nstatus t =

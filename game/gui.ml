@@ -806,6 +806,11 @@ let go_back engine (menu_holder, main_menu, battle_screen, one_player,
     load_menu engine [random;touranment;preset] [] main_menu_bg Menu1P ());
   ()
 
+let rec findTrapped = function
+  | (PartialTrapping _)::t -> true
+  | h::t -> findTrapped t
+  | [] -> false
+
 let switch_poke engine pokebuttons battlebuttons back_button () =
   let poke1,poke2,poke3,poke4,poke5 = match pokebuttons with
   | [poke1;poke2;poke3;poke4;poke5] -> (poke1, poke2, poke3, poke4, poke5)
@@ -822,7 +827,6 @@ let switch_poke engine pokebuttons battlebuttons back_button () =
     | 3 -> big_help poke4
     | 4 -> big_help poke5
     | _ -> failwith "Invariant is not having more than five pokemon" in
-  List.iter (fun s -> s#misc#hide ()) [move1;move2;move3;move4;switch];
   let team = (match get_game_status engine with
   | Battle (InGame (t1, t2, _, _, _)) ->
       (match !current_screen with
@@ -833,7 +837,20 @@ let switch_poke engine pokebuttons battlebuttons back_button () =
       | Battle (P2 _) -> current_screen := Battle (P2 SwitchPoke); t2
       | _ -> failwith "Faulty Game logic")
   | _ -> failwith "Fauly game Logic") in
-  List.iteri switch_poke_helper team.alive
+  if findTrapped (snd team.current.curr_status) && (!current_screen = Battle (P1 SwitchPoke) || !current_screen = Battle (P2 SwitchPoke)) then
+    (
+      let error_win = GWindow.message_dialog ~message:"You're Pokemon is trapped!"
+       ~buttons:GWindow.Buttons.close  ~message_type:`ERROR () in ignore(error_win#connect#close ~callback:(error_win#destroy));
+       ignore (error_win#connect#response ~callback:(fun s -> error_win#destroy ())); error_win#show ();
+       (match !current_screen with
+       | Battle (P1 _) -> current_screen := Battle (P1 ChooseMove)
+       | Battle (P2 _) -> current_screen := Battle (P2 ChooseMove)
+       | _ -> failwith "Faulty Game Logic")
+    )
+  else (
+    List.iter (fun s -> s#misc#hide ()) [move1;move2;move3;move4;switch];
+    List.iteri switch_poke_helper team.alive
+  )
 
 let rec getNumCritSuperNoAndFinal c s n v=
   match v with
@@ -899,6 +916,7 @@ let rec getMoveString a =
   | ConfuseUserA s -> getMoveString s
   | SleepAttack s -> getMoveString s
   | SleepAttackFail _ -> `DontMove
+  | TrappingMove s -> getMoveString s
   | KnockedOff (_, s) -> getMoveString s
 
 let rec getMoveStringStatus a =
@@ -1010,6 +1028,7 @@ let rec getAttackString starter a =
   | KnockedOff (item, s) -> getAttackString starter s ^ starter ^ " has knocked off the opponent's " ^ (Pokemon.string_of_item item)
   | SleepAttack s -> starter ^ " is fast asleep." ^ getAttackString starter s
   | SleepAttackFail s -> starter ^ " used " ^ s ^ " but it wasn't asleep."
+  | TrappingMove s -> getAttackString starter s ^ "The opponent has been trapped."
   | SwitchOutA s -> (match !secondaryEffect with
                     | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
                     | `P2 -> current_command := (Some (Poke "random"), Some NoMove));
@@ -1093,6 +1112,7 @@ let rec getEndString starter s =
   | PoisonDmg -> starter ^ " has taken poison damage."
   | LeechDmg s -> starter ^ " has taken leech seed damage." ^ getEndString starter s
   | LeechHeal s -> starter ^ " has healed from leech seeds." ^ getEndString starter s
+  | TrapDamage (s, s') -> starter ^ " has taken damage from " ^ s ^ "." ^ getEndString starter s'
   | LightScreenFade s -> getEndString starter s ^ starter ^ "'s Light Screen has faded."
   | TauntFade s -> getEndString starter s ^ starter ^ "'s Taunt has faded."
   | ReflectFade s -> getEndString starter s ^ starter ^ "'s Reflect has faded."
@@ -1106,6 +1126,7 @@ let rec getEndString starter s =
   | HailBuffetB s -> getEndString starter s ^ "Both Pokemon get hit by the hail."
   | HailBuffet1 s -> getEndString starter s ^ "Player one gets hit by the hail."
   | HailBuffet2 s -> getEndString starter s ^ "Player two gets hit by the hail."
+
 
 let animate_attack (animbox : GPack.fixed) img startx starty nextx' nexty (moveanim : GPack.fixed) move_img movestring =
   match movestring with
