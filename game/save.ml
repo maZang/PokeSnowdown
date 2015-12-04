@@ -82,6 +82,13 @@ let addPoke str =
     let prevSave = unlocked_pokemon () in
     let newSave = match prevSave with
     |`Assoc lst -> let lst' = addToUnlocked str (incPrevSave "unlocked" lst) in
-                  `Assoc (lst' @ Yojson.Basic.Util.to_assoc json_of_poke)
+                  `Assoc ((str, json_of_poke)::lst')
     | _ -> raise FaultyGameSave in
     Yojson.Basic.to_file "../data/factorysets.json" newSave)
+
+let getFileMessage () =
+  let open Yojson.Basic.Util in
+  let save = unlocked_pokemon () in
+  match save with
+  | `Assoc l -> "Unlocked Pokemon: " ^ (List.assoc "unlocked" l |> to_int |> string_of_int)
+  | _ -> raise FaultyGameSave

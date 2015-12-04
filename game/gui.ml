@@ -381,9 +381,25 @@ let make_battle_screen ?packing () =
 let make_menu ?packing () =
   (* vbox is known as menu_holder outside of this function *)
   let vbox = GPack.vbox ?packing () in
+  let menubar = GMenu.menu_bar ~packing:vbox#pack () in
   (* hbox1 is known as main_menu outside of this function *)
   let hbox1 = GPack.hbox ~homogeneous:true ~packing:(vbox#pack) ~height:
     (screen_height/6) ()in
+  let factory = new GMenu.factory menubar in
+  let help_menu = factory#add_submenu "Help" in
+  let _ = factory#add_item "Stats" ~callback:(fun () ->
+    let error_win = GWindow.message_dialog ~message:(Save.getFileMessage ())
+    ~buttons:GWindow.Buttons.close  ~message_type:`INFO () in ignore(error_win#connect#close ~callback:(error_win#destroy));
+    ignore (error_win#connect#response ~callback:(fun s -> error_win#destroy ())); error_win#show ()) in
+  (* Help menu *)
+  let factory = new GMenu.factory help_menu in
+  ignore(factory#add_item "About" ~callback: (fun () ->
+    let error_win = GWindow.message_dialog ~message:("To find more about this game, please read the Documentation that comes along with it. The most common key commands are W, A, S, D for movement and Space bar for skipping text.")
+    ~buttons:GWindow.Buttons.close  ~message_type:`INFO () in ignore(error_win#connect#close ~callback:(error_win#destroy));
+    ignore (error_win#connect#response ~callback:(fun s -> error_win#destroy ())); error_win#show ()));
+  ignore(factory#add_item "Errors" ~callback: (fun () ->let error_win = GWindow.message_dialog  ~message:("Instructions to fix corrupted save file are in the Documentation. Please do not edit the save files yourself.")
+    ~buttons:GWindow.Buttons.close  ~message_type:`INFO () in ignore(error_win#connect#close ~callback:(error_win#destroy));
+    ignore (error_win#connect#response ~callback:(fun s -> error_win#destroy ())); error_win#show ()));
   (* hbox2 is known as battle_screen outside of this function *)
   let hbox2 = GPack.vbox ~packing:(vbox#pack) () in
   (* button1 is known as one_player outside of this function*)
@@ -1345,7 +1361,7 @@ let quit engine ready () =
 
 (* The main gui *)
 let main_gui engine battle_engine () =
-  let window = GWindow.window ~width: screen_width ~height: screen_height
+  let window = GWindow.window ~width: screen_width ~height:(screen_height+24)
     ~title: "Pokemon Snowdown" ~resizable:false () in
   (* menu = menu_holder, main_menu, one_player, two_player, no_player,
     one_player_menu, random_1p, preset_1p, touranment, buffer_area,
