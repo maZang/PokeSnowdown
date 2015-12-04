@@ -481,6 +481,7 @@ let getSecondaryEffect str = match str with
   | "haze" -> [Haze]
   | "reflect" -> [ReflectMake]
   | "self-destruct" | "explosion" -> [UserFaint]
+  | "memento" -> [UserFaint; StageAttack [(Attack, 2); (SpecialAttack, 2)]]
   | "amnesia" -> [StageBoost [(SpecialDefense, 2)]]
   | "nasty-plot" -> [StageBoost [(SpecialAttack, 2)]]
   | "charge-beam" -> [StageBoost [(SpecialAttack, 1)]]
@@ -677,10 +678,10 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Grass;Flying]; move1= getMoveFromString "hammer-arm"; move2 =
-  getMoveFromString "venoshock"; move3 = getMoveFromString "icicle-spear";
-  move4 = getMoveFromString "poison-powder"; hp = 98; attack = 0; special_attack = 165; defense = 65;
-  speed = 120; special_defense = 135; ability="pixilate"; evs; nature; item}
+  {name="gardevoir-mega"; element=[Grass;Flying]; move1= getMoveFromString "memento"; move2 =
+  getMoveFromString "venoshock"; move3 = getMoveFromString "pound";
+  move4 = getMoveFromString "poison-powder"; hp = 98; attack = 100; special_attack = 165; defense = 65;
+  speed = 120; special_defense = 135; ability="huge-power"; evs; nature; item}
 
 let getTestOpp () =
   let evs = {attack = 255; defense =  0; special_attack= 0; special_defense= 255;
@@ -696,6 +697,7 @@ let getPokeToolTip t =
   let battlePoke = t.current in
   "Name: " ^ battlePoke.pokeinfo.name ^
   "\nType: " ^ string_of_type battlePoke.pokeinfo.element ^
+  "\nAbility: " ^ battlePoke.pokeinfo.ability ^
   "\nAttack: " ^ string_of_int battlePoke.battack ^ "                  Modified: " ^ string_of_float (float_of_int battlePoke.battack *. getStageAD (fst t.stat_enhance.attack) *. (snd t.stat_enhance.attack)) ^
   "\nDefense: " ^ string_of_int battlePoke.bdefense ^ "               Modified: " ^ string_of_float (float_of_int battlePoke.bdefense *. getStageAD (fst t.stat_enhance.defense) *. (snd t.stat_enhance.defense)) ^
   "\nSpecial Attack: " ^ string_of_int battlePoke.bspecial_attack ^ "     Modified: " ^ string_of_float (float_of_int battlePoke.bspecial_attack *. getStageAD (fst t.stat_enhance.special_attack) *. (snd t.stat_enhance.special_attack)) ^

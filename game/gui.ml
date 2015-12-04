@@ -967,6 +967,7 @@ let rec getMoveStringStatus a =
   | CopyPrevMoveA s -> getMoveString s
   | CopyFail -> `DontMove
   | TauntS _ -> `DontMissStatus
+  | UserFaintS s -> getMoveStringStatus s
   | TauntFail -> `DontMove
   | Taunted _ -> `DontMove
   | StealthRockS _ -> `RockStatus
@@ -1084,6 +1085,7 @@ let rec getStatusString starter s =
   | SandStormS s -> getStatusString starter s ^ starter ^ " has created a large sandstorm."
   | HailS s -> getStatusString starter s ^ starter ^ " has made large pellets of hail fall down."
   | EncoreS s -> getStatusString starter s ^ starter ^ " has trapped the opponent in an encore."
+  | UserFaintS s -> getStatusString starter s ^ starter ^ " took damage from the move and is about to faint."
   | EncoreFail -> starter ^ " used encore but it failed."
   | CopyPrevMoveS s -> starter ^ " copied the opponent's move." ^ getStatusString starter s
   | CopyPrevMoveA s -> starter ^ " copied the opponent's move." ^ getAttackString starter s
