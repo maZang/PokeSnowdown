@@ -3,7 +3,7 @@ type battlemove = Poke of string | UseAttack of string | NoMove | FaintPoke of s
 
 type stat = Attack | Defense | SpecialAttack | SpecialDefense | Speed | Accuracy | Evasion
 
-type item = Nothing | Leftovers | ChoiceBand | LifeOrb | ChoiceSpecsN
+type item = Nothing | Leftovers | ChoiceBand | LifeOrb | ChoiceSpecs
 
 type guiattack = NormMove of string | Crit of guiattack |
                   SEff of guiattack | NoEff of guiattack | HitMult of int * guiattack | BurnMove of guiattack | FreezeMove of guiattack | ParaMove of guiattack | MissMove of string | FrozenSolid |
@@ -26,7 +26,8 @@ type endMove = BurnDmg | BreakBurn | BreakFreeze  | BreakPara  | BreakPoison | P
                ReflectFade of endMove | SunFade of endMove | RainFade of endMove | SandStormFade of endMove | SandBuffetB of endMove | SandBuffet1 of endMove |
                SandBuffet2 of endMove | HailFade of endMove | HailBuffetB of endMove | HailBuffet1 of endMove | HailBuffet2 of endMove
 
-type guimove = SPoke of string | AttackMove of guiattack | Faint | NoAction | Continue | Next | Status of guistatus | EndMove of endMove | FaintNext | SFaint | ForceChoose
+type guimove = SPoke of string | AttackMove of guiattack | Faint | NoAction | Continue | Next | Status of guistatus | EndMove of endMove | FaintNext | SFaint | ForceChoose of guiattack | ForceMove of string
+                | ForceNone
 
 type playerMove = Pl1 of guimove | Pl2 of guimove
 
@@ -54,7 +55,7 @@ type secondary_effects = MultHit of int | StageBoost of (stat * int) list | IncC
                          WeightDamage | DrainMove | LeechSeed | ChargeInSunlight of string | ToxicChance | StageBoostSunlight of (stat * int) list | Recovery | LightScreenMake
                          | Haze | ReflectMake | UserFaint | NeverMiss | DrainMoveSleep | VariableDamage | Rest | SuperFang | SubstituteMake | Flail | Protect | BellyDrum
                          | Spikes | HealBell | SunHeal | MaxHealthDmg | SunnyDay | FalseSwipe | Refresh | PsychUp | RandStageBoost | FlowerShield | RainDance | SandStormMake
-                         | HailMake | Encore of int | PainSplit | SelfEncore | ConfuseUser | CopyPrevMove | KnockOff |ChanceStageBoost
+                         | HailMake | Encore of int | PainSplit | SelfEncore | ConfuseUser | CopyPrevMove | KnockOff |ChanceStageBoost | SelfSwitch
 
 type move = {name:string; priority: int; target: target; dmg_class: dmg_class;
     mutable power:int; effect_chance: int; accuracy: int; element: element;
@@ -110,7 +111,7 @@ type outcome = WinnerP1 | WinnerP2
 
 type battle_mode = Random1p | Random2p | Preset1p of pokemon list | TournBattle of pokemon list
 
-type screen = SwitchPoke | ChooseMove | Faint | BothFaint
+type screen = SwitchPoke | ChooseMove | Faint | BothFaint | SwitchPokeF
 
 type battle_state = InGame of trainer_team * trainer_team * weather_terrain * playerMove ref * playerMove ref | Loading | P1 of screen| P2 of screen | Processing
 

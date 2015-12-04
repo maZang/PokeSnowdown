@@ -524,6 +524,7 @@ let getSecondaryEffect str = match str with
   | "frost-breath" | "storm-throw" -> [IncCrit 3]
   | "hone-claws" -> [StageBoost [(Attack,1);(Accuracy,1)]]
   | "ominous-wind" | "silver-wind" | "ancient-power" -> [ChanceStageBoost]
+  | "volt-switch" | "u-turn" -> [SelfSwitch]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -641,21 +642,21 @@ let getRandomPreset ?pjson:(pjson=unlocked_pokemon ()) () =
  getPresetPokemon ~pjson:pjson (List.nth full_list rand)
 
 let getTestPoke () =
-  let evs = {attack = 0; defense =  255; special_attack= 0; special_defense= 255;
+  let evs = {attack = 0; defense =  255; special_attack= 255; special_defense= 255;
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Psychic]; move1= getMoveFromString "thunder-wave"; move2 =
-  getMoveFromString "hypnosis"; move3 = getMoveFromString "will-o-wisp";
-  move4 = getMoveFromString "hone-claws"; hp = 98; attack = 85; special_attack = 165; defense = 65;
-  speed = 0; special_defense = 135; ability="pixilate"; evs; nature; item}
+  {name="gardevoir-mega"; element=[Psychic]; move1= getMoveFromString "u-turn"; move2 =
+  getMoveFromString "hypnosis"; move3 = getMoveFromString "pound";
+  move4 = getMoveFromString "volt-switch"; hp = 98; attack = 85; special_attack = 165; defense = 65;
+  speed = 120; special_defense = 135; ability="pixilate"; evs; nature; item}
 
 let getTestOpp () =
   let evs = {attack = 0; defense =  255; special_attack= 0; special_defense= 255;
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gallade-mega"; element=[Grass]; move1= getMoveFromString "thunder-wave"; move2 =
+  {name="gallade-mega"; element=[Grass]; move1= getMoveFromString "volt-switch"; move2 =
   getMoveFromString "earthquake"; move3 = getMoveFromString "slack-off";
   move4 = getMoveFromString "toxic"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
