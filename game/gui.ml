@@ -918,6 +918,7 @@ let rec getMoveString a =
   | SleepAttack s -> getMoveString s
   | SleepAttackFail _ -> `DontMove
   | TrappingMove s -> getMoveString s
+  | LifeOrbA s -> getMoveString s
   | KnockedOff (_, s) -> getMoveString s
 
 let rec getMoveStringStatus a =
@@ -1032,6 +1033,7 @@ let rec getAttackString starter a =
   | SleepAttackFail s -> starter ^ " used " ^ s ^ " but it wasn't asleep."
   | TrappingMove s -> getAttackString starter s ^ "The opponent has been trapped."
   | NoRecoil s -> getAttackString starter s ^ starter ^ "'s ability prevented the recoil damage."
+  | LifeOrbA s -> getAttackString starter s ^ starter ^ " has lost some health from its life orb."
   | SwitchOutA s -> (match !secondaryEffect with
                     | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
                     | `P2 -> current_command := (Some (Poke "random"), Some NoMove));
@@ -1130,6 +1132,7 @@ let rec getEndString starter s =
   | HailBuffetB s -> getEndString starter s ^ "Both Pokemon get hit by the hail."
   | HailBuffet1 s -> getEndString starter s ^ "Player one gets hit by the hail."
   | HailBuffet2 s -> getEndString starter s ^ "Player two gets hit by the hail."
+  | LeftOversHeal s -> getEndString starter s ^ starter ^ " has healed from the leftovers."
 
 
 let animate_attack (animbox : GPack.fixed) img startx starty nextx' nexty (moveanim : GPack.fixed) move_img movestring =

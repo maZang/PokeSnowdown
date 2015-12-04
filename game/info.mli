@@ -12,7 +12,7 @@ type guiattack = NormMove of string | Crit of guiattack |
                   | ConfuseMoveA of guiattack | Recharging of guiattack | DrainA of guiattack | UserFaintA of guiattack | NoEffAll of string | DrainSleepFail of string
                   | BreakSub of guiattack | SubDmg of guiattack | ProtectedA of string | StatBoostA of stat * int * guiattack | SwitchOutA of guiattack | FalseSwipeA of guiattack
                   | ConfuseUserA of guiattack | KnockedOff of item * guiattack | SleepMove of guiattack | SleepAttack of guiattack | SleepAttackFail of string
-                  | TrappingMove of guiattack | NoRecoil of guiattack
+                  | TrappingMove of guiattack | NoRecoil of guiattack | LifeOrbA of guiattack
 
 type guistatus = StatBoost of stat * int * guistatus | NormStatus of string | ThawS of guistatus | FrozenSolidS | MissStatus of string | NoFreezeS of guistatus | NoBurnS of guistatus |
                   NoParaS of guistatus | ParaS | SwitchOut of guistatus | FlinchS | StatAttack of stat * int * guistatus | AsleepS | WakeS of guistatus | MakeSleep of guistatus
@@ -27,7 +27,7 @@ type guistatus = StatBoost of stat * int * guistatus | NormStatus of string | Th
 type endMove = BurnDmg | BreakBurn | BreakFreeze  | BreakPara  | BreakPoison | PoisonDmg | LeechDmg of endMove | LeechHeal of endMove | Base | LightScreenFade of endMove |
                ReflectFade of endMove | SunFade of endMove | RainFade of endMove | SandStormFade of endMove | SandBuffetB of endMove | SandBuffet1 of endMove |
                SandBuffet2 of endMove | HailFade of endMove | HailBuffetB of endMove | HailBuffet1 of endMove | HailBuffet2 of endMove | TauntFade of endMove |
-               TrapDamage of string * endMove
+               TrapDamage of string * endMove | LeftOversHeal of endMove
 
 type guimove = SPoke of string*string | AttackMove of guiattack | Faint | NoAction | Continue | Next | Status of guistatus | EndMove of endMove | FaintNext | SFaint | ForceChoose of guiattack | ForceMove of string
                 | ForceNone
