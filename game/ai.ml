@@ -1,10 +1,11 @@
 open Info
 
-(* [get_move_random poke] gets the name of a random move for the Pokemon [poke].
+(* [get_move_random poke] gets the string name of a random move for the
+ * Pokemon [poke].
  *
  *  - [poke] is a battle Pokemon.
  *)
-let get_move_random (poke : battle_poke) : string =
+let get_move_random (poke:battle_poke) : string =
   match Random.int 4 with
   | 0 -> poke.pokeinfo.move1.name
   | 1 -> poke.pokeinfo.move2.name
@@ -12,43 +13,68 @@ let get_move_random (poke : battle_poke) : string =
   | 3 -> poke.pokeinfo.move4.name
   | _ -> failwith "Does not occur." (* Here to satisfy the compiler >:( *)
 
-(* Calculate weight of a move by it's accuracy and power *)
-let calculate_move_weights (pmove : move) : int =
-  (pmove.accuracy * pmove.power) / 100
+(* [calculate_move_weight pmove elst] returns the integer weight of a
+ * move [pmove] based on its accuracy, power, and type advantage against
+ * the opposing Pokemon's type [elst].
+ *
+ *  - [pmove] is the move whose weight to determine.
+ *  - [elst] is the opposing Pokemon's type, a list of elements.
+ *)
+let calculate_move_weight (pmove:move) (elst:element list) : int =
+  let tweight = List.fold_left (fun acc x ->
+                    acc *. Pokemon.getElementEffect pmove.element x) 1. elst in
+  int_of_float ((float_of_int (pmove.accuracy * pmove.power))
+      *. tweight /. 100.)
 
-(* Assign status moves a weight, 15% of the old total. *)
-let assign_status_weight (weight : int) (total : int) : int =
-  if weight = 0 then (int_of_float (0.15 *. float_of_int (total)))
-  else weight
+(* [assign_status_weight pmove weight total] is a helper function for
+ * [get_move_better] that returns a new weight that is 15% of the old total
+ * weight of the four moves if the move is a status move. Otherwise, returns
+ * the original weight.
+ *
+ *  - [pmove] is the move whose weight to determine.
+ *  - [weight] is the integer weight of the move.
+ *  - [total] is the total weight of the four moves of the Pokemon.
+ *)
+let assign_status_weight (pmove:move) (weight:int) (total:int) : int =
+  match pmove.dmg_class with
+  | Status -> int_of_float (0.15 *. float_of_int (total))
+  | _ -> weight
 
-(* Usually the picks the better move (one with a greater weight). If all moves
- * are status moves, then randomly pick a status move. *)
-let get_move_better (poke : battle_poke) : string =
-  let m1 = calculate_move_weights poke.pokeinfo.move1 in
-  let m2 = calculate_move_weights poke.pokeinfo.move2 in
-  let m3 = calculate_move_weights poke.pokeinfo.move3 in
-  let m4 = calculate_move_weights poke.pokeinfo.move4 in
+(* [get_move_better poke1 poke2] returns the string name of one of four moves
+ * of the Pokemon [poke2] to be used against the opposing Pokemon [poke1].
+ * The probability of the selected move is based on the weight assigned to
+ * each of the four moves. If all four moves are status moves, then a move
+ * is selected randomly (equal weight).
+ *
+ *  - [poke1] is a battle Pokemon.
+ *  - [poke2] is a battle Pokemon.
+*)
+let get_move_better (poke1:battle_poke) (poke2:battle_poke) : string =
+  let m1 = calculate_move_weight poke2.pokeinfo.move1 poke1.pokeinfo.element in
+  let m2 = calculate_move_weight poke2.pokeinfo.move2 poke1.pokeinfo.element in
+  let m3 = calculate_move_weight poke2.pokeinfo.move3 poke1.pokeinfo.element in
+  let m4 = calculate_move_weight poke2.pokeinfo.move4 poke1.pokeinfo.element in
   let total = m1+m2+m3+m4 in
-  if total = 0 then get_move_random poke
+  if (total = 0) then get_move_random poke2
   else
-    (let w1 = assign_status_weight m1 total in
-    let w2 = assign_status_weight m2 total in
-    let w3 = assign_status_weight m3 total in
-    let w4 = assign_status_weight m4 total in
+    (let w1 = assign_status_weight poke2.pokeinfo.move1 m1 total in
+    let w2 = assign_status_weight poke2.pokeinfo.move2 m2 total in
+    let w3 = assign_status_weight poke2.pokeinfo.move3 m3 total in
+    let w4 = assign_status_weight poke2.pokeinfo.move4 m4 total in
     let newtotal = w1+w2+w3+w4 in
     let randnum = Random.int newtotal in
-    if (randnum < w1) then poke.pokeinfo.move1.name
-    else if (randnum >= w1 && randnum < (w1+w2)) then poke.pokeinfo.move2.name
+    if (randnum < w1) then poke2.pokeinfo.move1.name
+    else if (randnum >= w1 && randnum < (w1+w2)) then poke2.pokeinfo.move2.name
     else if (randnum >= (w1+w2) && randnum < (w1+w2+w3))
-         then poke.pokeinfo.move3.name
-    else poke.pokeinfo.move4.name)
+         then poke2.pokeinfo.move3.name
+    else poke2.pokeinfo.move4.name)
 
 (* [replace_dead_random lst] randomly chooses a Pokemon given a non-empty
  * list [lst] of alive ones.
  *
  *  - [lst] is a list of currently-alive battle Pokemon.
  *)
-let replace_dead_random (lst : battle_poke list) : string =
+let replace_dead_random (lst:battle_poke list) : string =
   let n = Random.int (List.length lst) in (List.nth lst n).pokeinfo.name
 
 (* [get_advantage_value elst1 elst2] returns the float value representing
