@@ -646,7 +646,7 @@ let getTestPoke () =
   let nature = Bold in
   let item = Leftovers in
   {name="gardevoir-mega"; element=[Psychic]; move1= getMoveFromString "ominous-wind"; move2 =
-  getMoveFromString "acupressure"; move3 = getMoveFromString "leaf-tornado";
+  getMoveFromString "hypnosis"; move3 = getMoveFromString "leaf-tornado";
   move4 = getMoveFromString "hone-claws"; hp = 98; attack = 85; special_attack = 165; defense = 65;
   speed = 0; special_defense = 135; ability="pixilate"; evs; nature; item}
 
@@ -657,7 +657,7 @@ let getTestOpp () =
   let item = Leftovers in
   {name="gallade-mega"; element=[Grass]; move1= getMoveFromString "flamethrower"; move2 =
   getMoveFromString "earthquake"; move3 = getMoveFromString "slack-off";
-  move4 = getMoveFromString "harden"; hp = 68; attack = 85; special_attack = 165; defense = 65;
+  move4 = getMoveFromString "hypnosis"; hp = 68; attack = 85; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
 
 let getPokeToolTip t =

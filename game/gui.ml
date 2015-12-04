@@ -858,40 +858,40 @@ let rec string_from_stat s =
 
 let rec getMoveString a =
   match a with
-  | NormMove s -> DontMiss s
+  | NormMove s -> `DontMiss s
   | Crit s -> getMoveString s
   | SEff s -> getMoveString s
   | NoEff s -> getMoveString s
-  | NoEffAll s -> DontMiss s
+  | NoEffAll s -> `DontMiss s
   | StatBoostA (stat, i, s) -> getMoveString s
   | StatAttackA (stat, i, s) -> getMoveString s
   | HitMult (n, s) -> getMoveString s
   | BurnMove s -> getMoveString s
   | FreezeMove s -> getMoveString s
   | ParaMove s -> getMoveString s
-  | MissMove s ->  Miss s
-  | Asleep -> SleepMiss
+  | MissMove s ->  `Miss s
+  | Asleep -> `SleepMiss
   | Wake s -> getMoveString s
-  | FrozenSolid -> FrozenMiss
+  | FrozenSolid -> `FrozenMiss
   | Thaw s-> getMoveString s
   | NoFreeze s -> getMoveString s
   | NoBurn s -> getMoveString s
   | NoPara s -> getMoveString s
-  | Para -> ParaMiss
+  | Para -> `ParaMiss
   | OHKill s -> getMoveString s
-  | FlinchA -> FlinchMiss
+  | FlinchA -> `FlinchMiss
   | PoisonMove s -> getMoveString s
   | Recoil s -> getMoveString s
   | BreakConfuse s -> getMoveString s
-  | Confused -> ConfuseMiss
+  | Confused -> `ConfuseMiss
   | DrainA s-> getMoveString s
   | ConfuseMoveA s -> getMoveString s
   | UserFaintA s -> getMoveString s
-  | DrainSleepFail s -> DontMove
+  | DrainSleepFail s -> `DontMove
   | BreakSub s -> getMoveString s
   | SubDmg s -> getMoveString s
-  | ProtectedA s -> DontMiss s
-  | ChargingMove (s, n) -> DontMove
+  | ProtectedA s -> `DontMiss s
+  | ChargingMove (s, n) -> `DontMove
   | SwitchOutA s -> getMoveString s
   | Recharging s -> getMoveString s
   | FalseSwipeA s -> getMoveString s
@@ -1031,15 +1031,31 @@ let rec getEndString starter s =
 let animate_attack (animbox : GPack.fixed) img startx starty nextx' nexty (moveanim : GPack.fixed) move_img attack=
   let movestring = getMoveString attack in
   match movestring with
-  | SleepMiss -> ()
-  | FrozenMiss -> ()
-  | ParaMiss -> ()
-  | FlinchMiss -> ()
-  | ConfuseMiss -> ()
-  | DontMove -> ()
-  | DontMiss s | Miss s ->
+  | `SleepMiss ->
+      ( move_img#misc#show ();
+        moveanim#move move_img#coerce startx starty;
+      for i = 0 to 2 do
+        move_img#set_file "../data/fx/sleep1.png";
+        for i = 0 to 40 do
+          busywait_small ()
+        done;
+        move_img#set_file "../data/fx/sleep2.png";
+        for i = 0 to 40 do
+          busywait_small ()
+        done;
+        move_img#set_file "../data/fx/sleep3.png";
+        for i = 0 to 40 do
+          busywait_small ()
+        done
+      done; move_img#misc#hide ())
+  | `FrozenMiss -> ()
+  | `ParaMiss -> ()
+  | `FlinchMiss -> ()
+  | `ConfuseMiss -> ()
+  | `DontMove -> ()
+  | `DontMiss s | `Miss s ->
     (let themove = Pokemon.getMoveFromString s in
-     let nextx = (if movestring = DontMiss s then nextx' else screen_width / 2) in
+     let nextx = (if movestring = `DontMiss s then nextx' else screen_width / 2) in
       match themove.dmg_class with
       | Physical ->
         (let incx = (nextx - startx) / 80 in
