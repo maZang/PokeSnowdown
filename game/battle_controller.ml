@@ -72,8 +72,34 @@ let prevmove2 = ref ""
 let prevpoke1 = ref (getBattlePoke (getTestPoke ()))
 let prevpoke2 = ref (getBattlePoke (getTestPoke ()))
 
+let convertToMega t =
+  let found = ref false in
+  let helper bpoke =
+    match bpoke.pokeinfo.item with
+    | MegaStone -> if findMega bpoke.pokeinfo.name then
+                      (found := true; getBattlePoke (convertToMega bpoke.pokeinfo "-mega"))
+                    else
+                      bpoke
+    | MegaStoneY -> if findMegaX bpoke.pokeinfo.name then
+                      (found := true; getBattlePoke (convertToMega bpoke.pokeinfo "-mega-y"))
+                    else
+                      bpoke
+    | MegaStoneX -> if findMegaX bpoke.pokeinfo.name then
+                      (found := true; getBattlePoke (convertToMega bpoke.pokeinfo "-mega-x"))
+                    else
+                       bpoke
+    | _ -> bpoke  in
+    t.current <- helper (t.current);
+    if !found then
+      ()
+    else
+    (t.alive <- List.map (fun x -> if !found then x else helper x) t.alive)
+
+
 (* Initializes the game state *)
 let initialize_battle team1 team2 =
+  convertToMega team1;
+  convertToMega team2;
   team1.current <- getBattlePoke (getTestPoke ());
   team2.current <- getBattlePoke (getTestOpp ()); Battle (InGame
     (team1, team2, {weather = ClearSkies; terrain = {side1= ref []; side2= ref []}}, ref (Pl1 NoAction), ref (Pl2 NoAction)))

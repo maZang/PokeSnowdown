@@ -3,7 +3,7 @@ type battlemove = Poke of string | UseAttack of string | NoMove | FaintPoke of s
 
 type stat = Attack | Defense | SpecialAttack | SpecialDefense | Speed | Accuracy | Evasion
 
-type item = Nothing | Leftovers | ChoiceBand | LifeOrb | ChoiceSpecs | ChoiceScarf
+type item = Nothing | Leftovers | ChoiceBand | LifeOrb | ChoiceSpecs | ChoiceScarf | MegaStone | MegaStoneX | MegaStoneY
 
 type guiattack = NormMove of string | Crit of guiattack |
                   SEff of guiattack | NoEff of guiattack | HitMult of int * guiattack | BurnMove of guiattack | FreezeMove of guiattack | ParaMove of guiattack | MissMove of string | FrozenSolid |
