@@ -19,10 +19,13 @@ let unpack opt =
 
 (* Status of Pokemon is changed after switching out *)
 let switchOutStatus bpoke =
-  match bpoke.curr_status with
-  | (x, _) -> (match x with
+  if bpoke.pokeinfo.ability = "natural-cure" then
+    (NoNon, [])
+  else
+    (match bpoke.curr_status with
+    | (x, _) -> (match x with
               | Toxic _ -> (Toxic 0, [])
-              | _ -> (x, []))
+              | _ -> (x, [])))
 
 (* Stat enhancements are lost after switching out (except for some edge cases)*)
 let switchOutStatEnhancements t =
@@ -173,7 +176,16 @@ let damageCalculation t1 t2 (w,ter1, ter2) move =
       getStageAD (fst t2.stat_enhance.special_defense) *.
       (snd t2.stat_enhance.special_defense)
     | Status -> failwith "Faulty Game Logic: Debug 44" in
-  let attack = match move.dmg_class with
+  let attack =
+    (match t1.current.pokeinfo.ability with
+    | "swarm" -> if move.element = Bug && t1.current.curr_hp * 3 <= t1.current.bhp then 1.5 else 1.0
+    | "blaze" ->if move.element = Fire && t1.current.curr_hp * 3 <= t1.current.bhp then 1.5 else 1.0
+    | "overgrow" -> if move.element = Grass && t1.current.curr_hp * 3 <= t1.current.bhp then 1.5 else 1.0
+    | "torrent" -> if move.element = Water && t1.current.curr_hp * 3 <= t1.current.bhp then 1.5 else 1.0
+    | "sand-force" -> if move.element = Rock || move.element = Ground || move.element = Steel then 1.3 else 1.0
+    | "technician" -> if move.power <= 60 then 1.5 else 1.0
+    | _ -> 1.0 ) *.
+    (match move.dmg_class with
     | Physical ->
       (match t1.current.pokeinfo.ability with
       | "huge-power" | "pure-power" -> 2.0
@@ -186,7 +198,7 @@ let damageCalculation t1 t2 (w,ter1, ter2) move =
       float_of_int t1.current.bspecial_attack *.
       getStageAD (fst t1.stat_enhance.special_attack) *.
       (snd t1.stat_enhance.special_attack)
-    | Status -> failwith "Faulty Game Logic: Debug 178" in
+    | Status -> failwith "Faulty Game Logic: Debug 178") in
   let crit_bool, crit  = getCrit t1.current move in
   let type_mod = List.fold_left (fun acc x -> acc *. getElementEffect
       move.element x) 1. t2.current.pokeinfo.element *. (if
@@ -501,7 +513,11 @@ let move_handler atk def wt move =
     | (IncCrit _)::t -> secondary_effects t
     (* Calls MultHit after determining how many times to hit consecutively *)
     | RandMultHit::t ->
-        let randnum = Random.int 6 + 1 in
+        let randnum =
+          if atk.current.pokeinfo.ability = "skill-link" then
+            5
+          else
+            Random.int 6 + 1 in
         if randnum < 3 then
           secondary_effects ((MultHit 2)::t)
         else if randnum < 5 then
@@ -1456,8 +1472,8 @@ let handle_preprocessing t1 t2 w m1 m2 =
                     (w.weather <- ClearSkies; SandStormFade descript)
                    else
                     (w.weather <- (SandStorm (n-1));
-                    match (List.mem Rock t1.current.pokeinfo.element || List.mem Ground t1.current.pokeinfo.element || List.mem Steel t1.current.pokeinfo.element || t1.current.pokeinfo.ability = "sand-rush"),
-                          (List.mem Rock t2.current.pokeinfo.element || List.mem Ground t2.current.pokeinfo.element || List.mem Steel t2.current.pokeinfo.element || t2.current.pokeinfo.ability = "sand-rush") with
+                    match (List.mem Rock t1.current.pokeinfo.element || List.mem Ground t1.current.pokeinfo.element || List.mem Steel t1.current.pokeinfo.element || t1.current.pokeinfo.ability = "sand-rush" || t1.current.pokeinfo.ability = "sand-force" ),
+                          (List.mem Rock t2.current.pokeinfo.element || List.mem Ground t2.current.pokeinfo.element || List.mem Steel t2.current.pokeinfo.element || t2.current.pokeinfo.ability = "sand-rush" || t2.current.pokeinfo.ability = "sand-force" ) with
                     | (false, false) -> (t1.current.curr_hp <- t1.current.curr_hp - t1.current.bhp/16;
                                       t2.current.curr_hp <- t2.current.curr_hp - t2.current.bhp/16;
                                       SandBuffetB descript)
@@ -1564,6 +1580,11 @@ let handle_two_moves t1 t2 w m1 m2 a1 a2 =
   let p1poke = t1.current in
   let p2poke = t2.current in
     (* Gets speed of both Pokemon with modifiers *)
+  let findbonuspriority t m =
+    match t.current.pokeinfo.ability with
+    | "prankster" -> if m.dmg_class = Status then 1 else 0
+    | "gale-wings" -> if m.element = Flying then 1 else 0
+    | _ -> 0 in
   let curr_move = findBattleMove p1poke.pokeinfo a1 in
   let curr_move' = findBattleMove p2poke.pokeinfo a2 in
   let p1speed = ref (float_of_int t1.current.bspeed *.
@@ -1578,19 +1599,21 @@ let handle_two_moves t1 t2 w m1 m2 a1 a2 =
     | SandStorm _-> (if p1poke.pokeinfo.ability = "sand-rush" then p1speed := !p1speed *. 2.;
                                 if p2poke.pokeinfo.ability = "sand-rush" then p2speed := !p2speed *. 2.)
     | _ -> ());
-  (if (p1speed = p2speed) && (curr_move.priority = curr_move'.priority) then
+  let p1priority = curr_move.priority + findbonuspriority t1 curr_move in
+  let p2priority = curr_move'.priority + findbonuspriority t2 curr_move' in
+  (if (p1speed = p2speed) && (p1priority = p2priority) then
       if 50 > Random.int 100 then
         p1speed := 1. +. !p2speed
       else
         ()
-  else if (curr_move.priority > curr_move'.priority) then
+  else if (p1priority > p2priority) then
       p1speed := 1. +. !p2speed
-  else if (curr_move'.priority > curr_move.priority) then
+  else if (p2priority > p1priority) then
       p2speed := 1. +. !p1speed
   else
     ());
   (* Case for where Player 1 is faster *)
-  if (!p1speed > !p2speed) || curr_move.priority > curr_move'.priority then (
+  if (!p1speed > !p2speed) then (
     (* Gets the moves both pokemon used *)
     prevmove1 := a1;
     match curr_move.dmg_class with
@@ -1716,7 +1739,7 @@ let getEntryHazardDmg t ter1=
   let damage = int_of_float (helper 0. !ter1 *. float_of_int t.current.bhp) in
   t.current.curr_hp <- max 0 (t.current.curr_hp - damage)
 
-let switchPokeHandler faint nextpoke t ter1 t2 =
+let switchPokeHandler faint nextpoke t ter1 t2 w =
   let prevPoke = t.current in
   let switchPoke, restPoke = findBattlePoke t.alive nextpoke in
   t.stat_enhance <- switchOutStatEnhancements t;
@@ -1730,6 +1753,8 @@ let switchPokeHandler faint nextpoke t ter1 t2 =
   if t.current.curr_hp > 0 then
     (match t.current.pokeinfo.ability with
     | "intimidate" -> t2.stat_enhance.attack <- (fst t2.stat_enhance.attack - 1, snd t2.stat_enhance.attack); ("." ^ t.current.pokeinfo.name ^ "'s intimidate lowered the opponent's attack.")
+    | "drizzle" -> w.weather <- Rain 5; ("." ^ t.current.pokeinfo.name ^ " caused the Rain to fall.")
+    | "drought" -> w.weather <- Sun 5; ("." ^ t.current.pokeinfo.name ^ " cause the Sun to come up.")
     | _ -> "")
   else
     ""
@@ -1750,8 +1775,8 @@ let handle_action state action1 action2 =
   | Poke p' -> let p = if p' = "random" then getRandomPoke t1 else p' in
       (match action2 with
       | Poke p2' -> let p2 = if p2' = "random" then getRandomPoke t2 else p2' in
-                    let t1switch = switchPokeHandler false p t1 w.terrain.side1 t2 in
-                    let t2switch = switchPokeHandler false p2 t2 w.terrain.side2 t1 in
+                    let t1switch = switchPokeHandler false p t1 w.terrain.side1 t2 w in
+                    let t2switch = switchPokeHandler false p2 t2 w.terrain.side2 t1 w in
                     if (t1.current.curr_hp = 0) then
                           if (t2.current.curr_hp = 0) then
                             (m1 := Pl1 SFaint; m2 := Pl2 Faint)
@@ -1762,7 +1787,7 @@ let handle_action state action1 action2 =
                             (m1 := Pl2 SFaint; m2 := Pl1 FaintNext)
                           else
                             (m1 := Pl1 (SPoke (p, t1switch)); m2 := Pl2 (SPoke (p2, t2switch)))
-      | UseAttack a2' -> let t1switch = switchPokeHandler false p t1 w.terrain.side1 t2 in
+      | UseAttack a2' -> let t1switch = switchPokeHandler false p t1 w.terrain.side1 t2 w in
                        if (t1.current.curr_hp = 0) then
                         (m1 := Pl1 SFaint; m2 := Pl2 FaintNext)
                       else
@@ -1779,7 +1804,7 @@ let handle_action state action1 action2 =
                           (m1 := Pl1 (SPoke (p,t1switch)); m2 := Pl2 (ForceChoose newmove))
                         else
                           (m1 := Pl1 (SPoke (p, t1switch)); m2 := Pl2 (AttackMove newmove))))
-      | NoMove ->  let t1switch = switchPokeHandler false p t1 w.terrain.side1 t2 in
+      | NoMove ->  let t1switch = switchPokeHandler false p t1 w.terrain.side1 t2 w in
                     if (t1.current.curr_hp = 0) then
                       (m1 := Pl1 Faint; m2 := Pl2 FaintNext)
                     else
@@ -1789,7 +1814,7 @@ let handle_action state action1 action2 =
                      let a1 = if force1 then force1s else a1' in
       (match action2 with
       | Poke p' -> (let p  = if p' = "random" then getRandomPoke t2 else p' in
-                   let t2switch = switchPokeHandler false p t2 w.terrain.side2 t1 in
+                   let t2switch = switchPokeHandler false p t2 w.terrain.side2 t1 w in
                     (if (t2.current.curr_hp = 0) then
                       (m1 := Pl2 SFaint; m2 := Pl1 FaintNext)
                     else
@@ -1823,12 +1848,12 @@ let handle_action state action1 action2 =
       | _ -> failwith "Faulty Game Logic: Debug 449")
   | NoMove -> (match action2 with
               | FaintPoke p ->
-                  let t2switch = switchPokeHandler true p t2 w.terrain.side2 t1 in
+                  let t2switch = switchPokeHandler true p t2 w.terrain.side2 t1 w in
                   m1 := Pl2 (SPoke (p,t2switch));
                   m2 := Pl1 Next
               | Poke p' -> let p = if p' = "random" then getRandomPoke t2
                           else p' in
-                          let t2switch = switchPokeHandler false p t2 w.terrain.side2 t1 in
+                          let t2switch = switchPokeHandler false p t2 w.terrain.side2 t1 w in
                           if (t2.current.curr_hp = 0) then
                             (m1 := Pl2 SFaint; m2 := Pl1 FaintNext)
                           else
@@ -1852,8 +1877,8 @@ let handle_action state action1 action2 =
               )
   | FaintPoke p -> (match action2 with
                     | FaintPoke p' ->
-                        (let t1switch = switchPokeHandler true p t1 w.terrain.side1 t2 in
-                        let t2switch = switchPokeHandler true p' t2 w.terrain.side2 t1 in
+                        (let t1switch = switchPokeHandler true p t1 w.terrain.side1 t2 w in
+                        let t2switch = switchPokeHandler true p' t2 w.terrain.side2 t1 w in
                         if (t1.current.curr_hp = 0) then
                           if (t2.current.curr_hp = 0) then
                             (m1 := Pl1 SFaint; m2 := Pl2 Faint)
@@ -1865,7 +1890,7 @@ let handle_action state action1 action2 =
                           else
                             (m1 := Pl1 (SPoke (p, t1switch)); m2 := Pl2 (SPoke (p', t2switch))))
                     | _ ->
-                        (let t1switch = switchPokeHandler true p t1 w.terrain.side1 t2 in
+                        (let t1switch = switchPokeHandler true p t1 w.terrain.side1 t2 w in
                         if (t1.current.curr_hp = 0) then
                           (m1 := Pl1 SFaint; m2 := Pl2 FaintNext)
                         else
