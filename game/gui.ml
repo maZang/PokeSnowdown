@@ -440,7 +440,7 @@ let make_menu ?packing () =
   let img = GMisc.image ~file:"./gui_pics/main.gif" ~packing:(hbox2#pack)
     ~width:screen_width ~height:(5*screen_height /6) () in
   (* load_screen is a gif that plays before battle (during initialization)*)
-  let load_screen = GMisc.image ~file:"../data/backgrounds/background.gif"
+  let load_screen = GMisc.image ~file:"../data/backgrounds/button.png"
     ~show:false ~packing:(vbox#pack) () in
   (* Return all objects created *)
   (vbox, hbox1, hbox2, button1, button2, button3, button4,
@@ -935,6 +935,7 @@ let rec getMoveStringStatus a =
   | ProtectS s-> `ShieldStatus
   | ProtectFail s-> `DontMove
   | SpikesS s -> `SpikesStatus
+  | ToxicSpikesS s -> `TSpikesStatus
   | HealBellS s -> `DontMissStatus
   | RefreshS s -> `DontMissStatus
   | Fail s -> `DontMove
@@ -948,7 +949,7 @@ let rec getMoveStringStatus a =
   | TauntS _ -> `DontMissStatus
   | TauntFail -> `DontMove
   | Taunted _ -> `DontMove
-  | StealthRockS _ -> `DontMissStatus
+  | StealthRockS _ -> `RockStatus
   | SwitchOut s -> `DontMove
 
 let rec getMoveStringEnd a =
@@ -1060,6 +1061,7 @@ let rec getStatusString starter s =
   | CopyPrevMoveA s -> starter ^ " copied the opponent's move." ^ getAttackString starter s
   | CopyFail -> starter ^ " tried to copy the previous move but failed."
   | TauntS s -> getStatusString starter s ^ "The opponent has been taunted."
+  | ToxicSpikesS s -> getStatusString starter s ^ starter ^ " has deposited a layer of toxic spikes."
   | TauntFail -> starter ^ " used Taunt but it failed."
   | Taunted s -> starter ^ " couldn't use " ^ s ^ " because it was taunted."
   | StealthRockS s -> getStatusString starter s ^ "Rocks were put on the opponent's side."
@@ -1136,6 +1138,8 @@ let animate_attack (animbox : GPack.fixed) img startx starty nextx' nexty (movea
   | `SubStatus -> ()
   | `ShieldStatus -> ()
   | `SpikesStatus -> ()
+  | `TSpikesStatus -> ()
+  | `RockStatus -> ()
   | `HealStatus -> ()
   | `LeechStatus -> ()
   | `BurnDmg ->
@@ -1319,7 +1323,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
   (match !m1 with
   | Pl1 SPoke p -> text_buffer#set_text ("Player One has switched to " ^ p); poke1_img#set_file ("../data/back-sprites/" ^ p ^ ".gif");updatetools ();busywait ()
   | Pl2 SPoke p -> text_buffer#set_text ("Player Two has switched to " ^ p); poke2_img#set_file ("../data/sprites/" ^ p ^ ".gif"); updatetools (); busywait ()
-  | Pl1 AttackMove a -> secondaryEffect := `P1;
+  | Pl1 AttackMove a ->secondaryEffect := `P1;
                    let atk_string = getAttackString t1.current.pokeinfo.name a in
                    let str_list = Str.split (Str.regexp "\\.") atk_string in
                    List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
@@ -1446,7 +1450,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
     (endTurnEarly := false; turn_end ())
   else
   (match !m2 with
-  | Pl1 AttackMove a -> secondaryEffect := `P1;
+  | Pl1 AttackMove a ->  secondaryEffect := `P1;
                    let atk_string = getAttackString t1.current.pokeinfo.name a in
                    let str_list = Str.split (Str.regexp "\\.") atk_string in
                    List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;

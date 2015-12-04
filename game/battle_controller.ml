@@ -1150,6 +1150,21 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
                     secondary_effects t)
                   else
                     newmove := Fail move.name
+    (* for the toxic spikes *)
+    | TSpikes::t -> let rec addSpikes acc1 acc2 ter = match ter with
+                        | (ToxicSpikes n)::t ->if n >= 2 then
+                                            (false, acc2 @ (ToxicSpikes 2)::t)
+                                          else
+                                            (true, acc2 @ (ToxicSpikes (n+1))::t)
+                        | h::t -> addSpikes acc1 (h::acc2) t
+                        | [] -> (acc1, (ToxicSpikes 1)::acc2) in
+                  let success, newter = addSpikes true [] !t2 in
+                  if success then
+                    (t2 := newter;
+                    newmove := ToxicSpikesS !newmove;
+                    secondary_effects t)
+                  else
+                    newmove := Fail move.name
     (* for heal bell and aromatherapy *)
     | HealBell::t -> let helper_heal poke =
                       poke.curr_status <- (NoNon, snd poke.curr_status) in
@@ -1574,9 +1589,11 @@ let handle_two_moves t1 t2 w m1 m2 a1 a2 =
 let getEntryHazardDmg t ter1=
   let rec helper acc lst = match lst with
   | [] -> acc
-  | (Spikes n)::t -> (if n = 1 then (helper (0.125 +. acc) t)
-                      else if n = 2 then (helper (1. /. 6. +. acc) t)
-                      else (helper (0.25 +. acc) t))
+  | (Spikes n)::t' ->if List.mem Flying t.current.pokeinfo.element then helper acc t'
+                    else
+                      (if n = 1 then (helper (0.125 +. acc) t')
+                      else if n = 2 then (helper (1. /. 6. +. acc) t')
+                      else (helper (0.25 +. acc) t'))
   | StealthRock::t' -> (let typeeffect = List.fold_left (fun acc x -> acc *. getElementEffect
                         Rock x) 1. t.current.pokeinfo.element in
                         match typeeffect with
@@ -1585,6 +1602,11 @@ let getEntryHazardDmg t ter1=
                         | 2. -> helper (0.25 +. acc) t'
                         | 4. -> helper (0.5 +. acc) t'
                         | _ -> helper (0.125 +. acc) t')
+  | (ToxicSpikes n)::t' -> if List.mem Flying t.current.pokeinfo.element then helper acc t'
+                      else
+                        ((match t.current.curr_status with
+                        | (NoNon, x) -> (if n = 1 then (t.current.curr_status <- (Poisoned, x)) else (t.current.curr_status <- (Toxic 0, x)))
+                        | _ -> ()); helper acc t')
   | h::t -> helper acc t in
   let damage = int_of_float (helper 0. !ter1 *. float_of_int t.current.bhp) in
   t.current.curr_hp <- max 0 (t.current.curr_hp - damage)
@@ -1655,7 +1677,7 @@ let handle_action state action1 action2 =
   | UseAttack a1' -> let force1, force1s = getForcedMove (snd t1.current.curr_status) in
                      let a1 = if force1 then force1s else a1' in
       (match action2 with
-      | Poke p' -> let p  = if p' = "random" then getRandomPoke t2 else p' in
+      | Poke p' -> (let p  = if p' = "random" then getRandomPoke t2 else p' in
                    switchPokeHandler false p t2 w.terrain.side2;
                     (if (t2.current.curr_hp = 0) then
                       (m1 := Pl2 SFaint; m2 := Pl1 FaintNext)
@@ -1665,28 +1687,28 @@ let handle_action state action1 action2 =
                       if curr_move.dmg_class = Status then
                         (
                           let newmove = status_move_handler t1 t2 (w, w.terrain.side1, w.terrain.side2) curr_move in
-                        m1 := Pl2 (SPoke p); m1 := Pl1 (Status newmove))
+                           m1 := Pl2 (SPoke p); m2 := Pl1 (Status newmove))
                      else
                       (let newmove = move_handler t1 t2 (w, w.terrain.side1, w.terrain.side2) curr_move in
                         if List.mem SelfSwitch curr_move.secondary then
                           (m1 := Pl2 (SPoke p); m2 := Pl1 (ForceChoose newmove))
                         else
-                          (m1 := Pl2 (SPoke p); m2 := Pl1 (AttackMove newmove)))))
-      | UseAttack a2' -> let force2, force2s = getForcedMove (snd t2.current.curr_status) in
+                          (m1 := Pl2 (SPoke p); m2 := Pl1 (AttackMove newmove))))))
+      | UseAttack a2' -> (let force2, force2s = getForcedMove (snd t2.current.curr_status) in
                           let a2 = if force2 then force2s else a2' in
-                          handle_two_moves t1 t2 w m1 m2 a1 a2
-      | NoMove -> let curr_poke = t1.current in
+                          handle_two_moves t1 t2 w m1 m2 a1 a2)
+      | NoMove -> (let curr_poke = t1.current in
                   let curr_move = findBattleMove curr_poke.pokeinfo a1 in
                   prevmove1 := a1;
                   if curr_move.dmg_class = Status then
                     (let newmove = status_move_handler t1 t2 (w, w.terrain.side1, w.terrain.side2) curr_move in
-                    m1 := Pl1 (Status newmove); m2 := Pl2 NoAction)
+                     m1 := Pl1 (Status newmove); m2 := Pl2 NoAction)
                   else
                     (let newmove = move_handler t1 t2 (w, w.terrain.side1, w.terrain.side2) curr_move in
                     if List.mem SelfSwitch curr_move.secondary then
                       (m1 := Pl1 (ForceChoose newmove); m2 := Pl2 ForceNone)
                     else
-                      (m1 := Pl1 (AttackMove newmove); m2 := Pl2 NoAction))
+                      (m1 := Pl1 (AttackMove newmove); m2 := Pl2 NoAction)))
       | _ -> failwith "Faulty Game Logic: Debug 449")
   | NoMove -> (match action2 with
               | FaintPoke p ->
@@ -1728,7 +1750,7 @@ let handle_action state action1 action2 =
                             (m1 := Pl1 SFaint; m2 := Pl2 FaintNext)
                         else
                           if (t2.current.curr_hp = 0) then
-                            (m1 := Pl2 SFaint; m1 := Pl1 FaintNext)
+                            (m1 := Pl2 SFaint; m2 := Pl1 FaintNext)
                           else
                             m1 := Pl1 (SPoke p); m2 := Pl2 (SPoke p'))
                     | _ ->

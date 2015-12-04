@@ -540,6 +540,7 @@ let getSecondaryEffect str = match str with
   | "taunt" -> [TauntMove]
   | "ice-burn" -> [ChargeMove "The Pokemon is accumlating ice"; BurnChance]
   | "stealth-rock" -> [StealthRockMake]
+  | "toxic-spikes" -> [TSpikes]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -663,7 +664,7 @@ let getTestPoke () =
   let nature = Bold in
   let item = Leftovers in
   {name="gardevoir-mega"; element=[Fire;Flying]; move1= getMoveFromString "snarl"; move2 =
-  getMoveFromString "heavy-slam"; move3 = getMoveFromString "ice-burn";
+  getMoveFromString "heavy-slam"; move3 = getMoveFromString "toxic-spikes";
   move4 = getMoveFromString "volt-switch"; hp = 98; attack = 0; special_attack = 165; defense = 65;
   speed = 120; special_defense = 135; ability="pixilate"; evs; nature; item}
 
@@ -672,7 +673,7 @@ let getTestOpp () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gallade-mega"; element=[Bug;Fire]; move1= getMoveFromString "tail-slap"; move2 =
+  {name="gallade-mega"; element=[Bug;Flying]; move1= getMoveFromString "tail-slap"; move2 =
   getMoveFromString "head-smash"; move3 = getMoveFromString "crush-grip";
   move4 = getMoveFromString "toxic"; hp = 68; attack = 255; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
