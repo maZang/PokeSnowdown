@@ -185,6 +185,9 @@ let damageCalculation t1 t2 (w,ter1, ter2) move =
     | "sand-force" -> if move.element = Rock || move.element = Ground || move.element = Steel then 1.3 else 1.0
     | "technician" -> if move.power <= 60 then 1.5 else 1.0
     | _ -> 1.0 ) *.
+    (match t1.current.curr_item with
+    | LifeOrb -> 1.3
+    | _ -> 1.0 ) *.
     (match move.dmg_class with
     | Physical ->
       (match t1.current.pokeinfo.ability with
@@ -944,8 +947,11 @@ let move_handler atk def wt move =
       newmove := newreason;
       damage := min def.current.curr_hp !damage;
       def.current.curr_hp <-def.current.curr_hp - !damage;
+      (* returns a move description *)
       secondary_effects move.secondary;
-    (* returns a move description *)
+      (match atk.current.curr_item with
+      | LifeOrb -> atk.current.curr_hp <- max 0 (atk.current.curr_hp - atk.current.bhp/10); newmove := LifeOrbA !newmove
+      | _ -> ());
       !newmove)
    else
       newreason)
@@ -1472,6 +1478,13 @@ let handle_next_turn t1 t2 w m1 m2 =
     Seed etc... after every move to prepare for next turn *)
 let handle_preprocessing t1 t2 w m1 m2 =
   Printf.printf "Handling preprocessing for move\n%!";
+  let fix_items t descript = match t.current.curr_item with
+  | Leftovers ->  if t.current.curr_hp > 0 then
+                      (t.current.curr_hp <- t.current.curr_hp + t.current.bhp/16;
+                      LeftOversHeal descript)
+                  else
+                    descript
+  | _ -> descript in
   let rec fix_weather descript = match w.weather with
   | Sun n -> if n <= 0 then
                   (w.weather <- ClearSkies; SunFade descript)
@@ -1576,12 +1589,14 @@ let handle_preprocessing t1 t2 w m1 m2 =
   let (ter1, move1f) = fix_terrain t1 [] move1'' !(w.terrain.side1) in
   let (ter2, move2f) = fix_terrain t2 [] move2'' !(w.terrain.side2) in
   let move2f' = fix_weather move2f in
-  (match move1f with
+  let move1F = fix_items t1 move1f in
+  let move2F = fix_items t2 move2f' in
+  (match move1F with
   | Base -> m1 := Pl1 Continue
-  | _ -> m1 := Pl1 (EndMove move1f));
-  (match move2f' with
+  | _ -> m1 := Pl1 (EndMove move1F));
+  (match move2F with
   | Base -> m2 := Pl2 Continue
-  | _ -> m2 := Pl2 (EndMove move2f'));
+  | _ -> m2 := Pl2 (EndMove move2F));
   t1.current.curr_hp <- min (max 0 t1.current.curr_hp) t1.current.bhp;
   t2.current.curr_hp <- min (max 0 t2.current.curr_hp) t2.current.bhp;
   w.terrain.side1 := ter1; w.terrain.side2 := ter2
