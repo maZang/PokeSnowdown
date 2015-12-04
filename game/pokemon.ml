@@ -436,7 +436,7 @@ let getSecondaryEffect str = match str with
     | "sludge-bomb" | "poison-jab" | "gunk-shot" | "sludge-wave" -> [PoisonChance]
   | "cross-poison" | "poison-tail" -> [PoisonChance; IncCrit 1]
   | "twineedle" -> [MultHit 2; PoisonChance]
-  | "growl" | "aurora-beam" | "baby-doll-eyes" | "play-rough" -> [StageAttack [(Attack, 1)]]
+  | "growl" | "aurora-beam" | "baby-doll-eyes" | "play-rough" | "play-nice" -> [StageAttack [(Attack, 1)]]
   | "sing" | "sleep-powder" | "hypnosis" | "lovely-kiss" | "spore" | "dark-void"
     | "grass-whistle" | "relic-song" -> [PutToSleep]
   | "supersonic" | "psybeam" | "confusion" | "confuse-ray" | "dizzy-punch"
@@ -462,7 +462,8 @@ let getSecondaryEffect str = match str with
   | "sonic-boom" -> [ConstantDmg 20]
   | "dragon-rage" -> [ConstantDmg 40]
   | "seismic-toss" | "night-shade" -> [ConstantDmg 100]
-  | "absorb" | "mega-drain" | "leech-life" | "giga-drain" | "drain-punch" | "horn-leech" | "draining-kiss" -> [DrainMove]
+  | "absorb" | "mega-drain" | "leech-life" | "giga-drain" | "drain-punch"
+    | "horn-leech" | "draining-kiss" -> [DrainMove]
   | "leech-seed" -> [LeechSeed]
   | "growth" -> [StageBoostSunlight [(Attack, 1); (SpecialAttack, 1)]]
   | "solar-beam" -> [ChargeInSunlight "Need sunlight to charge faster!"]
@@ -556,6 +557,7 @@ let getSecondaryEffect str = match str with
   | "stored-power" -> [StoredPower]
   | "shift-gear" -> [StageBoost [(Speed, 2); (Attack, 1)]]
   | "cosmic-power" -> [StageBoost [(Defense, 1); (SpecialDefense, 1)]]
+  | "venom-drench" -> [VenomDrench]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -678,7 +680,7 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "mach-punch"; move2 =
+  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "venom-drench"; move2 =
   getMoveFromString "venoshock"; move3 = getMoveFromString "pound";
   move4 = getMoveFromString "poison-powder"; hp = 98; attack = 100; special_attack = 165; defense = 65;
   speed = 120; special_defense = 135; ability="drizzle"; evs; nature; item}

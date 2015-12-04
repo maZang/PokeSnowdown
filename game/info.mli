@@ -59,7 +59,7 @@ type secondary_effects = MultHit of int | StageBoost of (stat * int) list | IncC
                          | Haze | ReflectMake | UserFaint | NeverMiss | DrainMoveSleep | VariableDamage | Rest | SuperFang | SubstituteMake | Flail | Protect | BellyDrum
                          | Spikes | HealBell | SunHeal | MaxHealthDmg | SunnyDay | FalseSwipe | Refresh | PsychUp | RandStageBoost | FlowerShield | RainDance | SandStormMake
                          | HailMake | Encore of int | PainSplit | SelfEncore | ConfuseUser | CopyPrevMove | KnockOff |ChanceStageBoost | SelfSwitch | FoulPlay | TauntMove |
-                         StealthRockMake | TSpikes | StickyWebMake | Rototiller | SleepEffect | BeatUp | CausePartialTrapping | DoublePower | StoredPower
+                         StealthRockMake | TSpikes | StickyWebMake | Rototiller | SleepEffect | BeatUp | CausePartialTrapping | DoublePower | StoredPower | VenomDrench
 
 type move = {name:string; priority: int; target: target; dmg_class: dmg_class;
     mutable power:int; effect_chance: int; accuracy: int; element: element;
