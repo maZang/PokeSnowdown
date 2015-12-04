@@ -324,6 +324,7 @@ let hitMoveDueToStatus atk moveDescript =
       | UsedProtect::t -> helperVolaStatus t moveDescript'
       | (ForcedMoveNoSwitch _)::t -> helperVolaStatus t moveDescript'
       | (ForcedMove _)::t -> helperVolaStatus t moveDescript'
+      | (Taunt _)::t -> helperVolaStatus t moveDescript'
       | _ -> failwith "unimplemented" in
   let nvola, vola = atk.current.curr_status in
   match nvola with
@@ -398,18 +399,18 @@ let hitAttack atk def (w,t1,t2) (move : move) damage moveDescript =
     else
       (false, MissMove move.name) in
   let need_charge, charge_string = need_charge_attack move.secondary in
-  if need_charge then
-    if List.mem (Charge) (snd atk.current.curr_status) then
-      let volatile_list =
-        List.filter (fun s -> not (s = Charge)) (snd atk.current.curr_status) in
-      atk.current.curr_status <- (fst atk.current.curr_status, volatile_list);
-      hit_move ()
-    else
-      (atk.current.curr_status <-
+    if need_charge then
+      if List.mem (Charge) (snd atk.current.curr_status) then
+        let volatile_list =
+          List.filter (fun s -> not (s = Charge)) (snd atk.current.curr_status) in
+          atk.current.curr_status <- (fst atk.current.curr_status, volatile_list);
+          hit_move ()
+      else
+        (atk.current.curr_status <-
         (fst atk.current.curr_status, (ForcedMoveNoSwitch (1, move.name))::(Charge)::(snd atk.current.curr_status));
-      (false, ChargingMove (charge_string, move.name)))
-  else
-    hit_move ()
+        (false, ChargingMove (charge_string, move.name)))
+    else
+      hit_move ()
 
 (* Helper function for finding substitutes *)
 let rec find_substitute lst =
@@ -420,24 +421,31 @@ let rec find_substitute lst =
 (* Returns true if Pokemon moves, false if it doesn't as well as some value
   describing why it failed (has to do with some status) *)
 let hitStatus atk def (move: move) moveDescript =
-  match move.target with
-  | UserOrAlly | User | UsersField | OpponentsFields
-  | Ally | EntireField | UserAndAlly -> (true, moveDescript)
-  | _ ->
-    let accStage, accMult = atk.stat_enhance.accuracy in
-    let evStage, evMult = def.stat_enhance.evasion in
-    let probability = float_of_int move.accuracy *. getStageEvasion  accStage
+  let rec findTaunt lst = match lst with
+  | (Taunt _)::_ -> true
+  | h::t -> findTaunt t
+  | [] -> false in
+  if findTaunt (snd atk.current.curr_status) then
+    (false, Taunted move.name)
+  else
+    (match move.target with
+    | UserOrAlly | User | UsersField | OpponentsFields
+    | Ally | EntireField | UserAndAlly -> (true, moveDescript)
+    | _ ->
+      let accStage, accMult = atk.stat_enhance.accuracy in
+      let evStage, evMult = def.stat_enhance.evasion in
+      let probability = float_of_int move.accuracy *. getStageEvasion  accStage
                 *. accMult /. (getStageEvasion evStage *. evMult) in
-    let randnum = Random.float 100. in
-    if probability > randnum then
-      if find_substitute (snd def.current.curr_status) then
-        (false, SubBlock moveDescript)
-      else if find_protect (snd def.current.curr_status) then
-        (false, ProtectedS move.name)
+      let randnum = Random.float 100. in
+      if probability > randnum then
+        if find_substitute (snd def.current.curr_status) then
+          (false, SubBlock moveDescript)
+        else if find_protect (snd def.current.curr_status) then
+          (false, ProtectedS move.name)
+        else
+          (true, moveDescript)
       else
-        (true, moveDescript)
-    else
-      (false, MissStatus move.name)
+        (false, MissStatus move.name))
 
 (* Used for writing out the multi move description *)
 let rec link_multmove_descript m1 m2 =
@@ -1230,6 +1238,16 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
                           | _ ->  newmove := CopyPrevMoveA (move_handler atk def (wt, t1, t2) move'))
                           else
                             (newmove := CopyFail)
+    (* Literally just for the move taunt *)
+    | TauntMove::[] ->  let rec findTaunt lst = match lst with
+                    | (Taunt _)::_ -> true
+                    | h::t -> findTaunt t
+                    | [] -> false in
+                    if findTaunt (snd def.current.curr_status) then
+                      (newmove := TauntFail)
+                    else
+                      (newmove := TauntS !newmove;
+                      def.current.curr_status <- (fst def.current.curr_status, (Taunt 3)::(snd def.current.curr_status)))
     | [] -> ()
     | _ -> failwith "Faulty Game Logic: Debug 1188"
   in
@@ -1274,6 +1292,7 @@ let rec filterNonvola lst = match lst with
   | UsedProtect::t -> filterNonvola t
   | RechargingStatus::t -> RechargingStatus::(filterNonvola t)
   | (ForcedMove (n, s))::t -> if n = 0 then filterNonvola t else (ForcedMove ((n-1), s))::(filterNonvola t)
+  | (Taunt n)::t -> if n = 0 then filterNonvola t else (Taunt (n-1))::(filterNonvola t)
   | (ForcedMoveNoSwitch (n, s))::t -> if n <= 0 then filterNonvola t else (ForcedMoveNoSwitch (n-1,s))::(filterNonvola t)
 
 let remove_some_status bp =
@@ -1360,6 +1379,7 @@ let handle_preprocessing t1 t2 w m1 m2 =
           fix_vstatus t1 t2 (LeechDmg descript1) (LeechHeal descript2) t)
         else
           fix_vstatus t1 t2 descript1 descript2 t
+  | (Taunt 0)::t -> fix_vstatus t1 t2 (TauntFade descript1) descript2 t
   | h::t -> fix_vstatus t1 t2 descript1 descript2 t in
   let fix_nstatus nstatus t =
   match nstatus with

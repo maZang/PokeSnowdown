@@ -944,6 +944,9 @@ let rec getMoveStringStatus a =
   | CopyPrevMoveS s -> getMoveStringStatus s
   | CopyPrevMoveA s -> getMoveString s
   | CopyFail -> `DontMove
+  | TauntS _ -> `DontMissStatus
+  | TauntFail -> `DontMove
+  | Taunted _ -> `DontMove
   | SwitchOut s -> `DontMove
 
 let rec getMoveStringEnd a =
@@ -1053,6 +1056,9 @@ let rec getStatusString starter s =
   | CopyPrevMoveS s -> starter ^ " copied the opponent's move." ^ getStatusString starter s
   | CopyPrevMoveA s -> starter ^ " copied the opponent's move." ^ getAttackString starter s
   | CopyFail -> starter ^ " tried to copy the previous move but failed."
+  | TauntS s -> getStatusString starter s ^ "The opponent has been taunted."
+  | TauntFail -> starter ^ " used Taunt but it failed."
+  | Taunted s -> starter ^ " couldn't use " ^ s ^ " because it was taunted."
   | SwitchOut s -> (match !secondaryEffect with
                     | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
                     | `P2 -> current_command := (Some (Poke "random"), Some NoMove));
@@ -1070,6 +1076,7 @@ let rec getEndString starter s =
   | LeechDmg s -> starter ^ " has taken leech seed damage." ^ getEndString starter s
   | LeechHeal s -> starter ^ " has healed from leech seeds." ^ getEndString starter s
   | LightScreenFade s -> getEndString starter s ^ starter ^ "'s Light Screen has faded."
+  | TauntFade s -> getEndString starter s ^ starter ^ "'s Taunt has faded."
   | ReflectFade s -> getEndString starter s ^ starter ^ "'s Reflect has faded."
   | SunFade s-> getEndString starter s ^ "The sunlight has faded."
   | RainFade s -> getEndString starter s ^ "The rain has faded."

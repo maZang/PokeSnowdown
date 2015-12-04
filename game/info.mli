@@ -20,11 +20,11 @@ type guistatus = StatBoost of stat * int * guistatus | NormStatus of string | Th
                   | SubBlock of guistatus | SubFail of guistatus | SubMake of guistatus | ProtectedS of string | ProtectS of guistatus | ProtectFail of guistatus |
                    Fail of string | SpikesS of guistatus | BurnStatus of guistatus | HealBellS of guistatus | RefreshS of guistatus | PsychUpS of guistatus | SunnyDayS of guistatus |
                    RainDanceS of guistatus | SandStormS of guistatus | HailS of guistatus | EncoreS of guistatus | EncoreFail | CopyPrevMoveS of guistatus | CopyPrevMoveA of guiattack
-                   | CopyFail
+                   | CopyFail | TauntS of guistatus | TauntFail | Taunted of string
 
 type endMove = BurnDmg | BreakBurn | BreakFreeze  | BreakPara  | BreakPoison | PoisonDmg | LeechDmg of endMove | LeechHeal of endMove | Base | LightScreenFade of endMove |
                ReflectFade of endMove | SunFade of endMove | RainFade of endMove | SandStormFade of endMove | SandBuffetB of endMove | SandBuffet1 of endMove |
-               SandBuffet2 of endMove | HailFade of endMove | HailBuffetB of endMove | HailBuffet1 of endMove | HailBuffet2 of endMove
+               SandBuffet2 of endMove | HailFade of endMove | HailBuffetB of endMove | HailBuffet1 of endMove | HailBuffet2 of endMove | TauntFade of endMove
 
 type guimove = SPoke of string | AttackMove of guiattack | Faint | NoAction | Continue | Next | Status of guistatus | EndMove of endMove | FaintNext | SFaint | ForceChoose of guiattack | ForceMove of string
                 | ForceNone
@@ -55,7 +55,7 @@ type secondary_effects = MultHit of int | StageBoost of (stat * int) list | IncC
                          WeightDamage | DrainMove | LeechSeed | ChargeInSunlight of string | ToxicChance | StageBoostSunlight of (stat * int) list | Recovery | LightScreenMake
                          | Haze | ReflectMake | UserFaint | NeverMiss | DrainMoveSleep | VariableDamage | Rest | SuperFang | SubstituteMake | Flail | Protect | BellyDrum
                          | Spikes | HealBell | SunHeal | MaxHealthDmg | SunnyDay | FalseSwipe | Refresh | PsychUp | RandStageBoost | FlowerShield | RainDance | SandStormMake
-                         | HailMake | Encore of int | PainSplit | SelfEncore | ConfuseUser | CopyPrevMove | KnockOff |ChanceStageBoost | SelfSwitch | FoulPlay
+                         | HailMake | Encore of int | PainSplit | SelfEncore | ConfuseUser | CopyPrevMove | KnockOff |ChanceStageBoost | SelfSwitch | FoulPlay | TauntMove
 
 type move = {name:string; priority: int; target: target; dmg_class: dmg_class;
     mutable power:int; effect_chance: int; accuracy: int; element: element;
@@ -76,7 +76,8 @@ type non_volatile_status = Burn | Freeze | Paralysis | Poisoned | Toxic of int |
 
 type volatile_status =  Confusion of int | Flinch | Leeched
   | Charge | Substitute of int | Protected | UsedProtect
-  | RechargingStatus | ForcedMove of int * string | ForcedMoveNoSwitch of int * string
+  | RechargingStatus | ForcedMove of int * string | ForcedMoveNoSwitch of int * string |
+  Taunt of int
 
 type status = non_volatile_status * volatile_status list
 

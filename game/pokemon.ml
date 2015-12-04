@@ -183,6 +183,7 @@ let string_of_vola_status elm =
   | RechargingStatus -> "Recharging"
   | ForcedMove (n, s) -> "Forced to use: " ^ s
   | ForcedMoveNoSwitch (n, s) -> "Locked into: " ^  s
+  | Taunt n -> "Taunted"
 
 let string_of_poke_status (non, vola) =
   List.fold_left (fun acc s -> acc ^ ", " ^ string_of_vola_status s) (string_of_status non) vola
@@ -421,10 +422,11 @@ let getSecondaryEffect str = match str with
   | "charm" | "feather-dance" -> [StageAttack [(Attack, 2)]]
   | "meditate" | "sharpen" | "metal-claw" | "howl" | "meteor-mash" -> [StageBoost [(Attack, 1)]]
   | "whirlwind" | "roar" | "dragon-tail" -> [ForceSwitch]
-  | "double-kick" | "gear-grind" | "bonemerang" | "double-hit" -> [MultHit 2]
+  | "double-kick" | "gear-grind" | "bonemerang" | "double-hit" | "dual-chop" -> [MultHit 2]
   | "sand-attack" | "smokescreen" | "kinesis" | "flash"
-    | "mud-slap" | "octazooka" | "leaf-tornado" | "mud-bomb" -> [StageAttack [(Accuracy, 1)]]
-  | "take-down" | "double-edge" | "submission" | "brave-bird" -> [RecoilMove]
+    | "mud-slap" | "octazooka" | "leaf-tornado" | "mud-bomb"
+    | "muddy-water" -> [StageAttack [(Accuracy, 1)]]
+  | "take-down" | "double-edge" | "submission" | "brave-bird" | "wild-charge" -> [RecoilMove]
   | "tail-whip" | "leer" | "iron-tail" | "crunch"
     | "rock-smash" | "razor-shell" | "crush-claw" -> [StageAttack [(Defense, 1)]]
   | "poison-sting" | "poison-powder" | "smog" | "sludge" | "poison-gas"
@@ -456,13 +458,13 @@ let getSecondaryEffect str = match str with
   | "sonic-boom" -> [ConstantDmg 20]
   | "dragon-rage" -> [ConstantDmg 40]
   | "seismic-toss" | "night-shade" -> [ConstantDmg 100]
-  | "absorb" | "mega-drain" | "leech-life" | "giga-drain" -> [DrainMove]
+  | "absorb" | "mega-drain" | "leech-life" | "giga-drain" | "drain-punch" | "horn-leech" -> [DrainMove]
   | "leech-seed" -> [LeechSeed]
   | "growth" -> [StageBoostSunlight [(Attack, 1); (SpecialAttack, 1)]]
   | "solar-beam" -> [ChargeInSunlight "Need sunlight to charge faster!"]
   | "string-shot" | "cotton-spore" | "scary-face" -> [StageAttack [(Speed, 2)]]
-  | "agility" -> [StageBoost [(Speed, 2)]]
-  | "screech" -> [StageAttack [(Defense, 2)]]
+  | "agility" | "rock-polish" -> [StageBoost [(Speed, 2)]]
+  | "screech" | "metal-sound" -> [StageAttack [(Defense, 2)]]
   | "double-team" -> [StageBoost [(Evasion, 1)]]
   | "minimize" -> [StageBoost [(Evasion, 2)]]
   | "harden" | "withdraw" | "defense-curl" | "steel-wing" -> [StageBoost [(Defense, 1)]]
@@ -497,6 +499,7 @@ let getSecondaryEffect str = match str with
   | "water-spout" | "eruption" -> [MaxHealthDmg]
   | "sunny-day" -> [SunnyDay]
   | "refresh" -> [Refresh]
+  | "flame-charge" -> [StageBoost [(Speed, 1)]]
   | "false-swipe" | "hold-back" -> [FalseSwipe]
   | "psych-up" -> [PsychUp]
   | "acupressure" -> [RandStageBoost]
@@ -529,6 +532,9 @@ let getSecondaryEffect str = match str with
   | "foul-play" -> [FoulPlay]
   | "quiver-dance" -> [StageBoost [(SpecialAttack, 1); (SpecialDefense,1); (Speed, 1)]]
   | "shell-smash" -> [StageBoost [(SpecialAttack, 2); (Attack,2); (Speed, 2); (Defense, -1); (SpecialDefense, -1)]]
+  | "volt-tackle" -> [RecoilMove; ParaChance]
+  | "coil" -> [StageBoost [(Attack, 1); (Defense, 1); (Accuracy, 1)]]
+  | "taunt" -> [TauntMove]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -651,8 +657,8 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Psychic]; move1= getMoveFromString "shell-smash"; move2 =
-  getMoveFromString "heavy-slam"; move3 = getMoveFromString "heat-crash";
+  {name="gardevoir-mega"; element=[Psychic]; move1= getMoveFromString "drain-punch"; move2 =
+  getMoveFromString "heavy-slam"; move3 = getMoveFromString "taunt";
   move4 = getMoveFromString "volt-switch"; hp = 98; attack = 0; special_attack = 165; defense = 65;
   speed = 120; special_defense = 135; ability="pixilate"; evs; nature; item}
 
