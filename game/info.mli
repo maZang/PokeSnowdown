@@ -56,7 +56,7 @@ type secondary_effects = MultHit of int | StageBoost of (stat * int) list | IncC
                          WeightDamage | DrainMove | LeechSeed | ChargeInSunlight of string | ToxicChance | StageBoostSunlight of (stat * int) list | Recovery | LightScreenMake
                          | Haze | ReflectMake | UserFaint | NeverMiss | DrainMoveSleep | VariableDamage | Rest | SuperFang | SubstituteMake | Flail | Protect | BellyDrum
                          | Spikes | HealBell | SunHeal | MaxHealthDmg | SunnyDay | FalseSwipe | Refresh | PsychUp | RandStageBoost | FlowerShield | RainDance | SandStormMake
-                         | HailMake | Encore of int | PainSplit | SelfEncore | ConfuseUser | CopyPrevMove | KnockOff
+                         | HailMake | Encore of int | PainSplit | SelfEncore | ConfuseUser | CopyPrevMove | KnockOff |ChanceStageBoost
 
 type move = {name:string; priority: int; target: target; dmg_class: dmg_class;
     mutable power:int; effect_chance: int; accuracy: int; element: element;
@@ -110,7 +110,7 @@ type trainer_team = {mutable current: battle_poke; mutable alive: battle_poke li
 one turn, the one with the Poke standing the latest wins *)
 type outcome = WinnerP1 | WinnerP2
 
-type battle_mode = Random1p | Random2p | Preset1p of pokemon list
+type battle_mode = Random1p | Random2p | Preset1p of pokemon list | TournBattle of pokemon list
 
 type screen = SwitchPoke | ChooseMove | Faint | BothFaint
 

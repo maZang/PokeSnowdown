@@ -522,6 +522,7 @@ let getSecondaryEffect str = match str with
   | "knock-off" -> [KnockOff]
   | "frost-breath" | "storm-throw" -> [IncCrit 3]
   | "hone-claws" -> [StageBoost [(Attack,1);(Accuracy,1)]]
+  | "ominous-wind" | "silver-wind" | "ancient-power" -> [ChanceStageBoost]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -554,10 +555,8 @@ let getAllMoves poke =
 let getAllAbilities poke =
   List.map (to_string) (poke_json |> member poke |> member "ability" |> to_list)
 
-let getRandomPokemon () =
-  let randomPokeName = poke_arr |>
-    member (string_of_int (Random.int num_pokemon_total + 1)) |> to_string in
-  let randomPoke = poke_json |> member randomPokeName in
+let generatePokemon str =
+  let randomPoke = poke_json |> member str in
   let element_string = randomPoke |> member "type" |> to_list|> filter_string in
   let element = List.map getElement element_string in
   let moves = randomPoke |> member "moves" |> to_list in
@@ -592,14 +591,19 @@ let getRandomPokemon () =
   let move2 = !move2s |> getMoveFromString in
   let move3 = !move3s |> getMoveFromString in
   let move4 = !move4s |> getMoveFromString in
-  {name = randomPokeName; element; move1 ; move2; move3 ; move4 ; hp;
+  {name = str; element; move1 ; move2; move3 ; move4 ; hp;
   attack; defense; special_defense; special_attack; speed; ability; evs;
   nature; item}
 
-let getPresetPokemon str =
-  let presetjson = unlocked_pokemon () in
+let getRandomPokemon () =
+  let randomPokeName = poke_arr |>
+    member (string_of_int (Random.int num_pokemon_total + 1)) |> to_string in
+  generatePokemon randomPokeName
+
+let getPresetPokemon ?pjson:(pjson=unlocked_pokemon ()) str =
+  Printf.printf "%s\n%!" str;
   let poke = poke_json |> member str in
-  let presetpoke = presetjson |> member str in
+  let presetpoke = pjson |> member str in
   let ev_helper str =
     presetpoke |> member "evs" |> member str |> to_string |> int_of_string in
   let element_string = poke |> member "type" |> to_list|> filter_string in
@@ -630,14 +634,19 @@ let getPresetPokemon str =
   attack; defense; special_defense; special_attack; speed; ability; evs;
   nature; item}
 
+let getRandomPreset ?pjson:(pjson=unlocked_pokemon ()) () =
+ let full_list = List.map (to_string) (pjson |> member "pokemon" |> to_list) in
+ let rand = Random.int (List.length full_list) in
+ getPresetPokemon ~pjson:pjson (List.nth full_list rand)
+
 let getTestPoke () =
   let evs = {attack = 0; defense =  255; special_attack= 0; special_defense= 255;
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Psychic]; move1= getMoveFromString "meteor-mash"; move2 =
-  getMoveFromString "spacial-rend"; move3 = getMoveFromString "leaf-tornado";
-  move4 = getMoveFromString "hone-claws"; hp = 68; attack = 85; special_attack = 165; defense = 65;
+  {name="gardevoir-mega"; element=[Psychic]; move1= getMoveFromString "ominous-wind"; move2 =
+  getMoveFromString "acupressure"; move3 = getMoveFromString "leaf-tornado";
+  move4 = getMoveFromString "hone-claws"; hp = 98; attack = 85; special_attack = 165; defense = 65;
   speed = 0; special_defense = 135; ability="pixilate"; evs; nature; item}
 
 let getTestOpp () =

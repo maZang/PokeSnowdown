@@ -1,8 +1,10 @@
 open Pokemon
+open Info
 
 exception FaultyGameSave
 exception BadFieldOption
 exception BadEVInput
+exception OwnPokemonAlready
 
 let updatePokemonFields pokename move1 move2 move3 move4 ability nature item hpevs atkevs defevs spatkevs spdefevs speedevs key=
   let move_lst = getAllMoves pokename in
@@ -44,3 +46,62 @@ let createSavePokeEdit pokename move1 move2 move3 move4 ability nature item hpev
   | `Assoc lst -> `Assoc (create_new_save lst)
   | _ -> raise FaultyGameSave in
   Yojson.Basic.to_file "../data/factorysets.json" newSave
+
+let convertPokeToJson poke =
+  `Assoc [("name", `String poke.name);
+          ("moves", `List [`String poke.move1.name; `String poke.move2.name;
+          `String poke.move3.name; `String poke.move4.name]);
+          ("ability", `String poke.ability);
+          ("nature", `String (string_of_nature poke.nature));
+          ("item", `String (string_of_item poke.item));
+          ("evs", (`Assoc [("hp", `String (string_of_int poke.evs.hp));
+                          ("attack", `String (string_of_int poke.evs.attack));
+                          ("defense", `String (string_of_int poke.evs.defense));
+                          ("special-attack", `String (string_of_int poke.evs.special_attack));
+                          ("special-defense", `String (string_of_int poke.evs.special_defense));
+                          ("speed", `String (string_of_int poke.evs.speed))]))]
+
+let rec addToUnlocked pokename lst =
+  match lst with
+  | (s, `List x)::t -> if s = "pokemon" then (s, `List ((`String pokename)::x))::t else (s, `List x)::(addToUnlocked pokename t)
+  | (s, x)::t -> ((s, x)::(addToUnlocked pokename t))
+  | _ -> raise FaultyGameSave
+
+let rec incPrevSave key lst =
+  match lst with
+  | (s, `Int n)::t -> if key = s then (s, `Int (n+1))::t else (s, `Int n)::(incPrevSave key t)
+  | (s, x)::t -> ((s,x)::(incPrevSave key t))
+  | _ -> raise FaultyGameSave
+
+let addPoke beat str =
+  if List.mem str (unlocked_poke_string_list ()) then
+    raise OwnPokemonAlready
+  else
+    (let poke = generatePokemon str in
+    let json_of_poke = convertPokeToJson poke in
+    let prevSave = unlocked_pokemon () in
+    let newSave = match prevSave with
+    |`Assoc lst -> let lst' = addToUnlocked str (incPrevSave beat (incPrevSave "unlocked" lst)) in
+                  `Assoc ((str, json_of_poke)::lst')
+    | _ -> raise FaultyGameSave in
+    Yojson.Basic.to_file "../data/factorysets.json" newSave)
+
+let getFileMessage () =
+  let open Yojson.Basic.Util in
+  let save = unlocked_pokemon () in
+  match save with
+  | `Assoc l -> "Unlocked Pokemon: " ^ (List.assoc "unlocked" l |> to_int |> string_of_int) ^ "\n" ^
+                "You beat baldman " ^ (List.assoc "baldman" l |> to_int |> string_of_int) ^ " times\n" ^
+                "You beat beauty " ^ (List.assoc "beauty" l |> to_int |> string_of_int) ^ " times\n" ^
+                "You beat bugcatcher " ^ (List.assoc "bugcatcher" l |> to_int |> string_of_int) ^ " times\n" ^
+                "You beat campernerd " ^ (List.assoc "campernerd" l |> to_int |> string_of_int) ^ " times\n" ^
+                "You beat dragontamer " ^ (List.assoc "dragontamer" l |> to_int |> string_of_int) ^ " times\n" ^
+                "You beat falkner " ^ (List.assoc "falkner" l |> to_int |> string_of_int) ^ " times\n" ^
+                "You beat fatman " ^ (List.assoc "fatman" l |> to_int |> string_of_int) ^ " times\n" ^
+                "You beat psychic " ^ (List.assoc "psychic" l |> to_int |> string_of_int) ^ " times\n" ^
+                "You beat youngster " ^ (List.assoc "youngster" l |> to_int |> string_of_int) ^ " times\n" ^
+                (let times_beat_oak = List.assoc "professor oak" l |> to_int in if times_beat_oak > 0 then
+                "You beat Professor Oak " ^ string_of_int times_beat_oak ^ " times\n" else "")
+
+
+  | _ -> raise FaultyGameSave

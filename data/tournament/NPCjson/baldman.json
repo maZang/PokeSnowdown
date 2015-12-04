@@ -9,7 +9,7 @@
     ],
     "ability": "justified",
     "nature": "jolly",
-    "item": "absolite",
+    "item": "nothing",
     "evs": {
       "hp": "0",
       "attack": "252",
@@ -29,7 +29,7 @@
     ],
     "ability": "static",
     "nature": "bold",
-    "item": "ampharosite",
+    "item": "nothing",
     "evs": {
       "hp": "252",
       "attack": "0",
@@ -69,7 +69,7 @@
     ],
     "ability": "swarm",
     "nature": "jolly",
-    "item": "beedrillite",
+    "item": "nothing",
     "evs": {
       "hp": "0",
       "attack": "252",
@@ -169,7 +169,7 @@
     ],
     "ability": "shadow-tag",
     "nature": "adamant",
-    "item": "gengarite",
+    "item": "nothing",
     "evs": {
       "hp": "0",
       "attack": "0",
@@ -209,7 +209,7 @@
     ],
     "ability": "flash-fire",
     "nature": "bold",
-    "item": "black sludge",
+    "item": "nothing",
     "evs": {
       "hp": "248",
       "attack": "0",
@@ -229,7 +229,7 @@
     ],
     "ability": "prankster",
     "nature": "careful",
-    "item": "sablenite",
+    "item": "nothing",
     "evs": {
       "hp": "252",
       "attack": "0",
@@ -249,7 +249,7 @@
     ],
     "ability": "sand-stream",
     "nature": "jolly",
-    "item": "choice scarf",
+    "item": "nothing",
     "evs": {
       "hp": "0",
       "attack": "252",
@@ -269,7 +269,7 @@
     ],
     "ability": "chlorophyll",
     "nature": "modest",
-    "item": "venusaurite",
+    "item": "nothing",
     "evs": {
       "hp": "232",
       "attack": "0",
@@ -299,6 +299,6 @@
       "speed": "252"
     }
   },
-	"num-wins": 0,
-	"pokemon": [ "absol", "ampharos", "arcanine", "beedrill", "chandelure", "chesnaught", "cobalion", "cresselia", "gengar", "nidoking", "nidoqueen", "sableye", "tyranitar", "venusaur", "weavile" ]
+	"pokemon": [ "absol", "ampharos", "arcanine", "beedrill", "chandelure", "chesnaught", "cobalion", "cresselia", "gengar", "nidoking", "nidoqueen", "sableye", "tyranitar", "venusaur", "weavile" ],
+  "unlockable": ["absol"]
 }

@@ -71,18 +71,22 @@ let prevpoke2 = ref (getBattlePoke (getTestPoke ()))
 
 (* Initializes the game state *)
 let initialize_battle team1 team2 =
-  team1.current <- getBattlePoke (getTestPoke ());
-  team2.current <- getBattlePoke (getTestOpp ()); Battle (InGame
+  (* team1.current <- getBattlePoke (getTestPoke ());
+  team2.current <- getBattlePoke (getTestOpp ()); *)Battle (InGame
     (team1, team2, {weather = ClearSkies; terrain = {side1= ref []; side2= ref []}}, ref (Pl1 NoAction), ref (Pl2 NoAction)))
 
 (* Gets a random team of pokemon for initialization *)
-let getRandomTeam () =
+let getRandomTeam mode =
+  let randFunc = match mode with
+  | `Random -> getRandomPokemon
+  | `Preset -> fun () -> getRandomPreset ()
+  | `Tournament -> getRandomPreset ~pjson:(Tournament.getJson ()) in
   let stat_enhance = {attack=(0,1.); defense=(0,1.); speed=(0,1.);
       special_attack=(0,1.); special_defense=(0,1.); evasion=(0,1.);
       accuracy=(0,1.)} in
-  {current = (getBattlePoke(getRandomPokemon ()));
+  {current = (getBattlePoke(randFunc ()));
   dead =[]; alive = (List.map getBattlePoke
-  (List.map getRandomPokemon [();();();();()])); stat_enhance}
+  (List.map randFunc [();();();();()])); stat_enhance}
 
 (* This function returns the accuracy/evasion bonus given by the stages.
    Pre-condition: num is between -6 and 6
@@ -569,6 +573,31 @@ let move_handler atk def wt move =
             secondary_effects t)
           else
             newmove := NoEffAll move.name
+      (* ChanceStageBoost has a 10% chance of boosting all stats except accuracy and evasion*)
+    | ChanceStageBoost::t ->
+        (match Random.int 10 with
+        | 0 -> (let stage1, multiplier1 = atk.stat_enhance.attack in
+                let boost1 = max (min 6 (stage1 + 1)) (-6) in
+                atk.stat_enhance.attack <- (boost1, multiplier1);
+                newmove := StatBoostA (Attack, (boost1 - stage1), !newmove);
+                let stage2, multiplier2 = atk.stat_enhance.defense in
+                let boost2 = max (min 6 (stage2 + 1)) (-6) in
+                atk.stat_enhance.defense <- (boost2, multiplier2);
+                newmove := StatBoostA (Defense, (boost2 - stage2), !newmove);
+                let stage3, multiplier3 = atk.stat_enhance.special_attack in
+                let boost3 = max (min 6 (stage3 + 1)) (-6) in
+                atk.stat_enhance.special_attack <- (boost3, multiplier3);
+                newmove := StatBoostA (SpecialAttack, (boost3 - stage3), !newmove);
+                let stage4, multiplier4 = atk.stat_enhance.special_defense in
+                let boost4 = max (min 6 (stage4 + 1)) (-6) in
+                atk.stat_enhance.special_defense <- (boost4, multiplier4);
+                newmove := StatBoostA (SpecialDefense, (boost4 - stage4), !newmove);
+                let stage5, multiplier5 = atk.stat_enhance.speed in
+                let boost5 = max (min 6 (stage5 + 1)) (-6) in
+                atk.stat_enhance.speed <- (boost5, multiplier5);
+                newmove := StatBoostA (Speed, (boost5 - stage5), !newmove);
+                secondary_effects t)
+        | _ -> secondary_effects t)
     (* StageBoost is any status move that boosts stats *)
     | (StageBoost l)::t ->
         (match l with
@@ -1653,16 +1682,16 @@ let rec main_loop_2p engine gui_ready ready ready_gui () =
 
 (* Main controller for random one player *)
 let rec main_controller_random1p engine gui_ready ready ready_gui=
-  let team1 = getRandomTeam () in
-  let team2 = getRandomTeam () in
+  let team1 = getRandomTeam `Random in
+  let team2 = getRandomTeam `Random in
   let battle = initialize_battle team1 team2 in
   let () = engine := Ivar.create (); Ivar.fill !engine battle in
   main_loop_1p engine gui_ready ready ready_gui ()
 
 (* Main controller for random two player *)
 let rec main_controller_random2p engine gui_ready ready ready_gui =
-  let team1 = getRandomTeam () in
-  let team2 = getRandomTeam () in
+  let team1 = getRandomTeam `Random in
+  let team2 = getRandomTeam `Random in
   let battle = initialize_battle team1 team2 in
   let () = engine := Ivar.create (); Ivar.fill !engine battle in
   main_loop_2p engine gui_ready ready ready_gui ()
@@ -1674,7 +1703,19 @@ let rec main_controller_preset1p engine gui_ready ready ready_gui t =
   let team1' = List.map getBattlePoke t in
   let team1 = {current = List.hd team1'; alive = List.tl team1'; dead = [];
                   stat_enhance} in
-  let team2 = getRandomTeam () in
+  let team2 = getRandomTeam `Preset in
+  let battle = initialize_battle team1 team2 in
+  let () = engine := Ivar.create (); Ivar.fill !engine battle in
+  main_loop_1p engine gui_ready ready ready_gui ()
+
+let rec main_controller_tourn engine gui_ready ready ready_gui t =
+  let stat_enhance = {attack=(0,1.); defense=(0,1.); speed=(0,1.);
+      special_attack=(0,1.); special_defense=(0,1.); evasion=(0,1.);
+      accuracy=(0,1.)} in
+  let team1' = List.map getBattlePoke t in
+  let team1 = {current = List.hd team1'; alive = List.tl team1'; dead = [];
+                  stat_enhance} in
+  let team2 = getRandomTeam `Tournament in
   let battle = initialize_battle team1 team2 in
   let () = engine := Ivar.create (); Ivar.fill !engine battle in
   main_loop_1p engine gui_ready ready ready_gui ()
@@ -1686,5 +1727,6 @@ let initialize_controller (engine, battle_engine) =
   upon (Ivar.read !battle_status) (fun s -> match s with
     | Random1p -> (main_controller_random1p engine gui_ready ready ready_gui)
     | Random2p -> (main_controller_random2p engine gui_ready ready ready_gui)
+    | TournBattle t -> (main_controller_tourn engine gui_ready ready ready_gui t)
     | Preset1p t -> (main_controller_preset1p engine gui_ready ready ready_gui t));
   ()
