@@ -133,15 +133,17 @@ type gameMovement = Up | Down | Left | Right | Interact
 let move_ivar = ref (Ivar.create ())
 let playerDirection = ref Down
 
-let obstacle_coordinates = ref (obstacle_coordinates ())
+let obstacle_coordinates = ref (getObstacleCoordinates ())
 
 let rec move_up () =
   (if List.mem (!x, !y - 1) !obstacle_coordinates then
     ((match (!x, !y) with
     | (7,2) -> opp1#misc#hide (); opp2#misc#hide ();
                tilemap#set_file "../data/tournament/tilemap2.png";
-               x := 7; y := 7; spriteanim#put sprite#coerce (40 * !x) (40 * !y);
-               obstacle_coordinates := ice_obstacles
+               x := 7; y := 7; spriteanim#move sprite#coerce (40 * !x) (40 * !y);
+               bossanim#move boss#coerce 280 20;
+               boss#misc#show ();
+               obstacle_coordinates := ice_obstacles;
     | _ -> () );(sprite#set_file "../data/tournament/Player/Up.png"))
   else
     (sprite#set_file "../data/tournament/Player/Up1.png";
@@ -159,7 +161,14 @@ let rec move_up () =
 
 let rec move_down () =
   (if List.mem (!x, !y + 1) !obstacle_coordinates then
-    (sprite#set_file "../data/tournament/Player/Down.png")
+    ((match (!x, !y) with
+    | (7,7) -> opp1#misc#show (); opp2#misc#show ();
+               tilemap#set_file "../data/tournament/tilemap1.png";
+               x := 7; y := 2; spriteanim#move sprite#coerce (40 * !x) (40 * !y);
+               bossanim#move boss#coerce 280 100;
+               boss#misc#hide ();
+               obstacle_coordinates := tilemap_nooak;
+    | _ -> () );(sprite#set_file "../data/tournament/Player/Down.png"))
   else
     (sprite#set_file "../data/tournament/Player/Down1.png";
     for i = 0 to 20 do
@@ -547,10 +556,18 @@ let load_tournament engine img bg_img load_screen battle text buttonhide buttons
   | Menu1P -> (gameText#set_text "Use W,A,S,D to move. Press H to interact with Prof. Oak and space bar to talk.";
               current_screen := Tourney; List.iter (fun s -> s#misc#hide ()) buttonhide;
               img#misc#hide ();
+              obstacle_coordinates := getObstacleCoordinates ();
+              x := 7; y := 5;
+              spriteanim#move sprite#coerce (40 * !x) (40 * !y);
               tilemap#set_file "../data/tournament/tilemap1.png";
               opp1#set_file ("../data/tournament/NPC/" ^ (getRandomOpp1 ()) ^ ".png");
               opp2#set_file ("../data/tournament/NPC/" ^ (getRandomOpp2 ()) ^ ".png");
               opp1#misc#show (); opp2#misc#show ();
+              bossanim#move boss#coerce 280 100;
+              (if !obstacle_coordinates = tilemap_nooak then
+                boss#misc#hide ()
+              else
+                boss#misc#show ());
               battle_screen#pack gameBoard#coerce; battle_screen#pack gameText#coerce)
   | Tourney -> (current_screen := TourneyChoose;
                 tournament#set_label "Continue";
