@@ -869,6 +869,7 @@ let rec getMoveString a =
   | BurnMove s -> getMoveString s
   | FreezeMove s -> getMoveString s
   | ParaMove s -> getMoveString s
+  | SleepMove s -> getMoveString s
   | MissMove s ->  `Miss s
   | Asleep -> `SleepMiss
   | Wake s -> getMoveString s
@@ -947,6 +948,7 @@ let rec getMoveStringStatus a =
   | TauntS _ -> `DontMissStatus
   | TauntFail -> `DontMove
   | Taunted _ -> `DontMove
+  | StealthRockS _ -> `DontMissStatus
   | SwitchOut s -> `DontMove
 
 let rec getMoveStringEnd a =
@@ -969,9 +971,10 @@ let rec getAttackString starter a =
       starter ^ " used " ^ str ^ ". The move hit " ^ string_of_int n ^ " times with " ^ string_of_int
       c ^ " crits." ^ (if s' > 0 then "It was supereffective." else if n' > 0 then
       "It was not very effective." else "")
-  | BurnMove s -> getAttackString starter s ^ "The opponent has been burned"
-  | FreezeMove s -> getAttackString starter s ^ "The opponent is frozen solid"
-  | ParaMove s -> getAttackString starter s ^ "The opponent has been paralyzed"
+  | BurnMove s -> getAttackString starter s ^ "The opponent has been burned."
+  | FreezeMove s -> getAttackString starter s ^ "The opponent is frozen solid."
+  | ParaMove s -> getAttackString starter s ^ "The opponent has been paralyzed."
+  | SleepMove s -> getAttackString starter s ^ "The opponent has been put to sleep."
   | MissMove s ->  starter ^ " used " ^ s ^ " but it missed!"
   | Asleep -> starter ^ " was fast asleep!"
   | Wake s -> starter ^ " woke up." ^ getAttackString starter s
@@ -1059,6 +1062,7 @@ let rec getStatusString starter s =
   | TauntS s -> getStatusString starter s ^ "The opponent has been taunted."
   | TauntFail -> starter ^ " used Taunt but it failed."
   | Taunted s -> starter ^ " couldn't use " ^ s ^ " because it was taunted."
+  | StealthRockS s -> getStatusString starter s ^ "Rocks were put on the opponent's side."
   | SwitchOut s -> (match !secondaryEffect with
                     | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
                     | `P2 -> current_command := (Some (Poke "random"), Some NoMove));
@@ -1561,7 +1565,9 @@ let poke_move_cmd button engine buttons battle text
         (match get_game_status battle_status with
         | Random1p | Preset1p _ | TournBattle _ -> current_command := (Some (FaintPoke (button#label)), Some (FaintPoke "")); next ()
         (* In two player, you would call switch_poke command again *)
-        | _ -> failwith "Faulty Game Logic: Debug 616")
+        | Random2p -> text_buffer#set_text "Player Twos' Pokemon has fainted. Choosing...";
+                      current_command := (Some (FaintPoke (button#label)), snd !current_command); current_screen := Battle (P2 Faint); switch_poke engine [poke1;poke2;poke3;poke4;poke5] [move1;move2;
+                              move3;move4;switch] back_button ())
   | Battle (P1 Faint) -> current_command := (Some (FaintPoke (button#label)), snd !current_command); next ()
   | Battle (P2 Faint) -> current_command := (fst !current_command, Some (FaintPoke (button#label))); next ()
   | Battle (P1 SwitchPoke) -> current_command := (Some (Poke (button#label)), snd !current_command); next ()

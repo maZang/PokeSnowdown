@@ -531,6 +531,17 @@ let move_handler atk def wt move =
           | _ -> ()
         else
           ()); secondary_effects t
+    (* Paralyzed opponent if chance exceeds a certain threshold*)
+    | PutToSleep::t ->
+        let randnum = Random.int 100 in
+        (if move.effect_chance > randnum then
+          let sleep_turns = Random.int 3 + 2 in
+          match def.current.curr_status with
+          | (NoNon, x) -> def.current.curr_status <- (Sleep sleep_turns, x);
+                            newmove := SleepMove !newmove
+          | _ -> ()
+        else
+          ()); secondary_effects t
     (* For the move super fang *)
     | SuperFang::t ->
           (let type_mod = List.fold_left (fun acc x -> acc *. getElementEffect
@@ -561,7 +572,7 @@ let move_handler atk def wt move =
     (* Recoil moves deal certain damage to the user *)
     | RecoilMove::t ->
         newmove := Recoil !newmove;
-        atk.current.curr_hp <- max 0 (atk.current.curr_hp - !damage / 4)
+        atk.current.curr_hp <- max 0 (atk.current.curr_hp - !damage / 3)
     (* Chance of poisoning the opponent *)
     | PoisonChance::t ->
         let randnum = Random.int 100 in
@@ -751,7 +762,7 @@ let move_handler atk def wt move =
                           newmove := Recharging !newmove; secondary_effects t)
     (* Moves based upon weight are instead based on current health *)
     | WeightDamage::t ->
-      (let base_power = def.current.curr_hp * 120 / def.current.bhp in
+      (let base_power = max 20 (def.current.curr_hp * 120 / def.current.bhp) in
       move.power <- base_power;
       let moveDescript', fdamage' = damageCalculation atk def weather move in
       let damage' = int_of_float fdamage' in
@@ -767,7 +778,7 @@ let move_handler atk def wt move =
         secondary_effects t
     (* for the move flail *)
     | Flail::t ->
-        (let base_power = (atk.current.bhp - atk.current.curr_hp) * 200 / atk.current.bhp in
+        (let base_power = max 20 ((atk.current.bhp - atk.current.curr_hp) * 200 / atk.current.bhp) in
         move.power <- base_power;
         let moveDescript', fdamage' = damageCalculation atk def weather move in
         let damage' = int_of_float fdamage' in
@@ -775,7 +786,7 @@ let move_handler atk def wt move =
         secondary_effects t
     (* Max health damage *)
     | MaxHealthDmg::t ->
-         (let base_power = atk.current.curr_hp * 150 / atk.current.bhp in
+         (let base_power = max 20 (atk.current.curr_hp * 150 / atk.current.bhp) in
         move.power <- base_power;
         let moveDescript', fdamage' = damageCalculation atk def weather move in
         let damage' = int_of_float fdamage' in
@@ -1248,6 +1259,13 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
                     else
                       (newmove := TauntS !newmove;
                       def.current.curr_status <- (fst def.current.curr_status, (Taunt 3)::(snd def.current.curr_status)))
+    (* for the move stealth rocks *)
+    | StealthRockMake::t -> if List.mem StealthRock !t2 then
+                                (newmove := Fail "Stealth Rock")
+                              else
+                                (t2 := StealthRock::!t2;
+                                newmove := StealthRockS !newmove;
+                                secondary_effects t )
     | [] -> ()
     | _ -> failwith "Faulty Game Logic: Debug 1188"
   in
@@ -1559,6 +1577,14 @@ let getEntryHazardDmg t ter1=
   | (Spikes n)::t -> (if n = 1 then (helper (0.125 +. acc) t)
                       else if n = 2 then (helper (1. /. 6. +. acc) t)
                       else (helper (0.25 +. acc) t))
+  | StealthRock::t' -> (let typeeffect = List.fold_left (fun acc x -> acc *. getElementEffect
+                        Rock x) 1. t.current.pokeinfo.element in
+                        match typeeffect with
+                        | 0.25 -> helper (0.03125 +. acc) t'
+                        | 0.50 -> helper (0.0625 +. acc) t'
+                        | 2. -> helper (0.25 +. acc) t'
+                        | 4. -> helper (0.5 +. acc) t'
+                        | _ -> helper (0.125 +. acc) t')
   | h::t -> helper acc t in
   let damage = int_of_float (helper 0. !ter1 *. float_of_int t.current.bhp) in
   t.current.curr_hp <- max 0 (t.current.curr_hp - damage)
@@ -1600,7 +1626,7 @@ let handle_action state action1 action2 =
                             (m1 := Pl1 SFaint; m2 := Pl2 FaintNext)
                         else
                           if (t2.current.curr_hp = 0) then
-                            (m1 := Pl2 SFaint; m1 := Pl1 FaintNext)
+                            (m1 := Pl2 SFaint; m2 := Pl1 FaintNext)
                           else
                             (m1 := Pl1 (SPoke p); m2 := Pl2 (SPoke p2))
       | UseAttack a2' -> switchPokeHandler false p t1 w.terrain.side1;
