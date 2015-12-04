@@ -59,5 +59,125 @@
       "speed": "252"
     }
   },
+  "magnezone": {
+    "name": "magnezone",
+    "moves": [
+      "volt-switch",
+      "hidden-power",
+      "flash-cannon",
+      "thunderbolt"
+    ],
+    "ability": "magnet-pull",
+    "nature": "modest",
+    "item": "choice specs",
+    "evs": {
+      "hp": "172",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "84"
+    }
+  },
+  "manectric": {
+    "name": "manectric",
+    "moves": [
+      "thunderbolt",
+      "volt-switch",
+      "overheat",
+      "hidden-power"
+    ],
+    "ability": "lightningrod",
+    "nature": "timid",
+    "item": "nothing",
+    "evs": {
+      "hp": "4",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "raikou": {
+    "name": "raikou",
+    "moves": [
+      "calm-mind",
+      "thunderbolt",
+      "hidden-power",
+      "volt-switch"
+    ],
+    "ability": "pressure",
+    "nature": "timid",
+    "item": "leftovers",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "242",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "snorlax": {
+    "name": "snorlax",
+    "moves": [
+      "body-slam",
+      "crunch",
+      "earthquake",
+      "fire-punch"
+    ],
+    "ability": "thick-fat",
+    "nature": "adamant",
+    "item": "choice band",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "88",
+      "special-defense": "168",
+      "speed": "0"
+    }
+  },
+  "suicune": {
+    "name": "suicune",
+    "moves": [
+      "roar",
+      "scald",
+      "rest",
+      "sleep-talk"
+    ],
+    "ability": "pressure",
+    "nature": "bold",
+    "item": "leftovers",
+    "evs": {
+      "hp": "252",
+      "attack": "0",
+      "special-attack": "0",
+      "defense": "252",
+      "special-defense": "4",
+      "speed": "0"
+    }
+  },
+  "swampert": {
+    "name": "swampert",
+    "moves": [
+      "stealth-rock",
+      "waterfall",
+      "earthquake",
+      "ice-punch"
+    ],
+    "ability": "damp",
+    "nature": "adamant",
+    "item": "nothing",
+    "evs": {
+      "hp": "212",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "44"
+    }
+  },
 	"pokemon": [ "blaziken", "charizard", "entei", "magnezone", "manectric", "raikou", "snorlax", "suicune", "swampert", "talonflame", "tentacruel", "thundurus", "umbreon", "whimsicott", "zapdos" ]
 }
