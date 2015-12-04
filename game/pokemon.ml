@@ -403,7 +403,8 @@ let getSecondaryEffect str = match str with
     | "spike-cannon" | "barrage" | "fury-swipes" | "bone-rush"
     | "bullet-seed" -> [RandMultHit]
   | "fire-punch" | "ember" | "flamethrower" | "fire-blast" | "flame-wheel"
-    | "will-o-wisp" | "blue-flare" | "lava-plume" | "heat-wave" -> [BurnChance]
+    | "will-o-wisp" | "blue-flare" | "lava-plume" | "heat-wave"
+    | "scald" -> [BurnChance]
   | "ice-punch" | "ice-beam" | "blizzard" | "powder-snow" -> [FreezeChance]
   | "thunder-punch" | "body-slam" | "stun-spore" | "thunder-shock"
     | "thunderbolt" | "thunder-wave" | "thunder" | "lick" | "glare"
@@ -485,7 +486,7 @@ let getSecondaryEffect str = match str with
   | "substitute" -> [SubstituteMake]
   | "triple-kick" -> [MultHit 3]
   | "flail" | "reversal" -> [Flail]
-  | "protect" | "detect"-> [Protect]
+  | "protect" | "detect"| "quick-guard" | "wide-guard" | "crafty-shield"-> [Protect]
   | "belly-drum" -> [BellyDrum]
   | "spikes" -> [Spikes]
   | "swagger" -> [StageAttack [(Attack, -2)]; ConfuseOpp]
@@ -525,6 +526,9 @@ let getSecondaryEffect str = match str with
   | "hone-claws" -> [StageBoost [(Attack,1);(Accuracy,1)]]
   | "ominous-wind" | "silver-wind" | "ancient-power" -> [ChanceStageBoost]
   | "volt-switch" | "u-turn" -> [SelfSwitch]
+  | "foul-play" -> [FoulPlay]
+  | "quiver-dance" -> [StageBoost [(SpecialAttack, 1); (SpecialDefense,1); (Speed, 1)]]
+  | "shell-smash" -> [StageBoost [(SpecialAttack, 2); (Attack,2); (Speed, 2); (Defense, -1); (SpecialDefense, -1)]]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -537,6 +541,7 @@ let getMoveFromString str =
   let power = match str with
             | "triple-kick" -> 20
             | "return" | "frustration" -> 102
+            | "heavy-slam" | "heat-crash" -> 120
             | _ ->  (try int_of_string powerstr with |_ -> 0) in
   let dmg_class = move |> member "dmg_class" |> to_string |> getDmgClass in
   let target = move |> member "target" |> to_string |> getTarget in
@@ -646,19 +651,19 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Psychic]; move1= getMoveFromString "u-turn"; move2 =
-  getMoveFromString "hypnosis"; move3 = getMoveFromString "pound";
-  move4 = getMoveFromString "volt-switch"; hp = 98; attack = 85; special_attack = 165; defense = 65;
+  {name="gardevoir-mega"; element=[Psychic]; move1= getMoveFromString "shell-smash"; move2 =
+  getMoveFromString "heavy-slam"; move3 = getMoveFromString "heat-crash";
+  move4 = getMoveFromString "volt-switch"; hp = 98; attack = 0; special_attack = 165; defense = 65;
   speed = 120; special_defense = 135; ability="pixilate"; evs; nature; item}
 
 let getTestOpp () =
-  let evs = {attack = 0; defense =  255; special_attack= 0; special_defense= 255;
+  let evs = {attack = 255; defense =  0; special_attack= 0; special_defense= 255;
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
   {name="gallade-mega"; element=[Grass]; move1= getMoveFromString "volt-switch"; move2 =
   getMoveFromString "earthquake"; move3 = getMoveFromString "slack-off";
-  move4 = getMoveFromString "toxic"; hp = 68; attack = 85; special_attack = 165; defense = 65;
+  move4 = getMoveFromString "toxic"; hp = 68; attack = 255; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
 
 let getPokeToolTip t =

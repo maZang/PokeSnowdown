@@ -819,6 +819,11 @@ let move_handler atk def wt move =
                              def.current.curr_item <- Nothing; secondary_effects t)
     (* Volt Switch and Bug Buzz Dealt with Elsewhere *)
     | SelfSwitch::t -> secondary_effects t
+    (* For the move Foul Play *)
+    | FoulPlay::t -> (let moveDescript', fdamage' = damageCalculation def def weather move in
+                      let damage' = int_of_float fdamage' in
+                      def.current.curr_hp <- max 0 (def.current.curr_hp - damage' + !damage);
+                      secondary_effects t)
     | [] -> ()
     | _ -> failwith "Faulty Game Logic: Debug 783"
     in
