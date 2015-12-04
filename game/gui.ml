@@ -897,6 +897,8 @@ let rec getMoveString a =
   | Recharging s -> getMoveString s
   | FalseSwipeA s -> getMoveString s
   | ConfuseUserA s -> getMoveString s
+  | SleepAttack s -> getMoveString s
+  | SleepAttackFail _ -> `DontMove
   | KnockedOff (_, s) -> getMoveString s
 
 let rec getMoveStringStatus a =
@@ -951,6 +953,9 @@ let rec getMoveStringStatus a =
   | Taunted _ -> `DontMove
   | StealthRockS _ -> `RockStatus
   | StickyWebS _-> `DontMissStatus
+  | SleepTalkA (_, a) -> getMoveString a
+  | SleepTalkS (_, s) -> getMoveStringStatus s
+  | SleepAttackS s -> getMoveStringStatus s
   | SwitchOut s -> `DontMove
 
 let rec getMoveStringEnd a =
@@ -1003,6 +1008,8 @@ let rec getAttackString starter a =
   | ChargingMove (s, n) -> starter ^ " is charging up." ^ s
   | ConfuseUserA s -> getAttackString starter s ^ starter ^ " has confused itself."
   | KnockedOff (item, s) -> getAttackString starter s ^ starter ^ " has knocked off the opponent's " ^ (Pokemon.string_of_item item)
+  | SleepAttack s -> starter ^ " is fast asleep." ^ getAttackString starter s
+  | SleepAttackFail s -> starter ^ " used " ^ s ^ " but it wasn't asleep."
   | SwitchOutA s -> (match !secondaryEffect with
                     | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
                     | `P2 -> current_command := (Some (Poke "random"), Some NoMove));
@@ -1023,6 +1030,7 @@ let rec getStatusString starter s =
   | BurnStatus s -> getStatusString starter s ^ "The opponent has been burned."
   | BadPoisonStatus s -> getStatusString starter s ^ "The opponent has been badly poisoned."
   | ParaStatus s -> getStatusString starter s ^ "The opponent has been paralyzed."
+  | SleepAttackS s -> starter ^ " was asleep." ^ getStatusString starter s
   | ThawS s -> " unfroze." ^ getStatusString starter s
   | NoFreezeS s -> starter ^ " cannot freeze. " ^ getStatusString starter s
   | NoBurnS s -> starter ^ " cannot burn. " ^ getStatusString starter s
@@ -1067,6 +1075,8 @@ let rec getStatusString starter s =
   | Taunted s -> starter ^ " couldn't use " ^ s ^ " because it was taunted."
   | StealthRockS s -> getStatusString starter s ^ "Rocks were put on the opponent's side."
   | StickyWebS s -> getStatusString starter s ^ starter ^ " has placed a sticky web on the opponent's side."
+  | SleepTalkA (s1, s2) -> getStatusString starter s1 ^ getAttackString starter s2
+  | SleepTalkS (s1, s2) -> getStatusString starter s1 ^ getStatusString starter s2
   | SwitchOut s -> (match !secondaryEffect with
                     | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
                     | `P2 -> current_command := (Some (Poke "random"), Some NoMove));

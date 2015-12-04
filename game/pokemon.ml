@@ -405,7 +405,7 @@ let getSecondaryEffect str = match str with
     | "bullet-seed" | "tail-slap"-> [RandMultHit]
   | "fire-punch" | "ember" | "flamethrower" | "fire-blast" | "flame-wheel"
     | "will-o-wisp" | "blue-flare" | "lava-plume" | "heat-wave"
-    | "scald" | "searing-shot"-> [BurnChance]
+    | "scald" | "searing-shot" | "sacred-fire" -> [BurnChance]
   | "ice-punch" | "ice-beam" | "blizzard" | "powder-snow" -> [FreezeChance]
   | "thunder-punch" | "body-slam" | "stun-spore" | "thunder-shock"
     | "thunderbolt" | "thunder-wave" | "thunder" | "lick" | "glare"
@@ -543,6 +543,7 @@ let getSecondaryEffect str = match str with
   | "toxic-spikes" -> [TSpikes]
   | "sticky-web" -> [StickyWebMake]
   | "rototiller" -> [Rototiller]
+  | "sleep-talk" | "snore" -> [SleepEffect; FlinchMove]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -665,9 +666,9 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Grass;Flying]; move1= getMoveFromString "rototiller"; move2 =
-  getMoveFromString "heavy-slam"; move3 = getMoveFromString "toxic-spikes";
-  move4 = getMoveFromString "volt-switch"; hp = 98; attack = 0; special_attack = 165; defense = 65;
+  {name="gardevoir-mega"; element=[Grass;Flying]; move1= getMoveFromString "sleep-talk"; move2 =
+  getMoveFromString "toxic-spikes"; move3 = getMoveFromString "snore";
+  move4 = getMoveFromString "toxic-spikes"; hp = 98; attack = 0; special_attack = 165; defense = 65;
   speed = 120; special_defense = 135; ability="pixilate"; evs; nature; item}
 
 let getTestOpp () =
@@ -675,7 +676,7 @@ let getTestOpp () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gallade-mega"; element=[Grass;Flying]; move1= getMoveFromString "sticky-web"; move2 =
+  {name="gallade-mega"; element=[Grass;Flying]; move1= getMoveFromString "hypnosis"; move2 =
   getMoveFromString "head-smash"; move3 = getMoveFromString "crush-grip";
   move4 = getMoveFromString "toxic"; hp = 68; attack = 255; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}

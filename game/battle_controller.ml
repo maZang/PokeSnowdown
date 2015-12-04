@@ -293,7 +293,7 @@ let rec filter_substitute n lst =
 
 (* Helper function to see if pokemon can move; also called to break a Pokemon
   out of a status condition *)
-let hitMoveDueToStatus atk moveDescript =
+let hitMoveDueToStatus atk moveDescript move =
   let rec helperVolaStatus lst moveDescript' =
     match lst with
       | [] -> (true, moveDescript')
@@ -351,7 +351,9 @@ let hitMoveDueToStatus atk moveDescript =
   | Sleep n -> if n <= 0 then
                 (atk.current.curr_status <- (NoNon, snd atk.current.curr_status);
                 helperVolaStatus vola (`Wake moveDescript))
-               else
+               else if List.mem SleepEffect move.secondary then
+                helperVolaStatus vola (`AsleepEffect moveDescript)
+              else
                 (false ,`Asleep)
   |_ -> helperVolaStatus vola (moveDescript)
 
@@ -762,7 +764,7 @@ let move_handler atk def wt move =
                           newmove := Recharging !newmove; secondary_effects t)
     (* Moves based upon weight are instead based on current health *)
     | WeightDamage::t ->
-      (let base_power = max 20 (def.current.curr_hp * 120 / def.current.bhp) in
+      (let base_power = max 20 ((def.current.curr_hp + !damage) * 120 / def.current.bhp) in
       move.power <- base_power;
       let moveDescript', fdamage' = damageCalculation atk def weather move in
       let damage' = int_of_float fdamage' in
@@ -843,16 +845,26 @@ let move_handler atk def wt move =
                       let damage' = int_of_float fdamage' in
                       def.current.curr_hp <- max 0 (def.current.curr_hp - damage' + !damage);
                       secondary_effects t)
+    (* for the move snore *)
+    | SleepEffect::t -> let findSleep x = match x with
+                        | (Sleep _, _) -> true
+                        | _ -> false in
+                      if findSleep (atk.current.curr_status) then
+                        secondary_effects t
+                      else
+                        (def.current.curr_hp <- def.current.curr_hp + !damage;
+                          newmove := SleepAttackFail move.name)
     | [] -> ()
     | _ -> failwith "Faulty Game Logic: Debug 783"
     in
-  let hit, reason = hitMoveDueToStatus atk (`NoAdd !newmove) in
+  let hit, reason = hitMoveDueToStatus atk (`NoAdd !newmove) move in
   let rec decompose reason =
     match reason with
     | `NoFreeze s -> NoFreeze (decompose s)
     | `NoBurn s -> NoBurn (decompose s)
     | `NoPara s -> NoPara (decompose s)
     | `Asleep -> Asleep
+    | `AsleepEffect s -> SleepAttack (decompose s)
     | `Wake s -> Wake (decompose s)
     | `Para -> Para
     | `Thaw s -> Thaw (decompose s)
@@ -1294,16 +1306,30 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
                               (t2 := StickyWeb::!t2;
                               newmove := StickyWebS !newmove;
                               secondary_effects t)
+      (* for the move sleep talk *)
+    | SleepEffect::t -> let findSleep x = match x with
+                        | (Sleep _, _) -> true
+                        | _ -> false in
+                      if findSleep (atk.current.curr_status) then
+                        (let sleepmove = List.nth [atk.current.pokeinfo.move1; atk.current.pokeinfo.move2; atk.current.pokeinfo.move3; atk.current.pokeinfo.move4] (Random.int 4) in
+                          let prev_status = atk.current.curr_status in
+                         atk.current.curr_status <- (NoNon, snd atk.current.curr_status);
+                         (match sleepmove.dmg_class with
+                          | Status -> newmove := SleepTalkS (!newmove, status_move_handler atk def (wt, t1, t2) sleepmove)
+                          | _ -> newmove := SleepTalkA (!newmove, move_handler atk def (wt, t1, t2) sleepmove)); atk.current.curr_status <- prev_status)
+                      else
+                        (newmove := Fail "Sleep Talk")
     | [] -> ()
     | _ -> failwith "Faulty Game Logic: Debug 1188"
   in
-  let hit, reason = hitMoveDueToStatus atk (`NoAdd !newmove) in
+  let hit, reason = hitMoveDueToStatus atk (`NoAdd !newmove) move in
   let rec decompose reason =
     match reason with
     | `NoFreeze s -> NoFreezeS (decompose s)
     | `NoBurn s -> NoBurnS (decompose s)
     | `NoPara s -> NoParaS (decompose s)
     | `Asleep -> AsleepS
+    | `AsleepEffect s -> SleepAttackS (decompose s)
     | `Wake s -> WakeS (decompose s)
     | `Para -> ParaS
     | `Thaw s -> ThawS (decompose s)
