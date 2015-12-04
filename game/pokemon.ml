@@ -403,7 +403,7 @@ let getSecondaryEffect str = match str with
     | "leaf-blade" | "night-slash" | "psycho-cut" | "shadow-claw" | "spacial-rend" -> [IncCrit 1]
   | "double-slap" | "comet-punch" | "fury-attack" | "pin-missile"
     | "spike-cannon" | "barrage" | "fury-swipes" | "bone-rush"
-    | "bullet-seed" | "tail-slap"-> [RandMultHit]
+    | "bullet-seed" | "tail-slap" | "icicle-spear" | "rock-blast" -> [RandMultHit]
   | "fire-punch" | "ember" | "flamethrower" | "fire-blast" | "flame-wheel"
     | "will-o-wisp" | "blue-flare" | "lava-plume" | "heat-wave"
     | "scald" | "searing-shot" | "sacred-fire" -> [BurnChance]
@@ -423,7 +423,7 @@ let getSecondaryEffect str = match str with
   | "swords-dance" -> [StageBoost [(Attack, 2)]]
   | "charm" | "feather-dance" -> [StageAttack [(Attack, 2)]]
   | "meditate" | "sharpen" | "metal-claw" | "howl" | "meteor-mash" | "power-up-punch" -> [StageBoost [(Attack, 1)]]
-  | "whirlwind" | "roar" | "dragon-tail" -> [ForceSwitch]
+  | "whirlwind" | "roar" | "dragon-tail"| "circle-throw" -> [ForceSwitch]
   | "double-kick" | "gear-grind" | "bonemerang" | "double-hit" | "dual-chop" -> [MultHit 2]
   | "sand-attack" | "smokescreen" | "kinesis" | "flash"
     | "mud-slap" | "octazooka" | "leaf-tornado" | "mud-bomb"
@@ -450,7 +450,8 @@ let getSecondaryEffect str = match str with
   | "acid" | "psychic" | "shadow-ball" | "flash-cannon" | "bug-buzz"
     | "energy-ball" | "focus-blast" | "earth-power" -> [StageAttack [(SpecialDefense, 1)]]
   | "mist-ball" | "moonblast" | "snarl" -> [StageAttack [(SpecialAttack, 1)]]
-  | "bubble-beam" | "bubble" | "icy-wind" | "mud-shot" | "electroweb" | "constrict" -> [StageAttack [(Speed, 1)]]
+  | "bubble-beam" | "bubble" | "icy-wind" | "mud-shot" | "electroweb" | "constrict"
+    | "rock-tomb" -> [StageAttack [(Speed, 1)]]
   | "hyper-beam"| "blast-burn" | "frenzy-plant" | "hydro-cannon"
       | "roar-of-time" | "giga-impact" | "rock-wrecker"  -> [RechargeMove]
   | "swift" | "feint-attack" | "vital-throw" | "aerial-ace" | "magnet-bomb"
@@ -467,6 +468,7 @@ let getSecondaryEffect str = match str with
   | "solar-beam" -> [ChargeInSunlight "Need sunlight to charge faster!"]
   | "string-shot" | "cotton-spore" | "scary-face" -> [StageAttack [(Speed, 2)]]
   | "agility" | "rock-polish" -> [StageBoost [(Speed, 2)]]
+  | "hammer-arm" -> [StageBoost [(Speed, -1)]]
   | "screech" | "metal-sound" -> [StageAttack [(Defense, 2)]]
   | "double-team" -> [StageBoost [(Evasion, 1)]]
   | "minimize" -> [StageBoost [(Evasion, 2)]]
@@ -550,6 +552,9 @@ let getSecondaryEffect str = match str with
   | "fire-spin" | "whirlpool" | "clamp" | "sand-tomb" | "wrap" | "bind"
     | "infestation" | "magma-storm" -> [CausePartialTrapping]
   | "hex" | "brine" | "venoshock"-> [DoublePower]
+  | "stored-power" -> [StoredPower]
+  | "shift-gear" -> [StageBoost [(Speed, 2); (Attack, 1)]]
+  | "cosmic-power" -> [StageBoost [(Defense, 1); (SpecialDefense, 1)]]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -672,8 +677,8 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Grass;Flying]; move1= getMoveFromString "hex"; move2 =
-  getMoveFromString "venoshock"; move3 = getMoveFromString "brine";
+  {name="gardevoir-mega"; element=[Grass;Flying]; move1= getMoveFromString "hammer-arm"; move2 =
+  getMoveFromString "venoshock"; move3 = getMoveFromString "icicle-spear";
   move4 = getMoveFromString "poison-powder"; hp = 98; attack = 0; special_attack = 165; defense = 65;
   speed = 120; special_defense = 135; ability="pixilate"; evs; nature; item}
 
@@ -682,7 +687,7 @@ let getTestOpp () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gallade-mega"; element=[Grass;Flying]; move1= getMoveFromString "poison-gas"; move2 =
+  {name="gallade-mega"; element=[Grass;Flying]; move1= getMoveFromString "splash"; move2 =
   getMoveFromString "sand-tomb"; move3 = getMoveFromString "crush-grip";
   move4 = getMoveFromString "toxic"; hp = 68; attack = 255; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}

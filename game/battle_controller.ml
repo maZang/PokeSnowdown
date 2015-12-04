@@ -803,6 +803,16 @@ let move_handler atk def wt move =
         let damage' = int_of_float fdamage' in
         def.current.curr_hp <- max 0 (def.current.curr_hp - damage' + !damage));
         secondary_effects t
+    (* Stored Power *)
+    | StoredPower::t ->
+      (let base_power =  (fst atk.stat_enhance.attack + fst atk.stat_enhance.defense +
+      fst atk.stat_enhance.special_attack + fst atk.stat_enhance.special_defense +
+    fst atk.stat_enhance.speed + fst atk.stat_enhance.accuracy + fst atk.stat_enhance.evasion) * 20 + 20 in
+        move.power <- base_power;
+        let moveDescript', fdamage' = damageCalculation atk def weather move in
+        let damage' = int_of_float fdamage' in
+        def.current.curr_hp <- max 0 (def.current.curr_hp - damage' + !damage));
+        secondary_effects t
     (* Moves that drain health *)
     | DrainMove::t ->
       let heal = !damage / 2 in
