@@ -1,3 +1,303 @@
 {
+	"breloom": {
+    "name": "breloom",
+    "moves": [
+      "spore",
+      "bullet-seed",
+      "mach-punch",
+      "rock-tomb"
+    ],
+    "ability": "technician",
+    "nature": "adamant",
+    "item": "life orb",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "celebi": {
+    "name": "celebi",
+    "moves": [
+      "recover",
+      "baton-pass",
+      "giga-drain",
+      "swords-dance"
+    ],
+    "ability": "natural-cure",
+    "nature": "impish",
+    "item": "leftovers",
+    "evs": {
+      "hp": "252",
+      "attack": "0",
+      "special-attack": "0",
+      "defense": "148",
+      "special-defense": "0",
+      "speed": "108"
+    }
+  },
+  "ferrothorn": {
+    "name": "ferrothorn",
+    "moves": [
+      "stealth-rock",
+      "leech-seed",
+      "power-whip",
+      "protect"
+    ],
+    "ability": "iron-barbs",
+    "nature": "relaxed",
+    "item": "leftovers",
+    "evs": {
+      "hp": "252",
+      "attack": "0",
+      "special-attack": "0",
+      "defense": "88",
+      "special-defense": "168",
+      "speed": "0"
+    }
+  },
+  "mandibuzz": {
+    "name": "mandibuzz",
+    "moves": [
+      "roost",
+      "knock-off",
+      "taunt",
+      "defog"
+    ],
+    "ability": "overcoat",
+    "nature": "careful",
+    "item": "leftovers",
+    "evs": {
+      "hp": "240",
+      "attack": "0",
+      "special-attack": "0",
+      "defense": "0",
+      "special-defense": "216",
+      "speed": "52"
+    }
+  },
+  "milotic": {
+    "name": "milotic",
+    "moves": [
+      "scald",
+      "recover",
+      "haze",
+      "ice-beam"
+    ],
+    "ability": "marvel-scale",
+    "nature": "bold",
+    "item": "leftovers",
+    "evs": {
+      "hp": "248",
+      "attack": "0",
+      "special-attack": "0",
+      "defense": "252",
+      "special-defense": "8",
+      "speed": "0"
+    }
+  },
+  "pinsir": {
+    "name": "pinsir",
+    "moves": [
+      "swords-dance",
+      "return",
+      "close-combat",
+      "quick-attack"
+    ],
+    "ability": "hyper-cutter",
+    "nature": "jolly",
+    "item": "nothing",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "reuniclus": {
+    "name": "reuniclus",
+    "moves": [
+      "calm-mind",
+      "psyshock",
+      "focus-blast",
+      "recover"
+    ],
+    "ability": "magic-guard",
+    "nature": "bold",
+    "item": "leftovers",
+    "evs": {
+      "hp": "252",
+      "attack": "0",
+      "special-attack": "4",
+      "defense": "252",
+      "special-defense": "0",
+      "speed": "0"
+    }
+  },
+  "roserade": {
+    "name": "roserade",
+    "moves": [
+      "spikes",
+      "sludge-bomb",
+      "leaf-storm",
+      "extrasensory"
+    ],
+    "ability": "technician",
+    "nature": "timid",
+    "item": "life orb",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "4",
+      "speed": "252"
+    }
+  },
+  "scizor": {
+    "name": "scizor",
+    "moves": [
+      "bullet-punch",
+      "u-turn",
+      "superpower",
+      "pursuit"
+    ],
+    "ability": "technician",
+    "nature": "adamant",
+    "item": "choice band",
+    "evs": {
+      "hp": "248",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "8"
+    }
+  },
+  "scolipede": {
+    "name": "scolipede",
+    "moves": [
+      "pin-missile",
+      "toxic-spikes",
+      "endeavor",
+      "protect"
+    ],
+    "ability": "speed-boost",
+    "nature": "jolly",
+    "item": "nothing",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "serperior": {
+    "name": "serperior",
+    "moves": [
+      "leaf-storm",
+      "dragon-pulse",
+      "hidden-power",
+      "substitute"
+    ],
+    "ability": "contrary",
+    "nature": "timid",
+    "item": "life orb",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "4",
+      "speed": "252"
+    }
+  },
+  "sharpedo": {
+    "name": "sharpedo",
+    "moves": [
+      "protect",
+      "crunch",
+      "waterfall",
+      "ice-beam"
+    ],
+    "ability": "speed-boost",
+    "nature": "naughty",
+    "item": "life orb",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "12",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "244"
+    }
+  },
+  "shaymin": {
+    "name": "shaymin",
+    "moves": [
+      "seed-flare",
+      "dazzling-gleam",
+      "air-slash",
+      "energy-ball"
+    ],
+    "ability": "natural-cure",
+    "nature": "timid",
+    "item": "choice specs",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "4",
+      "speed": "252"
+    }
+  },
+  "slurpuff": {
+    "name": "slurpuff",
+    "moves": [
+      "belly-drum",
+      "play-rough",
+      "return",
+      "drain-punch"
+    ],
+    "ability": "unburden",
+    "nature": "jolly",
+    "item": "nothing",
+    "evs": {
+      "hp": "28",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "228"
+    }
+  },
+  "volcarona": {
+    "name": "volcarona",
+    "moves": [
+      "quiver-dance",
+      "fire-blast",
+      "giga-drain",
+      "bug-buzz"
+    ],
+    "ability": "flame-body",
+    "nature": "timid",
+    "item": "nothing",
+    "evs": {
+      "hp": "72",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "184"
+    }
+  },
 	"pokemon": [ "breloom", "celebi", "ferrothorn", "mandibuzz", "milotic", "pinsir", "reuniclus", "roserade", "scizor", "scolipede", "serperior", "sharpedo", "shaymin", "slurpuff", "volcarona" ]
 }
