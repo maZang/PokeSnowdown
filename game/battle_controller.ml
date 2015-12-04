@@ -61,7 +61,7 @@ let getBattlePoke poke =
   (* Returns the new battle pokemon as a record *)
   {pokeinfo = poke; curr_hp = bhp; curr_status = (NoNon, []);
   curr_item = poke.item; bhp; battack; bdefense; bspecial_attack;
-  bspecial_defense; bspeed}
+  bspecial_defense; bspeed; curr_abil = poke.ability}
 
 (* Used for some secondary conditions *)
 let prevmove1 = ref ""
@@ -175,6 +175,8 @@ let damageCalculation t1 t2 (w,ter1, ter2) move =
     | Status -> failwith "Faulty Game Logic: Debug 44" in
   let attack = match move.dmg_class with
     | Physical ->
+      (if (t1.current.pokeinfo.ability = "huge-power" || t1.current.pokeinfo.ability = "pure-power") then
+        2. else 1.0) *.
       float_of_int t1.current.battack *.
       getStageAD (fst t1.stat_enhance.attack) *.
       (snd t1.stat_enhance.attack)
@@ -325,7 +327,8 @@ let hitMoveDueToStatus atk moveDescript move =
       | (ForcedMoveNoSwitch _)::t -> helperVolaStatus t moveDescript'
       | (ForcedMove _)::t -> helperVolaStatus t moveDescript'
       | (Taunt _)::t -> helperVolaStatus t moveDescript'
-      | _ -> failwith "unimplemented" in
+      | (PartialTrapping _)::t -> helperVolaStatus t moveDescript'
+      | (RechargingStatus)::t -> helperVolaStatus t moveDescript' in
   let nvola, vola = atk.current.curr_status in
   match nvola with
   | Freeze -> if List.mem Ice atk.current.pokeinfo.element then (
@@ -794,6 +797,24 @@ let move_handler atk def wt move =
         let damage' = int_of_float fdamage' in
         def.current.curr_hp <- max 0 (def.current.curr_hp - damage' + !damage));
         secondary_effects t
+    (* Beat Up *)
+    | BeatUp::t ->
+      (let base_power =  (List.length atk.alive  + 1 ) * 20 in
+        move.power <- base_power;
+        let moveDescript', fdamage' = damageCalculation atk def weather move in
+        let damage' = int_of_float fdamage' in
+        def.current.curr_hp <- max 0 (def.current.curr_hp - damage' + !damage));
+        secondary_effects t
+    (* Stored Power *)
+    | StoredPower::t ->
+      (let base_power =  (fst atk.stat_enhance.attack + fst atk.stat_enhance.defense +
+      fst atk.stat_enhance.special_attack + fst atk.stat_enhance.special_defense +
+    fst atk.stat_enhance.speed + fst atk.stat_enhance.accuracy + fst atk.stat_enhance.evasion) * 20 + 20 in
+        move.power <- base_power;
+        let moveDescript', fdamage' = damageCalculation atk def weather move in
+        let damage' = int_of_float fdamage' in
+        def.current.curr_hp <- max 0 (def.current.curr_hp - damage' + !damage));
+        secondary_effects t
     (* Moves that drain health *)
     | DrainMove::t ->
       let heal = !damage / 2 in
@@ -854,6 +875,25 @@ let move_handler atk def wt move =
                       else
                         (def.current.curr_hp <- def.current.curr_hp + !damage;
                           newmove := SleepAttackFail move.name)
+    (* for the trapping moves *)
+    | CausePartialTrapping::t -> let rec findPartialTrapping = function
+                                  | (PartialTrapping (s, _))::t -> if s = move.name then true else findPartialTrapping t
+                                  | h::t -> findPartialTrapping t
+                                  | [] -> false in
+                                if findPartialTrapping (snd def.current.curr_status) then
+                                  ()
+                                else
+                                  (let turns = Random.int 3 + 2 in
+                                  def.current.curr_status <- (fst def.current.curr_status, (PartialTrapping (move.name, turns))::(snd def.current.curr_status));
+                                  newmove := TrappingMove !newmove)
+      (* moves that double in power *)
+    | DoublePower::t -> (match move.name with
+                | "brine" -> if def.current.curr_hp * 2 <= def.current.bhp then def.current.curr_hp <- max 0 (def.current.curr_hp - !damage) else ()
+                | "hex" ->  if fst atk.current.curr_status = NoNon then () else def.current.curr_hp <- max 0 (def.current.curr_hp - !damage)
+                | "venoshock" -> (match (fst atk.current.curr_status) with
+                                  | Poisoned | Toxic _ -> def.current.curr_hp <- max 0 (def.current.curr_hp - !damage)
+                                  | _ -> ())
+                | _ -> ())
     | [] -> ()
     | _ -> failwith "Faulty Game Logic: Debug 783"
     in
@@ -1086,6 +1126,8 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
                   atk.current.curr_hp <-
                       min atk.current.bhp (atk.current.curr_hp + heal);
                   newmove := HealHealth !newmove; secondary_effects t
+    | UserFaint::t -> atk.current.curr_hp <- 0; newmove := UserFaintS !newmove;
+                      secondary_effects t
     (* moves that make light screen *)
     | LightScreenMake::t -> let rec findLightScreen ter = match ter with
                             | (LightScreen _)::t -> true
@@ -1366,6 +1408,7 @@ let rec filterNonvola lst = match lst with
   | (ForcedMove (n, s))::t -> if n = 0 then filterNonvola t else (ForcedMove ((n-1), s))::(filterNonvola t)
   | (Taunt n)::t -> if n = 0 then filterNonvola t else (Taunt (n-1))::(filterNonvola t)
   | (ForcedMoveNoSwitch (n, s))::t -> if n <= 0 then filterNonvola t else (ForcedMoveNoSwitch (n-1,s))::(filterNonvola t)
+  | (PartialTrapping (s, n))::t -> if n <= 0 then filterNonvola t else (PartialTrapping (s, (n-1)))::(filterNonvola t)
 
 let remove_some_status bp =
   let nonvola, vola = bp.curr_status in
@@ -1451,6 +1494,9 @@ let handle_preprocessing t1 t2 w m1 m2 =
           fix_vstatus t1 t2 (LeechDmg descript1) (LeechHeal descript2) t)
         else
           fix_vstatus t1 t2 descript1 descript2 t
+  | (PartialTrapping (s, n))::t ->
+        (t1.current.curr_hp <- t1.current.curr_hp - t1.current.bhp / 8;
+        fix_vstatus t1 t2 (TrapDamage (s, descript1)) (descript2) t)
   | (Taunt 0)::t -> fix_vstatus t1 t2 (TauntFade descript1) descript2 t
   | h::t -> fix_vstatus t1 t2 descript1 descript2 t in
   let fix_nstatus nstatus t =
@@ -1655,7 +1701,7 @@ let getEntryHazardDmg t ter1=
   let damage = int_of_float (helper 0. !ter1 *. float_of_int t.current.bhp) in
   t.current.curr_hp <- max 0 (t.current.curr_hp - damage)
 
-let switchPokeHandler faint nextpoke t ter1 =
+let switchPokeHandler faint nextpoke t ter1 t2 =
   let prevPoke = t.current in
   let switchPoke, restPoke = findBattlePoke t.alive nextpoke in
   t.stat_enhance <- switchOutStatEnhancements t;
@@ -1665,6 +1711,9 @@ let switchPokeHandler faint nextpoke t ter1 =
     (t.dead <- prevPoke::t.dead; t.alive <- restPoke)
   else
     t.alive <- prevPoke::restPoke);
+  (match t.current.pokeinfo.ability with
+    | "intimidate" -> t2.stat_enhance.attack <- (fst t2.stat_enhance.attack - 1, snd t2.stat_enhance.attack)
+    | _ -> ());
   getEntryHazardDmg t ter1
 
 (* test for forced moves *)
@@ -1683,8 +1732,8 @@ let handle_action state action1 action2 =
   | Poke p' -> let p = if p' = "random" then getRandomPoke t1 else p' in
       (match action2 with
       | Poke p2' -> let p2 = if p2' = "random" then getRandomPoke t2 else p2' in
-                    switchPokeHandler false p t1 w.terrain.side1;
-                    switchPokeHandler false p2 t2 w.terrain.side2;
+                    switchPokeHandler false p t1 w.terrain.side1 t2;
+                    switchPokeHandler false p2 t2 w.terrain.side2 t1;
                     if (t1.current.curr_hp = 0) then
                           if (t2.current.curr_hp = 0) then
                             (m1 := Pl1 SFaint; m2 := Pl2 Faint)
@@ -1695,7 +1744,7 @@ let handle_action state action1 action2 =
                             (m1 := Pl2 SFaint; m2 := Pl1 FaintNext)
                           else
                             (m1 := Pl1 (SPoke p); m2 := Pl2 (SPoke p2))
-      | UseAttack a2' -> switchPokeHandler false p t1 w.terrain.side1;
+      | UseAttack a2' -> switchPokeHandler false p t1 w.terrain.side1 t2;
                        if (t1.current.curr_hp = 0) then
                         (m1 := Pl1 SFaint; m2 := Pl2 FaintNext)
                       else
@@ -1712,7 +1761,7 @@ let handle_action state action1 action2 =
                           (m1 := Pl1 (SPoke p); m2 := Pl2 (ForceChoose newmove))
                         else
                           (m1 := Pl1 (SPoke p); m2 := Pl2 (AttackMove newmove))))
-      | NoMove ->  switchPokeHandler false p t1 w.terrain.side1;
+      | NoMove ->  switchPokeHandler false p t1 w.terrain.side1 t2;
                     if (t1.current.curr_hp = 0) then
                       (m1 := Pl1 Faint; m2 := Pl2 FaintNext)
                     else
@@ -1722,7 +1771,7 @@ let handle_action state action1 action2 =
                      let a1 = if force1 then force1s else a1' in
       (match action2 with
       | Poke p' -> (let p  = if p' = "random" then getRandomPoke t2 else p' in
-                   switchPokeHandler false p t2 w.terrain.side2;
+                   switchPokeHandler false p t2 w.terrain.side2 t1;
                     (if (t2.current.curr_hp = 0) then
                       (m1 := Pl2 SFaint; m2 := Pl1 FaintNext)
                     else
@@ -1756,12 +1805,12 @@ let handle_action state action1 action2 =
       | _ -> failwith "Faulty Game Logic: Debug 449")
   | NoMove -> (match action2 with
               | FaintPoke p ->
-                  switchPokeHandler true p t2 w.terrain.side2;
+                  switchPokeHandler true p t2 w.terrain.side2 t1;
                   m1 := Pl2 (SPoke p);
                   m2 := Pl1 Next
               | Poke p' -> let p = if p' = "random" then getRandomPoke t2
                           else p' in
-                          switchPokeHandler false p t2 w.terrain.side2;
+                          switchPokeHandler false p t2 w.terrain.side2 t1;
                           if (t2.current.curr_hp = 0) then
                             (m1 := Pl2 SFaint; m2 := Pl1 FaintNext)
                           else
@@ -1785,8 +1834,8 @@ let handle_action state action1 action2 =
               )
   | FaintPoke p -> (match action2 with
                     | FaintPoke p' ->
-                        (switchPokeHandler true p t1 w.terrain.side1;
-                        switchPokeHandler true p' t2 w.terrain.side2;
+                        (switchPokeHandler true p t1 w.terrain.side1 t2;
+                        switchPokeHandler true p' t2 w.terrain.side2 t1;
                         if (t1.current.curr_hp = 0) then
                           if (t2.current.curr_hp = 0) then
                             (m1 := Pl1 SFaint; m2 := Pl2 Faint)
@@ -1798,7 +1847,7 @@ let handle_action state action1 action2 =
                           else
                             m1 := Pl1 (SPoke p); m2 := Pl2 (SPoke p'))
                     | _ ->
-                        (switchPokeHandler true p t1 w.terrain.side1;
+                        (switchPokeHandler true p t1 w.terrain.side1 t2;
                         if (t1.current.curr_hp = 0) then
                           (m1 := Pl1 SFaint; m2 := Pl2 FaintNext)
                         else

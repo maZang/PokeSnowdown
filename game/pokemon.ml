@@ -184,6 +184,7 @@ let string_of_vola_status elm =
   | ForcedMove (n, s) -> "Forced to use: " ^ s
   | ForcedMoveNoSwitch (n, s) -> "Locked into: " ^  s
   | Taunt n -> "Taunted"
+  | PartialTrapping (s,n) -> "Trapped by "^  s ^ " for " ^ string_of_int n  ^ " turns."
 
 let string_of_poke_status (non, vola) =
   List.fold_left (fun acc s -> acc ^ ", " ^ string_of_vola_status s) (string_of_status non) vola
@@ -402,7 +403,7 @@ let getSecondaryEffect str = match str with
     | "leaf-blade" | "night-slash" | "psycho-cut" | "shadow-claw" | "spacial-rend" -> [IncCrit 1]
   | "double-slap" | "comet-punch" | "fury-attack" | "pin-missile"
     | "spike-cannon" | "barrage" | "fury-swipes" | "bone-rush"
-    | "bullet-seed" | "tail-slap"-> [RandMultHit]
+    | "bullet-seed" | "tail-slap" | "icicle-spear" | "rock-blast" -> [RandMultHit]
   | "fire-punch" | "ember" | "flamethrower" | "fire-blast" | "flame-wheel"
     | "will-o-wisp" | "blue-flare" | "lava-plume" | "heat-wave"
     | "scald" | "searing-shot" | "sacred-fire" -> [BurnChance]
@@ -421,8 +422,8 @@ let getSecondaryEffect str = match str with
   | "freeze-shock" -> [ChargeMove "Charging"; ParaChance]
   | "swords-dance" -> [StageBoost [(Attack, 2)]]
   | "charm" | "feather-dance" -> [StageAttack [(Attack, 2)]]
-  | "meditate" | "sharpen" | "metal-claw" | "howl" | "meteor-mash" -> [StageBoost [(Attack, 1)]]
-  | "whirlwind" | "roar" | "dragon-tail" -> [ForceSwitch]
+  | "meditate" | "sharpen" | "metal-claw" | "howl" | "meteor-mash" | "power-up-punch" -> [StageBoost [(Attack, 1)]]
+  | "whirlwind" | "roar" | "dragon-tail"| "circle-throw" -> [ForceSwitch]
   | "double-kick" | "gear-grind" | "bonemerang" | "double-hit" | "dual-chop" -> [MultHit 2]
   | "sand-attack" | "smokescreen" | "kinesis" | "flash"
     | "mud-slap" | "octazooka" | "leaf-tornado" | "mud-bomb"
@@ -449,7 +450,8 @@ let getSecondaryEffect str = match str with
   | "acid" | "psychic" | "shadow-ball" | "flash-cannon" | "bug-buzz"
     | "energy-ball" | "focus-blast" | "earth-power" -> [StageAttack [(SpecialDefense, 1)]]
   | "mist-ball" | "moonblast" | "snarl" -> [StageAttack [(SpecialAttack, 1)]]
-  | "bubble-beam" | "bubble" | "icy-wind" | "mud-shot" | "electroweb" -> [StageAttack [(Speed, 1)]]
+  | "bubble-beam" | "bubble" | "icy-wind" | "mud-shot" | "electroweb" | "constrict"
+    | "rock-tomb" -> [StageAttack [(Speed, 1)]]
   | "hyper-beam"| "blast-burn" | "frenzy-plant" | "hydro-cannon"
       | "roar-of-time" | "giga-impact" | "rock-wrecker"  -> [RechargeMove]
   | "swift" | "feint-attack" | "vital-throw" | "aerial-ace" | "magnet-bomb"
@@ -466,6 +468,7 @@ let getSecondaryEffect str = match str with
   | "solar-beam" -> [ChargeInSunlight "Need sunlight to charge faster!"]
   | "string-shot" | "cotton-spore" | "scary-face" -> [StageAttack [(Speed, 2)]]
   | "agility" | "rock-polish" -> [StageBoost [(Speed, 2)]]
+  | "hammer-arm" -> [StageBoost [(Speed, -1)]]
   | "screech" | "metal-sound" -> [StageAttack [(Defense, 2)]]
   | "double-team" -> [StageBoost [(Evasion, 1)]]
   | "minimize" -> [StageBoost [(Evasion, 2)]]
@@ -478,6 +481,7 @@ let getSecondaryEffect str = match str with
   | "haze" -> [Haze]
   | "reflect" -> [ReflectMake]
   | "self-destruct" | "explosion" -> [UserFaint]
+  | "memento" -> [UserFaint; StageAttack [(Attack, 2); (SpecialAttack, 2)]]
   | "amnesia" -> [StageBoost [(SpecialDefense, 2)]]
   | "nasty-plot" -> [StageBoost [(SpecialAttack, 2)]]
   | "charge-beam" -> [StageBoost [(SpecialAttack, 1)]]
@@ -514,6 +518,7 @@ let getSecondaryEffect str = match str with
   | "blaze-kick" -> [IncCrit 1; BurnChance]
   | "encore" -> [Encore 3]
   | "pain-split" -> [PainSplit]
+  | "noble-roar" -> [StageAttack [(Attack, 1);(SpecialAttack, 1)]]
   | "superpower" -> [StageBoost [(Attack,-1);(Defense,-1)]]
   | "thrash" | "outrage" | "petal-dance" -> [SelfEncore]
   | "mirror-move" | "copycat" -> [CopyPrevMove]
@@ -544,6 +549,13 @@ let getSecondaryEffect str = match str with
   | "sticky-web" -> [StickyWebMake]
   | "rototiller" -> [Rototiller]
   | "sleep-talk" | "snore" -> [SleepEffect; FlinchMove]
+  | "beat-up" -> [BeatUp]
+  | "fire-spin" | "whirlpool" | "clamp" | "sand-tomb" | "wrap" | "bind"
+    | "infestation" | "magma-storm" -> [CausePartialTrapping]
+  | "hex" | "brine" | "venoshock"-> [DoublePower]
+  | "stored-power" -> [StoredPower]
+  | "shift-gear" -> [StageBoost [(Speed, 2); (Attack, 1)]]
+  | "cosmic-power" -> [StageBoost [(Defense, 1); (SpecialDefense, 1)]]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -666,18 +678,18 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Grass;Flying]; move1= getMoveFromString "sleep-talk"; move2 =
-  getMoveFromString "toxic-spikes"; move3 = getMoveFromString "snore";
-  move4 = getMoveFromString "toxic-spikes"; hp = 98; attack = 0; special_attack = 165; defense = 65;
-  speed = 120; special_defense = 135; ability="pixilate"; evs; nature; item}
+  {name="gardevoir-mega"; element=[Grass;Flying]; move1= getMoveFromString "memento"; move2 =
+  getMoveFromString "venoshock"; move3 = getMoveFromString "pound";
+  move4 = getMoveFromString "poison-powder"; hp = 98; attack = 100; special_attack = 165; defense = 65;
+  speed = 120; special_defense = 135; ability="huge-power"; evs; nature; item}
 
 let getTestOpp () =
   let evs = {attack = 255; defense =  0; special_attack= 0; special_defense= 255;
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gallade-mega"; element=[Grass;Flying]; move1= getMoveFromString "hypnosis"; move2 =
-  getMoveFromString "head-smash"; move3 = getMoveFromString "crush-grip";
+  {name="gallade-mega"; element=[Grass;Flying]; move1= getMoveFromString "splash"; move2 =
+  getMoveFromString "sand-tomb"; move3 = getMoveFromString "crush-grip";
   move4 = getMoveFromString "toxic"; hp = 68; attack = 255; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="pixilate"; evs; nature; item}
 
@@ -685,6 +697,7 @@ let getPokeToolTip t =
   let battlePoke = t.current in
   "Name: " ^ battlePoke.pokeinfo.name ^
   "\nType: " ^ string_of_type battlePoke.pokeinfo.element ^
+  "\nAbility: " ^ battlePoke.pokeinfo.ability ^
   "\nAttack: " ^ string_of_int battlePoke.battack ^ "                  Modified: " ^ string_of_float (float_of_int battlePoke.battack *. getStageAD (fst t.stat_enhance.attack) *. (snd t.stat_enhance.attack)) ^
   "\nDefense: " ^ string_of_int battlePoke.bdefense ^ "               Modified: " ^ string_of_float (float_of_int battlePoke.bdefense *. getStageAD (fst t.stat_enhance.defense) *. (snd t.stat_enhance.defense)) ^
   "\nSpecial Attack: " ^ string_of_int battlePoke.bspecial_attack ^ "     Modified: " ^ string_of_float (float_of_int battlePoke.bspecial_attack *. getStageAD (fst t.stat_enhance.special_attack) *. (snd t.stat_enhance.special_attack)) ^
