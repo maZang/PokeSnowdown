@@ -901,14 +901,14 @@ let rec getMoveString a =
 let rec getMoveStringStatus a =
   match a with
   | NormStatus s -> `DontMissStatus
-  | StatBoost (stat, i, s) -> `StatusBoost
-  | StatAttack (stat, i, s) -> `StatusAttack
+  | StatBoost (stat, i, s) -> `DontMissStatus
+  | StatAttack (stat, i, s) -> `DontMissStatus
   | MissStatus s -> `DontMove
   | FrozenSolidS -> `FrozenMiss
-  | PoisonStatus s-> `PoisonStatus
-  | BurnStatus s -> `BurnStatus
-  | BadPoisonStatus s -> `PoisonStatus
-  | ParaStatus s -> `ParaStatus
+  | PoisonStatus s-> `DontMissStatus
+  | BurnStatus s -> `DontMissStatus
+  | BadPoisonStatus s -> `DontMissStatus
+  | ParaStatus s -> `DontMissStatus
   | ThawS s -> getMoveStringStatus s
   | NoFreezeS s -> getMoveStringStatus s
   | NoBurnS s -> getMoveStringStatus s
@@ -916,11 +916,11 @@ let rec getMoveStringStatus a =
   | ParaS -> `ParaMiss
   | AsleepS -> `SleepMiss
   | WakeS s -> getMoveStringStatus s
-  | MakeSleep s -> `SleepStatus
+  | MakeSleep s -> `DontMissStatus
   | FlinchS -> `DontMove
   | BreakConfuseS s-> getMoveStringStatus s
   | ConfusedS -> `ConfuseMiss
-  | ConfuseMove s -> `ConfuseStatus
+  | ConfuseMove s -> `DontMissStatus
   | LeechS s -> `LeechStatus
   | HealHealth s -> `HealStatus
   | LightScreenS s -> `ShieldStatus
@@ -937,7 +937,7 @@ let rec getMoveStringStatus a =
   | HealBellS s -> `DontMissStatus
   | RefreshS s -> `DontMissStatus
   | Fail s -> `DontMove
-  | PsychUpS s -> `StatBoost
+  | PsychUpS s -> `DontMissStatus
   | SunnyDayS s | RainDanceS s | SandStormS s | HailS s -> `DontMove
   | EncoreS s -> `DontMissStatus
   | EncoreFail -> `DontMove
@@ -945,6 +945,12 @@ let rec getMoveStringStatus a =
   | CopyPrevMoveA s -> getMoveString s
   | CopyFail -> `DontMove
   | SwitchOut s -> `DontMove
+
+let rec getMoveStringEnd a =
+  match a with
+  | BurnDmg -> `BurnDmg
+  | PoisonDmg -> `PoisonDmg
+  | _ -> `DontMove
 
 let rec getAttackString starter a =
   match a with
@@ -1080,7 +1086,7 @@ let animate_attack (animbox : GPack.fixed) img startx starty nextx' nexty (movea
   match movestring with
   | `SleepMiss ->
       ( move_img#misc#show ();
-        moveanim#move move_img#coerce startx starty;
+      moveanim#move move_img#coerce startx (starty-30);
       for i = 0 to 2 do
         move_img#set_file "../data/fx/sleep1.png";
         for i = 0 to 40 do
@@ -1096,9 +1102,65 @@ let animate_attack (animbox : GPack.fixed) img startx starty nextx' nexty (movea
         done
       done; move_img#misc#hide ())
   | `FrozenMiss -> ()
-  | `ParaMiss -> ()
+  | `ParaMiss ->
+      ( move_img#misc#show ();
+      moveanim#move move_img#coerce (startx-30) starty;
+      for i = 0 to 2 do
+        move_img#set_file "../data/fx/paralysis1.png";
+        for i = 0 to 40 do
+          busywait_small ()
+        done;
+        move_img#set_file "../data/fx/paralysis2.png";
+        for i = 0 to 40 do
+          busywait_small ()
+        done;
+        move_img#set_file "../data/fx/paralysis3.png";
+        for i = 0 to 40 do
+          busywait_small ()
+        done
+      done; move_img#misc#hide ())
   | `FlinchMiss -> ()
   | `ConfuseMiss -> ()
+  | `DontMissStatus -> ()
+  | `SubStatus -> ()
+  | `ShieldStatus -> ()
+  | `SpikesStatus -> ()
+  | `HealStatus -> ()
+  | `LeechStatus -> ()
+  | `BurnDmg ->
+    ( move_img#misc#show ();
+      moveanim#move move_img#coerce (startx-30) starty;
+      for i = 0 to 2 do
+        move_img#set_file "../data/fx/burn1.png";
+        for i = 0 to 40 do
+          busywait_small ()
+        done;
+        move_img#set_file "../data/fx/burn2.png";
+        for i = 0 to 40 do
+          busywait_small ()
+        done;
+        move_img#set_file "../data/fx/burn3.png";
+        for i = 0 to 40 do
+          busywait_small ()
+        done
+      done; move_img#misc#hide ())
+  | `PoisonDmg ->
+    ( move_img#misc#show ();
+      moveanim#move move_img#coerce (startx-30) starty;
+      for i = 0 to 2 do
+        move_img#set_file "../data/fx/poison1.png";
+        for i = 0 to 40 do
+          busywait_small ()
+        done;
+        move_img#set_file "../data/fx/poison2.png";
+        for i = 0 to 40 do
+          busywait_small ()
+        done;
+        move_img#set_file "../data/fx/poison3.png";
+        for i = 0 to 40 do
+          busywait_small ()
+        done
+      done; move_img#misc#hide ())
   | `DontMove -> ()
   | `DontMiss s | `Miss s ->
     (let themove = Pokemon.getMoveFromString s in
@@ -1259,11 +1321,13 @@ let rec game_animation engine buttons (battle: GPack.table) text
   | Pl1 Status s ->secondaryEffect := `P1;
                    let status_string = getStatusString t1.current.pokeinfo.name s in
                    let str_list = Str.split (Str.regexp "\\.") status_string in
-                   List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list
+                   List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
+                   animate_attack pokeanim1 poke1_img poke1x poke1y poke2x poke2y moveanim move_img (getMoveStringStatus s)
   | Pl2 Status s ->secondaryEffect := `P2;
                    let status_string = getStatusString t2.current.pokeinfo.name s in
                    let str_list = Str.split (Str.regexp "\\.") status_string in
-                   List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list
+                   List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
+                   animate_attack pokeanim2 poke2_img poke2x poke2y poke1x poke1y moveanim move_img (getMoveStringStatus s)
   | Pl1 NoAction -> text_buffer#set_text ("Both Pokemon Not Doing Anything"); busywait ()
   | Pl2 NoAction -> text_buffer#set_text ("Both Pokemon Not Doing Anything"); busywait ()
   | Pl1 Continue | Pl2 Continue | Pl1 Next | Pl2 Next -> ()
@@ -1331,6 +1395,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
   | Pl1 EndMove x -> let txt = getEndString t1.current.pokeinfo.name x in
                     let str_list = Str.split (Str.regexp "\\.") txt in
                     List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
+                    animate_attack pokeanim1 poke1_img poke1x poke1y poke2x poke2y moveanim move_img (getMoveStringEnd x);
                     updatehealth1 ()
   | _ -> failwith "unimplements");
   if !endTurnEarly then
@@ -1356,12 +1421,14 @@ let rec game_animation engine buttons (battle: GPack.table) text
                    let str_list = Str.split (Str.regexp "\\.") status_string in
                    updatetools ();
                    List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
+                   animate_attack pokeanim1 poke1_img poke1x poke1y poke2x poke2y moveanim move_img (getMoveStringStatus s);
                    pre_process ()
   | Pl2 Status s ->secondaryEffect := `P2;
                    let status_string = getStatusString t2.current.pokeinfo.name s in
                    let str_list = Str.split (Str.regexp "\\.") status_string in
                    updatetools ();
                    List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
+                   animate_attack pokeanim2 poke2_img poke2x poke2y poke1x poke1y moveanim move_img (getMoveStringStatus s);
                    pre_process ()
   (* | Pl1 Faint -> text_buffer#set_text "Player One Pokemon has fainted. Choosing a new Pokemon.";
                   (match get_game_status battle_status with
@@ -1380,6 +1447,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
   | Pl2 EndMove x -> let txt = getEndString t2.current.pokeinfo.name x in
                     let str_list = Str.split (Str.regexp "\\.") txt in
                     List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
+                    animate_attack pokeanim2 poke2_img poke2x poke2y poke1x poke1y moveanim move_img (getMoveStringEnd x);
                     updatehealth2 (); turn_end ()
   | _ -> failwith "unimplement")
 
