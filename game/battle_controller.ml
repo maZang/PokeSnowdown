@@ -1215,6 +1215,13 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
         | (true, false) -> secondary_effects ((StageBoost[(Defense,1)])::t)
         | (false, true) -> secondary_effects ((StageAttack[(Defense,-1)])::t)
         | _ -> ()); secondary_effects t)
+    | Rototiller::t ->
+        ((match ((List.mem Grass atk.current.pokeinfo.element),
+              (List.mem Grass def.current.pokeinfo.element)) with
+        | (true, true) -> secondary_effects ((StageBoost[(Attack,1);(SpecialAttack, 1)])::(StageAttack[(Attack,-1);(SpecialAttack, -1)])::t)
+        | (true, false) -> secondary_effects ((StageBoost[(Attack ,1); (SpecialAttack, 1)])::t)
+        | (false, true) -> secondary_effects ((StageAttack[(Attack,-1); (SpecialAttack, -1)])::t)
+        | _ -> ()); secondary_effects t)
     (* For the move rain dance *)
     | RainDance::t -> ((match w with
                     | Rain _ | HeavyRain _ -> ()
@@ -1281,6 +1288,12 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
                                 (t2 := StealthRock::!t2;
                                 newmove := StealthRockS !newmove;
                                 secondary_effects t )
+    | StickyWebMake::t -> if List.mem StickyWeb !t2 then
+                              (newmove := Fail "StickyWeb")
+                            else
+                              (t2 := StickyWeb::!t2;
+                              newmove := StickyWebS !newmove;
+                              secondary_effects t)
     | [] -> ()
     | _ -> failwith "Faulty Game Logic: Debug 1188"
   in
@@ -1589,6 +1602,11 @@ let handle_two_moves t1 t2 w m1 m2 a1 a2 =
 let getEntryHazardDmg t ter1=
   let rec helper acc lst = match lst with
   | [] -> acc
+  | StickyWeb::t' -> if List.mem Flying t.current.pokeinfo.element then helper acc t'
+                    else
+                      (let (s, f) = t.stat_enhance.speed in
+                      t.stat_enhance.speed <- ((max (-6) (s-1)), f);
+                      helper acc t')
   | (Spikes n)::t' ->if List.mem Flying t.current.pokeinfo.element then helper acc t'
                     else
                       (if n = 1 then (helper (0.125 +. acc) t')

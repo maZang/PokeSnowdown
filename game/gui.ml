@@ -950,6 +950,7 @@ let rec getMoveStringStatus a =
   | TauntFail -> `DontMove
   | Taunted _ -> `DontMove
   | StealthRockS _ -> `RockStatus
+  | StickyWebS _-> `DontMissStatus
   | SwitchOut s -> `DontMove
 
 let rec getMoveStringEnd a =
@@ -1065,6 +1066,7 @@ let rec getStatusString starter s =
   | TauntFail -> starter ^ " used Taunt but it failed."
   | Taunted s -> starter ^ " couldn't use " ^ s ^ " because it was taunted."
   | StealthRockS s -> getStatusString starter s ^ "Rocks were put on the opponent's side."
+  | StickyWebS s -> getStatusString starter s ^ starter ^ " has placed a sticky web on the opponent's side."
   | SwitchOut s -> (match !secondaryEffect with
                     | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
                     | `P2 -> current_command := (Some (Poke "random"), Some NoMove));
