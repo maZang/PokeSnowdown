@@ -194,10 +194,16 @@ let damageCalculation t1 t2 (w,ter1, ter2) move =
       | "huge-power" | "pure-power" -> 2.0
       | "guts" -> if fst t1.current.curr_status <> NoNon then 1.5 else 1.0
       | _ -> 1.0 ) *.
+      ( match t1.current.curr_item with
+      | ChoiceBand -> 1.5
+      | _ -> 1.0) *.
       float_of_int t1.current.battack *.
       getStageAD (fst t1.stat_enhance.attack) *.
       (snd t1.stat_enhance.attack)
     | Special ->
+      ( match t1.current.curr_item with
+      | ChoiceSpecs -> 1.5
+      | _ -> 1.0) *.
       float_of_int t1.current.bspecial_attack *.
       getStageAD (fst t1.stat_enhance.special_attack) *.
       (snd t1.stat_enhance.special_attack)
@@ -951,6 +957,7 @@ let move_handler atk def wt move =
       secondary_effects move.secondary;
       (match atk.current.curr_item with
       | LifeOrb -> atk.current.curr_hp <- max 0 (atk.current.curr_hp - atk.current.bhp/10); newmove := LifeOrbA !newmove
+      | ChoiceBand | ChoiceSpecs | ChoiceScarf -> atk.current.curr_status <- (fst atk.current.curr_status, ForcedMove (1, move.name)::(snd atk.current.curr_status) )
       | _ -> ());
       !newmove)
    else
@@ -1415,8 +1422,14 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
     if hit' then (
       newmove := newreason;
       (* Returns a description of the status *)
-      secondary_effects move.secondary; !newmove)
+      secondary_effects move.secondary;
+      (match atk.current.curr_item with
+      | ChoiceBand | ChoiceSpecs | ChoiceScarf -> atk.current.curr_status <- (fst atk.current.curr_status, ForcedMove (1, move.name)::(snd atk.current.curr_status) )
+      | _ -> ());
+
+      !newmove)
       (* returns a move description *)
+
     else
       newreason)
   else
@@ -1603,9 +1616,11 @@ let handle_two_moves t1 t2 w m1 m2 a1 a2 =
   let curr_move = findBattleMove p1poke.pokeinfo a1 in
   let curr_move' = findBattleMove p2poke.pokeinfo a2 in
   let p1speed = ref (float_of_int t1.current.bspeed *.
-    getStageAD (fst t1.stat_enhance.speed) *. (snd t1.stat_enhance.speed)) in
+    getStageAD (fst t1.stat_enhance.speed) *. (snd t1.stat_enhance.speed) *.
+    (if t1.current.curr_item = ChoiceScarf then 1.5 else 1.0)) in
   let p2speed = ref (float_of_int t2.current.bspeed *.
-    getStageAD (fst t2.stat_enhance.speed) *. (snd t2.stat_enhance.speed)) in
+    getStageAD (fst t2.stat_enhance.speed) *. (snd t2.stat_enhance.speed) *.
+    (if t2.current.curr_item = ChoiceScarf then 1.5 else 1.0)) in
   (match w.weather with
     | Rain _ | HeavyRain _  -> (if p1poke.pokeinfo.ability = "swift-swim" then p1speed := !p1speed *. 2.;
                                 if p2poke.pokeinfo.ability = "swift-swim" then p2speed := !p2speed *. 2.)
