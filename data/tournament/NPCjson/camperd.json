@@ -179,5 +179,125 @@
       "speed": "44"
     }
   },
+  "talonflame": {
+    "name": "talonflame",
+    "moves": [
+      "brave-bird",
+      "flare-blitz",
+      "u-turn",
+      "tailwind"
+    ],
+    "ability": "gale-wings",
+    "nature": "jolly",
+    "item": "choice band",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "tentacruel": {
+    "name": "tentacruel",
+    "moves": [
+      "rapid-spin",
+      "toxic-spikes",
+      "scald",
+      "knock-off"
+    ],
+    "ability": "liquid-ooze",
+    "nature": "bold",
+    "item": "nothing",
+    "evs": {
+      "hp": "240",
+      "attack": "0",
+      "special-attack": "0",
+      "defense": "244",
+      "special-defense": "0",
+      "speed": "24"
+    }
+  },
+  "thundurus": {
+    "name": "thundurus",
+    "moves": [
+      "thunder-wave",
+      "thunderbolt",
+      "grass-knot",
+      "focus-blast"
+    ],
+    "ability": "prankster",
+    "nature": "timid",
+    "item": "life orb",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "umbreon": {
+    "name": "umbreon",
+    "moves": [
+      "wish",
+      "moonlight",
+      "baton-pass",
+      "foul-play"
+    ],
+    "ability": "synchronize",
+    "nature": "calm",
+    "item": "leftovers",
+    "evs": {
+      "hp": "252",
+      "attack": "0",
+      "special-attack": "0",
+      "defense": "4",
+      "special-defense": "252",
+      "speed": "0"
+    }
+  },
+  "whimsicott": {
+    "name": "whimsicott",
+    "moves": [
+      "moonblast",
+      "giga-drain",
+      "switcheroo",
+      "u-turn"
+    ],
+    "ability": "infiltrator",
+    "nature": "timid",
+    "item": "choice specs",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "zapdos": {
+    "name": "zapdos",
+    "moves": [
+      "volt-switch",
+      "roost",
+      "defog",
+      "heat-wave"
+    ],
+    "ability": "pressure",
+    "nature": "hold",
+    "item": "leftovers",
+    "evs": {
+      "hp": "248",
+      "attack": "0",
+      "special-attack": "68",
+      "defense": "176",
+      "special-defense": "0",
+      "speed": "16"
+    }
+  },
 	"pokemon": [ "blaziken", "charizard", "entei", "magnezone", "manectric", "raikou", "snorlax", "suicune", "swampert", "talonflame", "tentacruel", "thundurus", "umbreon", "whimsicott", "zapdos" ]
 }
