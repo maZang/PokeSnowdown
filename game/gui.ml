@@ -1356,8 +1356,12 @@ let rec game_animation engine buttons (battle: GPack.table) text
       (Ivar.fill !gui_ready (Some Preprocess, Some Preprocess);
       game_step ()) in
   (match !m1 with
-  | Pl1 SPoke p -> text_buffer#set_text ("Player One has switched to " ^ p); poke1_img#set_file ("../data/back-sprites/" ^ p ^ ".gif");updatetools ();busywait ()
-  | Pl2 SPoke p -> text_buffer#set_text ("Player Two has switched to " ^ p); poke2_img#set_file ("../data/sprites/" ^ p ^ ".gif"); updatetools (); busywait ()
+  | Pl1 SPoke (p,mess) -> (let switch_string = ("Player One has switched to " ^ p ^ mess) in updatetools ();
+                   let str_list = Str.split (Str.regexp "\\.") switch_string in
+                   List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list)
+  | Pl2 SPoke (p,mess) ->  (let switch_string = ("Player One has switched to " ^ p ^ mess) in updatetools ();
+                           let str_list = Str.split (Str.regexp "\\.") switch_string in
+                           List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list)
   | Pl1 AttackMove a ->secondaryEffect := `P1;
                    let atk_string = getAttackString t1.current.pokeinfo.name a in
                    let str_list = Str.split (Str.regexp "\\.") atk_string in
@@ -1526,7 +1530,9 @@ let rec game_animation engine buttons (battle: GPack.table) text
   | Pl1 FaintNext | Pl2 FaintNext | Pl2 Faint | Pl1 ForceMove _| Pl2 ForceMove _ | Pl1 ForceNone | Pl2 ForceNone -> ()
   | Pl1 NoAction -> pre_process ()
   | Pl2 NoAction -> pre_process ()
-  | Pl2 SPoke p -> text_buffer#set_text ("Player Two has switched to " ^ p); poke2_img#set_file ("../data/sprites/" ^ p ^ ".gif"); busywait (); updatetools (); pre_process ()
+  | Pl2 SPoke (p,mess) -> (let switch_string = ("Player One has switched to " ^ p  ^ mess) in updatetools ();
+                           let str_list = Str.split (Str.regexp "\\.") switch_string in
+                           List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list; pre_process ())
   | Pl2 EndMove x -> let txt = getEndString t2.current.pokeinfo.name x in
                     let str_list = Str.split (Str.regexp "\\.") txt in
                     List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;

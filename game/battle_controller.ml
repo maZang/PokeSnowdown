@@ -1711,10 +1711,13 @@ let switchPokeHandler faint nextpoke t ter1 t2 =
     (t.dead <- prevPoke::t.dead; t.alive <- restPoke)
   else
     t.alive <- prevPoke::restPoke);
-  (match t.current.pokeinfo.ability with
-    | "intimidate" -> t2.stat_enhance.attack <- (fst t2.stat_enhance.attack - 1, snd t2.stat_enhance.attack)
-    | _ -> ());
-  getEntryHazardDmg t ter1
+  getEntryHazardDmg t ter1;
+  if t.current.curr_hp > 0 then
+    (match t.current.pokeinfo.ability with
+    | "intimidate" -> t2.stat_enhance.attack <- (fst t2.stat_enhance.attack - 1, snd t2.stat_enhance.attack); ("." ^ t.current.pokeinfo.name ^ "'s intimidate lowered the opponent's attack.")
+    | _ -> "")
+  else
+    ""
 
 (* test for forced moves *)
 let rec getForcedMove lst =
@@ -1732,8 +1735,8 @@ let handle_action state action1 action2 =
   | Poke p' -> let p = if p' = "random" then getRandomPoke t1 else p' in
       (match action2 with
       | Poke p2' -> let p2 = if p2' = "random" then getRandomPoke t2 else p2' in
-                    switchPokeHandler false p t1 w.terrain.side1 t2;
-                    switchPokeHandler false p2 t2 w.terrain.side2 t1;
+                    let t1switch = switchPokeHandler false p t1 w.terrain.side1 t2 in
+                    let t2switch = switchPokeHandler false p2 t2 w.terrain.side2 t1 in
                     if (t1.current.curr_hp = 0) then
                           if (t2.current.curr_hp = 0) then
                             (m1 := Pl1 SFaint; m2 := Pl2 Faint)
@@ -1743,8 +1746,8 @@ let handle_action state action1 action2 =
                           if (t2.current.curr_hp = 0) then
                             (m1 := Pl2 SFaint; m2 := Pl1 FaintNext)
                           else
-                            (m1 := Pl1 (SPoke p); m2 := Pl2 (SPoke p2))
-      | UseAttack a2' -> switchPokeHandler false p t1 w.terrain.side1 t2;
+                            (m1 := Pl1 (SPoke (p, t1switch)); m2 := Pl2 (SPoke (p2, t2switch)))
+      | UseAttack a2' -> let t1switch = switchPokeHandler false p t1 w.terrain.side1 t2 in
                        if (t1.current.curr_hp = 0) then
                         (m1 := Pl1 SFaint; m2 := Pl2 FaintNext)
                       else
@@ -1754,24 +1757,24 @@ let handle_action state action1 action2 =
                         let curr_move = findBattleMove t2.current.pokeinfo a2 in
                        if curr_move.dmg_class = Status then
                           (let newmove = status_move_handler t2 t1 (w, w.terrain.side2, w.terrain.side1) curr_move in
-                            m1 := Pl1 (SPoke p); m2 := Pl2 (Status newmove))
+                            m1 := Pl1 (SPoke (p,t1switch)); m2 := Pl2 (Status newmove))
                        else (
                         let newmove = move_handler t2 t1 (w, w.terrain.side2, w.terrain.side1) curr_move in
                         if List.mem SelfSwitch curr_move.secondary then
-                          (m1 := Pl1 (SPoke p); m2 := Pl2 (ForceChoose newmove))
+                          (m1 := Pl1 (SPoke (p,t1switch)); m2 := Pl2 (ForceChoose newmove))
                         else
-                          (m1 := Pl1 (SPoke p); m2 := Pl2 (AttackMove newmove))))
-      | NoMove ->  switchPokeHandler false p t1 w.terrain.side1 t2;
+                          (m1 := Pl1 (SPoke (p, t1switch)); m2 := Pl2 (AttackMove newmove))))
+      | NoMove ->  let t1switch = switchPokeHandler false p t1 w.terrain.side1 t2 in
                     if (t1.current.curr_hp = 0) then
                       (m1 := Pl1 Faint; m2 := Pl2 FaintNext)
                     else
-                       (m1 := Pl1 (SPoke p); m2 := Pl2 NoAction)
+                       (m1 := Pl1 (SPoke (p, t1switch)); m2 := Pl2 NoAction)
       | _ -> failwith "Faulty Game Logic: Debug 444")
   | UseAttack a1' -> let force1, force1s = getForcedMove (snd t1.current.curr_status) in
                      let a1 = if force1 then force1s else a1' in
       (match action2 with
       | Poke p' -> (let p  = if p' = "random" then getRandomPoke t2 else p' in
-                   switchPokeHandler false p t2 w.terrain.side2 t1;
+                   let t2switch = switchPokeHandler false p t2 w.terrain.side2 t1 in
                     (if (t2.current.curr_hp = 0) then
                       (m1 := Pl2 SFaint; m2 := Pl1 FaintNext)
                     else
@@ -1780,13 +1783,13 @@ let handle_action state action1 action2 =
                       if curr_move.dmg_class = Status then
                         (
                           let newmove = status_move_handler t1 t2 (w, w.terrain.side1, w.terrain.side2) curr_move in
-                           m1 := Pl2 (SPoke p); m2 := Pl1 (Status newmove))
+                           m1 := Pl2 (SPoke (p, t2switch)); m2 := Pl1 (Status newmove))
                      else
                       (let newmove = move_handler t1 t2 (w, w.terrain.side1, w.terrain.side2) curr_move in
                         if List.mem SelfSwitch curr_move.secondary then
-                          (m1 := Pl2 (SPoke p); m2 := Pl1 (ForceChoose newmove))
+                          (m1 := Pl2 (SPoke (p, t2switch)); m2 := Pl1 (ForceChoose newmove))
                         else
-                          (m1 := Pl2 (SPoke p); m2 := Pl1 (AttackMove newmove))))))
+                          (m1 := Pl2 (SPoke (p, t2switch)); m2 := Pl1 (AttackMove newmove))))))
       | UseAttack a2' -> (let force2, force2s = getForcedMove (snd t2.current.curr_status) in
                           let a2 = if force2 then force2s else a2' in
                           handle_two_moves t1 t2 w m1 m2 a1 a2)
@@ -1805,16 +1808,16 @@ let handle_action state action1 action2 =
       | _ -> failwith "Faulty Game Logic: Debug 449")
   | NoMove -> (match action2 with
               | FaintPoke p ->
-                  switchPokeHandler true p t2 w.terrain.side2 t1;
-                  m1 := Pl2 (SPoke p);
+                  let t2switch = switchPokeHandler true p t2 w.terrain.side2 t1 in
+                  m1 := Pl2 (SPoke (p,t2switch));
                   m2 := Pl1 Next
               | Poke p' -> let p = if p' = "random" then getRandomPoke t2
                           else p' in
-                          switchPokeHandler false p t2 w.terrain.side2 t1;
+                          let t2switch = switchPokeHandler false p t2 w.terrain.side2 t1 in
                           if (t2.current.curr_hp = 0) then
                             (m1 := Pl2 SFaint; m2 := Pl1 FaintNext)
                           else
-                            (m1 := Pl2 (SPoke p); m2 := Pl1 NoAction)
+                            (m1 := Pl2 (SPoke (p, t2switch)); m2 := Pl1 NoAction)
               | UseAttack a2' -> let force2, force2s = getForcedMove (snd t2.current.curr_status) in
                               let a2 = if force2 then force2s else a2' in
                               let curr_poke = t2.current in
@@ -1834,8 +1837,8 @@ let handle_action state action1 action2 =
               )
   | FaintPoke p -> (match action2 with
                     | FaintPoke p' ->
-                        (switchPokeHandler true p t1 w.terrain.side1 t2;
-                        switchPokeHandler true p' t2 w.terrain.side2 t1;
+                        (let t1switch = switchPokeHandler true p t1 w.terrain.side1 t2 in
+                        let t2switch = switchPokeHandler true p' t2 w.terrain.side2 t1 in
                         if (t1.current.curr_hp = 0) then
                           if (t2.current.curr_hp = 0) then
                             (m1 := Pl1 SFaint; m2 := Pl2 Faint)
@@ -1845,13 +1848,13 @@ let handle_action state action1 action2 =
                           if (t2.current.curr_hp = 0) then
                             (m1 := Pl2 SFaint; m2 := Pl1 FaintNext)
                           else
-                            m1 := Pl1 (SPoke p); m2 := Pl2 (SPoke p'))
+                            (m1 := Pl1 (SPoke (p, t1switch)); m2 := Pl2 (SPoke (p', t2switch))))
                     | _ ->
-                        (switchPokeHandler true p t1 w.terrain.side1 t2;
+                        (let t1switch = switchPokeHandler true p t1 w.terrain.side1 t2 in
                         if (t1.current.curr_hp = 0) then
                           (m1 := Pl1 SFaint; m2 := Pl2 FaintNext)
                         else
-                          (m1 := Pl1 (SPoke p); m2 := Pl2 Next)))
+                          (m1 := Pl1 (SPoke (p, t1switch)); m2 := Pl2 Next)))
   | Preprocess -> (match action2 with
                   | Preprocess -> handle_preprocessing t1 t2 w m1 m2
                   | _ -> failwith "Faulty Game Logic: Debug 211")

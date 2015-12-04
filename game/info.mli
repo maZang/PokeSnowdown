@@ -29,7 +29,7 @@ type endMove = BurnDmg | BreakBurn | BreakFreeze  | BreakPara  | BreakPoison | P
                SandBuffet2 of endMove | HailFade of endMove | HailBuffetB of endMove | HailBuffet1 of endMove | HailBuffet2 of endMove | TauntFade of endMove |
                TrapDamage of string * endMove
 
-type guimove = SPoke of string | AttackMove of guiattack | Faint | NoAction | Continue | Next | Status of guistatus | EndMove of endMove | FaintNext | SFaint | ForceChoose of guiattack | ForceMove of string
+type guimove = SPoke of string*string | AttackMove of guiattack | Faint | NoAction | Continue | Next | Status of guistatus | EndMove of endMove | FaintNext | SFaint | ForceChoose of guiattack | ForceMove of string
                 | ForceNone
 
 type playerMove = Pl1 of guimove | Pl2 of guimove
