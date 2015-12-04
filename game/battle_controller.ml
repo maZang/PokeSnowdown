@@ -187,7 +187,9 @@ let damageCalculation t1 t2 (w,ter1, ter2) move =
     | Status -> failwith "Faulty Game Logic: Debug 178" in
   let crit_bool, crit  = getCrit t1.current move in
   let type_mod = List.fold_left (fun acc x -> acc *. getElementEffect
-      move.element x) 1. t2.current.pokeinfo.element in
+      move.element x) 1. t2.current.pokeinfo.element *. (if
+      t2.current.pokeinfo.ability = "levitate" && move.element = Ground then
+      0. else 1.) in
   let weather_amplifier = get_weather_amplifier w move in
   let modifier =
       (* type effectiveness *)
@@ -1449,8 +1451,8 @@ let handle_preprocessing t1 t2 w m1 m2 =
                     (w.weather <- ClearSkies; SandStormFade descript)
                    else
                     (w.weather <- (SandStorm (n-1));
-                    match (List.mem Rock t1.current.pokeinfo.element || List.mem Ground t1.current.pokeinfo.element || List.mem Steel t1.current.pokeinfo.element),
-                          (List.mem Rock t2.current.pokeinfo.element || List.mem Ground t2.current.pokeinfo.element || List.mem Steel t2.current.pokeinfo.element) with
+                    match (List.mem Rock t1.current.pokeinfo.element || List.mem Ground t1.current.pokeinfo.element || List.mem Steel t1.current.pokeinfo.element || t1.current.pokeinfo.ability = "sand-rush"),
+                          (List.mem Rock t2.current.pokeinfo.element || List.mem Ground t2.current.pokeinfo.element || List.mem Steel t2.current.pokeinfo.element || t2.current.pokeinfo.ability = "sand-rush") with
                     | (false, false) -> (t1.current.curr_hp <- t1.current.curr_hp - t1.current.bhp/16;
                                       t2.current.curr_hp <- t2.current.curr_hp - t2.current.bhp/16;
                                       SandBuffetB descript)
@@ -1563,6 +1565,14 @@ let handle_two_moves t1 t2 w m1 m2 a1 a2 =
     getStageAD (fst t1.stat_enhance.speed) *. (snd t1.stat_enhance.speed)) in
   let p2speed = ref (float_of_int t2.current.bspeed *.
     getStageAD (fst t2.stat_enhance.speed) *. (snd t2.stat_enhance.speed)) in
+  (match w.weather with
+    | Rain _ | HeavyRain _  -> (if p1poke.pokeinfo.ability = "swift-swim" then p1speed := !p1speed *. 2.;
+                                if p2poke.pokeinfo.ability = "swift-swim" then p2speed := !p2speed *. 2.)
+    | Sun _ | HarshSun _ -> (if p1poke.pokeinfo.ability = "chlorophyll" then p1speed := !p1speed *. 2.;
+                                if p2poke.pokeinfo.ability = "chlorophyll" then p2speed := !p2speed *. 2.)
+    | SandStorm _-> (if p1poke.pokeinfo.ability = "sand-rush" then p1speed := !p1speed *. 2.;
+                                if p2poke.pokeinfo.ability = "sand-rush" then p2speed := !p2speed *. 2.)
+    | _ -> ());
   (if (p1speed = p2speed) && (curr_move.priority = curr_move'.priority) then
       if 50 > Random.int 100 then
         p1speed := 1. +. !p2speed
@@ -1679,7 +1689,7 @@ let getEntryHazardDmg t ter1=
                       (let (s, f) = t.stat_enhance.speed in
                       t.stat_enhance.speed <- ((max (-6) (s-1)), f);
                       helper acc t')
-  | (Spikes n)::t' ->if List.mem Flying t.current.pokeinfo.element then helper acc t'
+  | (Spikes n)::t' ->if List.mem Flying t.current.pokeinfo.element || t.current.pokeinfo.ability = "levitate" then helper acc t'
                     else
                       (if n = 1 then (helper (0.125 +. acc) t')
                       else if n = 2 then (helper (1. /. 6. +. acc) t')
@@ -1692,7 +1702,7 @@ let getEntryHazardDmg t ter1=
                         | 2. -> helper (0.25 +. acc) t'
                         | 4. -> helper (0.5 +. acc) t'
                         | _ -> helper (0.125 +. acc) t')
-  | (ToxicSpikes n)::t' -> if List.mem Flying t.current.pokeinfo.element then helper acc t'
+  | (ToxicSpikes n)::t' -> if List.mem Flying t.current.pokeinfo.element || t.current.pokeinfo.ability = "levitate" then helper acc t'
                       else
                         ((match t.current.curr_status with
                         | (NoNon, x) -> (if n = 1 then (t.current.curr_status <- (Poisoned, x)) else (t.current.curr_status <- (Toxic 0, x)))
