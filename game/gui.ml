@@ -107,18 +107,11 @@ let current_screen = ref MainMenu
 let x = ref 7
 let y = ref 5
 
-let obstacle_coordinates = [(0,0);(0,1);(0,2);(0,3);(0,4);(0,5);(0,6);(0,7);
-                       (14,0);(14,1);(14,2);(14,3);(14,4);(14,5);(14,6);(14,7);
-                       (0,0);(1,0);(2,0);(3,0);(4,0);(5,0);(6,0);(7,0);(8,0);
-                       (9,0);(10,0);(11,0);(12,0);(13,0);(14,0);(0,7);(1,7);
-                       (2,7);(3,7);(4,7);(5,7);(6,7);(7,7);(8,7);(9,7);(10,7);
-                       (11,7);(12,7);(13,7);(14,7)]
-
 let spriteanim = GPack.fixed ~width:screen_width ~height:(2 * screen_height/3) ()
 let bossanim = GPack.fixed ~width:screen_width ~height:(2 * screen_height/3) ()
 let opp1anim = GPack.fixed ~width:screen_width ~height:(2 * screen_height/3) ()
 let opp2anim = GPack.fixed ~width:screen_width ~height:(2 * screen_height/3) ()
-let tilemap = GMisc.image ~file:"../data/tournament/tilemap.png" ()
+let tilemap = GMisc.image ~file:"../data/tournament/tilemap1.png" ()
 (* 600 x 320 *)
 let gameBoard = GPack.table ~rows:4 ~columns: 4 ~height: (2* screen_height/3) ~width:screen_width  ()
 let sprite = GMisc.image ~file:"../data/tournament/Player/Down.png" ()
@@ -127,7 +120,7 @@ let gameText = GEdit.entry ~width:600 ~height:80
 let boss = GMisc.image ~file:"../data/tournament/NPC/ProfOak.png" ()
 let opp1 = GMisc.image ~file:"../data/tournament/NPC/dragontamer.png" ()
 let opp2 = GMisc.image ~file:"../data/tournament/NPC/psychic.png" ()
-let () =  (spriteanim#put sprite#coerce (40 * !x) (40 * !y); bossanim#put boss#coerce 280 20;
+let () =  (spriteanim#put sprite#coerce (40 * !x) (40 * !y); bossanim#put boss#coerce 280 100;
            opp1anim#put opp1#coerce 160 20; opp2anim#put opp2#coerce 400 20;
            gameBoard#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH spriteanim#coerce;
            gameBoard#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH bossanim#coerce;
@@ -140,9 +133,16 @@ type gameMovement = Up | Down | Left | Right | Interact
 let move_ivar = ref (Ivar.create ())
 let playerDirection = ref Down
 
+let obstacle_coordinates = ref (obstacle_coordinates ())
+
 let rec move_up () =
-  (if List.mem (!x, !y - 1) obstacle_coordinates then
-    (sprite#set_file "../data/tournament/Player/Up.png")
+  (if List.mem (!x, !y - 1) !obstacle_coordinates then
+    ((match (!x, !y) with
+    | (7,2) -> opp1#misc#hide (); opp2#misc#hide ();
+               tilemap#set_file "../data/tournament/tilemap2.png";
+               x := 7; y := 7; spriteanim#put sprite#coerce (40 * !x) (40 * !y);
+               obstacle_coordinates := ice_obstacles
+    | _ -> () );(sprite#set_file "../data/tournament/Player/Up.png"))
   else
     (sprite#set_file "../data/tournament/Player/Up1.png";
     for i = 0 to 20 do
@@ -158,7 +158,7 @@ let rec move_up () =
     y := !y - 1)); playerDirection := Up
 
 let rec move_down () =
-  (if List.mem (!x, !y + 1) obstacle_coordinates then
+  (if List.mem (!x, !y + 1) !obstacle_coordinates then
     (sprite#set_file "../data/tournament/Player/Down.png")
   else
     (sprite#set_file "../data/tournament/Player/Down1.png";
@@ -175,7 +175,7 @@ let rec move_down () =
     y := !y + 1)); playerDirection := Down
 
 let rec move_right () =
-  (if List.mem (!x + 1, !y) obstacle_coordinates then
+  (if List.mem (!x + 1, !y) !obstacle_coordinates then
     (sprite#set_file "../data/tournament/Player/Right.png")
   else
     (sprite#set_file "../data/tournament/Player/Right1.png";
@@ -192,7 +192,7 @@ let rec move_right () =
     x := !x + 1)); playerDirection := Right
 
 let rec move_left () =
-  (if List.mem (!x - 1, !y) obstacle_coordinates then
+  (if List.mem (!x - 1, !y) !obstacle_coordinates then
     (sprite#set_file "../data/tournament/Player/Left.png")
   else
     (sprite#set_file "../data/tournament/Player/Left1.png";
@@ -210,7 +210,7 @@ let rec move_left () =
 
 let talk tournament =
   match (!x, !y) with
-  | (7,1) -> if !playerDirection = Up then (List.iter (fun s -> gameText#set_text s; busywait ()) profOakQuotes; gameText#set_text "Use W,A,S,D to move. Press H to interact with Prof. Oak and space bar to talk.") else ()
+  | (7,3) -> if !playerDirection = Up then (List.iter (fun s -> gameText#set_text s; busywait ()) profOakQuotes; gameText#set_text "Use W,A,S,D to move. Press H to interact with Prof. Oak and space bar to talk.") else ()
   | (4,1) -> if !playerDirection = Up then (List.iter (fun s -> gameText#set_text s; busywait ()) (opp1Quotes ()); tournament#clicked ()) else ()
   | (10,1) -> if !playerDirection = Up then (List.iter (fun s -> gameText#set_text s; busywait ()) (opp2Quotes ()); tournament#clicked ()) else ()
   | _ -> ()
@@ -547,8 +547,10 @@ let load_tournament engine img bg_img load_screen battle text buttonhide buttons
   | Menu1P -> (gameText#set_text "Use W,A,S,D to move. Press H to interact with Prof. Oak and space bar to talk.";
               current_screen := Tourney; List.iter (fun s -> s#misc#hide ()) buttonhide;
               img#misc#hide ();
+              tilemap#set_file "../data/tournament/tilemap1.png";
               opp1#set_file ("../data/tournament/NPC/" ^ (getRandomOpp1 ()) ^ ".png");
               opp2#set_file ("../data/tournament/NPC/" ^ (getRandomOpp2 ()) ^ ".png");
+              opp1#misc#show (); opp2#misc#show ();
               battle_screen#pack gameBoard#coerce; battle_screen#pack gameText#coerce)
   | Tourney -> (current_screen := TourneyChoose;
                 tournament#set_label "Continue";
