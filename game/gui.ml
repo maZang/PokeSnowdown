@@ -879,7 +879,7 @@ let rec getMoveString a =
   | NoPara s -> getMoveString s
   | Para -> `ParaMiss
   | OHKill s -> getMoveString s
-  | FlinchA -> `FlinchMiss
+  | FlinchA -> `DontMove
   | PoisonMove s -> getMoveString s
   | Recoil s -> getMoveString s
   | BreakConfuse s -> getMoveString s
@@ -897,6 +897,54 @@ let rec getMoveString a =
   | FalseSwipeA s -> getMoveString s
   | ConfuseUserA s -> getMoveString s
   | KnockedOff (_, s) -> getMoveString s
+
+let rec getMoveStringStatus a =
+  match a with
+  | NormStatus s -> `DontMissStatus
+  | StatBoost (stat, i, s) -> `StatusBoost
+  | StatAttack (stat, i, s) -> `StatusAttack
+  | MissStatus s -> `DontMove
+  | FrozenSolidS -> `FrozenMiss
+  | PoisonStatus s-> `PoisonStatus
+  | BurnStatus s -> `BurnStatus
+  | BadPoisonStatus s -> `PoisonStatus
+  | ParaStatus s -> `ParaStatus
+  | ThawS s -> getMoveStringStatus s
+  | NoFreezeS s -> getMoveStringStatus s
+  | NoBurnS s -> getMoveStringStatus s
+  | NoParaS s -> getMoveStringStatus s
+  | ParaS -> `ParaMiss
+  | AsleepS -> `SleepMiss
+  | WakeS s -> getMoveStringStatus s
+  | MakeSleep s -> `SleepStatus
+  | FlinchS -> `DontMove
+  | BreakConfuseS s-> getMoveStringStatus s
+  | ConfusedS -> `ConfuseMiss
+  | ConfuseMove s -> `ConfuseStatus
+  | LeechS s -> `LeechStatus
+  | HealHealth s -> `HealStatus
+  | LightScreenS s -> `ShieldStatus
+  | HazeS s -> getMoveStringStatus s
+  | ReflectS s -> getMoveStringStatus s
+  | RestS s -> `HealStatus
+  | SubBlock s -> getMoveStringStatus s
+  | SubFail s -> getMoveStringStatus s
+  | SubMake s -> `SubStatus
+  | ProtectedS s -> `DontMove
+  | ProtectS s-> `ShieldStatus
+  | ProtectFail s-> `DontMove
+  | SpikesS s -> `SpikesStatus
+  | HealBellS s -> `DontMissStatus
+  | RefreshS s -> `DontMissStatus
+  | Fail s -> `DontMove
+  | PsychUpS s -> `StatBoost
+  | SunnyDayS s | RainDanceS s | SandStormS s | HailS s -> `DontMove
+  | EncoreS s -> `DontMissStatus
+  | EncoreFail -> `DontMove
+  | CopyPrevMoveS s -> getMoveStringStatus s
+  | CopyPrevMoveA s -> getMoveString s
+  | CopyFail -> `DontMove
+  | SwitchOut s -> `DontMove
 
 let rec getAttackString starter a =
   match a with
@@ -1028,8 +1076,7 @@ let rec getEndString starter s =
   | HailBuffet1 s -> getEndString starter s ^ "Player one gets hit by the hail."
   | HailBuffet2 s -> getEndString starter s ^ "Player two gets hit by the hail."
 
-let animate_attack (animbox : GPack.fixed) img startx starty nextx' nexty (moveanim : GPack.fixed) move_img attack=
-  let movestring = getMoveString attack in
+let animate_attack (animbox : GPack.fixed) img startx starty nextx' nexty (moveanim : GPack.fixed) move_img movestring =
   match movestring with
   | `SleepMiss ->
       ( move_img#misc#show ();
@@ -1201,13 +1248,13 @@ let rec game_animation engine buttons (battle: GPack.table) text
                    let atk_string = getAttackString t1.current.pokeinfo.name a in
                    let str_list = Str.split (Str.regexp "\\.") atk_string in
                    List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
-                   animate_attack pokeanim1 poke1_img poke1x poke1y poke2x poke2y moveanim move_img a;
+                   animate_attack pokeanim1 poke1_img poke1x poke1y poke2x poke2y moveanim move_img (getMoveString a);
                    updatehealth2 ()
   | Pl2 AttackMove a -> secondaryEffect := `P2;
                    let atk_string = getAttackString t2.current.pokeinfo.name a in
                    let str_list = Str.split (Str.regexp "\\.") atk_string in
                    List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
-                   animate_attack pokeanim2 poke2_img poke2x poke2y poke1x poke1y moveanim move_img a;
+                   animate_attack pokeanim2 poke2_img poke2x poke2y poke1x poke1y moveanim move_img (getMoveString a);
                    updatehealth1 ()
   | Pl1 Status s ->secondaryEffect := `P1;
                    let status_string = getStatusString t1.current.pokeinfo.name s in
@@ -1294,14 +1341,14 @@ let rec game_animation engine buttons (battle: GPack.table) text
                    let atk_string = getAttackString t1.current.pokeinfo.name a in
                    let str_list = Str.split (Str.regexp "\\.") atk_string in
                    List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
-                   animate_attack pokeanim1 poke1_img poke1x poke1y poke2x poke2y moveanim move_img a;
+                   animate_attack pokeanim1 poke1_img poke1x poke1y poke2x poke2y moveanim move_img (getMoveString a);
                    updatetools ();
                    pre_process ()
   | Pl2 AttackMove a -> secondaryEffect := `P2;
                    let atk_string = getAttackString t2.current.pokeinfo.name a in
                    let str_list = Str.split (Str.regexp "\\.") atk_string in
                    List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
-                   animate_attack pokeanim2 poke2_img poke2x poke2y poke1x poke1y moveanim move_img a;
+                   animate_attack pokeanim2 poke2_img poke2x poke2y poke1x poke1y moveanim move_img (getMoveString a);
                    updatetools ();
                    pre_process ()
   | Pl1 Status s ->secondaryEffect := `P1;
