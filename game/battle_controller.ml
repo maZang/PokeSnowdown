@@ -1384,19 +1384,32 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
                               (t2 := StickyWeb::!t2;
                               newmove := StickyWebS !newmove;
                               secondary_effects t)
-      (* for the move sleep talk *)
-    | SleepEffect::t -> let findSleep x = match x with
-                        | (Sleep _, _) -> true
-                        | _ -> false in
-                      if findSleep (atk.current.curr_status) then
-                        (let sleepmove = List.nth [atk.current.pokeinfo.move1; atk.current.pokeinfo.move2; atk.current.pokeinfo.move3; atk.current.pokeinfo.move4] (Random.int 4) in
-                          let prev_status = atk.current.curr_status in
-                         atk.current.curr_status <- (NoNon, snd atk.current.curr_status);
-                         (match sleepmove.dmg_class with
-                          | Status -> newmove := SleepTalkS (!newmove, status_move_handler atk def (wt, t1, t2) sleepmove)
-                          | _ -> newmove := SleepTalkA (!newmove, move_handler atk def (wt, t1, t2) sleepmove)); atk.current.curr_status <- prev_status)
-                      else
-                        (newmove := Fail "Sleep Talk")
+    (* for the move sleep talk *)
+    | SleepEffect::t ->
+        let findSleep x = match x with
+        | (Sleep _, _) -> true
+        | _ -> false in
+        if findSleep (atk.current.curr_status) then
+        (let sleepmove = List.nth [atk.current.pokeinfo.move1;
+            atk.current.pokeinfo.move2; atk.current.pokeinfo.move3;
+            atk.current.pokeinfo.move4] (Random.int 4) in
+            let prev_status = atk.current.curr_status in
+            atk.current.curr_status <- (NoNon, snd atk.current.curr_status);
+            match sleepmove.dmg_class with
+            | Status -> (newmove := SleepTalkS
+                (!newmove, status_move_handler atk def (wt, t1, t2) sleepmove))
+            | _ -> (newmove := SleepTalkA
+                (!newmove, move_handler atk def (wt, t1, t2) sleepmove);
+                                  atk.current.curr_status <- prev_status))
+        else
+          (newmove := Fail "Sleep Talk")
+    | VenomDrench::t ->
+        if (fst (def.current.curr_status) = Poisoned) then
+        (secondary_effects (StageAttack[(Attack,1)]
+                          ::StageAttack[(SpecialAttack,1)]
+                          ::StageAttack[(Speed,1)]::t))
+        else
+          (newmove := Fail "Venom Drench")
     | [] -> ()
     | _ -> failwith "Faulty Game Logic: Debug 1188"
   in

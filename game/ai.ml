@@ -48,7 +48,7 @@ let assign_status_weight (pmove:move) (weight:int) (total:int) : int =
  *
  *  - [poke1] is a battle Pokemon.
  *  - [poke2] is a battle Pokemon.
-*)
+ *)
 let get_move_better (poke1:battle_poke) (poke2:battle_poke) : string =
   let m1 = calculate_move_weight poke2.pokeinfo.move1 poke1.pokeinfo.element in
   let m2 = calculate_move_weight poke2.pokeinfo.move2 poke1.pokeinfo.element in
