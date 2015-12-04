@@ -430,7 +430,7 @@ let getSecondaryEffect str = match str with
     | "sludge-bomb" | "poison-jab" | "gunk-shot" | "sludge-wave" -> [PoisonChance]
   | "cross-poison" | "poison-tail" -> [PoisonChance; IncCrit 1]
   | "twineedle" -> [MultHit 2; PoisonChance]
-  | "growl" | "aurora-beam" -> [StageAttack [(Attack, 1)]]
+  | "growl" | "aurora-beam" | "baby-doll-eyes" -> [StageAttack [(Attack, 1)]]
   | "sing" | "sleep-powder" | "hypnosis" | "lovely-kiss" | "spore" | "dark-void"
     | "grass-whistle" -> [PutToSleep]
   | "supersonic" | "psybeam" | "confusion" | "confuse-ray" | "dizzy-punch"
@@ -475,6 +475,7 @@ let getSecondaryEffect str = match str with
   | "self-destruct" | "explosion" -> [UserFaint]
   | "amnesia" -> [StageBoost [(SpecialDefense, 2)]]
   | "nasty-plot" -> [StageBoost [(SpecialAttack, 2)]]
+  | "charge-beam" -> [StageBoost [(SpecialAttack, 1)]]
   | "dream-eater" -> [DrainMoveSleep]
   | "sky-attack" -> [ChargeMove "The Pokemon is glowing."; IncCrit 1; FlinchMove]
   | "psywave" -> [VariableDamage]
@@ -518,7 +519,7 @@ let getSecondaryEffect str = match str with
   | "cotton-guard" -> [StageBoost [(Defense, 3)]]
   | "tickle" -> [StageAttack [(Attack,1);(Defense,1)]]
   | "captivate" | "eerie-impulse" -> [StageAttack [(SpecialAttack, 2)]]
-  | "fake-tears" -> [StageAttack [(SpecialDefense, 2)]]
+  | "fake-tears" | "acid-spray" -> [StageAttack [(SpecialDefense, 2)]]
   | "knock-off" -> [KnockOff]
   | "frost-breath" | "storm-throw" -> [IncCrit 3]
   | "hone-claws" -> [StageBoost [(Attack,1);(Accuracy,1)]]
