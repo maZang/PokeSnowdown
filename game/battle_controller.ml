@@ -175,8 +175,10 @@ let damageCalculation t1 t2 (w,ter1, ter2) move =
     | Status -> failwith "Faulty Game Logic: Debug 44" in
   let attack = match move.dmg_class with
     | Physical ->
-      (if (t1.current.pokeinfo.ability = "huge-power" || t1.current.pokeinfo.ability = "pure-power") then
-        2. else 1.0) *.
+      (match t1.current.pokeinfo.ability with
+      | "huge-power" | "pure-power" -> 2.0
+      | "guts" -> if fst t1.current.curr_status <> NoNon then 1.5 else 1.0
+      | _ -> 1.0 ) *.
       float_of_int t1.current.battack *.
       getStageAD (fst t1.stat_enhance.attack) *.
       (snd t1.stat_enhance.attack)
@@ -234,7 +236,7 @@ let findSpeedMult t =
 
 (* Gets the attack multiplier based on current team conditions *)
 let findAttackMult t =
-  if fst (t.current.curr_status) = Burn then
+  if fst (t.current.curr_status) = Burn && (t.current.pokeinfo.ability <> "guts") then
     0.5
   else
     1.
@@ -578,8 +580,11 @@ let move_handler atk def wt move =
           ()); secondary_effects t
     (* Recoil moves deal certain damage to the user *)
     | RecoilMove::t ->
-        newmove := Recoil !newmove;
-        atk.current.curr_hp <- max 0 (atk.current.curr_hp - !damage / 3)
+        if atk.current.pokeinfo.ability = "rock-head" then
+          newmove := NoRecoil !newmove
+        else
+          (newmove := Recoil !newmove;
+          atk.current.curr_hp <- max 0 (atk.current.curr_hp - !damage / 3))
     (* Chance of poisoning the opponent *)
     | PoisonChance::t ->
         let randnum = Random.int 100 in

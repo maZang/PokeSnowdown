@@ -900,6 +900,7 @@ let rec getMoveString a =
   | FlinchA -> `DontMove
   | PoisonMove s -> getMoveString s
   | Recoil s -> getMoveString s
+  | NoRecoil s -> getMoveString s
   | BreakConfuse s -> getMoveString s
   | Confused -> `ConfuseMiss
   | DrainA s-> getMoveString s
@@ -1030,6 +1031,7 @@ let rec getAttackString starter a =
   | SleepAttack s -> starter ^ " is fast asleep." ^ getAttackString starter s
   | SleepAttackFail s -> starter ^ " used " ^ s ^ " but it wasn't asleep."
   | TrappingMove s -> getAttackString starter s ^ "The opponent has been trapped."
+  | NoRecoil s -> getAttackString starter s ^ starter ^ "'s ability prevented the recoil damage."
   | SwitchOutA s -> (match !secondaryEffect with
                     | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
                     | `P2 -> current_command := (Some (Poke "random"), Some NoMove));
