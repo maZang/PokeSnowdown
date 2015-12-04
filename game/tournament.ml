@@ -1,10 +1,15 @@
 open Info
 
-type enemy = RoughNeck | Beauty | BugCatcher | CampNerd | DragonTamer | Falkner | FatMan | Psychic | Youngster
+type enemy = RoughNeck | Beauty | BugCatcher | CampNerd | DragonTamer | Falkner | FatMan | Psychic | Youngster | ProfOak
 
 let enemy1 = ref Beauty
 let enemy2 = ref Falkner
 let selectedEnemy = ref Falkner
+
+let profOakBattleQuotes = ["I see. You have beat everyone I've thrown at you.";
+                          "Team Rocket cannot have someone as strong as you";
+                          "interrupting our Hunger Games err Pokemon Snowdown";
+                          "Time to show you why they call me Professor."]
 
 let profOakQuotes = ["Welcome to Pokemon Snowdown.";
                     "You may pick one of the two trainers to face.";
@@ -83,10 +88,11 @@ let getStringFromEnemy enm =
   | BugCatcher -> "bugcatcher"
   | CampNerd -> "campernerd"
   | DragonTamer -> "dragontamer"
-  | Falkner -> "falker"
+  | Falkner -> "falkner"
   | FatMan -> "fatman"
   | Psychic -> "psychic"
   | Youngster -> "youngster"
+  | ProfOak -> "professor oak"
 
 let getRandomOpp1 () =
   let rand_enemy = getRandomEnemy () in
@@ -115,6 +121,7 @@ let getQuotes enm =
   | FatMan -> fatManQuotes
   | Psychic -> psychicQuotes
   | Youngster -> youngsterQuotes
+  | ProfOak -> profOakBattleQuotes
 
 let opp1Quotes () = selectedEnemy := !enemy1; getQuotes !enemy1
 
@@ -127,4 +134,4 @@ let unlockPokemon () =
   let unlock_list = List.map (to_string) (getJson () |> member "unlockable" |> to_list) in
   let rand = Random.int (List.length unlock_list) in
   let poke_to_unlock = List.nth unlock_list rand in
-  Save.addPoke poke_to_unlock; poke_to_unlock
+  Save.addPoke (getStringFromEnemy !selectedEnemy) poke_to_unlock; poke_to_unlock

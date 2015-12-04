@@ -73,7 +73,7 @@ let rec incPrevSave key lst =
   | (s, x)::t -> ((s,x)::(incPrevSave key t))
   | _ -> raise FaultyGameSave
 
-let addPoke str =
+let addPoke beat str =
   if List.mem str (unlocked_poke_string_list ()) then
     raise OwnPokemonAlready
   else
@@ -81,7 +81,7 @@ let addPoke str =
     let json_of_poke = convertPokeToJson poke in
     let prevSave = unlocked_pokemon () in
     let newSave = match prevSave with
-    |`Assoc lst -> let lst' = addToUnlocked str (incPrevSave "unlocked" lst) in
+    |`Assoc lst -> let lst' = addToUnlocked str (incPrevSave beat (incPrevSave "unlocked" lst)) in
                   `Assoc ((str, json_of_poke)::lst')
     | _ -> raise FaultyGameSave in
     Yojson.Basic.to_file "../data/factorysets.json" newSave)
@@ -90,5 +90,18 @@ let getFileMessage () =
   let open Yojson.Basic.Util in
   let save = unlocked_pokemon () in
   match save with
-  | `Assoc l -> "Unlocked Pokemon: " ^ (List.assoc "unlocked" l |> to_int |> string_of_int)
+  | `Assoc l -> "Unlocked Pokemon: " ^ (List.assoc "unlocked" l |> to_int |> string_of_int) ^ "\n" ^
+                "You beat baldman " ^ (List.assoc "baldman" l |> to_int |> string_of_int) ^ " times\n" ^
+                "You beat beauty " ^ (List.assoc "beauty" l |> to_int |> string_of_int) ^ " times\n" ^
+                "You beat bugcatcher " ^ (List.assoc "bugcatcher" l |> to_int |> string_of_int) ^ " times\n" ^
+                "You beat campernerd " ^ (List.assoc "campernerd" l |> to_int |> string_of_int) ^ " times\n" ^
+                "You beat dragontamer " ^ (List.assoc "dragontamer" l |> to_int |> string_of_int) ^ " times\n" ^
+                "You beat falkner " ^ (List.assoc "falkner" l |> to_int |> string_of_int) ^ " times\n" ^
+                "You beat fatman " ^ (List.assoc "fatman" l |> to_int |> string_of_int) ^ " times\n" ^
+                "You beat psychic " ^ (List.assoc "psychic" l |> to_int |> string_of_int) ^ " times\n" ^
+                "You beat youngster " ^ (List.assoc "youngster" l |> to_int |> string_of_int) ^ " times\n" ^
+                (let times_beat_oak = List.assoc "professor oak" l |> to_int in if times_beat_oak > 0 then
+                "You beat Professor Oak " ^ string_of_int times_beat_oak ^ " times\n" else "")
+
+
   | _ -> raise FaultyGameSave
