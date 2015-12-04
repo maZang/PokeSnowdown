@@ -8,11 +8,12 @@ let selectedEnemy = ref Falkner
 
 let profOakBattleQuotes = ["I see. You have beat everyone I've thrown at you.";
                           "Team Rocket cannot have someone as strong as you";
-                          "interrupting our Hunger Games err Pokemon Snowdown";
+                          "interrupting our Hunger Games"; "...err Pokemon Snowdown";
                           "Time to show you why they call me Professor."]
 
-let profOakQuotes = ["Welcome to Pokemon Snowdown.";
-                    "You may pick one of the two trainers to face.";
+let profOakQuotes = ["Welcome to Pokemon Snowdown. Due to the stark winter";
+                    "we have held a recent Pokemon competition to maintain the population.";
+                    "You have the option to choose any of the two trainers to battle.";
                     "Look at the enemy trainers closely to discern what type of Pokemon they use.";
                     "You will have the option of choosing your Pokemon after you make your selection."]
 
@@ -104,12 +105,6 @@ let getRandomOpp2 () =
   let sprite = getStringFromEnemy rand_enemy in
   enemy2:= rand_enemy; sprite
 
-let profOakQuotes = ["Welcome to Pokemon Snowdown.";
-                    "You may pick one of the two trainers to face.";
-                    "Look at the enemy trainers closely to discern what type of Pokemon they use.";
-                    "You will have the option of choosing your Pokemon after you make your selection."]
-
-
 let getQuotes enm =
   match enm with
   | RoughNeck -> roughNeckQuotes
@@ -122,6 +117,8 @@ let getQuotes enm =
   | Psychic -> psychicQuotes
   | Youngster -> youngsterQuotes
   | ProfOak -> profOakBattleQuotes
+
+let getProfOakQuotes () = selectedEnemy := ProfOak; profOakBattleQuotes
 
 let opp1Quotes () = selectedEnemy := !enemy1; getQuotes !enemy1
 
@@ -171,4 +168,8 @@ let tilemap_nooak = [(0,0);(0,1);(0,2);(0,3);(0,4);(0,5);(0,6);(0,7);
                        (* tree stump and rock *)
                        (1,1);(13,1);(12,1)]
 
-let getObstacleCoordinates () = tilemap_nooak
+let getObstacleCoordinates () =
+  if Save.beat_game () then
+    tilemap_nooak
+  else
+    tilemap_profoak

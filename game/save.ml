@@ -73,6 +73,13 @@ let rec incPrevSave key lst =
   | (s, x)::t -> ((s,x)::(incPrevSave key t))
   | _ -> raise FaultyGameSave
 
+let rec incPlayOak () =
+  let prevSave = unlocked_pokemon () in
+  let newSave = match prevSave with
+  |`Assoc lst -> `Assoc (incPrevSave "play oak" lst)
+  | _ -> raise FaultyGameSave in
+  Yojson.Basic.to_file "../data/factorysets.json" newSave
+
 let addPoke beat str =
   if List.mem str (unlocked_poke_string_list ()) then
     raise OwnPokemonAlready
@@ -102,6 +109,16 @@ let getFileMessage () =
                 "You beat youngster " ^ (List.assoc "youngster" l |> to_int |> string_of_int) ^ " times\n" ^
                 (let times_beat_oak = List.assoc "professor oak" l |> to_int in if times_beat_oak > 0 then
                 "You beat Professor Oak " ^ string_of_int times_beat_oak ^ " times\n" else "")
+  | _ -> raise FaultyGameSave
 
-
+let beat_game () =
+  let open Yojson.Basic.Util in
+  match unlocked_pokemon () with
+  | `Assoc l -> let beat_list = [(List.assoc "baldman" l |> to_int); (List.assoc "beauty" l |> to_int);
+                  (List.assoc "bugcatcher" l |> to_int); (List.assoc "campernerd" l |> to_int);
+                  (List.assoc "dragontamer" l |> to_int); (List.assoc "falkner" l |> to_int);
+                  (List.assoc "fatman" l |> to_int); (List.assoc "psychic" l |> to_int);
+                  (List.assoc "youngster" l |> to_int)] in
+                let times_play_oak = List.assoc "play oak" l |> to_int in
+                List.fold_left (fun acc x -> (x > times_play_oak) && acc) true beat_list
   | _ -> raise FaultyGameSave
