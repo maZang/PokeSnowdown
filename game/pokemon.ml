@@ -434,7 +434,7 @@ let getSecondaryEffect str = match str with
   | "double-kick" | "gear-grind" | "bonemerang" | "double-hit" | "dual-chop" -> [MultHit 2]
   | "sand-attack" | "smokescreen" | "kinesis" | "flash"
     | "mud-slap" | "octazooka" | "leaf-tornado" | "mud-bomb"
-    | "muddy-water" | "sand-attack" -> [StageAttack [(Accuracy, 1)]]
+    | "muddy-water" -> [StageAttack [(Accuracy, 1)]]
   | "take-down" | "double-edge" | "submission" | "brave-bird" | "wild-charge"
       | "wood-hammer" | "flare-blitz" | "head-smash" | "head-charge" -> [RecoilMove]
   | "tail-whip" | "leer" | "iron-tail" | "crunch"
