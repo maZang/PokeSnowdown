@@ -730,30 +730,18 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-<<<<<<< HEAD
   {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "flail"; move2 =
   getMoveFromString "magnitude"; move3 = getMoveFromString "hyperspace-fury";
   move4 = getMoveFromString "poison-powder"; hp = 98; attack = 100; special_attack = 165; defense = 65;
-=======
-  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "metronome"; move2 =
-  getMoveFromString "v-create"; move3 = getMoveFromString "pound";
-  move4 = getMoveFromString "electro-ball"; hp = 98; attack = 100; special_attack = 165; defense = 65;
->>>>>>> 9ccc20d7bd1b82b1df3acb72a491aa0d2dd054f2
   speed = 120; special_defense = 135; ability="drizzle"; evs; nature; item}
 
 let getTestOpp () =
   let evs = {attack = 255; defense =  0; special_attack= 0; special_defense= 255;
             hp=255; speed=255} in
   let nature = Bold in
-<<<<<<< HEAD
-  let item = ChoiceScarf in
-  {name="gallade-mega"; element=[Grass]; move1= getMoveFromString "roost"; move2 =
-  getMoveFromString "sand-tomb"; move3 = getMoveFromString "earthquake";
-=======
   let item = Leftovers in
-  {name="gallade-mega"; element=[Grass;Flying]; move1= getMoveFromString "roost"; move2 =
+  {name="gallade-mega"; element=[Grass]; move1= getMoveFromString "roost"; move2 =
   getMoveFromString "sand-tomb"; move3 = getMoveFromString "rapid-spin";
->>>>>>> 9ccc20d7bd1b82b1df3acb72a491aa0d2dd054f2
   move4 = getMoveFromString "toxic"; hp = 68; attack = 255; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="gale-wings"; evs; nature; item}
 

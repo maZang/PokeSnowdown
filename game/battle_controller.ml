@@ -1014,7 +1014,7 @@ let move_handler atk def wt move =
     | `BreakConfuse s -> BreakConfuse (decompose s)
     | `Confused -> Confused in
   let reason' = decompose reason in
-  if hit && !damage > 0 then (
+  if hit && (!damage > 0 || move.power = 0) then (
     let hit', newreason = hitAttack atk def weather move !damage reason' in
     (* damage is always dealt before secondary effects calculated *)
     if hit' then (
