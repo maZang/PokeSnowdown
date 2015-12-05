@@ -2140,7 +2140,7 @@ let handle_action state action1 action2 =
   let t1, t2, w, m1, m2 = match get_game_status state with
     | Battle InGame (t1, t2, w, m1, m2) -> t1, t2, w, m1, m2
     | _ -> failwith "Faulty Game Logic" in
-  let () = prevpoke1 := t1.current; prevpoke2 := t2.current in
+  let () = prevpoke1 := {t1.current with curr_hp = t1.current.curr_hp}; prevpoke2 := {t2.current with curr_hp = t2.current.curr_hp} in
   match action1 with
   | Poke p' -> let p = if p' = "random" then getRandomPoke t1 else p' in
       (match action2 with
