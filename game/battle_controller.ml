@@ -933,6 +933,19 @@ let move_handler atk def wt move =
                       else
                         (def.current.curr_hp <- def.current.curr_hp + !damage;
                           newmove := SleepAttackFail move.name)
+    | ChancePower::t ->
+        (Printf.printf "aksdjlkj\n%!";let randum = Random.int 100 in
+        (if (randum < 5) then move.power <- 10
+        else if (randum >= 5 && randum < 15) then move.power <- 30
+        else if (randum >= 15 && randum < 35) then move.power <- 50
+        else if (randum >= 35 && randum < 65) then move.power <- 70
+        else if (randum >= 65 && randum < 85) then move.power <- 90
+        else if (randum >= 85 && randum < 95) then move.power <- 110
+        else move.power <- 150);
+        let moveDescript', fdamage' = damageCalculation atk def weather move in
+        let damage' = int_of_float fdamage' in
+        def.current.curr_hp <- max 0 (def.current.curr_hp - damage' + !damage);
+        secondary_effects t)
     (* for the trapping moves *)
     | CausePartialTrapping::t -> let rec findPartialTrapping = function
                                   | (PartialTrapping (s, _))::t -> if s = move.name then true else findPartialTrapping t

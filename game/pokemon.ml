@@ -466,6 +466,7 @@ let getSecondaryEffect str = match str with
     | "shock-wave" | "magical-leaf" | "shadow-punch" -> [NeverMiss]
   | "recover" | "soft-boiled" | "milk-drink" | "roost" | "heal-order"
     | "slack-off" -> [Recovery]
+  | "hyperspace-fury" -> [StageBoost [(Defense,-1)]; NeverMiss]
   | "low-kick" | "grass-knot" | "crush-grip"-> [WeightDamage]
   | "sonic-boom" -> [ConstantDmg 20]
   | "dragon-rage" -> [ConstantDmg 40]
@@ -568,6 +569,7 @@ let getSecondaryEffect str = match str with
   | "venom-drench" -> [VenomDrench]
   | "v-create" -> [StageBoost [(Defense,-1); (SpecialDefense,-1); (Speed,-1)]]
   | "metronome" -> [RandMove]
+  | "magnitude" -> [ChancePower]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -722,8 +724,8 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "metronome"; move2 =
-  getMoveFromString "v-create"; move3 = getMoveFromString "pound";
+  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "flail"; move2 =
+  getMoveFromString "magnitude"; move3 = getMoveFromString "hyperspace-fury";
   move4 = getMoveFromString "poison-powder"; hp = 98; attack = 100; special_attack = 165; defense = 65;
   speed = 120; special_defense = 135; ability="drizzle"; evs; nature; item}
 
@@ -732,7 +734,7 @@ let getTestOpp () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = ChoiceScarf in
-  {name="gallade-mega"; element=[Grass;Flying]; move1= getMoveFromString "roost"; move2 =
+  {name="gallade-mega"; element=[Grass]; move1= getMoveFromString "roost"; move2 =
   getMoveFromString "sand-tomb"; move3 = getMoveFromString "earthquake";
   move4 = getMoveFromString "toxic"; hp = 68; attack = 255; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="gale-wings"; evs; nature; item}
