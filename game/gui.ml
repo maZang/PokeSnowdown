@@ -450,7 +450,7 @@ let make_menu ?packing () =
   let img = GMisc.image ~file:"./gui_pics/main.gif" ~packing:(hbox2#pack)
     ~width:screen_width ~height:(5*screen_height /6) () in
   (* load_screen is a gif that plays before battle (during initialization)*)
-  let load_screen = GMisc.image ~file:"../data/backgrounds/button.png"
+  let load_screen = GMisc.image ~file:"../data/backgrounds/background.gif"
     ~show:false ~packing:(vbox#pack) () in
   (* Return all objects created *)
   (vbox, hbox1, hbox2, button1, button2, button3, button4,

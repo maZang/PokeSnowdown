@@ -2308,8 +2308,8 @@ let rec main_controller_tourn engine gui_ready ready ready_gui t =
 (* Initialize controller -- called by Game.ml *)
 let initialize_controller (engine, battle_engine) =
   let battle_status, gui_ready, ready, ready_gui = battle_engine in
-    Printf.printf "Initializing battle\n%!";
-  upon (Ivar.read !battle_status) (fun s -> match s with
+  upon (Ivar.read !battle_status) (Printf.printf "Initializing battle\n%!";
+    fun s -> match s with
     | Random1p -> (main_controller_random1p engine gui_ready ready ready_gui)
     | Random2p -> (main_controller_random2p engine gui_ready ready ready_gui)
     | TournBattle t -> (main_controller_tourn engine gui_ready ready ready_gui t)
