@@ -1009,7 +1009,9 @@ let move_handler atk def wt move =
         let current = float_of_int def.current.curr_hp in
         let base = float_of_int def.current.bhp in
         if (current /. base >= 0.85) then secondary_effects t
-        else newmove := FailA "Fake Out"
+        else
+          def.current.curr_hp <- (def.current.curr_hp + !damage);
+          newmove := FailA "Fake Out"
     | [] -> ()
     | _ -> failwith "Faulty Game Logic: Debug 783"
     in
