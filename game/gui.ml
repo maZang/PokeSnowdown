@@ -921,6 +921,7 @@ let rec getMoveString a =
   | LifeOrbA s -> getMoveString s
   | RapidSpinA s -> getMoveString s
   | KnockedOff (_, s) -> getMoveString s
+  | HitSelf s -> getMoveString s
 
 let rec getMoveStringStatus a =
   match a with
@@ -1026,7 +1027,7 @@ let rec getAttackString starter a =
   | FreezeMove s -> getAttackString starter s ^ "The opponent is frozen solid."
   | ParaMove s -> getAttackString starter s ^ "The opponent has been paralyzed."
   | SleepMove s -> getAttackString starter s ^ "The opponent has been put to sleep."
-  | MissMove s ->  starter ^ " used " ^ s ^ " but it missed!"
+  | MissMove s ->  starter ^ " used " ^ s ^ " but it missed."
   | Asleep -> starter ^ " was fast asleep!"
   | Wake s -> starter ^ " woke up." ^ getAttackString starter s
   | FrozenSolid -> starter ^ " was frozen solid!"
@@ -1058,6 +1059,7 @@ let rec getAttackString starter a =
   | NoRecoil s -> getAttackString starter s ^ starter ^ "'s ability prevented the recoil damage."
   | LifeOrbA s -> getAttackString starter s ^ starter ^ " has lost some health from its life orb."
   | RapidSpinA s -> getAttackString starter s ^ starter ^ " has removed some terrain elements."
+  | HitSelf s -> getAttackString starter s ^ starter ^ " has lost half of it's max hp."
   | SwitchOutA s -> (match !secondaryEffect with
                     | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
                     | `P2 -> current_command := (Some (Poke "random"), Some NoMove));
