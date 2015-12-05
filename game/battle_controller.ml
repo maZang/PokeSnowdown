@@ -104,7 +104,7 @@ let initialize_battle team1 team2 =
   convertToMega team2;
   team1.current <- getBattlePoke (getTestPoke ());
   team2.current <- getBattlePoke (getTestOpp ());
-  team1.dead <- team1.alive; team1.alive <- [];  Battle (InGame
+   Battle (InGame
     (team1, team2, {weather = ClearSkies; terrain = {side1= ref []; side2= ref []}}, ref (Pl1 NoAction), ref (Pl2 NoAction)))
 
 (* Gets a random team of pokemon for initialization *)
@@ -2361,6 +2361,22 @@ let rec main_controller_preset1p engine gui_ready ready ready_gui t =
   Ivar.fill !ready_gui true in
   main_loop_1p engine gui_ready ready ready_gui ()
 
+let rec main_controller_preset2p engine gui_ready ready ready_gui t t'=
+  Printf.printf "Initializing battle p1p\n%!";
+  let stat_enhance = {attack=(0,1.); defense=(0,1.); speed=(0,1.);
+      special_attack=(0,1.); special_defense=(0,1.); evasion=(0,1.);
+      accuracy=(0,1.)} in
+  let team1' = List.map getBattlePoke t in
+  let team1 = {current = List.hd team1'; alive = List.tl team1'; dead = [];
+                  stat_enhance} in
+  let team2' = List.map getBattlePoke t' in
+  let team2 = {current = List.hd team2'; alive = List.tl team2'; dead = [];
+                stat_enhance} in
+  let battle = initialize_battle team1 team2 in
+  let () = engine := Ivar.create (); Ivar.fill !engine battle;
+  Ivar.fill !ready_gui true in
+  main_loop_1p engine gui_ready ready ready_gui ()
+
 let rec main_controller_tourn engine gui_ready ready ready_gui t =
   Printf.printf "Initializing battle t\n%!";
   let stat_enhance = {attack=(0,1.); defense=(0,1.); speed=(0,1.);
@@ -2383,5 +2399,6 @@ let initialize_controller (engine, battle_engine) =
     | Random1p -> (main_controller_random1p engine gui_ready ready ready_gui)
     | Random2p -> (main_controller_random2p engine gui_ready ready ready_gui)
     | TournBattle t -> (main_controller_tourn engine gui_ready ready ready_gui t)
-    | Preset1p t -> (main_controller_preset1p engine gui_ready ready ready_gui t));
+    | Preset1p t -> (main_controller_preset1p engine gui_ready ready ready_gui t)
+    | Preset2p (t, t') -> main_controller_preset2p engine gui_ready ready ready_gui t t');
   ()
