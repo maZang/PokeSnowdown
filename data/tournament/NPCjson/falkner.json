@@ -199,5 +199,105 @@
       "speed": "0"
     }
   },
+  "tornadus": {
+    "name": "tornadus",
+    "moves": [
+      "hurricane",
+      "heat-wave",
+      "grass-knot",
+      "taunt"
+    ],
+    "ability": "prankster",
+    "nature": "timid",
+    "item": "life orb",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "4",
+      "speed": "252"
+    }
+  },
+  "vaporeon": {
+    "name": "vaporeon",
+    "moves": [
+      "wish",
+      "scald",
+      "protect",
+      "baton-pass"
+    ],
+    "ability": "water-absorb",
+    "nature": "calm",
+    "item": "leftovers",
+    "evs": {
+      "hp": "204",
+      "attack": "0",
+      "special-attack": "0",
+      "defense": "248",
+      "special-defense": "56",
+      "speed": "0"
+    }
+  },
+  "venomoth": {
+    "name": "venomoth",
+    "moves": [
+      "quiver-dance",
+      "sleep-powder",
+      "bug-buzz",
+      "sludge-bomb"
+    ],
+    "ability": "tinted-lens",
+    "nature": "timid",
+    "item": "life orb",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "yanmega": {
+    "name": "yanmega",
+    "moves": [
+      "bug-buzz",
+      "air-slash",
+      "giga-drain",
+      "u-turn"
+    ],
+    "ability": "tinted-lens",
+    "nature": "modest",
+    "item": "choice specs",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "4",
+      "speed": "252"
+    }
+  },
+  "zoroark": {
+    "name": "zoroark",
+    "moves": [
+      "swords-dance",
+      "sucker-punch",
+      "knock-off",
+      "return"
+    ],
+    "ability": "illusion",
+    "nature": "adamant",
+    "item": "life orb",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "0",
+      "special-defense": "4",
+      "speed": "252"
+    }
+  },
 	"pokemon": [ "aerodactyl", "blastoise", "crobat", "feraligatr", "gliscor", "gyarados", "manaphy", "noivern", "pangoro", "shuckle", "tornadus", "vaporeon", "venomoth", "yanmega", "zoroark" ]
 }
