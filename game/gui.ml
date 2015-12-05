@@ -450,6 +450,9 @@ let make_menu ?packing () =
   let img = GMisc.image ~file:"./gui_pics/main.gif" ~packing:(hbox2#pack)
     ~width:screen_width ~height:(5*screen_height /6) () in
   (* load_screen is a gif that plays before battle (during initialization)*)
+  let load_screen_table = GPack.table ~rows:4 ~columns: 4 ?packing ~width:screen_width
+    ~height:screen_height ~show:false ~packing:(vbox#pack) () in
+  let player_img = GMisc.image ~file:"../data/backgrounds/"
   let load_screen = GMisc.image ~file:"../data/backgrounds/background.gif"
     ~show:false ~packing:(vbox#pack) () in
   (* Return all objects created *)
@@ -544,16 +547,20 @@ let load_battle_load engine img bg_img load_screen battle text buttonhide button
     load_screen#misc#show (); current_screen :=
     (Battle Loading); Ivar.fill !engine (Battle Loading);
     Printf.printf "Initializing gui\n%!";
-    Ivar.fill !battle_status mode); let rec load_helper () =
+    Ivar.fill !battle_status mode);
+    upon (Ivar.read !ready_gui) (fun x ->
+    ready_gui := Ivar.create ();
     upon (Ivar.read !engine) (fun s -> match s with
       | Battle InGame _ ->
-          (main_menu#misc#show ();
+          (Printf.printf "LoadScreenbug\n%!";
+          Thread.delay 1.;
+          main_menu#misc#show ();
           battle_screen#misc#show ();
           load_screen#misc#hide ();
           load_battle_screen engine img bg_img battle text buttonhide buttonshow
           (battle_status, gui_ready) poke1_img poke2_img
           text_buffer health_holders ())
-      | _ -> load_helper ()) in load_helper())
+      | _ -> failwith "Faulty Game Logic: Debug 557")))
   else
     ()
 

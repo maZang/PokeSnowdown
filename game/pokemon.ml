@@ -747,7 +747,7 @@ let getTestPoke () =
   let item = Nothing in
   {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "flamethrower"; move2 =
   getMoveFromString "parting-shot"; move3 = getMoveFromString "ice-beam";
-  move4 = getMoveFromString "thunder-wave"; hp = 120; attack = 100; special_attack = 150; defense = 85;
+  move4 = getMoveFromString "whirlwind"; hp = 120; attack = 100; special_attack = 150; defense = 85;
   speed = 120; special_defense = 200; ability="speed-boost"; evs; nature; item}
 
 let getTestOpp () =
@@ -756,7 +756,7 @@ let getTestOpp () =
   let nature = Bold in
   let item = Nothing in
   {name="gallade-mega"; element=[Grass]; move1= getMoveFromString "will-o-wisp"; move2 =
-  getMoveFromString "work-up"; move3 = getMoveFromString "ice-beam";
+  getMoveFromString "work-up"; move3 = getMoveFromString "whirlwind";
   move4 = getMoveFromString "cosmic-power"; hp = 100; attack = 100; special_attack = 80; defense = 40;
   speed = 100; special_defense = 50; ability="limber"; evs; nature; item}
 
