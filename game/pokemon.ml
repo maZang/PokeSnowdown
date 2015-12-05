@@ -730,20 +730,20 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "flail"; move2 =
-  getMoveFromString "magnitude"; move3 = getMoveFromString "hyperspace-fury";
-  move4 = getMoveFromString "poison-powder"; hp = 98; attack = 100; special_attack = 165; defense = 65;
-  speed = 120; special_defense = 135; ability="drizzle"; evs; nature; item}
+  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "volt-switch"; move2 =
+  getMoveFromString "leaf-blade"; move3 = getMoveFromString "ice-beam";
+  move4 = getMoveFromString "poison-powder"; hp = 98; attack = 100; special_attack = 400; defense = 65;
+  speed = 120; special_defense = 200; ability="drizzle"; evs; nature; item}
 
 let getTestOpp () =
   let evs = {attack = 255; defense =  0; special_attack= 0; special_defense= 255;
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gallade-mega"; element=[Grass]; move1= getMoveFromString "roost"; move2 =
-  getMoveFromString "sand-tomb"; move3 = getMoveFromString "rapid-spin";
-  move4 = getMoveFromString "toxic"; hp = 68; attack = 255; special_attack = 165; defense = 65;
-  speed = 100; special_defense = 135; ability="gale-wings"; evs; nature; item}
+  {name="gallade-mega"; element=[Grass]; move1= getMoveFromString "ice-beam"; move2 =
+  getMoveFromString "volt-switch"; move3 = getMoveFromString "rapid-spin";
+  move4 = getMoveFromString "toxic"; hp = 68; attack = 255; special_attack = 300; defense = 65;
+  speed = 100; special_defense = 50; ability="gale-wings"; evs; nature; item}
 
 let getPokeToolTip t =
   let battlePoke = t.current in

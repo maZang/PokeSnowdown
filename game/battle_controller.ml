@@ -115,7 +115,7 @@ let getRandomTeam mode =
       accuracy=(0,1.)} in
   {current = (getBattlePoke(randFunc ()));
   dead =[]; alive = (List.map getBattlePoke
-  (List.map randFunc [();();();();()])); stat_enhance}
+  (List.map getTestOpp [();();();();()])); stat_enhance}
 
 (* This function returns the accuracy/evasion bonus given by the stages.
    Pre-condition: num is between -6 and 6
@@ -1797,7 +1797,7 @@ let handle_two_moves t1 t2 w m1 m2 a1 a2 =
               | _      ->
                       if List.mem SelfSwitch curr_move.secondary && List.length t1.alive > 0 then
                         (m1 := Pl1 (ForceChoose newmove); m2 := Pl2 (ForceMove curr_move'.name))
-                      else if List.mem SelfSwitch curr_move'.secondary then
+                      else if (List.mem SelfSwitch curr_move'.secondary) && (List.length t2.alive > 0) then
                         (let newmove' = move_handler t2 t1 (w, w.terrain.side2, w.terrain.side1) curr_move' in m1 := Pl1 (AttackMove newmove); m2 := Pl2 (ForceChoose newmove'))
                       else
                         (let newmove' = move_handler t2 t1 (w, w.terrain.side2, w.terrain.side1) curr_move' in
@@ -1841,7 +1841,7 @@ let handle_two_moves t1 t2 w m1 m2 a1 a2 =
               | _      ->
                         if List.mem SelfSwitch curr_move'.secondary && List.length t2.alive > 0 then
                           (m1 := Pl2 (ForceChoose newmove); m2 := Pl1 (ForceMove curr_move.name))
-                        else if List.mem SelfSwitch curr_move.secondary then
+                        else if (List.mem SelfSwitch curr_move.secondary) && (List.length t1.alive > 0) then
                           (let newmove'= move_handler t1 t2 (w, w.terrain.side1, w.terrain.side2) curr_move in m1 := Pl2 (AttackMove newmove); m2 := Pl1 (ForceChoose newmove'))
                         else
                           (let newmove'= move_handler t1 t2 (w, w.terrain.side1, w.terrain.side2) curr_move in
