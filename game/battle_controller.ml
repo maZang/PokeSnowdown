@@ -1041,6 +1041,23 @@ let move_handler atk def wt move =
         (let tmp = atk.current.curr_hp in
         if tmp < def.current.curr_hp then
         def.current.curr_hp <- tmp; secondary_effects t)
+    | Counter::t ->
+        (let prevmove, prevpoke = if wt.terrain.side1 == t1 then !prevmove2, !prevpoke1
+                                 else
+                                  if wt.terrain.side1 == t2 then !prevmove1, !prevpoke2
+                                  else failwith "Faulty Game Logic: Debug 1044" in
+        (match move.name with
+        | "counter" -> (match prevmove.dmg_class with
+                        | Physical -> (let hpdamage = prevpoke.curr_hp - atk.current.curr_hp in
+                                      def.current.curr_hp <- max 0 (def.current.curr_hp - (2*hpdamage));
+                                      secondary_effects t)
+                        | _ -> newmove := FailA "Counter")
+        | "mirror-coat" -> (match prevmove.dmg_class with
+                            | Special -> (let hpdamage = prevpoke.curr_hp - atk.current.curr_hp in
+                                         def.current.curr_hp <- max 0 (def.current.curr_hp - (2*hpdamage));
+                                         secondary_effects t)
+                        | _ -> newmove := FailA "Mirror Coat")
+        | _ -> ()))
     | [] -> ()
     | _ -> failwith "Faulty Game Logic: Debug 783"
     in

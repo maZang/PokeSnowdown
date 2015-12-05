@@ -39,6 +39,10 @@ let poke2y = 80
 let status_img1 = GMisc.image ~file:"../data/fx/status/healthy.png" ()
 let status_img2 = GMisc.image ~file:"../data/fx/status/healthy.png" ()
 
+(* loading screen images *)
+let player_img = GMisc.image ~file:"../data/backgrounds/player_versus/player1.gif" ()
+let versus_img = GMisc.image ~file:"../data/backgrounds/player_versus/player2.gif" ()
+
 (* used for user input *)
 let continue = ref false
 
@@ -450,19 +454,16 @@ let make_menu ?packing () =
   let img = GMisc.image ~file:"./gui_pics/main.gif" ~packing:(hbox2#pack)
     ~width:screen_width ~height:(5*screen_height /6) () in
   (* load_screen is a gif that plays before battle (during initialization)*)
-  let load_screen = GPack.table ~rows:4 ~columns: 4 ?packing ~width:screen_width
-    ~height:screen_height ~show:false () in
+  let load_screen = GPack.table ~rows:4 ~columns: 4 ~width:screen_width
+    ~height:screen_height  () in
   let load_screen_img = GMisc.image ~file:"../data/backgrounds/versus_screen.png" () in
   let playeranim = GPack.fixed ~width:screen_width ~height:screen_height () in
   let versusanim = GPack.fixed ~width:screen_width ~height:screen_height () in
-  let player_img = GMisc.image ~file:"../data/backgrounds/player_versus/002.gif" () in
-  let versus_img = GMisc.image ~file:"../data/backgrounds/player_versus/002.gif" () in
-  versusanim#put versus_img#coerce (poke2x-80) (poke2y-50);
-  playeranim#put player_img#coerce (poke1x -40) (poke1y + 105);
+  versusanim#put versus_img#coerce (300) (100);
+  playeranim#put player_img#coerce (300) (320);
   load_screen#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH playeranim#coerce;
   load_screen#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH versusanim#coerce;
   load_screen#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH load_screen_img#coerce;
-  vbox#add load_screen#coerce;
   (* Return all objects created *)
   (vbox, hbox1, hbox2, button1, button2, button3, button4,
     button5, button6, button7, button8, img, load_screen)
@@ -548,11 +549,15 @@ engine -- Battle InGame
 *)
 let load_battle_load engine img bg_img load_screen battle text buttonhide buttonshow
   (battle_status, gui_ready, ready, ready_gui) mode main_menu battle_screen
-  poke1_img poke2_img text_buffer health_holders () =
+  poke1_img poke2_img text_buffer health_holders menu_holder () =
   (* wait for engine to be filled by the battle controller *)
   if (Ivar.is_empty (!engine)) then
     ((main_menu#misc#hide (); battle_screen#misc#hide ();
-    load_screen#misc#show (); current_screen :=
+     (match mode with
+    | TournBattle _ -> versus_img#set_file ("../data/backgrounds/player_versus/" ^ (getStringOfEnemy ()) ^ ".gif")
+    | _ -> versus_img#set_file "../data/backgrounds/player_versus/player2.gif");
+     menu_holder#add load_screen#coerce;
+    current_screen :=
     (Battle Loading); Ivar.fill !engine (Battle Loading);
     Printf.printf "Initializing gui\n%!";
     Ivar.fill !battle_status mode);
@@ -561,10 +566,10 @@ let load_battle_load engine img bg_img load_screen battle text buttonhide button
     upon (Ivar.read !engine) (fun s -> match s with
       | Battle InGame _ ->
           (Printf.printf "LoadScreenbug\n%!";
-          Thread.delay 10.;
+          Thread.delay 2.5;
           main_menu#misc#show ();
           battle_screen#misc#show ();
-          load_screen#misc#hide ();
+          menu_holder#remove  load_screen#coerce;
           load_battle_screen engine img bg_img battle text buttonhide buttonshow
           (battle_status, gui_ready) poke1_img poke2_img
           text_buffer health_holders ())
@@ -574,7 +579,7 @@ let load_battle_load engine img bg_img load_screen battle text buttonhide button
 
 let load_tournament engine img bg_img load_screen battle text buttonhide buttonshow
   (battle_status, gui_ready, ready, ready_gui) main_menu (battle_screen : GPack.box)
-  poke1_img poke2_img text_buffer health_holders () =
+  poke1_img poke2_img text_buffer health_holders menu_holder () =
   let tournament = match buttonhide with
     | [_;_;tournament;_] -> tournament
     | _ -> failwith "Faulty Game Logic: Debug 508" in
@@ -622,7 +627,7 @@ let load_tournament engine img bg_img load_screen battle text buttonhide buttons
                           tournament#set_label "Tournament";
                           load_battle_load engine img bg_img load_screen battle text buttonhide buttonshow
                           (battle_status, gui_ready, ready, ready_gui) (TournBattle [poke1;poke2;poke3;poke4;poke5;poke6]) main_menu battle_screen
-                          poke1_img poke2_img text_buffer health_holders ()
+                          poke1_img poke2_img text_buffer health_holders menu_holder ()
                       ) with _ -> let error_win = GWindow.message_dialog ~message:"Error in your Pokemon selection. Try making sure everything is spelled correctly."
                                   ~buttons:GWindow.Buttons.close  ~message_type:`ERROR () in ignore(error_win#connect#close ~callback:(error_win#destroy));
                                   ignore (error_win#connect#response ~callback:(fun s -> error_win#destroy ())); error_win#show ())
@@ -631,14 +636,14 @@ let load_tournament engine img bg_img load_screen battle text buttonhide buttons
 
 let load_random  engine img bg_img load_screen battle text buttonhide buttonshow
   (battle_status, gui_ready, ready, ready_gui) main_menu battle_screen
-  poke1_img poke2_img text_buffer health_holders () =
+  poke1_img poke2_img text_buffer health_holders menu_holder () =
   match !current_screen with
   | Menu1P ->  load_battle_load engine img bg_img load_screen battle text buttonhide buttonshow
               (battle_status, gui_ready, ready, ready_gui) Random1p main_menu battle_screen
-              poke1_img poke2_img text_buffer health_holders ()
+              poke1_img poke2_img text_buffer health_holders menu_holder ()
   | Menu2P -> load_battle_load engine img bg_img load_screen battle text buttonhide buttonshow
               (battle_status, gui_ready, ready, ready_gui) Random2p main_menu battle_screen
-              poke1_img poke2_img text_buffer health_holders ()
+              poke1_img poke2_img text_buffer health_holders menu_holder ()
   | _ -> failwith "Faulty Game Logic: Debug 298"
 
 let load_poke_edit engine img bg_img load_screen battle text buttonhide (poke_edit : GButton.button)
@@ -706,7 +711,7 @@ let load_poke_edit engine img bg_img load_screen battle text buttonhide (poke_ed
 
 let load_preset engine img bg_img load_screen battle text buttonhide preset buttonshow
   (battle_status, gui_ready, ready, ready_gui) main_menu (battle_screen : GPack.box)
-  poke1_img poke2_img text_buffer health_holders () =
+  poke1_img poke2_img text_buffer health_holders menu_holder () =
   (match !current_screen with
     | Menu1P -> (current_screen := Preset1PChoose;
                 List.iter (fun s -> s#misc#hide ()) buttonhide;
@@ -735,7 +740,7 @@ let load_preset engine img bg_img load_screen battle text buttonhide preset butt
                           preset#set_label "Preset Battle";
                           load_battle_load engine img bg_img load_screen battle text buttonhide buttonshow
                           (battle_status, gui_ready, ready, ready_gui) (Preset1p [poke1;poke2;poke3;poke4;poke5;poke6]) main_menu battle_screen
-                          poke1_img poke2_img text_buffer health_holders ()
+                          poke1_img poke2_img text_buffer health_holders menu_holder ()
                       ) with _ -> let error_win = GWindow.message_dialog ~message:"Error in your Pokemon selection. Try making sure everything is spelled correctly."
                                   ~buttons:GWindow.Buttons.close  ~message_type:`ERROR () in ignore(error_win#connect#close ~callback:(error_win#destroy));
                                   ignore (error_win#connect#response ~callback:(fun s -> error_win#destroy ())); error_win#show ())
@@ -1049,6 +1054,7 @@ let rec getMoveStringEnd a =
   | TauntFade s -> getMoveStringEnd s
   | TrapDamage (_, s) -> getMoveStringEnd s
   | WishEnd s -> getMoveStringEnd s
+  | SpeedBoost s -> getMoveStringEnd s
   | _ -> `DontMove
 
 let rec getAttackString starter a =
@@ -1832,17 +1838,17 @@ let main_gui engine battle_engine () =
   ignore(random#connect#clicked ~callback:(load_random engine main_menu_bg bg_img load_screen
   battle text [random;preset;touranment;poke_edit] [move1; move2; move3; move4;
   switch] battle_engine main_menu battle_screen poke1_img poke2_img
-  text_buffer health_holders));
+  text_buffer health_holders menu_holder));
   (* Preset battle button *)
   ignore(preset#connect#clicked ~callback:(load_preset engine main_menu_bg bg_img load_screen
   battle text [random;touranment;poke_edit] preset [move1; move2; move3; move4;
   switch] battle_engine main_menu battle_screen poke1_img poke2_img
-  text_buffer health_holders));
+  text_buffer health_holders menu_holder));
   (* tourney battle button *)
   ignore(touranment#connect#clicked ~callback:(load_tournament engine main_menu_bg bg_img load_screen
   battle text [random;preset;touranment;poke_edit] [move1; move2; move3; move4;
   switch] battle_engine main_menu battle_screen poke1_img poke2_img
-  text_buffer health_holders));
+  text_buffer health_holders menu_holder));
   (* poke edit button *)
   ignore(poke_edit#connect#clicked ~callback:(load_poke_edit engine main_menu_bg
   bg_img load_screen battle text [random;preset;touranment] poke_edit
