@@ -467,7 +467,7 @@ let getSecondaryEffect str = match str with
   | "recover" | "soft-boiled" | "milk-drink" | "roost" | "heal-order"
     | "slack-off" -> [Recovery]
   | "hyperspace-fury" -> [StageBoost [(Defense,-1)]; NeverMiss]
-  | "low-kick" | "grass-knot" | "crush-grip"-> [WeightDamage]
+  | "low-kick" | "grass-knot" | "crush-grip" | "wring-out" -> [WeightDamage]
   | "sonic-boom" -> [ConstantDmg 20]
   | "dragon-rage" -> [ConstantDmg 40]
   | "seismic-toss" | "night-shade" -> [ConstantDmg 100]
@@ -511,6 +511,7 @@ let getSecondaryEffect str = match str with
   | "flatter" -> [StageAttack [(SpecialAttack, -1)]; ConfuseOpp]
   | "heal-bell" | "aromatherapy" -> [HealBell]
   | "sweet-scent" -> [StageAttack [(Evasion, 2)]]
+  | "defog" -> [StageAttack [(Evasion, 1)]]
   | "morning-sun" | "synthesis" | "moonlight" -> [SunHeal]
   | "water-spout" | "eruption" -> [MaxHealthDmg]
   | "sunny-day" -> [SunnyDay]
