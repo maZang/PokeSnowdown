@@ -1,3 +1,303 @@
 {
+	"bisharp": {
+    "name": "bisharp",
+    "moves": [
+      "knock-off",
+      "swords-dance",
+      "iron-head",
+      "sucker-punch"
+    ],
+    "ability": "defiant",
+    "nature": "jolly",
+    "item": "life orb",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "crawdaunt": {
+    "name": "crawdaunt",
+    "moves": [
+      "swords-dance",
+      "crabhammer",
+      "knock-off",
+      "aqua-jet"
+    ],
+    "ability": "adaptability",
+    "nature": "adamant",
+    "item": "life orb",
+    "evs": {
+      "hp": "4",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "dragonite": {
+    "name": "dragonite",
+    "moves": [
+      "outrage",
+      "extreme-speed",
+      "fire-punch",
+      "earthquake"
+    ],
+    "ability": "multiscale",
+    "nature": "adamant",
+    "item": "choice band",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "dragalge": {
+    "name": "dragalge",
+    "moves": [
+      "draco-meteor",
+      "sludge-wave",
+      "focus-blast",
+      "scald"
+    ],
+    "ability": "adaptability",
+    "nature": "modest",
+    "item": "choice specs",
+    "evs": {
+      "hp": "228",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "28"
+    }
+  },
+  "frosslass": {
+    "name": "frosslass",
+    "moves": [
+      "taunt",
+      "spikes",
+      "destiny-bond",
+      "ice-beam"
+    ],
+    "ability": "cursed body",
+    "nature": "timid",
+    "item": "nothing",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "haxorus": {
+    "name": "haxorus",
+    "moves": [
+      "outrage",
+      "earthquake",
+      "poison-jab",
+      "sleep-talk"
+    ],
+    "ability": "mold-breaker",
+    "nature": "jolly",
+    "item": "choice band",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "0",
+      "special-defense": "4",
+      "speed": "252"
+    }
+  },
+  "kingdra": {
+    "name": "kingdra",
+    "moves": [
+      "hydro-pump",
+      "draco-meteor",
+      "scald",
+      "ice-beam"
+    ],
+    "ability": "swift-swim",
+    "nature": "modest",
+    "item": "choice specs",
+    "evs": {
+      "hp": "28",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "228"
+    }
+  },
+  "kyurem": {
+    "name": "kyurem",
+    "moves": [
+      "draco-meteor",
+      "ice-beam",
+      "earth-power",
+      "focus-blast"
+    ],
+    "ability": "pressure",
+    "nature": "timid",
+    "item": "choice specs",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "4",
+      "speed": "252"
+    }
+  },
+  "moltres": {
+    "name": "moltres",
+    "moves": [
+      "fire-blast",
+      "hurricane",
+      "will-o-wisp",
+      "roost"
+    ],
+    "ability": "pressure",
+    "nature": "timid",
+    "item": "life orb",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "latias": {
+    "name": "latias",
+    "moves": [
+      "defog",
+      "draco-meteor",
+      "psyshock",
+      "healing-wish"
+    ],
+    "ability": "levitate",
+    "nature": "timid",
+    "item": "life orb",
+    "evs": {
+      "hp": "72",
+      "attack": "0",
+      "special-attack": "184",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "latios": {
+    "name": "latios",
+    "moves": [
+      "draco-meteor",
+      "psyshock",
+      "calm-mind",
+      "surf"
+    ],
+    "ability": "levitate",
+    "nature": "timid",
+    "item": "life orb",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "garchomp": {
+    "name": "garchomp",
+    "moves": [
+      "swords-dance",
+      "earthquake",
+      "dragon-claw",
+      "substitute"
+    ],
+    "ability": "rough-skin",
+    "nature": "jolly",
+    "item": "leftovers",
+    "evs": {
+      "hp": "12",
+      "attack": "244",
+      "special-attack": "0",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "salamence": {
+    "name": "salamence",
+    "moves": [
+      "dragon-dance",
+      "roost",
+      "double-edge",
+      "refresh"
+    ],
+    "ability": "intimidate",
+    "nature": "adamant",
+    "item": "nothing",
+    "evs": {
+      "hp": "80",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "176"
+    }
+  },
+  "skarmory": {
+    "name": "skarmory",
+    "moves": [
+      "roost",
+      "spikes",
+      "counter",
+      "whirlwind"
+    ],
+    "ability": "sturdy",
+    "nature": "impish",
+    "item": "leftovers",
+    "evs": {
+      "hp": "252",
+      "attack": "0",
+      "special-attack": "0",
+      "defense": "252",
+      "special-defense": "4",
+      "speed": "0"
+    }
+  },
+  "victini": {
+    "name": "victini",
+    "moves": [
+      "v-create",
+      "bolt-strike",
+      "brick-break",
+      "u-turn"
+    ],
+    "ability": "victory-star",
+    "nature": "adamant",
+    "item": "choice band",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
 	"pokemon": [ "bisharp", "crawdaunt", "dragonite", "dragalge", "frosslass", "haxorus", "kingdra", "kyurem", "moltres", "latias", "latios", "garchomp", "salamence", "skarmory", "victini" ]
 }

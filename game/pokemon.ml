@@ -418,7 +418,7 @@ let getSecondaryEffect str = match str with
   | "thunder-punch" | "body-slam" | "stun-spore" | "thunder-shock"
     | "thunderbolt" | "thunder-wave" | "thunder" | "lick" | "glare"
     | "zap-cannon" | "spark" | "dragon-breath" | "nuzzle" | "secret-power"
-    | "discharge" -> [ParaChance]
+    | "discharge" | "force-palm" -> [ParaChance]
   | "guillotine" | "horn-drill" | "fissure" | "sheer-cold" -> [OHKO]
   | "razor-wind" -> [ChargeMove "It made a whirlwind!"]
   | "fly" -> [ChargeMove "It flew up into the air."]
@@ -434,7 +434,7 @@ let getSecondaryEffect str = match str with
   | "double-kick" | "gear-grind" | "bonemerang" | "double-hit" | "dual-chop" -> [MultHit 2]
   | "sand-attack" | "smokescreen" | "kinesis" | "flash"
     | "mud-slap" | "octazooka" | "leaf-tornado" | "mud-bomb"
-    | "muddy-water" -> [StageAttack [(Accuracy, 1)]]
+    | "muddy-water" | "mirror-shot"-> [StageAttack [(Accuracy, 1)]]
   | "take-down" | "double-edge" | "submission" | "brave-bird" | "wild-charge"
       | "wood-hammer" | "flare-blitz" | "head-smash" | "head-charge" -> [RecoilMove]
   | "tail-whip" | "leer" | "iron-tail" | "crunch"
@@ -569,6 +569,10 @@ let getSecondaryEffect str = match str with
   | "v-create" -> [StageBoost [(Defense,-1); (SpecialDefense,-1); (Speed,-1)]]
   | "metronome" -> [RandMove]
   | "electro-ball" -> [ElectroBall]
+  | "rapid-spin" -> [RapidSpin]
+  | "switcheroo" | "trick" -> [ItemSwitch]
+  | "close-combat" -> [StageBoost [(Defense, -1); (SpecialDefense, -1)]]
+  | "wish" -> [WishMake]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -583,6 +587,7 @@ let getMoveFromString str =
             | "return" | "frustration" -> 102
             | "heavy-slam" | "heat-crash" -> 120
             | "trump-card" -> 80
+            | "natural-gift" -> 100
             | _ ->  (try int_of_string powerstr with |_ -> 0) in
   let dmg_class = move |> member "dmg_class" |> to_string |> getDmgClass in
   let target = move |> member "target" |> to_string |> getTarget in
@@ -732,9 +737,9 @@ let getTestOpp () =
   let evs = {attack = 255; defense =  0; special_attack= 0; special_defense= 255;
             hp=255; speed=255} in
   let nature = Bold in
-  let item = ChoiceScarf in
+  let item = Leftovers in
   {name="gallade-mega"; element=[Grass;Flying]; move1= getMoveFromString "roost"; move2 =
-  getMoveFromString "sand-tomb"; move3 = getMoveFromString "earthquake";
+  getMoveFromString "sand-tomb"; move3 = getMoveFromString "rapid-spin";
   move4 = getMoveFromString "toxic"; hp = 68; attack = 255; special_attack = 165; defense = 65;
   speed = 100; special_defense = 135; ability="gale-wings"; evs; nature; item}
 
