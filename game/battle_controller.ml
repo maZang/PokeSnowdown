@@ -401,14 +401,14 @@ let hitMoveDueToStatus atk moveDescript move =
               helperVolaStatus vola (`NoBurn moveDescript))
             else
               helperVolaStatus vola (moveDescript)
-  | Paralysis -> if List.mem Electric atk.current.pokeinfo.element then (
+  | Paralysis -> if List.mem Electric atk.current.pokeinfo.element || atk.current.curr_abil = "limber" then (
                 atk.current.curr_status <- (NoNon, snd atk.current.curr_status);
                 helperVolaStatus vola (`NoPara moveDescript))
                 else if 75 > Random.int 100 then (
                   helperVolaStatus vola (moveDescript))
               else
                   (false, `Para)
-  | Sleep n -> if n <= 0 then
+  | Sleep n -> if n <= 0 || atk.current.curr_abil = "insomnia" then
                 (atk.current.curr_status <- (NoNon, snd atk.current.curr_status);
                 helperVolaStatus vola (`Wake moveDescript))
                else if List.mem SleepEffect move.secondary then
@@ -1803,6 +1803,12 @@ let handle_preprocessing t1 t2 w m1 m2 =
                   t.current.curr_hp <- t.current.curr_hp - damage;
                   PoisonDmg)
   | _ -> Base in
+  let fix_abil t descript = match t.current.curr_abil with
+  | "speed-boost" -> let stage, multiplier = t.stat_enhance.speed in
+                    let boost = (min 6 (stage + 1)) in
+                    t.stat_enhance.speed <- (boost, multiplier);
+                    (SpeedBoost descript)
+  | _ -> descript in
   let nstatus, vstatus = t1.current.curr_status in
   let nstatus', vstatus' = t2.current.curr_status in
   let move1 = fix_nstatus nstatus t1 in
@@ -1814,12 +1820,14 @@ let handle_preprocessing t1 t2 w m1 m2 =
   let move2f' = fix_weather move2f in
   let move1F = fix_items t1 move1f in
   let move2F = fix_items t2 move2f' in
-  (match move1F with
+  let move1F' = fix_abil t1 move1F in
+  let move2F' = fix_abil t2 move2F in
+  (match move1F' with
   | Base -> m1 := Pl1 Continue
-  | _ -> m1 := Pl1 (EndMove move1F));
-  (match move2F with
+  | _ -> m1 := Pl1 (EndMove move1F'));
+  (match move2F' with
   | Base -> m2 := Pl2 Continue
-  | _ -> m2 := Pl2 (EndMove move2F));
+  | _ -> m2 := Pl2 (EndMove move2F'));
   t1.current.curr_hp <- min (max 0 t1.current.curr_hp) t1.current.bhp;
   t2.current.curr_hp <- min (max 0 t2.current.curr_hp) t2.current.bhp;
   w.terrain.side1 := ter1; w.terrain.side2 := ter2

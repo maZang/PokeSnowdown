@@ -1111,7 +1111,7 @@ let rec getStatusString starter s =
   | ThawS s -> " unfroze." ^ getStatusString starter s
   | NoFreezeS s -> starter ^ " cannot freeze. " ^ getStatusString starter s
   | NoBurnS s -> starter ^ " cannot burn. " ^ getStatusString starter s
-  | NoParaS s -> " cannot be paralyzed." ^ getStatusString starter s
+  | NoParaS s -> starter ^ " cannot be paralyzed." ^ getStatusString starter s
   | ParaS -> starter ^ " was paralyzed."
   | AsleepS -> starter ^ " is still asleep."
   | WakeS s -> starter ^ " woke up." ^ getStatusString starter s
@@ -1194,6 +1194,7 @@ let rec getEndString starter s =
   | HailBuffet2 s -> getEndString starter s ^ "Player two gets hit by the hail."
   | LeftOversHeal s -> getEndString starter s ^ starter ^ " has healed from the leftovers."
   | WishEnd s-> getEndString starter s ^ starter ^ " has been healed by the wish."
+  | SpeedBoost s -> getEndString starter s ^ starter ^ "'s speed boost has raised its speed."
 
 
 let animate_attack (animbox : GPack.fixed) img startx starty nextx' nexty (moveanim : GPack.fixed) move_img movestring =
@@ -1452,31 +1453,31 @@ let rec game_animation engine buttons (battle: GPack.table) text
   (match !m1 with
   | Pl1 SPoke (p,mess) -> (let switch_string = ("Player One has switched to " ^ p ^ mess) in updatetools ();
                    let str_list = Str.split (Str.regexp "\\.") switch_string in
-                   List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list)
+                   continue := false; List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list)
   | Pl2 SPoke (p,mess) ->  (let switch_string = ("Player One has switched to " ^ p ^ mess) in updatetools ();
                            let str_list = Str.split (Str.regexp "\\.") switch_string in
-                           List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list)
+                           continue := false; List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list)
   | Pl1 AttackMove a ->secondaryEffect := `P1;
                    let atk_string = getAttackString t1.current.pokeinfo.name a in
                    let str_list = Str.split (Str.regexp "\\.") atk_string in
-                   List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
+                   continue := false; List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
                    animate_attack pokeanim1 poke1_img poke1x poke1y poke2x poke2y moveanim move_img (getMoveString a);
                    updatehealth2 ()
   | Pl2 AttackMove a -> secondaryEffect := `P2;
                    let atk_string = getAttackString t2.current.pokeinfo.name a in
                    let str_list = Str.split (Str.regexp "\\.") atk_string in
-                   List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
+                   continue := false; List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
                    animate_attack pokeanim2 poke2_img poke2x poke2y poke1x poke1y moveanim move_img (getMoveString a);
                    updatehealth1 ()
   | Pl1 Status s ->secondaryEffect := `P1;
                    let status_string = getStatusString t1.current.pokeinfo.name s in
                    let str_list = Str.split (Str.regexp "\\.") status_string in
-                   List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
+                   continue := false; List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
                    animate_attack pokeanim1 poke1_img poke1x poke1y poke2x poke2y moveanim move_img (getMoveStringStatus s)
   | Pl2 Status s ->secondaryEffect := `P2;
                    let status_string = getStatusString t2.current.pokeinfo.name s in
                    let str_list = Str.split (Str.regexp "\\.") status_string in
-                   List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
+                   continue := false; List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
                    animate_attack pokeanim2 poke2_img poke2x poke2y poke1x poke1y moveanim move_img (getMoveStringStatus s)
   | Pl1 NoAction -> text_buffer#set_text ("Both Pokemon Not Doing Anything"); busywait ()
   | Pl2 NoAction -> text_buffer#set_text ("Both Pokemon Not Doing Anything"); busywait ()
@@ -1493,7 +1494,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
   | Pl1 ForceChoose a ->
                   let atk_string = getAttackString t1.current.pokeinfo.name a in
                    let str_list = Str.split (Str.regexp "\\.") atk_string in
-                   List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
+                   continue := false; List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
                    animate_attack pokeanim1 poke1_img poke1x poke1y poke2x poke2y moveanim move_img (getMoveString a);
                    updatehealth2 ();
                    text_buffer#set_text "Player One Pokemon has switched out. Choosing a new Pokemon.";
@@ -1506,7 +1507,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
   | Pl1 ForceChooseS a ->
                   let atk_string = getStatusString t1.current.pokeinfo.name a in
                    let str_list = Str.split (Str.regexp "\\.") atk_string in
-                   List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
+                   continue := false; List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
                    animate_attack pokeanim1 poke1_img poke1x poke1y poke2x poke2y moveanim move_img (getMoveStringStatus a);
                    updatehealth2 ();
                    text_buffer#set_text "Player One Pokemon has switched out. Choosing a new Pokemon.";
@@ -1519,7 +1520,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
   | Pl2 ForceChoose a ->
                   let atk_string = getAttackString t2.current.pokeinfo.name a in
                    let str_list = Str.split (Str.regexp "\\.") atk_string in
-                   List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
+                   continue := false; List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
                    animate_attack pokeanim2 poke2_img poke2x poke2y poke1x poke1y moveanim move_img (getMoveString a);
                    updatehealth1 ();
                    text_buffer#set_text "Player Two Pokemon has switched out. Choosing a new Pokemon.";
@@ -1537,7 +1538,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
   | Pl2 ForceChooseS a ->
                   let atk_string = getStatusString t2.current.pokeinfo.name a in
                    let str_list = Str.split (Str.regexp "\\.") atk_string in
-                   List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
+                   continue := false; List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
                    animate_attack pokeanim2 poke2_img poke2x poke2y poke1x poke1y moveanim move_img (getMoveStringStatus a);
                    updatehealth1 ();
                    text_buffer#set_text "Player Two Pokemon has switched out. Choosing a new Pokemon.";
@@ -1617,14 +1618,14 @@ let rec game_animation engine buttons (battle: GPack.table) text
   | Pl1 AttackMove a ->  secondaryEffect := `P1;
                    let atk_string = getAttackString t1.current.pokeinfo.name a in
                    let str_list = Str.split (Str.regexp "\\.") atk_string in
-                   List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
+                   continue := false; List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
                    animate_attack pokeanim1 poke1_img poke1x poke1y poke2x poke2y moveanim move_img (getMoveString a);
                    updatetools ();
                    pre_process ()
   | Pl2 AttackMove a -> secondaryEffect := `P2;
                    let atk_string = getAttackString t2.current.pokeinfo.name a in
                    let str_list = Str.split (Str.regexp "\\.") atk_string in
-                   List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
+                   continue := false; List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
                    animate_attack pokeanim2 poke2_img poke2x poke2y poke1x poke1y moveanim move_img (getMoveString a);
                    updatetools ();
                    pre_process ()
@@ -1632,14 +1633,14 @@ let rec game_animation engine buttons (battle: GPack.table) text
                    let status_string = getStatusString t1.current.pokeinfo.name s in
                    let str_list = Str.split (Str.regexp "\\.") status_string in
                    updatetools ();
-                   List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
+                   continue := false; List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
                    animate_attack pokeanim1 poke1_img poke1x poke1y poke2x poke2y moveanim move_img (getMoveStringStatus s);
                    pre_process ()
   | Pl2 Status s ->secondaryEffect := `P2;
                    let status_string = getStatusString t2.current.pokeinfo.name s in
                    let str_list = Str.split (Str.regexp "\\.") status_string in
                    updatetools ();
-                   List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
+                   continue := false; List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
                    animate_attack pokeanim2 poke2_img poke2x poke2y poke1x poke1y moveanim move_img (getMoveStringStatus s);
                    pre_process ()
   (* | Pl1 Faint -> text_buffer#set_text "Player One Pokemon has fainted. Choosing a new Pokemon.";
@@ -1657,7 +1658,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
   | Pl2 NoAction -> pre_process ()
   | Pl2 SPoke (p,mess) -> (let switch_string = ("Player One has switched to " ^ p  ^ mess) in updatetools ();
                            let str_list = Str.split (Str.regexp "\\.") switch_string in
-                           List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list; pre_process ())
+                           continue := false; List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list; pre_process ())
   | Pl2 EndMove x -> let txt = getEndString t2.current.pokeinfo.name x in
                     let str_list = Str.split (Str.regexp "\\.") txt in
                     List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
@@ -1666,7 +1667,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
    | Pl1 ForceChoose a ->
                   let atk_string = getAttackString t1.current.pokeinfo.name a in
                    let str_list = Str.split (Str.regexp "\\.") atk_string in
-                   List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
+                   continue := false; List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
                    animate_attack pokeanim1 poke1_img poke1x poke1y poke2x poke2y moveanim move_img (getMoveString a);
                    updatehealth2 ();
                    text_buffer#set_text "Player One Pokemon has switched out. Choosing a new Pokemon.";
@@ -1677,7 +1678,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
                   let atk_string = getStatusString t1.current.pokeinfo.name a in
                    let str_list = Str.split (Str.regexp "\\.") atk_string in
                    List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
-                   animate_attack pokeanim1 poke1_img poke1x poke1y poke2x poke2y moveanim move_img (getMoveStringStatus a);
+                   continue := false; animate_attack pokeanim1 poke1_img poke1x poke1y poke2x poke2y moveanim move_img (getMoveStringStatus a);
                    updatehealth2 ();
                    text_buffer#set_text "Player One Pokemon has switched out. Choosing a new Pokemon.";
                    current_command := (fst !current_command, Some NoMove); busywait (); updatetools (); current_screen := Battle (P1 SwitchPokeF);
@@ -1686,7 +1687,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
   | Pl2 ForceChoose a ->
                   let atk_string = getAttackString t2.current.pokeinfo.name a in
                    let str_list = Str.split (Str.regexp "\\.") atk_string in
-                   List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
+                   continue := false; List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
                    animate_attack pokeanim2 poke2_img poke2x poke2y poke1x poke1y moveanim move_img (getMoveString a);
                    updatehealth1 ();
                    text_buffer#set_text "Player Two Pokemon has switched out. Choosing a new Pokemon.";
@@ -1700,7 +1701,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
   | Pl2 ForceChooseS a ->
                   let atk_string = getStatusString t2.current.pokeinfo.name a in
                    let str_list = Str.split (Str.regexp "\\.") atk_string in
-                   List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
+                   continue := false; List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
                    animate_attack pokeanim2 poke2_img poke2x poke2y poke1x poke1y moveanim move_img (getMoveStringStatus a);
                    updatehealth1 ();
                    text_buffer#set_text "Player Two Pokemon has switched out. Choosing a new Pokemon.";

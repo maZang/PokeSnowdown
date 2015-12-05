@@ -587,12 +587,14 @@ let getSecondaryEffect str = match str with
   | "heart-swap" -> [HeartSwap]
   | "fake-out" -> [FakeOut; FlinchMove]
   | "facade" -> [Facade]
+  | "parting-shot" -> [StageAttack [(Attack, 1); (SpecialAttack, 1)]; SelfSwitch]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
     power:int; effect_chance: int; accuracy: int; element: element;
     description: string} *)
 let getMoveFromString str =
+  Printf.printf "%s\n%!" str;
   let move = move_json |> member str in
   let priority = move |> member "priority" |> to_string |> int_of_string in
   let powerstr = move |> member "power" |> to_string in
@@ -742,20 +744,20 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Nothing in
-  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "facade"; move2 =
-  getMoveFromString "leaf-blade"; move3 = getMoveFromString "ice-beam";
-  move4 = getMoveFromString "will-o-wisp"; hp = 120; attack = 100; special_attack = 150; defense = 85;
-  speed = 120; special_defense = 200; ability="wonder-guard"; evs; nature; item}
+  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "flamethrower"; move2 =
+  getMoveFromString "parting-shot"; move3 = getMoveFromString "ice-beam";
+  move4 = getMoveFromString "thunder-wave"; hp = 120; attack = 100; special_attack = 150; defense = 85;
+  speed = 120; special_defense = 200; ability="speed-boost"; evs; nature; item}
 
 let getTestOpp () =
-  let evs = {attack = 255; defense =  0; special_attack= 0; special_defense= 255;
+  let evs = {attack = 255; defense =  0; special_attack= 0; special_defense= 0;
             hp=255; speed=255} in
   let nature = Bold in
   let item = Nothing in
   {name="gallade-mega"; element=[Grass]; move1= getMoveFromString "will-o-wisp"; move2 =
   getMoveFromString "work-up"; move3 = getMoveFromString "ice-beam";
   move4 = getMoveFromString "cosmic-power"; hp = 100; attack = 100; special_attack = 80; defense = 40;
-  speed = 100; special_defense = 50; ability="gale-wings"; evs; nature; item}
+  speed = 100; special_defense = 50; ability="limber"; evs; nature; item}
 
 let getPokeToolTip t =
   let battlePoke = t.current in

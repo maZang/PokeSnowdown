@@ -28,7 +28,7 @@ type guistatus = StatBoost of stat * int * guistatus | NormStatus of string | Th
 type endMove = BurnDmg | BreakBurn | BreakFreeze  | BreakPara  | BreakPoison | PoisonDmg | LeechDmg of endMove | LeechHeal of endMove | Base | LightScreenFade of endMove |
                ReflectFade of endMove | SunFade of endMove | RainFade of endMove | SandStormFade of endMove | SandBuffetB of endMove | SandBuffet1 of endMove |
                SandBuffet2 of endMove | HailFade of endMove | HailBuffetB of endMove | HailBuffet1 of endMove | HailBuffet2 of endMove | TauntFade of endMove |
-               TrapDamage of string * endMove | LeftOversHeal of endMove | WishEnd of endMove
+               TrapDamage of string * endMove | LeftOversHeal of endMove | WishEnd of endMove | SpeedBoost of endMove
 
 type guimove = SPoke of string*string | AttackMove of guiattack | Faint | NoAction | Continue | Next | Status of guistatus | EndMove of endMove | FaintNext | SFaint | ForceChoose of guiattack | ForceMove of string
                 | ForceNone | ForceChooseS of guistatus
