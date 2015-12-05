@@ -832,6 +832,14 @@ let move_handler atk def wt move =
       let damage' = int_of_float fdamage' in
       def.current.curr_hp <- max 0 (def.current.curr_hp - damage' + !damage));
       secondary_effects t
+    (* Moves based upon weight are instead based on current health *)
+    | GyroBall::t ->
+      (let base_power = min 150 (int_of_float (25. *. (float_of_int def.current.bspeed /. float_of_int atk.current.bspeed))) in
+      move.power <- base_power;
+      let moveDescript', fdamage' = damageCalculation atk def weather move in
+      let damage' = int_of_float fdamage' in
+      def.current.curr_hp <- max 0 (def.current.curr_hp - damage' + !damage));
+      secondary_effects t
     (* Damage that varies *)
     | VariableDamage::t ->
       (let base_power = int_of_float ((Random.float 1. +. 0.5) *. 100.) in
@@ -1535,6 +1543,48 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
                       | Nothing -> secondary_effects t
                       | _ -> newmove := KnockedOffS (def.current.curr_item, !newmove);
                              def.current.curr_item <- Nothing; secondary_effects t)
+    | PowerSwap::t ->
+        (let astats = atk.stat_enhance in
+        let dstats = def.stat_enhance in
+        let tmp = fst astats.attack in
+        astats.attack <- (fst dstats.attack, snd astats.attack);
+        dstats.attack <- (tmp, snd dstats.attack);
+        let tmp2 = fst astats.special_attack in
+        astats.special_attack <- (fst dstats.special_attack, snd astats.special_attack);
+        dstats.special_attack <- (tmp2, snd dstats.special_attack); secondary_effects t)
+    | GuardSwap::t ->
+        (let astats = atk.stat_enhance in
+        let dstats = def.stat_enhance in
+        let tmp = fst astats.defense in
+        astats.defense <- (fst dstats.defense, snd astats.defense);
+        dstats.defense <- (tmp, snd dstats.defense);
+        let tmp2 = fst astats.special_defense in
+        astats.special_defense <- (fst dstats.special_defense, snd astats.special_defense);
+        dstats.special_defense <- (tmp2, snd dstats.special_defense); secondary_effects t)
+    | HeartSwap::t ->
+        (let astats = atk.stat_enhance in
+        let dstats = def.stat_enhance in
+        let tmp = fst astats.attack in
+        astats.attack <- (fst dstats.attack, snd astats.attack);
+        dstats.attack <- (tmp, snd dstats.attack);
+        let tmp2 = fst astats.special_attack in
+        astats.special_attack <- (fst dstats.special_attack, snd astats.special_attack);
+        dstats.special_attack <- (tmp2, snd dstats.special_attack);
+        let tmp3 = fst astats.defense in
+        astats.defense <- (fst dstats.defense, snd astats.defense);
+        dstats.defense <- (tmp3, snd dstats.defense);
+        let tmp4 = fst astats.special_defense in
+        astats.special_defense <- (fst dstats.special_defense, snd astats.special_defense);
+        dstats.special_defense <- (tmp4, snd dstats.special_defense);
+        let tmp5 = fst astats.speed in
+        astats.speed <- (fst dstats.speed, snd astats.speed);
+        dstats.speed <- (tmp5, snd dstats.speed);
+        let tmp6 = fst astats.evasion in
+        astats.evasion <- (fst dstats.evasion, snd astats.evasion);
+        dstats.evasion<- (tmp6, snd dstats.evasion);
+        let tmp7 = fst astats.accuracy in
+        astats.accuracy <- (fst dstats.accuracy, snd astats.accuracy);
+        dstats.accuracy <- (tmp7, snd dstats.accuracy); secondary_effects t)
     | [] -> ()
     | _ -> failwith "Faulty Game Logic: Debug 1188"
   in

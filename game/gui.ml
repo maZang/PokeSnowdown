@@ -35,6 +35,10 @@ let poke1y = 165
 let poke2x = 450
 let poke2y = 80
 
+(* Status condition over health bar *)
+let status_img1 = GMisc.image ~file:"../data/fx/status/healthy.png" ()
+let status_img2 = GMisc.image ~file:"../data/fx/status/healthy.png" ()
+
 (* used for user input *)
 let continue = ref false
 
@@ -308,15 +312,12 @@ let make_battle_screen ?packing () =
      () in
   (* Container used to hold health bars to force the health bars to be a
   certain size *)
+  let healthbaranim1 = GPack.fixed ~width:screen_width ~height:(2 * screen_height/3) () in
+  let healthbaranim2 = GPack.fixed ~width:screen_width ~height:(2 * screen_height/3) () in
   let health_bar_holder1 = GPack.vbox ~width:200 ~height:12 () in
   let health_bar_holder2 = GPack.vbox ~width:200 ~height:12 () in
-  let status_img1 = GMisc.image ~file:"../data/fx/status/healthy.png" ~packing:(health_bar_holder1#pack) () in
-  let status_img2 = GMisc.image ~file:"../data/fx/status/healthy.png" ~packing:(health_bar_holder2#pack) () in
-  (* Actual health bars implemented with progress bars *)
-  let health_bar1 = GRange.progress_bar
-                          ~packing:(health_bar_holder1#pack ~expand:false) () in
-  let health_bar2 = GRange.progress_bar
-                          ~packing:(health_bar_holder2#pack ~expand:false) () in
+  let () = health_bar_holder1#pack status_img1#coerce in
+  let () = health_bar_holder2#pack status_img2#coerce in
   (* Holder to hold the text buffer *)
   let text = GPack.hbox ?packing ~height: (1 * screen_height / 6) ~show:false () in
   (* Background image of the battle: TODO RANDOMIZE BACKGROUND *)
@@ -347,6 +348,11 @@ let make_battle_screen ?packing () =
   let pokeanim1 = GPack.fixed ~width:screen_width ~height:(2 * screen_height/3) () in
   let pokeanim2 = GPack.fixed ~width:screen_width ~height:(2 * screen_height/3) () in
   let moveanim = GPack.fixed ~width:screen_width ~height:(2 * screen_height/3) () in
+   (* Actual health bars implemented with progress bars *)
+  let health_bar1 = GRange.progress_bar
+                          ~packing:(health_bar_holder1#pack ~expand:false) () in
+  let health_bar2 = GRange.progress_bar
+                          ~packing:(health_bar_holder2#pack ~expand:false) () in
   (* Initialize size and text of the health bars*)
   health_bar1#set_fraction 1.;
   health_bar1#set_text "Health";
@@ -356,6 +362,8 @@ let make_battle_screen ?packing () =
   text_buffer#misc#modify_font
       (Pango.Font.from_string "arial,monospace condensed 10");
   (* Place pokemon in animation box *)
+  healthbaranim2#put health_bar_holder2#coerce (poke2x-80) (poke2y-50);
+  healthbaranim1#put health_bar_holder1#coerce (poke1x -40) (poke1y + 105);
   pokeanim1#put poke1_img#coerce poke1x poke1y;
   pokeanim2#put poke2_img#coerce poke2x poke2y;
   moveanim#put move_img#coerce 200 200;
@@ -364,10 +372,10 @@ let make_battle_screen ?packing () =
   battle#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH moveanim#coerce;
   battle#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH pokeanim1#coerce;
   battle#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH pokeanim2#coerce;
-  battle#attach ~left:0 ~top:3 ~right:2 ~bottom:4
-                  ~fill:`NONE health_bar_holder1#coerce;
-  battle#attach ~left:1 ~top:0 ~right:4
-                  ~fill:`NONE health_bar_holder2#coerce;
+  battle#attach ~left:0 ~top:0 ~right:4 ~bottom:4
+                  ~fill:`BOTH healthbaranim1#coerce;
+  battle#attach ~left:0 ~top:0 ~right:4 ~bottom:4
+                  ~fill:`BOTH healthbaranim2#coerce;
   battle#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH bg_img#coerce;
   (* Return all the objects created *)
   battle, text, bg_img, move1, move2, move3, move4, switch, poke1_img,
@@ -807,6 +815,19 @@ let go_back engine (menu_holder, main_menu, battle_screen, one_player,
     battle_screen#remove editimg#coerce;
     load_menu engine [random;touranment;preset] [] main_menu_bg Menu1P ());
   ()
+
+let getStatusFile status =
+  match status with
+  | NoNon -> "../data/fx/status/healthy.png"
+  | Poisoned | Toxic _ -> "../data/fx/status/poisoned.png"
+  | Freeze -> "../data/fx/status/frozen.png"
+  | Paralysis -> "../data/fx/status/paralyzed.png"
+  | Burn -> "../data/fx/status/burned.png"
+  | Sleep _ -> "../data/fx/status/asleep.png"
+
+let changeStatus t1 t2 =
+  status_img1#set_file (getStatusFile (fst t1.current.curr_status));
+  status_img2#set_file (getStatusFile (fst t2.current.curr_status))
 
 let rec findTrapped = function
   | (PartialTrapping _)::t -> true
@@ -1374,6 +1395,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
   let updatetools () =
     poke1_img#set_file ("../data/back-sprites/" ^ t1.current.pokeinfo.name  ^ ".gif");
     poke2_img#set_file ("../data/sprites/" ^ t2.current.pokeinfo.name  ^ ".gif");
+    changeStatus t1 t2;
     move1#set_label (t1.current).pokeinfo.move1.name;
     move2#set_label (t1.current).pokeinfo.move2.name;
     move3#set_label (t1.current).pokeinfo.move3.name;

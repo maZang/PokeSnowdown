@@ -93,7 +93,7 @@ let getStringFromEnemy enm =
   | FatMan -> "fatman"
   | Psychic -> "psychic"
   | Youngster -> "youngster"
-  | ProfOak -> "professor oak"
+  | ProfOak -> "professoroak"
 
 let getRandomOpp1 () =
   let rand_enemy = getRandomEnemy () in
