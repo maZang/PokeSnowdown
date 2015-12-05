@@ -935,14 +935,14 @@ let move_handler atk def wt move =
                         (def.current.curr_hp <- def.current.curr_hp + !damage;
                           newmove := SleepAttackFail move.name)
     | ChancePower::t ->
-        (Printf.printf "aksdjlkj\n%!";let randum = Random.int 100 in
-        (if (randum < 5) then move.power <- 10
+        (let randum = Random.int 100 in
+        if (randum < 5) then move.power <- 10
         else if (randum >= 5 && randum < 15) then move.power <- 30
         else if (randum >= 15 && randum < 35) then move.power <- 50
         else if (randum >= 35 && randum < 65) then move.power <- 70
         else if (randum >= 65 && randum < 85) then move.power <- 90
         else if (randum >= 85 && randum < 95) then move.power <- 110
-        else move.power <- 150);
+        else move.power <- 150;
         let moveDescript', fdamage' = damageCalculation atk def weather move in
         let damage' = int_of_float fdamage' in
         def.current.curr_hp <- max 0 (def.current.curr_hp - damage' + !damage);
@@ -1503,6 +1503,15 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
                 t1 := (Wish (1, healing))::!t1;
                 newmove := WishS !newmove)
             )
+    | ReverseStats::t ->
+        (let stats = atk.stat_enhance in
+        stats.attack <- (-fst stats.attack, snd stats.attack);
+        stats.defense <- (-fst stats.defense, snd stats.defense);
+        stats.speed <- (-fst stats.speed, snd stats.speed);
+        stats.special_attack <- (-fst stats.special_attack, snd stats.special_attack);
+        stats.special_defense <- (-fst stats.special_defense, snd stats.special_defense);
+        stats.evasion <- (-fst stats.evasion, snd stats.evasion);
+        stats.accuracy <- (-fst stats.accuracy, snd stats.accuracy); secondary_effects t)
     | [] -> ()
     | _ -> failwith "Faulty Game Logic: Debug 1188"
   in

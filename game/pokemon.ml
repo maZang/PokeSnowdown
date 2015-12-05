@@ -574,7 +574,8 @@ let getSecondaryEffect str = match str with
   | "switcheroo" | "trick" -> [ItemSwitch]
   | "close-combat" -> [StageBoost [(Defense, -1); (SpecialDefense, -1)]]
   | "wish" -> [WishMake]
-  | "magnitude" -> [ChancePower]
+  | "magnitude" | "present" -> [ChancePower]
+  | "topsy-turvy" -> [ReverseStats]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -730,9 +731,9 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "flail"; move2 =
+  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "calm-mind"; move2 =
   getMoveFromString "magnitude"; move3 = getMoveFromString "hyperspace-fury";
-  move4 = getMoveFromString "poison-powder"; hp = 98; attack = 100; special_attack = 165; defense = 65;
+  move4 = getMoveFromString "topsy-turvy"; hp = 98; attack = 100; special_attack = 165; defense = 65;
   speed = 120; special_defense = 135; ability="drizzle"; evs; nature; item}
 
 let getTestOpp () =
