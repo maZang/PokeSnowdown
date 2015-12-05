@@ -115,7 +115,7 @@ let getRandomTeam mode =
       accuracy=(0,1.)} in
   {current = (getBattlePoke(randFunc ()));
   dead =[]; alive = (List.map getBattlePoke
-  (List.map getTestOpp [();();();();()])); stat_enhance}
+  (List.map randFunc [();();();();()])); stat_enhance}
 
 (* This function returns the accuracy/evasion bonus given by the stages.
    Pre-condition: num is between -6 and 6
