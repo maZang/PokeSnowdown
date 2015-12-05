@@ -741,20 +741,20 @@ let getTestPoke () =
   let evs = {attack = 0; defense =  255; special_attack= 255; special_defense= 255;
             hp=255; speed=255} in
   let nature = Bold in
-  let item = Leftovers in
-  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "fake-out"; move2 =
+  let item = Nothing in
+  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "facade"; move2 =
   getMoveFromString "leaf-blade"; move3 = getMoveFromString "ice-beam";
-  move4 = getMoveFromString "embargo"; hp = 98; attack = 100; special_attack = 400; defense = 65;
+  move4 = getMoveFromString "will-o-wisp"; hp = 120; attack = 100; special_attack = 150; defense = 85;
   speed = 120; special_defense = 200; ability="wonder-guard"; evs; nature; item}
 
 let getTestOpp () =
   let evs = {attack = 255; defense =  0; special_attack= 0; special_defense= 255;
             hp=255; speed=255} in
   let nature = Bold in
-  let item = Leftovers in
-  {name="gallade-mega"; element=[Grass]; move1= getMoveFromString "high-jump-kick"; move2 =
-  getMoveFromString "work-up"; move3 = getMoveFromString "high-jump-kick";
-  move4 = getMoveFromString "cosmic-power"; hp = 300; attack = 255; special_attack = 300; defense = 65;
+  let item = Nothing in
+  {name="gallade-mega"; element=[Grass]; move1= getMoveFromString "will-o-wisp"; move2 =
+  getMoveFromString "work-up"; move3 = getMoveFromString "ice-beam";
+  move4 = getMoveFromString "cosmic-power"; hp = 100; attack = 100; special_attack = 80; defense = 40;
   speed = 100; special_defense = 50; ability="gale-wings"; evs; nature; item}
 
 let getPokeToolTip t =
