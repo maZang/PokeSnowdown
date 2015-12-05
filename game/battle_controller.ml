@@ -1033,7 +1033,7 @@ let move_handler atk def wt move =
       !newmove)
    else
       (newmove := newreason;
-      if (!newmove = MissMove move.name) then
+      if (!newmove = MissMove move.name && (move.name = "high-jump-kick" || move.name = "jump-kick")) then
         (newmove := HitSelf !newmove;
         (atk.current.curr_hp <- max 0 (atk.current.curr_hp - atk.current.bhp/2)));
       !newmove))
