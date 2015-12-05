@@ -1410,6 +1410,22 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
                     | (Paralysis, x) -> atk.current.curr_status <- (NoNon, x)
                     | (Burn, x) -> atk.current.curr_status <- (NoNon, x)
                     | _ -> ()); newmove := RefreshS !newmove; secondary_effects t
+    | PsychoShift::t ->
+        (let tmp = ref NoNon in
+        (match (atk.current.curr_status, def.current.curr_status) with
+        | (Burn, x), (NoNon, _) ->
+            tmp := Burn; atk.current.curr_status <- (NoNon, x);
+            def.current.curr_status <- (!tmp, snd (def.current.curr_status))
+        | (Paralysis, x), (NoNon, _) ->
+            tmp := Paralysis; atk.current.curr_status <- (NoNon, x);
+            def.current.curr_status <- (!tmp, snd (def.current.curr_status))
+        | (Poisoned, x), (NoNon, _) ->
+            tmp := Poisoned; atk.current.curr_status <- (NoNon, x);
+            def.current.curr_status <- (!tmp, snd (def.current.curr_status))
+        | (Toxic y, x), (NoNon, _)->
+            tmp := Toxic 0; atk.current.curr_status <- (NoNon, x);
+            def.current.curr_status <- (!tmp, snd (def.current.curr_status))
+        | _ -> ()); secondary_effects t)
     (* Copies changes to target's stats and replicate to user *)
     | PsychUp::t -> (let i1 = fst def.stat_enhance.attack in
                     let i2 = fst def.stat_enhance.defense in

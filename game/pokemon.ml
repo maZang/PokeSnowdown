@@ -591,6 +591,7 @@ let getSecondaryEffect str = match str with
   | "gastro-acid" -> [GastroAcid]
   | "smelling-salts" -> [SmellingSalts]
   | "counter" | "mirror-coat" -> [Counter]
+  | "psycho-shift" -> [PsychoShift]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
