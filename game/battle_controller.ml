@@ -1064,6 +1064,12 @@ let move_handler atk def wt move =
                            let newhp = (float_of_int def.current.curr_hp) -. 1.5*.hpdamage +. float_of_int (!damage) in
                            def.current.curr_hp <- max 0 (int_of_float newhp);
                            secondary_effects t)
+        | "revenge" | "avalanche" -> (let hpdamage = prevpoke.curr_hp - atk.current.curr_hp in
+                                     if (hpdamage > 0) then
+                                        (def.current.curr_hp <- max 0 (def.current.curr_hp - !damage);
+                                        secondary_effects t)
+                                     else ())
+
         | _ -> ()))
     | [] -> ()
     | _ -> failwith "Faulty Game Logic: Debug 783"
