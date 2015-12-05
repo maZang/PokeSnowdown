@@ -103,7 +103,8 @@ let initialize_battle team1 team2 =
   convertToMega team1;
   convertToMega team2;
   team1.current <- getBattlePoke (getTestPoke ());
-  team2.current <- getBattlePoke (getTestOpp ()); Battle (InGame
+  team2.current <- getBattlePoke (getTestOpp ());
+  team1.dead <- team1.alive; team1.alive <- [];  Battle (InGame
     (team1, team2, {weather = ClearSkies; terrain = {side1= ref []; side2= ref []}}, ref (Pl1 NoAction), ref (Pl2 NoAction)))
 
 (* Gets a random team of pokemon for initialization *)
@@ -914,7 +915,11 @@ let move_handler atk def wt move =
                           newmove := (FalseSwipeA !newmove))
                        else (); secondary_effects t)
     (* Moves that force a switch out *)
-    | ForceSwitch::t -> newmove := SwitchOutA !newmove; secondary_effects t
+    | ForceSwitch::t ->
+                  if List.length def.alive > 0 then
+                    (newmove := SwitchOutA !newmove; secondary_effects t)
+                  else
+                    newmove := FailA move.name
     (* Base case *)
     | SelfEncore::t ->  let rec findForcedMove = function
                         | (ForcedMoveNoSwitch (n,_))::t ->(true, n)
@@ -1155,7 +1160,11 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
         | 6 -> secondary_effects (StageBoost[(Evasion,2)]::t)
         | _ -> failwith "Does Not Happen"); secondary_effects t
     (* Move that forces a switch out *)
-    | ForceSwitch::t -> newmove := SwitchOut !newmove; secondary_effects t
+    | ForceSwitch::t ->
+                  if List.length def.alive > 0 then
+                    (newmove := SwitchOut !newmove; secondary_effects t)
+                  else
+                    newmove := Fail move.name
     (* Move that lowers stat of opponent *)
     | StageAttack l::t ->
         (match l with
@@ -1563,10 +1572,13 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
                 newmove := WishS !newmove)
             )
     | SelfSwitch::t ->
-          (match move.name with
+        if List.length atk.alive > 0 then
+          ((match move.name with
           | "baton-pass" -> t1 := (BatonPass (atk.stat_enhance, snd atk.current.curr_status))::!t1
           | _ -> ());
-            secondary_effects t
+            secondary_effects t)
+        else
+          newmove := Fail move.name
     | AbilityChange::t ->
             (match move.name with
              | "simple-beam" -> def.current.curr_abil <- "simple"
@@ -1909,7 +1921,7 @@ let handle_two_moves t1 t2 w m1 m2 a1 a2 =
     match curr_move.dmg_class with
     (* case where Player 1 uses a Status move *)
     | Status -> let newmove = status_move_handler t1 t2 (w, w.terrain.side1, w.terrain.side2) curr_move in
-            if (List.mem ForceSwitch curr_move.secondary) then
+            if (List.mem ForceSwitch curr_move.secondary && List.length t2.alive > 0) then
               (m1 := Pl1(Status newmove); m2 := Pl2 NoAction)
             else
               (prevmove2 := a2;
@@ -1938,7 +1950,7 @@ let handle_two_moves t1 t2 w m1 m2 a1 a2 =
     (* Case where Player 1 uses a Physical/Special Move *)
     | _ -> let newmove = move_handler t1 t2 (w, w.terrain.side1, w.terrain.side2) curr_move in
            (* Case where second pokemon faints before getting to move *)
-           if (p2poke.curr_hp = 0 || List.mem ForceSwitch curr_move.secondary) then
+           if (p2poke.curr_hp = 0 || (List.mem ForceSwitch curr_move.secondary && List.length t2.alive > 0)) then
               if List.mem SelfSwitch curr_move.secondary && List.length t1.alive > 0 then
                 (m1 := Pl1 (ForceChoose newmove); m2 := Pl2 ForceNone)
               else
@@ -1973,7 +1985,7 @@ let handle_two_moves t1 t2 w m1 m2 a1 a2 =
     prevmove2 := a2;
     match curr_move'.dmg_class with
     | Status -> let newmove = status_move_handler t2 t1 (w, w.terrain.side2, w.terrain.side1) curr_move' in
-            if (List.mem ForceSwitch curr_move'.secondary) then
+            if (List.mem ForceSwitch curr_move'.secondary && List.length t1.alive > 0) then
               (m1 := Pl2 (Status newmove); m2 := Pl1 NoAction)
             else
             (prevmove1 := a1;
@@ -1997,7 +2009,7 @@ let handle_two_moves t1 t2 w m1 m2 a1 a2 =
                   (m1 := Pl2 (Status newmove); m2 := Pl1 (AttackMove newmove'))))
               )
     | _ -> let newmove = move_handler t2 t1 (w, w.terrain.side2, w.terrain.side1) curr_move' in
-           if (p1poke.curr_hp = 0 || List.mem ForceSwitch curr_move'.secondary) then
+           if (p1poke.curr_hp = 0 || (List.mem ForceSwitch curr_move'.secondary && List.length t1.alive > 0)) then
               (if List.mem SelfSwitch curr_move'.secondary && List.length t2.alive > 0 then
                 (m1 := Pl2 (ForceChoose newmove); m2 := Pl1 ForceNone)
               else
@@ -2283,21 +2295,26 @@ let rec main_loop_2p engine gui_ready ready ready_gui () =
 
 (* Main controller for random one player *)
 let rec main_controller_random1p engine gui_ready ready ready_gui=
+ Printf.printf "Initializing battle r1p\n%!";
   let team1 = getRandomTeam `Random in
   let team2 = getRandomTeam `Random in
   let battle = initialize_battle team1 team2 in
-  let () = engine := Ivar.create (); Ivar.fill !engine battle in
+  let () = engine := Ivar.create (); Ivar.fill !engine battle;
+  Ivar.fill !ready_gui true in
   main_loop_1p engine gui_ready ready ready_gui ()
 
 (* Main controller for random two player *)
 let rec main_controller_random2p engine gui_ready ready ready_gui =
+  Printf.printf "Initializing battle r2p\n%!";
   let team1 = getRandomTeam `Random in
   let team2 = getRandomTeam `Random in
   let battle = initialize_battle team1 team2 in
-  let () = engine := Ivar.create (); Ivar.fill !engine battle in
+  let () = engine := Ivar.create (); Ivar.fill !engine battle;
+  Ivar.fill !ready_gui true in
   main_loop_2p engine gui_ready ready ready_gui ()
 
 let rec main_controller_preset1p engine gui_ready ready ready_gui t =
+  Printf.printf "Initializing battle p1p\n%!";
   let stat_enhance = {attack=(0,1.); defense=(0,1.); speed=(0,1.);
       special_attack=(0,1.); special_defense=(0,1.); evasion=(0,1.);
       accuracy=(0,1.)} in
@@ -2306,10 +2323,12 @@ let rec main_controller_preset1p engine gui_ready ready ready_gui t =
                   stat_enhance} in
   let team2 = getRandomTeam `Preset in
   let battle = initialize_battle team1 team2 in
-  let () = engine := Ivar.create (); Ivar.fill !engine battle in
+  let () = engine := Ivar.create (); Ivar.fill !engine battle;
+  Ivar.fill !ready_gui true in
   main_loop_1p engine gui_ready ready ready_gui ()
 
 let rec main_controller_tourn engine gui_ready ready ready_gui t =
+  Printf.printf "Initializing battle t\n%!";
   let stat_enhance = {attack=(0,1.); defense=(0,1.); speed=(0,1.);
       special_attack=(0,1.); special_defense=(0,1.); evasion=(0,1.);
       accuracy=(0,1.)} in
@@ -2318,7 +2337,8 @@ let rec main_controller_tourn engine gui_ready ready ready_gui t =
                   stat_enhance} in
   let team2 = getRandomTeam `Tournament in
   let battle = initialize_battle team1 team2 in
-  let () = engine := Ivar.create (); Ivar.fill !engine battle in
+  let () = engine := Ivar.create (); Ivar.fill !engine battle;
+  Ivar.fill !ready_gui true in
   main_loop_1p engine gui_ready ready ready_gui ()
 
 (* Initialize controller -- called by Game.ml *)
