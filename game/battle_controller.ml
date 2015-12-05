@@ -1026,7 +1026,7 @@ let move_handler atk def wt move =
         | NoNon -> secondary_effects t
         | _ -> (def.current.curr_hp <- max 0 (def.current.curr_hp - !damage);
                secondary_effects t))
-    | SmellingSmalts::t ->
+    | SmellingSalts::t ->
         (match def.current.curr_status with
         | (Paralysis, x) ->
             def.current.curr_hp <- max 0 (def.current.curr_hp - !damage);
