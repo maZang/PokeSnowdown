@@ -982,6 +982,7 @@ let rec getMoveStringStatus a =
   | RandMoveS s -> getMoveStringStatus s
   | RandMoveA s -> getMoveString s
   | ItemSwapS s -> getMoveStringStatus s
+  | WishS s -> getMoveStringStatus s
 
 let rec getMoveStringEnd a =
   match a with
@@ -1004,6 +1005,7 @@ let rec getMoveStringEnd a =
   | HailBuffet2 s -> getMoveStringEnd s
   | TauntFade s -> getMoveStringEnd s
   | TrapDamage (_, s) -> getMoveStringEnd s
+  | WishEnd s -> getMoveStringEnd s
   | _ -> `DontMove
 
 let rec getAttackString starter a =
@@ -1125,8 +1127,9 @@ let rec getStatusString starter s =
   | SleepTalkA (s1, s2) -> getStatusString starter s1 ^ getAttackString starter s2
   | SleepTalkS (s1, s2) -> getStatusString starter s1 ^ getStatusString starter s2
   | ItemSwapS s -> getStatusString starter s ^ starter ^ " has swapped items with its opponent."
-  | RandMoveS s -> getStatusString starter s
-  | RandMoveA s -> getAttackString starter s
+  | RandMoveS s -> starter ^ " used a random move." ^ getStatusString starter s
+  | RandMoveA s -> starter ^ " used a random move." ^ getAttackString starter s
+  | WishS s -> getStatusString starter s ^ "A wish was made."
   | SwitchOut s -> (match !secondaryEffect with
                     | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
                     | `P2 -> current_command := (Some (Poke "random"), Some NoMove));
@@ -1159,6 +1162,7 @@ let rec getEndString starter s =
   | HailBuffet1 s -> getEndString starter s ^ "Player one gets hit by the hail."
   | HailBuffet2 s -> getEndString starter s ^ "Player two gets hit by the hail."
   | LeftOversHeal s -> getEndString starter s ^ starter ^ " has healed from the leftovers."
+  | WishEnd s-> getEndString starter s ^ starter ^ " has been healed by the wish."
 
 
 let animate_attack (animbox : GPack.fixed) img startx starty nextx' nexty (moveanim : GPack.fixed) move_img movestring =

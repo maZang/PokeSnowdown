@@ -1464,6 +1464,18 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
             def.current.curr_item <- prev_item;
             newmove := ItemSwapS !newmove;
             secondary_effects t)
+    | WishMake::t ->
+            ( let rec findWish = function
+              | (Wish _)::t -> true
+              | h::t -> findWish t
+              | [] -> false in
+              if findWish !t1 then
+                newmove := Fail "Wish"
+              else
+                (let healing = atk.current.bhp / 2 in
+                t1 := (Wish (1, healing))::!t1;
+                newmove := WishS !newmove)
+            )
     | [] -> ()
     | _ -> failwith "Faulty Game Logic: Debug 1188"
   in
@@ -1598,6 +1610,11 @@ let handle_preprocessing t1 t2 w m1 m2 =
                         fix_terrain t acc (ReflectFade descript) t'
                        else
                         fix_terrain t ((Reflect (n-1))::acc) descript t'
+  | (Wish (n, heal)::t') -> if n = 0 then
+                            (t.current.curr_hp <- t.current.curr_hp + heal;
+                            fix_terrain t acc (WishEnd descript) t')
+                          else
+                            (fix_terrain t ((Wish ((n-1), heal))::acc) descript  t')
   | h::t' -> fix_terrain t (h::acc) descript t'
   | [] -> (acc, descript) in
   let rec fix_vstatus t1 t2 descript1 descript2 = function
