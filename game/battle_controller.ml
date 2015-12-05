@@ -1546,8 +1546,16 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
         dstats.attack <- (tmp, snd dstats.attack);
         let tmp2 = fst astats.special_attack in
         astats.special_attack <- (fst dstats.special_attack, snd astats.special_attack);
-        dstats.special_attack <- (tmp2, snd dstats.special_attack); secondary_effects t
-        )
+        dstats.special_attack <- (tmp2, snd dstats.special_attack); secondary_effects t)
+    | GuardSwap::t ->
+        (let astats = atk.stat_enhance in
+        let dstats = def.stat_enhance in
+        let tmp = fst astats.defense in
+        astats.defense <- (fst dstats.defense, snd astats.defense);
+        dstats.defense <- (tmp, snd dstats.defense);
+        let tmp2 = fst astats.special_defense in
+        astats.special_defense <- (fst dstats.special_defense, snd astats.special_defense);
+        dstats.special_defense <- (tmp2, snd dstats.special_defense); secondary_effects t)
     | [] -> ()
     | _ -> failwith "Faulty Game Logic: Debug 1188"
   in
