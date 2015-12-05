@@ -983,6 +983,7 @@ let rec getMoveStringStatus a =
   | RandMoveA s -> getMoveString s
   | ItemSwapS s -> getMoveStringStatus s
   | WishS s -> getMoveStringStatus s
+  | AbilityChangeS s -> getMoveStringStatus s
 
 let rec getMoveStringEnd a =
   match a with
@@ -1130,6 +1131,7 @@ let rec getStatusString starter s =
   | RandMoveS s -> starter ^ " used a random move." ^ getStatusString starter s
   | RandMoveA s -> starter ^ " used a random move." ^ getAttackString starter s
   | WishS s -> getStatusString starter s ^ "A wish was made."
+  | AbilityChangeS s -> getStatusString starter s ^ starter ^ " changed the opponent's ability."
   | SwitchOut s -> (match !secondaryEffect with
                     | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
                     | `P2 -> current_command := (Some (Poke "random"), Some NoMove));
