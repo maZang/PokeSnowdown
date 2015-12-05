@@ -1530,6 +1530,16 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
         stats.special_defense <- (-fst stats.special_defense, snd stats.special_defense);
         stats.evasion <- (-fst stats.evasion, snd stats.evasion);
         stats.accuracy <- (-fst stats.accuracy, snd stats.accuracy); secondary_effects t)
+    | PowerSwap::t ->
+        (let astats = atk.stat_enhance in
+        let dstats = def.stat_enhance in
+        let tmp = fst astats.attack in
+        astats.attack <- (fst dstats.attack, snd astats.attack);
+        dstats.attack <- (tmp, snd dstats.attack);
+        let tmp2 = fst astats.special_attack in
+        astats.special_attack <- (fst dstats.special_attack, snd astats.special_attack);
+        dstats.special_attack <- (tmp2, snd dstats.special_attack); secondary_effects t
+        )
     | [] -> ()
     | _ -> failwith "Faulty Game Logic: Debug 1188"
   in
