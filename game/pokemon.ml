@@ -588,6 +588,7 @@ let getSecondaryEffect str = match str with
   | "fake-out" -> [FakeOut; FlinchMove]
   | "facade" -> [Facade]
   | "parting-shot" -> [StageAttack [(Attack, 1); (SpecialAttack, 1)]; SelfSwitch]
+  | "gastro-acid" -> [GastroAcid]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;

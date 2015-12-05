@@ -1609,6 +1609,10 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
         let tmp7 = fst astats.accuracy in
         astats.accuracy <- (fst dstats.accuracy, snd astats.accuracy);
         dstats.accuracy <- (tmp7, snd dstats.accuracy); secondary_effects t)
+    | GastroAcid::t ->
+        def.current.curr_abil <- "nothing";
+        newmove := GastroAcidS !newmove;
+        secondary_effects t
     | [] -> ()
     | _ -> failwith "Faulty Game Logic: Debug 1188"
   in

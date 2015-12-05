@@ -1010,6 +1010,7 @@ let rec getMoveStringStatus a =
   | WishS s -> getMoveStringStatus s
   | AbilityChangeS s -> getMoveStringStatus s
   | KnockedOffS (_, s) -> getMoveStringStatus s
+  | GastroAcidS s -> getMoveStringStatus s
 
 let rec getMoveStringEnd a =
   match a with
@@ -1161,6 +1162,7 @@ let rec getStatusString starter s =
   | WishS s -> getStatusString starter s ^ "A wish was made."
   | AbilityChangeS s -> getStatusString starter s ^ starter ^ " changed the opponent's ability."
   | KnockedOffS (item, s) -> getStatusString starter s ^ starter ^ " made the opponent's " ^ (Pokemon.string_of_item item) ^ " unusable."
+  | GastroAcidS s -> getStatusString starter s ^ starter ^ " suppressed the opponent's ability."
   | SwitchOut s -> (match !secondaryEffect with
                     | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
                     | `P2 -> current_command := (Some (Poke "random"), Some NoMove));

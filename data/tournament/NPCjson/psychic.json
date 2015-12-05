@@ -299,5 +299,6 @@
       "speed": "252"
     }
   },
-	"pokemon": [ "alakazam", "azelf", "braviary", "bronzong", "camerupt", "cinccino", "clawitzer", "cofagrigus", "delphox", "deoxys", "doublade", "espeon", "hoopa", "mew", "starmie" ]
+	"pokemon": [ "alakazam", "azelf", "braviary", "bronzong", "camerupt", "cinccino", "clawitzer", "cofagrigus", "delphox", "deoxys", "doublade", "espeon", "hoopa", "mew", "starmie" ],
+  "unlockable": ["alakazam", "slowbro", "hypno", "exeggutor", "starmie", "mrmime", "jynx", "xatu", "espeon", "slowking", "unown", "wobbuffet", "girafarig", "gardevoir", "medicham", "grumpig", "lunatone", "solrock", "claydol", "chimecho", "metagross", "bronzong", "gallade", "musharna", "swoobat", "sigilyph", "gothitelle", "reuniclus", "beheeyem", "delphox", "meowstic", "malamar", "gengar", "shedinja", "sableye", "banette", "drifblim", "mismagius", "spiritomb", "dusknoir", "froslass", "cofagrigus", "jellicent", "chandelure", "golurk", "aegislash", "trevenant", "gourgeist"]
 }

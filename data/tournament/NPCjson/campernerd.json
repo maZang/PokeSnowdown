@@ -299,5 +299,6 @@
       "speed": "16"
     }
   },
-	"pokemon": [ "blaziken", "charizard", "entei", "magnezone", "manectric", "raikou", "snorlax", "suicune", "swampert", "talonflame", "tentacruel", "thundurus", "umbreon", "whimsicott", "zapdos" ]
+	"pokemon": [ "blaziken", "charizard", "entei", "magnezone", "manectric", "raikou", "snorlax", "suicune", "swampert", "talonflame", "tentacruel", "thundurus", "umbreon", "whimsicott", "zapdos" ],
+  "unlockable": ["charizard", "ninetales", "arcanine", "rapidash", "flareon", "typhlosion", "magcargo", "houndoom", "blaziken", "camerupt", "torkoal", "infernape", "magmortar", "emboar", "simisear", "darmanitan", "chandelure", "heatmor", "volcarona", "delphox", "talonflame", "pyroar", "raichu", "electrode", "jolteon", "lanturn", "ampharos", "manectric", "plusle", "minun", "luxray", "pachirisu", "magnezone", "electivire", "rotom", "zebstrika", "emolga", "galvantula", "eelektross", "stunfisk", "heliolisk", "dedenne"]
 }
