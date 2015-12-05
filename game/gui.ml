@@ -450,11 +450,19 @@ let make_menu ?packing () =
   let img = GMisc.image ~file:"./gui_pics/main.gif" ~packing:(hbox2#pack)
     ~width:screen_width ~height:(5*screen_height /6) () in
   (* load_screen is a gif that plays before battle (during initialization)*)
-  let load_screen_table = GPack.table ~rows:4 ~columns: 4 ?packing ~width:screen_width
-    ~height:screen_height ~show:false ~packing:(vbox#pack) () in
-  let player_img = GMisc.image ~file:"../data/backgrounds/"
-  let load_screen = GMisc.image ~file:"../data/backgrounds/background.gif"
-    ~show:false ~packing:(vbox#pack) () in
+  let load_screen = GPack.table ~rows:4 ~columns: 4 ?packing ~width:screen_width
+    ~height:screen_height ~show:false () in
+  let load_screen_img = GMisc.image ~file:"../data/backgrounds/versus_screen.png" () in
+  let playeranim = GPack.fixed ~width:screen_width ~height:screen_height () in
+  let versusanim = GPack.fixed ~width:screen_width ~height:screen_height () in
+  let player_img = GMisc.image ~file:"../data/backgrounds/player_versus/002.gif" () in
+  let versus_img = GMisc.image ~file:"../data/backgrounds/player_versus/002.gif" () in
+  versusanim#put versus_img#coerce (poke2x-80) (poke2y-50);
+  playeranim#put player_img#coerce (poke1x -40) (poke1y + 105);
+  load_screen#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH playeranim#coerce;
+  load_screen#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH versusanim#coerce;
+  load_screen#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH load_screen_img#coerce;
+  vbox#add load_screen#coerce;
   (* Return all objects created *)
   (vbox, hbox1, hbox2, button1, button2, button3, button4,
     button5, button6, button7, button8, img, load_screen)
@@ -553,7 +561,7 @@ let load_battle_load engine img bg_img load_screen battle text buttonhide button
     upon (Ivar.read !engine) (fun s -> match s with
       | Battle InGame _ ->
           (Printf.printf "LoadScreenbug\n%!";
-          Thread.delay 1.;
+          Thread.delay 10.;
           main_menu#misc#show ();
           battle_screen#misc#show ();
           load_screen#misc#hide ();
