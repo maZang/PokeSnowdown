@@ -919,6 +919,7 @@ let rec getMoveString a =
   | SleepAttackFail _ -> `DontMove
   | TrappingMove s -> getMoveString s
   | LifeOrbA s -> getMoveString s
+  | RapidSpinA s -> getMoveString s
   | KnockedOff (_, s) -> getMoveString s
 
 let rec getMoveStringStatus a =
@@ -980,6 +981,8 @@ let rec getMoveStringStatus a =
   | SwitchOut s -> `DontMove
   | RandMoveS s -> getMoveStringStatus s
   | RandMoveA s -> getMoveString s
+  | ItemSwapS s -> getMoveStringStatus s
+  | WishS s -> getMoveStringStatus s
 
 let rec getMoveStringEnd a =
   match a with
@@ -1002,6 +1005,7 @@ let rec getMoveStringEnd a =
   | HailBuffet2 s -> getMoveStringEnd s
   | TauntFade s -> getMoveStringEnd s
   | TrapDamage (_, s) -> getMoveStringEnd s
+  | WishEnd s -> getMoveStringEnd s
   | _ -> `DontMove
 
 let rec getAttackString starter a =
@@ -1053,6 +1057,7 @@ let rec getAttackString starter a =
   | TrappingMove s -> getAttackString starter s ^ "The opponent has been trapped."
   | NoRecoil s -> getAttackString starter s ^ starter ^ "'s ability prevented the recoil damage."
   | LifeOrbA s -> getAttackString starter s ^ starter ^ " has lost some health from its life orb."
+  | RapidSpinA s -> getAttackString starter s ^ starter ^ " has removed some terrain elements."
   | SwitchOutA s -> (match !secondaryEffect with
                     | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
                     | `P2 -> current_command := (Some (Poke "random"), Some NoMove));
@@ -1121,8 +1126,10 @@ let rec getStatusString starter s =
   | StickyWebS s -> getStatusString starter s ^ starter ^ " has placed a sticky web on the opponent's side."
   | SleepTalkA (s1, s2) -> getStatusString starter s1 ^ getAttackString starter s2
   | SleepTalkS (s1, s2) -> getStatusString starter s1 ^ getStatusString starter s2
-  | RandMoveS s -> getStatusString starter s
-  | RandMoveA s -> getAttackString starter s
+  | ItemSwapS s -> getStatusString starter s ^ starter ^ " has swapped items with its opponent."
+  | RandMoveS s -> starter ^ " used a random move." ^ getStatusString starter s
+  | RandMoveA s -> starter ^ " used a random move." ^ getAttackString starter s
+  | WishS s -> getStatusString starter s ^ "A wish was made."
   | SwitchOut s -> (match !secondaryEffect with
                     | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
                     | `P2 -> current_command := (Some (Poke "random"), Some NoMove));
@@ -1155,6 +1162,7 @@ let rec getEndString starter s =
   | HailBuffet1 s -> getEndString starter s ^ "Player one gets hit by the hail."
   | HailBuffet2 s -> getEndString starter s ^ "Player two gets hit by the hail."
   | LeftOversHeal s -> getEndString starter s ^ starter ^ " has healed from the leftovers."
+  | WishEnd s-> getEndString starter s ^ starter ^ " has been healed by the wish."
 
 
 let animate_attack (animbox : GPack.fixed) img startx starty nextx' nexty (moveanim : GPack.fixed) move_img movestring =
@@ -1276,6 +1284,10 @@ let animate_attack (animbox : GPack.fixed) img startx starty nextx' nexty (movea
         move_img#set_file "../data/fx/leftclaw.png";
         moveanim#move move_img#coerce nextx nexty;
         move_img#misc#show ();
+        for l = 1 to 10 do
+          busywait_small ()
+        done;
+        move_img#set_file ("../data/fx/" ^ (String.lowercase (Pokemon.string_of_element (Pokemon.getMoveFromString s).element)) ^ "wisp.png");
         for l = 1 to 10 do
           busywait_small ()
         done;
