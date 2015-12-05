@@ -1,0 +1,143 @@
+{
+	"arceus": {
+    "name": "arceus",
+    "moves": [
+      "swords-dance",
+      "extreme-speed",
+      "stone-edge",
+      "earthquake"
+    ],
+    "ability": "multitype",
+    "nature": "jolly",
+    "item": "life orb",
+    "evs": {
+      "hp": "4",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "0",
+      "special-defense": "252",
+      "speed": "0"
+    }
+  },
+  "deoxsys": {
+    "name": "deoxsys",
+    "moves": [
+      "psycho-boost",
+      "stealth-rock",
+      "spikes",
+      "magic-coat"
+    ],
+    "ability": "pressure",
+    "nature": "timid",
+    "item": "nothing",
+    "evs": {
+      "hp": "4",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "dialga": {
+    "name": "dialga",
+    "moves": [
+      "stealth-rock",
+      "draco-meteor",
+      "fire-blast",
+      "toxic"
+    ],
+    "ability": "pressure",
+    "nature": "calm",
+    "item": "leftovers",
+    "evs": {
+      "hp": "244",
+      "attack": "0",
+      "special-attack": "0",
+      "defense": "0",
+      "special-defense": "252",
+      "speed": "12"
+    }
+  },
+  "genesect": {
+    "name": "genesect",
+    "moves": [
+      "u-turn",
+      "iron-head",
+      "ice-beam",
+      "explosion"
+    ],
+    "ability": "download",
+    "nature": "hasty",
+    "item": "choice scarf",
+    "evs": {
+      "hp": "0",
+      "attack": "248",
+      "special-attack": "8",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "giratina": {
+    "name": "giratina",
+    "moves": [
+      "will-o-wisp",
+      "roar",
+      "rest",
+      "sleep-talk"
+    ],
+    "ability": "pressure",
+    "nature": "bold",
+    "item": "leftovers",
+    "evs": {
+      "hp": "248",
+      "attack": "0",
+      "special-attack": "0",
+      "defense": "252",
+      "special-defense": "8",
+      "speed": "0"
+    }
+  },
+  "groudon": {
+    "name": "groudon",
+    "moves": [
+      "stealth-rock",
+      "precipice-blades",
+      "stone-edge",
+      "dragon-tail"
+    ],
+    "ability": "drought",
+    "nature": "relaxed",
+    "item": "nothing",
+    "evs": {
+      "hp": "252",
+      "attack": "0",
+      "special-attack": "0",
+      "defense": "%6",
+      "special-defense": "200",
+      "speed": "0"
+    }
+  },
+  "ho-oh": {
+    "name": "ho-oh",
+    "moves": [
+      "brave-bird",
+      "sacred-fire",
+      "recover",
+      "earthquake"
+    ],
+    "ability": "regenerator",
+    "nature": "adamant",
+    "item": "life orb",
+    "evs": {
+      "hp": "248",
+      "attack": "196",
+      "special-attack": "0",
+      "defense": "52",
+      "special-defense": "0",
+      "speed": "12"
+    }
+  },
+	"pokemon": [ "arceus", "deoxsys", "dialga", "genesect", "giratina", "groudon", "ho-oh", "kyogre", "lugia", "mewtwo", "palkia", "rayquaza", "reshiram", "xerneas", "yvetal" ]
+}
