@@ -583,6 +583,7 @@ let getSecondaryEffect str = match str with
   | "power-swap" -> [PowerSwap]
   | "gyro-ball" -> [GyroBall]
   | "guard-swap" -> [GuardSwap]
+  | "heart-swap" -> [HeartSwap]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -739,7 +740,7 @@ let getTestPoke () =
   let nature = Bold in
   let item = Leftovers in
   {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "gyro-ball"; move2 =
-  getMoveFromString "guard-swap"; move3 = getMoveFromString "power-swap";
+  getMoveFromString "heart-swap"; move3 = getMoveFromString "power-swap";
   move4 = getMoveFromString "skill-swap"; hp = 98; attack = 100; special_attack = 400; defense = 65;
   speed = 0; special_defense = 200; ability="drizzle"; evs; nature; item}
 
