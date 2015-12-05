@@ -595,7 +595,7 @@ let getSecondaryEffect str = match str with
     power:int; effect_chance: int; accuracy: int; element: element;
     description: string} *)
 let getMoveFromString str =
-  Printf.printf "%s\n%!" str;
+  (* Printf.printf "%s\n%!" str; *)
   let move = move_json |> member str in
   let priority = move |> member "priority" |> to_string |> int_of_string in
   let powerstr = move |> member "power" |> to_string in
@@ -702,7 +702,7 @@ let getRandomPokemon () =
   generatePokemon randomPokeName
 
 let getPresetPokemon ?pjson:(pjson=unlocked_pokemon ()) str =
-  Printf.printf "%s\n%!" str;
+  (* Printf.printf "%s\n%!" str; *)
   let poke = poke_json |> member str in
   let presetpoke = pjson |> member str in
   let ev_helper str =
