@@ -1019,10 +1019,10 @@ let move_handler atk def wt move =
           def.current.curr_hp <- (def.current.curr_hp + !damage);
           newmove := FailA "Fake Out"
     | Facade::t ->
-        match fst atk.current.curr_status with
+        (match fst atk.current.curr_status with
         | NoNon -> secondary_effects t
         | _ -> def.current.curr_hp <- max 0 (def.current.curr_hp - !damage);
-               secondary_effects t
+               secondary_effects t)
     | [] -> ()
     | _ -> failwith "Faulty Game Logic: Debug 783"
     in
