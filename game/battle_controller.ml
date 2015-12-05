@@ -100,8 +100,8 @@ let convertToMega t =
 let initialize_battle team1 team2 =
   convertToMega team1;
   convertToMega team2;
-  (* team1.current <- getBattlePoke (getTestPoke ());
-  team2.current <- getBattlePoke (getTestOpp ());*) Battle (InGame
+  team1.current <- getBattlePoke (getTestPoke ());
+  team2.current <- getBattlePoke (getTestOpp ()); Battle (InGame
     (team1, team2, {weather = ClearSkies; terrain = {side1= ref []; side2= ref []}}, ref (Pl1 NoAction), ref (Pl2 NoAction)))
 
 (* Gets a random team of pokemon for initialization *)
@@ -827,6 +827,14 @@ let move_handler atk def wt move =
     (* Moves based upon weight are instead based on current health *)
     | WeightDamage::t ->
       (let base_power = max 20 ((def.current.curr_hp + !damage) * 120 / def.current.bhp) in
+      move.power <- base_power;
+      let moveDescript', fdamage' = damageCalculation atk def weather move in
+      let damage' = int_of_float fdamage' in
+      def.current.curr_hp <- max 0 (def.current.curr_hp - damage' + !damage));
+      secondary_effects t
+    (* Moves based upon weight are instead based on current health *)
+    | GyroBall::t ->
+      (let base_power = min 150 (int_of_float (25. *. (float_of_int def.current.bspeed /. float_of_int atk.current.bspeed))) in
       move.power <- base_power;
       let moveDescript', fdamage' = damageCalculation atk def weather move in
       let damage' = int_of_float fdamage' in
