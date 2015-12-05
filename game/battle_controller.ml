@@ -19,7 +19,7 @@ let unpack opt =
 
 (* Status of Pokemon is changed after switching out *)
 let switchOutStatus bpoke =
-  if bpoke.pokeinfo.ability = "natural-cure" then
+  if bpoke.curr_abil = "natural-cure" then
     (NoNon, [])
   else
     (match bpoke.curr_status with
@@ -175,7 +175,7 @@ let get_weather_amplifier w (move : move) =
 (* Damage calculation following the equation given by Bulbapedia.
    Stat boosts are taken into account in the beginning *)
 let damageCalculation t1 t2 (w,ter1, ter2) (move : move) =
-  let abil_modifier, move_type = match t1.current.pokeinfo.ability with
+  let abil_modifier, move_type = match t1.current.curr_abil with
       | "pixilate" -> if move.element = Normal then (1.3, Fairy) else (1., move.element)
       | "refrigerate" -> if move.element = Normal then (1.3, Ice) else (1., move.element)
       | "aerilate" -> if move.element = Normal then (1.3, Ice) else (1., move.element)
@@ -208,7 +208,7 @@ let damageCalculation t1 t2 (w,ter1, ter2) (move : move) =
       (snd t2.stat_enhance.special_defense)
     | Status -> failwith "Faulty Game Logic: Debug 44" in
   let attack =
-    (match t1.current.pokeinfo.ability with
+    (match t1.current.curr_abil with
     | "swarm" -> if move.element = Bug && t1.current.curr_hp * 3 <= t1.current.bhp then 1.5 else 1.0
     | "blaze" ->if move.element = Fire && t1.current.curr_hp * 3 <= t1.current.bhp then 1.5 else 1.0
     | "overgrow" -> if move.element = Grass && t1.current.curr_hp * 3 <= t1.current.bhp then 1.5 else 1.0
@@ -221,7 +221,7 @@ let damageCalculation t1 t2 (w,ter1, ter2) (move : move) =
     | _ -> 1.0 ) *.
     (match move.dmg_class with
     | Physical ->
-      (match t1.current.pokeinfo.ability with
+      (match t1.current.curr_abil with
       | "huge-power" | "pure-power" -> 2.0
       | "guts" -> if fst t1.current.curr_status <> NoNon then 1.5 else 1.0
       | _ -> 1.0 ) *.
@@ -240,14 +240,15 @@ let damageCalculation t1 t2 (w,ter1, ter2) (move : move) =
       (snd t1.stat_enhance.special_attack)
     | Status -> failwith "Faulty Game Logic: Debug 178") in
   let crit_bool, crit  = getCrit t1.current move in
-  let type_mod = List.fold_left (fun acc x -> acc *. getElementEffect
+  let type_mod' = List.fold_left (fun acc x -> acc *. getElementEffect
       move_type x) 1. t2.current.pokeinfo.element *. (if
-      t2.current.pokeinfo.ability = "levitate" && move.element = Ground then
+      t2.current.curr_abil = "levitate" && move.element = Ground then
       0. else 1.) in
+  let type_mod = (if type_mod' = 1. && t2.current.curr_abil = "wonder-guard" then 0. else type_mod') in
   let weather_amplifier = get_weather_amplifier w move in
   let modifier =
       (* type effectiveness *)
-      type_mod *. abil_modifier *. (if (type_mod = 1. && t2.current.pokeinfo.ability = "wonder-guard") then 0. else 1.) *.
+      type_mod *. abil_modifier *.
       (* STAB bonus *)
       if (List.mem move.element t1.current.pokeinfo.element) then 1.5 else 1. *.
       (* Crit bonus *)
@@ -288,7 +289,7 @@ let findSpeedMult t =
 
 (* Gets the attack multiplier based on current team conditions *)
 let findAttackMult t =
-  if fst (t.current.curr_status) = Burn && (t.current.pokeinfo.ability <> "guts") then
+  if fst (t.current.curr_status) = Burn && (t.current.curr_abil <> "guts") then
     0.5
   else
     1.
@@ -444,7 +445,7 @@ let hitAttack atk def (w,t1,t2) (move : move) damage moveDescript =
   | (Substitute n)::_  -> Some n
   | h::t -> get_substitute_health t in
   let hit_move () =
-    if probability > randnum || List.mem NeverMiss move.secondary then
+    if probability > randnum || List.mem NeverMiss move.secondary || atk.current.curr_abil = "no-guard" || def.current.curr_abil= "no-guard" then
       match get_substitute_health (snd def.current.curr_status) with
       | None -> (if find_protect (snd def.current.curr_status) then
                   (false, ProtectedA move.name)
@@ -536,7 +537,7 @@ let move_handler atk def wt move =
   let newmove = ref moveDescript in
   (* damage does not need to be mutated *)
   let damage = ref (int_of_float fdamage) in
-  let effect_chance = move.effect_chance * (if atk.current.pokeinfo.ability = "serene-grace" then 2 else 1) in
+  let effect_chance = move.effect_chance * (if atk.current.curr_abil = "serene-grace" then 2 else 1) in
   (* helper function to deal with secondary effects *)
   let rec secondary_effects lst = match lst with
     (* MultiHit is any move that can occur more than once e.g. Double Slap;
@@ -556,7 +557,7 @@ let move_handler atk def wt move =
     (* Calls MultHit after determining how many times to hit consecutively *)
     | RandMultHit::t ->
         let randnum =
-          if atk.current.pokeinfo.ability = "skill-link" then
+          if atk.current.curr_abil = "skill-link" then
             5
           else
             Random.int 6 + 1 in
@@ -638,7 +639,7 @@ let move_handler atk def wt move =
           ()); secondary_effects t
     (* Recoil moves deal certain damage to the user *)
     | RecoilMove::t ->
-        if atk.current.pokeinfo.ability = "rock-head" then
+        if atk.current.curr_abil = "rock-head" then
           newmove := NoRecoil !newmove
         else
           (newmove := Recoil !newmove;
@@ -1713,8 +1714,8 @@ let handle_preprocessing t1 t2 w m1 m2 =
                     (w.weather <- ClearSkies; SandStormFade descript)
                    else
                     (w.weather <- (SandStorm (n-1));
-                    match (List.mem Rock t1.current.pokeinfo.element || List.mem Ground t1.current.pokeinfo.element || List.mem Steel t1.current.pokeinfo.element || t1.current.pokeinfo.ability = "sand-rush" || t1.current.pokeinfo.ability = "sand-force" ),
-                          (List.mem Rock t2.current.pokeinfo.element || List.mem Ground t2.current.pokeinfo.element || List.mem Steel t2.current.pokeinfo.element || t2.current.pokeinfo.ability = "sand-rush" || t2.current.pokeinfo.ability = "sand-force" ) with
+                    match (List.mem Rock t1.current.pokeinfo.element || List.mem Ground t1.current.pokeinfo.element || List.mem Steel t1.current.pokeinfo.element || t1.current.curr_abil = "sand-rush" || t1.current.curr_abil = "sand-force" || t1.current.curr_abil = "magic-guard"),
+                          (List.mem Rock t2.current.pokeinfo.element || List.mem Ground t2.current.pokeinfo.element || List.mem Steel t2.current.pokeinfo.element || t2.current.curr_abil = "sand-rush" || t2.current.curr_abil = "sand-force" || t2.current.curr_abil = "magic-guard") with
                     | (false, false) -> (t1.current.curr_hp <- t1.current.curr_hp - t1.current.bhp/16;
                                       t2.current.curr_hp <- t2.current.curr_hp - t2.current.bhp/16;
                                       SandBuffetB descript)
@@ -1727,7 +1728,7 @@ let handle_preprocessing t1 t2 w m1 m2 =
                 (w.weather <- ClearSkies; HailFade descript)
               else
                 (w.weather <- (Hail (n-1));
-                match (List.mem Ice t1.current.pokeinfo.element), (List.mem Ice t2.current.pokeinfo.element) with
+                match (List.mem Ice t1.current.pokeinfo.element || t1.current.curr_abil = "magic-guard "), (List.mem Ice t2.current.pokeinfo.element || t2.current.curr_abil = "magic-guard") with
                 | (false, false) -> (t1.current.curr_hp <- t1.current.curr_hp - t1.current.bhp/16;
                                     t2.current.curr_hp <- t2.current.curr_hp - t2.current.bhp/16;
                                     HailBuffetB descript)
@@ -1756,11 +1757,14 @@ let handle_preprocessing t1 t2 w m1 m2 =
   let rec fix_vstatus t1 t2 descript1 descript2 = function
   | [] -> (descript1, descript2)
   | Leeched::t ->
-        if t2.current.curr_hp > 0 then
-          (let damage = t1.current.bhp / 16 in
-          t1.current.curr_hp <- t1.current.curr_hp - damage;
-          t2.current.curr_hp <- t2.current.curr_hp + damage;
-          fix_vstatus t1 t2 (LeechDmg descript1) (LeechHeal descript2) t)
+        if t2.current.curr_abil <> "magic-guard" then
+          (if t2.current.curr_hp > 0 then
+            (let damage = t1.current.bhp / 16 in
+            t1.current.curr_hp <- t1.current.curr_hp - damage;
+            t2.current.curr_hp <- t2.current.curr_hp + damage;
+            fix_vstatus t1 t2 (LeechDmg descript1) (LeechHeal descript2) t)
+          else
+            fix_vstatus t1 t2 descript1 descript2 t)
         else
           fix_vstatus t1 t2 descript1 descript2 t
   | (PartialTrapping (s, n))::t ->
@@ -1773,6 +1777,7 @@ let handle_preprocessing t1 t2 w m1 m2 =
   | Burn -> if List.mem Fire t.current.pokeinfo.element then
               (t.current.curr_status <- (NoNon, snd t1.current.curr_status);
                BreakBurn)
+            else if t.current.curr_abil = "magic-guard" then Base
             else
               (t.current.curr_hp <- t.current.curr_hp - 1 * t.current.bhp / 8;
               BurnDmg)
@@ -1789,12 +1794,14 @@ let handle_preprocessing t1 t2 w m1 m2 =
   | Poisoned -> if List.mem Poison t.current.pokeinfo.element || List.mem Steel t.current.pokeinfo.element then
                   (t.current.curr_status <- (NoNon, snd t.current.curr_status);
                   BreakPoison)
+                else if t.current.curr_abil = "magic-guard" then Base
                 else
                   (t.current.curr_hp <- t.current.curr_hp - 1 * t.current.bhp / 8;
                     PoisonDmg)
   | Toxic n -> if List.mem Poison t.current.pokeinfo.element || List.mem Steel t.current.pokeinfo.element then
                   (t.current.curr_status <- (NoNon, snd t.current.curr_status);
                   BreakPoison)
+                else if t.current.curr_abil = "magic-guard" then Base
                 else
                   (let damage = t.current.bhp * (n+1) / 16 in
                   t.current.curr_hp <- t.current.curr_hp - damage;
@@ -1829,7 +1836,7 @@ let handle_two_moves t1 t2 w m1 m2 a1 a2 =
   let p2poke = t2.current in
     (* Gets speed of both Pokemon with modifiers *)
   let findbonuspriority t m =
-    match t.current.pokeinfo.ability with
+    match t.current.curr_abil with
     | "prankster" -> if m.dmg_class = Status then 1 else 0
     | "gale-wings" -> if m.element = Flying then 1 else 0
     | _ -> 0 in
@@ -1842,12 +1849,12 @@ let handle_two_moves t1 t2 w m1 m2 a1 a2 =
     getStageAD (fst t2.stat_enhance.speed) *. (snd t2.stat_enhance.speed) *.
     (if t2.current.curr_item = ChoiceScarf then 1.5 else 1.0)) in
   (match w.weather with
-    | Rain _ | HeavyRain _  -> (if p1poke.pokeinfo.ability = "swift-swim" then p1speed := !p1speed *. 2.;
-                                if p2poke.pokeinfo.ability = "swift-swim" then p2speed := !p2speed *. 2.)
-    | Sun _ | HarshSun _ -> (if p1poke.pokeinfo.ability = "chlorophyll" then p1speed := !p1speed *. 2.;
-                                if p2poke.pokeinfo.ability = "chlorophyll" then p2speed := !p2speed *. 2.)
-    | SandStorm _-> (if p1poke.pokeinfo.ability = "sand-rush" then p1speed := !p1speed *. 2.;
-                                if p2poke.pokeinfo.ability = "sand-rush" then p2speed := !p2speed *. 2.)
+    | Rain _ | HeavyRain _  -> (if p1poke.curr_abil = "swift-swim" then p1speed := !p1speed *. 2.;
+                                if p2poke.curr_abil = "swift-swim" then p2speed := !p2speed *. 2.)
+    | Sun _ | HarshSun _ -> (if p1poke.curr_abil = "chlorophyll" then p1speed := !p1speed *. 2.;
+                                if p2poke.curr_abil = "chlorophyll" then p2speed := !p2speed *. 2.)
+    | SandStorm _-> (if p1poke.curr_abil = "sand-rush" then p1speed := !p1speed *. 2.;
+                                if p2poke.curr_abil = "sand-rush" then p2speed := !p2speed *. 2.)
     | _ -> ());
   let p1priority = curr_move.priority + findbonuspriority t1 curr_move in
   let p2priority = curr_move'.priority + findbonuspriority t2 curr_move' in
@@ -1995,7 +2002,7 @@ let getEntryHazardDmg t ter1=
                       (let (s, f) = t.stat_enhance.speed in
                       t.stat_enhance.speed <- ((max (-6) (s-1)), f);
                       helper acc t')
-  | (Spikes n)::t' ->if List.mem Flying t.current.pokeinfo.element || t.current.pokeinfo.ability = "levitate" then helper acc t'
+  | (Spikes n)::t' ->if List.mem Flying t.current.pokeinfo.element || t.current.curr_abil = "levitate" then helper acc t'
                     else
                       (if n = 1 then (helper (0.125 +. acc) t')
                       else if n = 2 then (helper (1. /. 6. +. acc) t')
@@ -2008,7 +2015,7 @@ let getEntryHazardDmg t ter1=
                         | 2. -> helper (0.25 +. acc) t'
                         | 4. -> helper (0.5 +. acc) t'
                         | _ -> helper (0.125 +. acc) t')
-  | (ToxicSpikes n)::t' -> if List.mem Flying t.current.pokeinfo.element || t.current.pokeinfo.ability = "levitate" then helper acc t'
+  | (ToxicSpikes n)::t' -> if List.mem Flying t.current.pokeinfo.element || t.current.curr_abil = "levitate" then helper acc t'
                       else
                         ((match t.current.curr_status with
                         | (NoNon, x) -> (if n = 1 then (t.current.curr_status <- (Poisoned, x)) else (t.current.curr_status <- (Toxic 0, x)))
@@ -2033,6 +2040,7 @@ let switchPokeHandler faint nextpoke t ter1 t2 w =
   | None -> (switchOutStatEnhancements t, []) in
   t.stat_enhance <- new_stat_enhance;
   t.current.curr_status <- switchOutStatus t.current;
+  t.current.curr_abil <- t.current.pokeinfo.ability;
   t.current <- switchPoke;
   t.current.curr_status <- (fst t.current.curr_status, new_vola_status);
   (if faint then
@@ -2042,7 +2050,7 @@ let switchPokeHandler faint nextpoke t ter1 t2 w =
   getEntryHazardDmg t ter1;
   ter1 := filterBatonPass !ter1;
   if t.current.curr_hp > 0 then
-    (match t.current.pokeinfo.ability with
+    (match t.current.curr_abil with
     | "intimidate" -> t2.stat_enhance.attack <- (fst t2.stat_enhance.attack - 1, snd t2.stat_enhance.attack); ("." ^ t.current.pokeinfo.name ^ "'s intimidate lowered the opponent's attack.")
     | "drizzle" -> w.weather <- Rain 5; ("." ^ t.current.pokeinfo.name ^ " caused the Rain to fall.")
     | "drought" -> w.weather <- Sun 5; ("." ^ t.current.pokeinfo.name ^ " cause the Sun to come up.")
