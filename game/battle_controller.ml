@@ -944,7 +944,7 @@ let move_handler atk def wt move =
                                   (let turns = Random.int 3 + 2 in
                                   def.current.curr_status <- (fst def.current.curr_status, (PartialTrapping (move.name, turns))::(snd def.current.curr_status));
                                   newmove := TrappingMove !newmove)
-      (* moves that double in power *)
+    (* moves that double in power *)
     | DoublePower::t -> (match move.name with
                 | "brine" -> if def.current.curr_hp * 2 <= def.current.bhp then def.current.curr_hp <- max 0 (def.current.curr_hp - !damage) else ()
                 | "hex" ->  if fst atk.current.curr_status = NoNon then () else def.current.curr_hp <- max 0 (def.current.curr_hp - !damage)
@@ -952,6 +952,20 @@ let move_handler atk def wt move =
                                   | Poisoned | Toxic _ -> def.current.curr_hp <- max 0 (def.current.curr_hp - !damage)
                                   | _ -> ())
                 | _ -> ())
+    (* for the move electro ball *)
+    | ElectroBall::t ->
+      (let speed1 = float_of_int atk.current.bspeed in
+      let speed2 = float_of_int def.current.bspeed in
+      let sratio = speed2 /. speed1 in
+      let base_power = if (sratio >= 0.5) then 60
+                       else if (sratio >= 0.34 && sratio < 0.5) then 80
+                       else if (sratio >= 0.25 && sratio < 0.34) then 120
+                       else 150 in
+      move.power <- base_power;
+      let moveDescript', fdamage' = damageCalculation atk def weather move in
+      let damage' = int_of_float fdamage' in
+      def.current.curr_hp <- max 0 (def.current.curr_hp - damage' + !damage));
+      secondary_effects t
     | [] -> ()
     | _ -> failwith "Faulty Game Logic: Debug 783"
     in

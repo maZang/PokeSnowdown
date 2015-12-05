@@ -568,6 +568,7 @@ let getSecondaryEffect str = match str with
   | "venom-drench" -> [VenomDrench]
   | "v-create" -> [StageBoost [(Defense,-1); (SpecialDefense,-1); (Speed,-1)]]
   | "metronome" -> [RandMove]
+  | "electro-ball" -> [ElectroBall]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -724,7 +725,7 @@ let getTestPoke () =
   let item = Leftovers in
   {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "metronome"; move2 =
   getMoveFromString "v-create"; move3 = getMoveFromString "pound";
-  move4 = getMoveFromString "poison-powder"; hp = 98; attack = 100; special_attack = 165; defense = 65;
+  move4 = getMoveFromString "electro-ball"; hp = 98; attack = 100; special_attack = 165; defense = 65;
   speed = 120; special_defense = 135; ability="drizzle"; evs; nature; item}
 
 let getTestOpp () =
