@@ -95,6 +95,9 @@ let getStringFromEnemy enm =
   | Youngster -> "youngster"
   | ProfOak -> "professoroak"
 
+let getStringOfEnemy () =
+  getStringFromEnemy !selectedEnemy
+
 let getRandomOpp1 () =
   let rand_enemy = getRandomEnemy () in
   let sprite = getStringFromEnemy rand_enemy in
