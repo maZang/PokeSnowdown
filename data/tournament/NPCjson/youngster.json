@@ -159,5 +159,145 @@
       "speed": "0"
     }
   },
+  "escavalier": {
+    "name": "escavalier",
+    "moves": [
+      "megahorn",
+      "iron-head",
+      "pursuit",
+      "drill-run"
+    ],
+    "ability": "overcoat",
+    "nature": "adamant",
+    "item": "choice band",
+    "evs": {
+      "hp": "172",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "84"
+    }
+  },
+  "exploud": {
+    "name": "exploud",
+    "moves": [
+      "boomburst",
+      "fire-blast",
+      "focus-blast",
+      "surf"
+    ],
+    "ability": "scrappy",
+    "nature": "modest",
+    "item": "choice specs",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "excadrill": {
+    "name": "excadrill",
+    "moves": [
+      "earthquake",
+      "iron-head",
+      "rock-slide",
+      "rapid-spin"
+    ],
+    "ability": "sand-rush",
+    "nature": "jolly",
+    "item": "life orb",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "hippowdon": {
+    "name": "hippowdon",
+    "moves": [
+      "earthquake",
+      "stealth-rock",
+      "slack-off",
+      "whirlwind"
+    ],
+    "ability": "sand-stream",
+    "nature": "impish",
+    "item": "leftovers",
+    "evs": {
+      "hp": "252",
+      "attack": "0",
+      "special-attack": "0",
+      "defense": "144",
+      "special-defense": "112",
+      "speed": "0"
+    }
+  },
+  "lopunny": {
+    "name": "lopunny",
+    "moves": [
+      "high-jump-kick",
+      "return",
+      "fake-out",
+      "ice-punch"
+    ],
+    "ability": "limber",
+    "nature": "jolly",
+    "item": "MegaStone",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "staraptor": {
+    "name": "staraptor",
+    "moves": [
+      "brave-bird",
+      "double-edge",
+      "final-gambit",
+      "u-turn"
+    ],
+    "ability": "reckless",
+    "nature": "jolly",
+    "item": "choice scarf",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "zygarde": {
+    "name": "zygarde",
+    "moves": [
+      "dragon-dance",
+      "earthquake",
+      "outrage",
+      "extreme-speed"
+    ],
+    "ability": "aura-break",
+    "nature": "adamant",
+    "item": "life orb",
+    "evs": {
+      "hp": "4",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
 	"pokemon": [ "chansey", "diggersby", "drapion", "druddigon", "dugtrio", "durant", "eelektross", "emboar", "escavalier", "exploud", "excadrill", "hippowdon", "lopunny", "staraptor", "zygarde" ]
 }
