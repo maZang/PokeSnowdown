@@ -1022,8 +1022,8 @@ let move_handler atk def wt move =
     | Facade::t ->
         (match fst atk.current.curr_status with
         | NoNon -> secondary_effects t
-        | _ -> def.current.curr_hp <- max 0 (def.current.curr_hp - !damage);
-               secondary_effects t)
+        | _ -> (def.current.curr_hp <- max 0 (def.current.curr_hp - !damage);
+               secondary_effects t))
     | [] -> ()
     | _ -> failwith "Faulty Game Logic: Debug 783"
     in
@@ -1565,8 +1565,8 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
     (* For the move embargo,  *)
     | KnockOff::t -> (match def.current.curr_item with
                       | Nothing -> secondary_effects t
-                      | _ -> newmove := KnockedOffS (def.current.curr_item, !newmove);
-                             def.current.curr_item <- Nothing; secondary_effects t)
+                      | _ -> (newmove := KnockedOffS (def.current.curr_item, !newmove);
+                             def.current.curr_item <- Nothing; secondary_effects t))
     | PowerSwap::t ->
         (let astats = atk.stat_enhance in
         let dstats = def.stat_enhance in
