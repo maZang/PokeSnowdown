@@ -1436,6 +1436,13 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
                           ::StageAttack[(Speed,1)]::t))
         else
           (newmove := Fail "Venom Drench")
+    | RandMove::t ->
+        (let moves = getAllMoves atk.current.pokeinfo.name in
+        let move = getMoveFromString (getRandomElement moves) in
+        match move.dmg_class with
+        | Status -> (newmove := RandMoveS
+            (status_move_handler atk def (wt, t1, t2) move))
+        | _ -> (newmove := RandMoveA (move_handler atk def (wt, t1, t2) move)))
     | [] -> ()
     | _ -> failwith "Faulty Game Logic: Debug 1188"
   in
