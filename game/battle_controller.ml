@@ -531,6 +531,7 @@ let move_handler atk def wt move =
   let newmove = ref moveDescript in
   (* damage does not need to be mutated *)
   let damage = ref (int_of_float fdamage) in
+  let effect_chance = move.effect_chance * (if atk.current.pokeinfo.ability = "serene-grace" then 2 else 1) in
   (* helper function to deal with secondary effects *)
   let rec secondary_effects lst = match lst with
     (* MultiHit is any move that can occur more than once e.g. Double Slap;
@@ -565,7 +566,7 @@ let move_handler atk def wt move =
     (* Burns opponent if chance exceeds a certain threshold *)
     | BurnChance::t ->
         let randum = Random.int 100 in
-        (if move.effect_chance > randum then
+        (if effect_chance > randum then
           match def.current.curr_status with
           | (NoNon, x) -> def.current.curr_status <- (Burn, x);
                            newmove := BurnMove !newmove
@@ -575,7 +576,7 @@ let move_handler atk def wt move =
     (* Freezes opponent if chance exceeds a certain threshold *)
     | FreezeChance::t ->
         let randnum = Random.int 100 in
-        (if move.effect_chance > randnum then
+        (if effect_chance > randnum then
            match def.current.curr_status with
            | (NoNon, x) -> def.current.curr_status <- (Freeze, x);
                             newmove := FreezeMove !newmove
@@ -585,7 +586,7 @@ let move_handler atk def wt move =
     (* Paralyzed opponent if chance exceeds a certain threshold*)
     | ParaChance::t ->
         let randnum = Random.int 100 in
-        (if move.effect_chance > randnum then
+        (if effect_chance > randnum then
           match def.current.curr_status with
           | (NoNon, x) -> def.current.curr_status <- (Paralysis, x);
                             newmove := ParaMove !newmove
@@ -595,7 +596,7 @@ let move_handler atk def wt move =
     (* Paralyzed opponent if chance exceeds a certain threshold*)
     | PutToSleep::t ->
         let randnum = Random.int 100 in
-        (if move.effect_chance > randnum then
+        (if effect_chance > randnum then
           let sleep_turns = Random.int 3 + 2 in
           match def.current.curr_status with
           | (NoNon, x) -> def.current.curr_status <- (Sleep sleep_turns, x);
@@ -625,7 +626,7 @@ let move_handler atk def wt move =
     (* Flinch Moves have a certain chance to make target flinch *)
     | FlinchMove::t ->
         let randnum = Random.int 100 in
-        (if move.effect_chance > randnum then
+        (if effect_chance > randnum then
           def.current.curr_status <- (fst def.current.curr_status,
                 Flinch::(snd def.current.curr_status))
         else
@@ -640,7 +641,7 @@ let move_handler atk def wt move =
     (* Chance of poisoning the opponent *)
     | PoisonChance::t ->
         let randnum = Random.int 100 in
-        (if move.effect_chance > randnum then
+        (if effect_chance > randnum then
           match def.current.curr_status with
           | (NoNon, x) -> def.current.curr_status <- (Poisoned, x);
                             newmove := PoisonMove !newmove
@@ -687,7 +688,7 @@ let move_handler atk def wt move =
           | [] -> secondary_effects t
           | (s,n)::t' ->
           let randnum = Random.int 100 in
-          if (move.effect_chance > randnum) then
+          if (effect_chance > randnum) then
             (match s with
               | Attack ->
                   let stage, multiplier = atk.stat_enhance.attack in
@@ -741,7 +742,7 @@ let move_handler atk def wt move =
           | [] -> secondary_effects t
           | (s,n)::t' ->
             let randnum = Random.int 100 in
-            if (move.effect_chance > randnum) then
+            if (effect_chance > randnum) then
             (match s with
               | Attack ->
                   let stage, multiplier = def.stat_enhance.attack in
@@ -793,7 +794,7 @@ let move_handler atk def wt move =
 
     (* Moves that have a chance of confusing the opponent *)
     | ConfuseOpp::t ->let randnum = Random.int 100 in
-                          (if (move.effect_chance > randnum) then
+                          (if (effect_chance > randnum) then
                             (let confuse_turns = Random.int 4 + 1 in
                             let novola , x = def.current.curr_status in
                             let rec check_for_confusion = function
@@ -2029,6 +2030,8 @@ let switchPokeHandler faint nextpoke t ter1 t2 w =
     | "intimidate" -> t2.stat_enhance.attack <- (fst t2.stat_enhance.attack - 1, snd t2.stat_enhance.attack); ("." ^ t.current.pokeinfo.name ^ "'s intimidate lowered the opponent's attack.")
     | "drizzle" -> w.weather <- Rain 5; ("." ^ t.current.pokeinfo.name ^ " caused the Rain to fall.")
     | "drought" -> w.weather <- Sun 5; ("." ^ t.current.pokeinfo.name ^ " cause the Sun to come up.")
+    | "snow-warning" -> w.weather <- Hail 5 ("." ^ t.current.pokeinfo.name ^ " has created a giant blizzard.")
+    | "sand-stream" -> w.weather <- SandStorm 5 ("." ^ t.current.pokeinfo.name ^ " whipped up a sand storm.")
     | _ -> "")
   else
     ""
@@ -2045,6 +2048,7 @@ let handle_action state action1 action2 =
   let t1, t2, w, m1, m2 = match get_game_status state with
     | Battle InGame (t1, t2, w, m1, m2) -> t1, t2, w, m1, m2
     | _ -> failwith "Faulty Game Logic" in
+  let () = prevpoke1 := t1.current; prevpoke2 := t1.current in
   match action1 with
   | Poke p' -> let p = if p' = "random" then getRandomPoke t1 else p' in
       (match action2 with
