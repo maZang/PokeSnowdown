@@ -713,7 +713,7 @@ let load_preset engine img bg_img load_screen battle text buttonhide preset butt
   (battle_status, gui_ready, ready, ready_gui) main_menu (battle_screen : GPack.box)
   poke1_img poke2_img text_buffer health_holders menu_holder () =
   (match !current_screen with
-    | Menu1P -> (current_screen := Preset1PChoose;
+    | Menu1P | Menu2P -> ( (if !current_screen = Menu1P then current_screen := Preset1PChoose else current_screen := Preset2PChoose);
                 List.iter (fun s -> s#misc#hide ()) buttonhide;
                 preset#set_label "Continue";
                 img#misc#hide ();
@@ -726,7 +726,6 @@ let load_preset engine img bg_img load_screen battle text buttonhide preset butt
                 select6 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
                 battle_screen#pack selectimg#coerce;
                 ())
-    | Menu2P -> ()
     | Preset1PChoose -> (try (
                           let poke1 = Pokemon.getPresetPokemon (!select1#entry#text) in
                           let poke2 = Pokemon.getPresetPokemon (!select2#entry#text) in
@@ -741,6 +740,44 @@ let load_preset engine img bg_img load_screen battle text buttonhide preset butt
                           load_battle_load engine img bg_img load_screen battle text buttonhide buttonshow
                           (battle_status, gui_ready, ready, ready_gui) (Preset1p [poke1;poke2;poke3;poke4;poke5;poke6]) main_menu battle_screen
                           poke1_img poke2_img text_buffer health_holders menu_holder ()
+                      ) with _ -> let error_win = GWindow.message_dialog ~message:"Error in your Pokemon selection. Try making sure everything is spelled correctly."
+                                  ~buttons:GWindow.Buttons.close  ~message_type:`ERROR () in ignore(error_win#connect#close ~callback:(error_win#destroy));
+                                  ignore (error_win#connect#response ~callback:(fun s -> error_win#destroy ())); error_win#show ())
+    | Preset2PChoose -> (try (
+                          let poke1 = Pokemon.getPresetPokemon (!select1#entry#text) in
+                          let poke2 = Pokemon.getPresetPokemon (!select2#entry#text) in
+                          let poke3 = Pokemon.getPresetPokemon (!select3#entry#text) in
+                          let poke4 = Pokemon.getPresetPokemon (!select4#entry#text) in
+                          let poke5 = Pokemon.getPresetPokemon (!select5#entry#text) in
+                          let poke6 = Pokemon.getPresetPokemon (!select6#entry#text) in
+                          !selecttext#destroy ();
+                          !select1#destroy (); !select2#destroy (); !select3#destroy ();
+                          !select4#destroy (); !select5#destroy (); !select6#destroy ();
+                          current_screen := Preset2PChooseAgain [poke1;poke2;poke3;poke4;poke5;poke6];
+                          selecttext := GMisc.label ~text:"Choose Player Twos' 6 Pokemon from the drop down menus." ~packing:(battle_screen#pack) ();
+                          select1 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
+                          select2 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
+                          select3 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
+                          select4 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
+                          select5 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
+                          select6 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
+                          ())  with _ -> let error_win = GWindow.message_dialog ~message:"Error in your Pokemon selection. Try making sure everything is spelled correctly."
+                                  ~buttons:GWindow.Buttons.close  ~message_type:`ERROR () in ignore(error_win#connect#close ~callback:(error_win#destroy));
+                                  ignore (error_win#connect#response ~callback:(fun s -> error_win#destroy ())); error_win#show ())
+    | Preset2PChooseAgain lst1 -> (try (
+                                      let poke1 = Pokemon.getPresetPokemon (!select1#entry#text) in
+                                      let poke2 = Pokemon.getPresetPokemon (!select2#entry#text) in
+                                      let poke3 = Pokemon.getPresetPokemon (!select3#entry#text) in
+                                      let poke4 = Pokemon.getPresetPokemon (!select4#entry#text) in
+                                      let poke5 = Pokemon.getPresetPokemon (!select5#entry#text) in
+                                      let poke6 = Pokemon.getPresetPokemon (!select6#entry#text) in
+                                      battle_screen#remove selectimg#coerce; !selecttext#destroy (); preset#misc#hide ();
+                                      !select1#destroy (); !select2#destroy (); !select3#destroy ();
+                                      !select4#destroy (); !select5#destroy (); !select6#destroy ();
+                                      preset#set_label "Preset Battle";
+                                      load_battle_load engine img bg_img load_screen battle text buttonhide buttonshow
+                                      (battle_status, gui_ready, ready, ready_gui) (Preset2p (lst1,[poke1;poke2;poke3;poke4;poke5;poke6])) main_menu battle_screen
+                                      poke1_img poke2_img text_buffer health_holders menu_holder ()
                       ) with _ -> let error_win = GWindow.message_dialog ~message:"Error in your Pokemon selection. Try making sure everything is spelled correctly."
                                   ~buttons:GWindow.Buttons.close  ~message_type:`ERROR () in ignore(error_win#connect#close ~callback:(error_win#destroy));
                                   ignore (error_win#connect#response ~callback:(fun s -> error_win#destroy ())); error_win#show ())
@@ -786,7 +823,7 @@ let go_back engine (menu_holder, main_menu, battle_screen, one_player,
     [random; preset ;touranment; poke_edit; back_button] main_menu_bg
     MainMenu ());
   if (match !current_screen with
-    | Battle (P1 ChooseMove)-> true
+    | Battle (P1 ChooseMove)  | Battle (P2 ChooseMove)-> true
     | _ -> false ) then
     (load_main_menu_from_battle engine one_player two_player no_player [move1;
     move2; move3; move4; switch; back_button] main_menu_bg battle text
@@ -801,7 +838,7 @@ let go_back engine (menu_holder, main_menu, battle_screen, one_player,
   if (!current_screen = Battle Processing) then
     (let battle_status, gui_ready, ready, ready_gui = battle_engine in
     Printf.printf "DID I FILL IT %B\n%!" (Ivar.is_full !gui_ready));
-  if (!current_screen = Preset1PChoose) then
+  if (!current_screen = Preset1PChoose ) then
     (preset#set_label "Preset Battle";
     battle_screen#remove selectimg#coerce; main_menu_bg#misc#show (); !selecttext#destroy ();
     !select1#destroy (); !select2#destroy (); !select3#destroy ();
@@ -834,6 +871,13 @@ let go_back engine (menu_holder, main_menu, battle_screen, one_player,
     !select7#destroy (); !selecttext#destroy (); main_menu_bg#misc#show ();
     battle_screen#remove editimg#coerce;
     load_menu engine [random;touranment;preset] [] main_menu_bg Menu1P ());
+  (match !current_screen with
+  | Preset2PChooseAgain _  | Preset2PChoose->
+  preset#set_label "Preset Battle"; battle_screen#remove selectimg#coerce; main_menu_bg#misc#show (); !selecttext#destroy ();
+    !select1#destroy (); !select2#destroy (); !select3#destroy ();
+    !select4#destroy (); !select5#destroy (); !select6#destroy ();
+    load_menu engine [random] [] main_menu_bg Menu2P ()
+  | _ -> () );
   ()
 
 let getStatusFile status =
@@ -1458,7 +1502,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
     | Random1p | Preset1p _| TournBattle _ -> (match !current_command with
                   | (None, _) -> text_buffer#set_text (Pokemon.string_of_weather w.weather); List.iter (fun s -> s#misc#show ()) battle_buttons; current_screen := Battle (P1 ChooseMove); update_buttons engine move1 move2 move3 move4
                   | _ -> Ivar.fill !gui_ready !current_command; current_command := (None, None); game_step ())
-    | Random2p -> (match !current_command with
+    | Random2p  | Preset2p _-> (match !current_command with
                   | (None, _) -> text_buffer#set_text (Pokemon.string_of_weather w.weather); List.iter (fun s -> s#misc#show ()) battle_buttons; current_screen := Battle (P1 ChooseMove); update_buttons engine move1 move2 move3 move4
                   | (_, None) -> text_buffer#set_text (Pokemon.string_of_weather w.weather); List.iter (fun s -> s#misc#show ()) battle_buttons; current_screen := Battle (P2 ChooseMove); update_buttons engine move1 move2 move3 move4
                   | _ -> Ivar.fill !gui_ready !current_command; current_command := (None, None); game_step ()) in
@@ -1554,7 +1598,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
                    (match get_game_status battle_status with
                     | Random1p | Preset1p _ | TournBattle _ -> busywait (); current_command := (fst !current_command), Some (Poke "random");
                               simple_move()
-                    | Random2p -> current_screen := Battle (P2 SwitchPokeF); busywait (); updatetools ();
+                    | Random2p | Preset2p _-> current_screen := Battle (P2 SwitchPokeF); busywait (); updatetools ();
                               current_command := (fst !current_command, snd !current_command);
                               switch_poke engine [poke1;poke2;poke3;poke4;poke5] [move1;move2;
                               move3;move4;switch] back_button ())
@@ -1572,7 +1616,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
                    (match get_game_status battle_status with
                     | Random1p | Preset1p _ | TournBattle _ -> busywait (); current_command := (fst !current_command), Some (Poke "random");
                               simple_move()
-                    | Random2p -> current_screen := Battle (P2 SwitchPokeF); busywait (); updatetools ();
+                    | Random2p | Preset2p _-> current_screen := Battle (P2 SwitchPokeF); busywait (); updatetools ();
                               current_command := (fst !current_command, snd !current_command);
                               switch_poke engine [poke1;poke2;poke3;poke4;poke5] [move1;move2;
                               move3;move4;switch] back_button ())
@@ -1602,7 +1646,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
                  (match get_game_status battle_status with
                  | Random1p | Preset1p _ | TournBattle _ -> busywait (); current_command := ((if fst !current_command = None then Some (NoMove) else fst !current_command), Some (FaintPoke ""));
                                simple_move()
-                 | Random2p -> current_screen := Battle (P2 Faint); busywait (); updatetools ();
+                 | Random2p | Preset2p _ -> current_screen := Battle (P2 Faint); busywait (); updatetools ();
                               current_command := (Some NoMove, snd !current_command);
                               switch_poke engine [poke1;poke2;poke3;poke4;poke5] [move1;move2;
                               move3;move4;switch] back_button ()))
@@ -1624,7 +1668,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
                  (match get_game_status battle_status with
                  | Random1p | Preset1p _ | TournBattle _ -> busywait (); current_command := (Some (NoMove), Some (FaintPoke ""));
                                simple_move()
-                 | Random2p -> current_screen := Battle (P2 Faint); busywait (); updatetools ();
+                 | Random2p | Preset2p _ -> current_screen := Battle (P2 Faint); busywait (); updatetools ();
                                 current_command := (Some (NoMove), snd !current_command);
                                 switch_poke engine [poke1;poke2;poke3;poke4;poke5] [move1;move2;
                                 move3;move4;switch] back_button ()))
@@ -1718,7 +1762,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
                    (match get_game_status battle_status with
                     | Random1p | Preset1p _ | TournBattle _ -> busywait (); current_command := (fst !current_command), Some (Poke "random");
                               simple_move()
-                    | Random2p -> current_screen := Battle (P2 SwitchPokeF); busywait (); updatetools ();
+                    | Random2p | Preset2p _ -> current_screen := Battle (P2 SwitchPokeF); busywait (); updatetools ();
                               switch_poke engine [poke1;poke2;poke3;poke4;poke5] [move1;move2;
                               move3;move4;switch] back_button ())
   | Pl2 ForceChooseS a ->
@@ -1732,7 +1776,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
                    (match get_game_status battle_status with
                     | Random1p | Preset1p _ | TournBattle _ -> busywait (); current_command := (fst !current_command), Some (Poke "random");
                               simple_move()
-                    | Random2p -> current_screen := Battle (P2 SwitchPokeF); busywait (); updatetools ();
+                    | Random2p | Preset2p _ -> current_screen := Battle (P2 SwitchPokeF); busywait (); updatetools ();
                               switch_poke engine [poke1;poke2;poke3;poke4;poke5] [move1;move2;
                               move3;move4;switch] back_button ())
   | _ -> failwith "unimplement")
@@ -1750,7 +1794,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
                                           Ivar.fill !gui_ready !current_command; current_command := (None, None);
                                           upon (Ivar.read !ready_gui) (fun _ -> ready_gui := Ivar.create (); game_animation engine battle_buttons battle text
                                                                         (battle_status, gui_ready, ready, ready_gui) bg_img poke1_img poke2_img move_img text_buffer health_holders pokeanim1 pokeanim2 moveanim back_button ())
-                      | Random2p -> List.iter (fun s -> s#misc#hide ()) battle_buttons; current_screen := Battle (P2 ChooseMove); update_buttons engine move1 move2 move3 move4;
+                      | Random2p | Preset2p _ -> List.iter (fun s -> s#misc#hide ()) battle_buttons; current_screen := Battle (P2 ChooseMove); update_buttons engine move1 move2 move3 move4;
                                     List.iter (fun s -> s#misc#show ()) [move1;move2;move3;move4;switch;back_button]; text_buffer#set_text "Player Two's Chance to Choose a Move.")
  | (Some _, Some _) -> current_screen := Battle Processing; List.iter (fun s -> s#misc#hide ()) battle_buttons; current_screen := Battle Processing; text_buffer#set_text "Both moves collected. Processing...";
                                           Ivar.fill !gui_ready !current_command; current_command := (None, None);
@@ -1783,7 +1827,7 @@ let poke_move_cmd button engine buttons battle text
         (match get_game_status battle_status with
         | Random1p | Preset1p _ | TournBattle _ -> current_command := (Some (FaintPoke (button#label)), Some (FaintPoke "")); next ()
         (* In two player, you would call switch_poke command again *)
-        | Random2p -> text_buffer#set_text "Player Twos' Pokemon has fainted. Choosing...";
+        | Random2p | Preset2p _ -> text_buffer#set_text "Player Twos' Pokemon has fainted. Choosing...";
                       current_command := (Some (FaintPoke (button#label)), snd !current_command); current_screen := Battle (P2 Faint); switch_poke engine [poke1;poke2;poke3;poke4;poke5] [move1;move2;
                               move3;move4;switch] back_button ())
   | Battle (P1 Faint) -> current_command := (Some (FaintPoke (button#label)), snd !current_command); next ()
