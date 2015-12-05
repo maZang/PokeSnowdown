@@ -1053,13 +1053,13 @@ let move_handler atk def wt move =
                         | Physical -> (let hpdamage = prevpoke.curr_hp - atk.current.curr_hp in
                                       def.current.curr_hp <- max 0 (def.current.curr_hp - (2*hpdamage) + !damage);
                                       secondary_effects t)
-                        | _ -> newmove := FailA "Counter") with | _ -> newmove := FailA "Counter")
+                        | _ -> def.current.curr_hp <- def.current.curr_hp + !damage; newmove := FailA "Counter") with | _ -> newmove := FailA "Counter")
         | "mirror-coat" -> (try (let prevmove = Pokemon.getMoveFromString prevstring in
                           match prevmove.dmg_class with
                             | Special -> (let hpdamage = prevpoke.curr_hp - atk.current.curr_hp in
                                          def.current.curr_hp <- max 0 (def.current.curr_hp - (2*hpdamage) + !damage);
                                          secondary_effects t)
-                        | _ -> newmove := FailA "Mirror Coat") with | _ -> newmove := FailA "Mirror Coat")
+                        | _ -> def.current.curr_hp <- def.current.curr_hp + !damage; newmove := FailA "Mirror Coat") with | _ -> newmove := FailA "Mirror Coat")
         | _ -> ()))
     | [] -> ()
     | _ -> failwith "Faulty Game Logic: Debug 783"
