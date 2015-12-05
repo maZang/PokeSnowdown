@@ -308,8 +308,10 @@ let make_battle_screen ?packing () =
      () in
   (* Container used to hold health bars to force the health bars to be a
   certain size *)
-  let health_bar_holder1 = GPack.box `VERTICAL ~width:200 ~height:12 () in
-  let health_bar_holder2 = GPack.box `VERTICAL ~width:200 ~height:12 () in
+  let health_bar_holder1 = GPack.vbox ~width:200 ~height:12 () in
+  let health_bar_holder2 = GPack.vbox ~width:200 ~height:12 () in
+  let status_img1 = GMisc.image ~file:"../data/fx/status/healthy.png" ~packing:(health_bar_holder1#pack) () in
+  let status_img2 = GMisc.image ~file:"../data/fx/status/healthy.png" ~packing:(health_bar_holder2#pack) () in
   (* Actual health bars implemented with progress bars *)
   let health_bar1 = GRange.progress_bar
                           ~packing:(health_bar_holder1#pack ~expand:false) () in
@@ -984,6 +986,7 @@ let rec getMoveStringStatus a =
   | RandMoveA s -> getMoveString s
   | ItemSwapS s -> getMoveStringStatus s
   | WishS s -> getMoveStringStatus s
+  | AbilityChangeS s -> getMoveStringStatus s
 
 let rec getMoveStringEnd a =
   match a with
@@ -1132,6 +1135,7 @@ let rec getStatusString starter s =
   | RandMoveS s -> starter ^ " used a random move." ^ getStatusString starter s
   | RandMoveA s -> starter ^ " used a random move." ^ getAttackString starter s
   | WishS s -> getStatusString starter s ^ "A wish was made."
+  | AbilityChangeS s -> getStatusString starter s ^ starter ^ " changed the opponent's ability."
   | SwitchOut s -> (match !secondaryEffect with
                     | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
                     | `P2 -> current_command := (Some (Poke "random"), Some NoMove));

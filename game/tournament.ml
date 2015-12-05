@@ -124,7 +124,8 @@ let opp1Quotes () = selectedEnemy := !enemy1; getQuotes !enemy1
 
 let opp2Quotes () = selectedEnemy := !enemy2; getQuotes !enemy2
 
-let getJson () = Yojson.Basic.from_file ("../data/tournament/NPCjson/baldman.json")
+let getJson () =
+   Yojson.Basic.from_file ("../data/tournament/NPCjson/" ^ (getStringFromEnemy !selectedEnemy) ^ ".json")
 
 let unlockPokemon () =
   let open Yojson.Basic.Util in

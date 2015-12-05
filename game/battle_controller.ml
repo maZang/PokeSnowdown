@@ -100,8 +100,8 @@ let convertToMega t =
 let initialize_battle team1 team2 =
   convertToMega team1;
   convertToMega team2;
-  team1.current <- getBattlePoke (getTestPoke ());
-  team2.current <- getBattlePoke (getTestOpp ()); Battle (InGame
+  (* team1.current <- getBattlePoke (getTestPoke ());
+  team2.current <- getBattlePoke (getTestOpp ());*) Battle (InGame
     (team1, team2, {weather = ClearSkies; terrain = {side1= ref []; side2= ref []}}, ref (Pl1 NoAction), ref (Pl2 NoAction)))
 
 (* Gets a random team of pokemon for initialization *)
@@ -1055,7 +1055,7 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
           (secondary_effects
             ((StageBoost (List.map (fun (stat, n) -> (stat, 2 * n)) l))::t))
         | _ -> secondary_effects ((StageBoost l)::t))
-  (* StageBoost is any status move that boosts stats *)
+    (* StageBoost is any status move that boosts stats *)
     | (StageBoost l)::t ->
         (match l with
           | [] -> secondary_effects t
@@ -1291,9 +1291,9 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
                       newmove := ProtectS !newmove)
                     else
                       newmove := ProtectFail !newmove)
-                  else
-                    (atk.current.curr_status <- (fst atk.current.curr_status, Protected::(snd atk.current.curr_status));
-                    newmove := ProtectS !newmove)); secondary_effects t
+                    else
+                      (atk.current.curr_status <- (fst atk.current.curr_status, Protected::(snd atk.current.curr_status));
+                      newmove := ProtectS !newmove)); secondary_effects t
     (* For the move belly drum *)
     | BellyDrum::t -> if atk.current.curr_hp > atk.current.bhp / 2 then
                         (atk.current.curr_hp <- atk.current.curr_hp - atk.current.bhp / 2;
@@ -1499,7 +1499,7 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
             newmove := ItemSwapS !newmove;
             secondary_effects t)
     | WishMake::t ->
-            ( let rec findWish = function
+            (let rec findWish = function
               | (Wish _)::t -> true
               | h::t -> findWish t
               | [] -> false in
@@ -1510,6 +1510,14 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
                 t1 := (Wish (1, healing))::!t1;
                 newmove := WishS !newmove)
             )
+    | AbilityChange::t ->
+            (match move.name with
+             | "simple-beam" -> def.current.curr_abil <- "simple"
+             | "worry-seed" -> def.current.curr_abil <- "insomnia"
+             | "entrainment" -> def.current.curr_abil <- atk.current.curr_abil
+             | _ -> ());
+             newmove := AbilityChangeS !newmove;
+             secondary_effects t
     | ReverseStats::t ->
         (let stats = atk.stat_enhance in
         stats.attack <- (-fst stats.attack, snd stats.attack);
@@ -1654,7 +1662,7 @@ let handle_preprocessing t1 t2 w m1 m2 =
                        else
                         fix_terrain t ((Reflect (n-1))::acc) descript t'
   | (Wish (n, heal)::t') -> if n = 0 then
-                            (t.current.curr_hp <- t.current.curr_hp + heal;
+                            (if t.current.curr_hp > 0 then t.current.curr_hp <- t.current.curr_hp + heal else ();
                             fix_terrain t acc (WishEnd descript) t')
                           else
                             (fix_terrain t ((Wish ((n-1), heal))::acc) descript  t')

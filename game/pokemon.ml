@@ -504,7 +504,7 @@ let getSecondaryEffect str = match str with
   | "substitute" -> [SubstituteMake]
   | "triple-kick" -> [MultHit 3]
   | "flail" | "reversal" -> [Flail]
-  | "protect" | "detect"| "quick-guard" | "wide-guard" | "crafty-shield"-> [Protect]
+  | "protect" | "detect"| "quick-guard" | "wide-guard" | "crafty-shield" | "mat-block" -> [Protect]
   | "belly-drum" -> [BellyDrum]
   | "spikes" -> [Spikes]
   | "swagger" -> [StageAttack [(Attack, -2)]; ConfuseOpp]
@@ -574,6 +574,7 @@ let getSecondaryEffect str = match str with
   | "switcheroo" | "trick" -> [ItemSwitch]
   | "close-combat" -> [StageBoost [(Defense, -1); (SpecialDefense, -1)]]
   | "wish" -> [WishMake]
+  | "simple-beam" | "entrainment" | "worry-seed" -> [AbilityChange]
   | "magnitude" | "present" -> [ChancePower]
   | "topsy-turvy" -> [ReverseStats]
   | "final-gambit" -> [FinalGambit]
@@ -734,9 +735,9 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "high-jump-kick"; move2 =
+  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "entrainment"; move2 =
   getMoveFromString "leaf-blade"; move3 = getMoveFromString "ice-beam";
-  move4 = getMoveFromString "final-gambit"; hp = 300; attack = 100; special_attack = 400; defense = 65;
+  move4 = getMoveFromString "simple-beam"; hp = 98; attack = 100; special_attack = 400; defense = 65;
   speed = 120; special_defense = 200; ability="drizzle"; evs; nature; item}
 
 let getTestOpp () =
@@ -753,7 +754,7 @@ let getPokeToolTip t =
   let battlePoke = t.current in
   "Name: " ^ battlePoke.pokeinfo.name ^
   "\nType: " ^ string_of_type battlePoke.pokeinfo.element ^
-  "\nAbility: " ^ battlePoke.pokeinfo.ability ^
+  "\nAbility: " ^ battlePoke.curr_abil ^
   "\nAttack: " ^ string_of_int battlePoke.battack ^ "                  Modified: " ^ string_of_float (float_of_int battlePoke.battack *. getStageAD (fst t.stat_enhance.attack) *. (snd t.stat_enhance.attack)) ^
   "\nDefense: " ^ string_of_int battlePoke.bdefense ^ "               Modified: " ^ string_of_float (float_of_int battlePoke.bdefense *. getStageAD (fst t.stat_enhance.defense) *. (snd t.stat_enhance.defense)) ^
   "\nSpecial Attack: " ^ string_of_int battlePoke.bspecial_attack ^ "     Modified: " ^ string_of_float (float_of_int battlePoke.bspecial_attack *. getStageAD (fst t.stat_enhance.special_attack) *. (snd t.stat_enhance.special_attack)) ^
