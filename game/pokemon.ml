@@ -744,7 +744,7 @@ let getTestPoke () =
   {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "fake-out"; move2 =
   getMoveFromString "leaf-blade"; move3 = getMoveFromString "ice-beam";
   move4 = getMoveFromString "embargo"; hp = 98; attack = 100; special_attack = 400; defense = 65;
-  speed = 120; special_defense = 200; ability="drizzle"; evs; nature; item}
+  speed = 120; special_defense = 200; ability="wonder-guard"; evs; nature; item}
 
 let getTestOpp () =
   let evs = {attack = 255; defense =  0; special_attack= 0; special_defense= 255;

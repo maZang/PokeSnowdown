@@ -184,7 +184,7 @@ let damageCalculation t1 t2 (w,ter1, ter2) (move : move) =
     | Physical ->
       let rec findReflect ter = match ter with
       | [] -> false
-      | (Reflect _)::t -> truet
+      | (Reflect _)::t -> true
       | h::t -> findReflect t in
       (match findReflect !ter2 with
       | true -> 2.0
