@@ -590,7 +590,7 @@ let getSecondaryEffect str = match str with
   | "parting-shot" -> [StageAttack [(Attack, 1); (SpecialAttack, 1)]; SelfSwitch]
   | "gastro-acid" -> [GastroAcid]
   | "smelling-salts" -> [SmellingSalts]
-  | "counter" | "mirror-coat" -> [Counter]
+  | "counter" | "mirror-coat" | "metal-burst" -> [Counter]
   | "psycho-shift" -> [PsychoShift]
   | "endeavor" -> [Endeavor]
   | _ -> []
@@ -750,7 +750,7 @@ let getTestPoke () =
   let nature = Bold in
   let item = Nothing in
   {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "counter"; move2 =
-  getMoveFromString "parting-shot"; move3 = getMoveFromString "ice-beam";
+  getMoveFromString "metal-burst"; move3 = getMoveFromString "ice-beam";
   move4 = getMoveFromString "pound"; hp = 120; attack = 100; special_attack = 90; defense = 85;
   speed = 120; special_defense = 200; ability="speed-boost"; evs; nature; item}
 
@@ -760,7 +760,7 @@ let getTestOpp () =
   let nature = Bold in
   let item = Nothing in
   {name="gallade-mega"; element=[Grass]; move1= getMoveFromString "pound"; move2 =
-  getMoveFromString "counter"; move3 = getMoveFromString "mirror-coat";
+  getMoveFromString "counter"; move3 = getMoveFromString "metal-burst";
   move4 = getMoveFromString "cosmic-power"; hp = 100; attack = 100; special_attack = 80; defense = 40;
   speed = 100; special_defense = 50; ability=""; evs; nature; item}
 
