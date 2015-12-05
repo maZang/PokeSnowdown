@@ -27,7 +27,7 @@ let item_list = ["leftovers";"choice band";"life orb";"choice specs"
   ;"choice scarf"; "MegaStone"; "MegaStoneX"; "MegaStoneY"; "nothing"]
 
 let unlocked_poke_string_list () =
-  List.map (to_string) (unlocked_pokemon () |> member "pokemon" |> to_list)
+  List.sort (compare) (List.map (to_string) (unlocked_pokemon () |> member "pokemon" |> to_list))
 
 let getNatureFromString str =
   match str with

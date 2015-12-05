@@ -1,10 +1,5 @@
 (* COMPILE COMMANDS (bottom one is for executable file):
-ocamlfind ocamlc -g -thread
- -package lablgtk2 -package async -package yojson -package str
- -linkpkg info.mli pokemon.mli gui.mli battle_controller.mli game.mli
-          pokemon.ml ai.ml save.ml tournament.ml gui.ml battle_controller.ml
-          game.ml
- -o game
+ocamlfind ocamlc -g -thread -package lablgtk2 -package async -package yojson -package str -linkpkg info.mli pokemon.mli gui.mli battle_controller.mli game.mli pokemon.ml ai.ml save.ml tournament.ml gui.ml battle_controller.ml game.ml -o game
 
 OR
 

@@ -299,6 +299,6 @@
       "speed": "252"
     }
   },
-	"pokemon": [ "bisharp", "crawdaunt", "dragonite", "dragalge", "frosslass", "haxorus", "kingdra", "kyurem", "moltres", "latias", "latios", "garchomp", "salamence", "skarmory", "victini" ], 
+	"pokemon": [ "bisharp", "crawdaunt", "dragonite", "dragalge", "froslass", "haxorus", "kingdra", "kyurem", "moltres", "latias", "latios", "garchomp", "salamence", "skarmory", "victini" ],
   "unlockable": ["dragonite", "kingdra", "flygon", "altaria", "salamence", "garchomp", "haxorus", "druddigon", "hydreigon", "dragalge", "tyrantrum", "goodra", "noivern", "forretress", "steelix", "scizor", "skarmory", "mawile", "aggron", "metagross", "empoleon", "bastiodon", "bronzong", "lucario", "magnezone", "probopass","excadrill", "escavalier", "ferrothorn", "klinklang", "bisharp", "durant", "aegislash", "klefki"]
 }
