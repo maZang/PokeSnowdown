@@ -526,8 +526,8 @@ let rec link_multmove_descript m1 m2 =
 
 (* Handles the moves that deal damage *)
 let move_handler atk def wt move =
-  let weather, ter1, ter2 = match wt with
-                | (wt', ter1, ter2) -> (wt'.weather, ter1, ter2), ter1, ter2 in
+  let wt', weather, ter1, ter2 = match wt with
+                | (wt', ter1, ter2) -> wt', (wt'.weather, ter1, ter2), ter1, ter2 in
 
   (* Recomputes stats before a move is made -- this happens because a burn
     or some status can occur right before a move is made. *)
@@ -1038,21 +1038,23 @@ let move_handler atk def wt move =
             def.current.curr_status <- (NoNon, x); secondary_effects t
         | _ -> secondary_effects t)
     | Counter::t ->
-        (let prevmove, prevpoke = if wt.terrain.side1 == t1 then !prevmove2, !prevpoke1
+        (let prevstring, prevpoke = if wt'.terrain.side1 == ter1 then !prevmove2, !prevpoke1
                                  else
-                                  if wt.terrain.side1 == t2 then !prevmove1, !prevpoke2
+                                  if wt'.terrain.side1 == ter2 then !prevmove1, !prevpoke2
                                   else failwith "Faulty Game Logic: Debug 1044" in
         (match move.name with
-        | "counter" -> (match prevmove.dmg_class with
+        | "counter" -> (try (let prevmove = Pokemon.getMoveFromString prevstring in
+                        match prevmove.dmg_class with
                         | Physical -> (let hpdamage = prevpoke.curr_hp - atk.current.curr_hp in
                                       def.current.curr_hp <- max 0 (def.current.curr_hp - (2*hpdamage));
                                       secondary_effects t)
-                        | _ -> newmove := FailA "Counter")
-        | "mirror-coat" -> (match prevmove.dmg_class with
+                        | _ -> newmove := FailA "Counter") with | _ -> newmove := FailA "Counter")
+        | "mirror-coat" -> (try (let prevmove = Pokemon.getMoveFromString prevstring in
+                          match prevmove.dmg_class with
                             | Special -> (let hpdamage = prevpoke.curr_hp - atk.current.curr_hp in
                                          def.current.curr_hp <- max 0 (def.current.curr_hp - (2*hpdamage));
                                          secondary_effects t)
-                        | _ -> newmove := FailA "Mirror Coat")
+                        | _ -> newmove := FailA "Mirror Coat") with | _ -> newmove := FailA "Mirror Coat")
         | _ -> ()))
     | [] -> ()
     | _ -> failwith "Faulty Game Logic: Debug 783"
