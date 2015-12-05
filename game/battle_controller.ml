@@ -994,6 +994,9 @@ let move_handler atk def wt move =
                       (atk.current.curr_status <- (fst atk.current.curr_status, filter_nonvola (snd atk.current.curr_status));
                       ter1 := filter_terrain (!ter1);
                       newmove := RapidSpinA !newmove)
+    | FinalGambit::t ->
+        (def.current.curr_hp <- max 0 (def.current.curr_hp - atk.current.curr_hp);
+        atk.current.curr_hp <- 0; secondary_effects t)
     | [] -> ()
     | _ -> failwith "Faulty Game Logic: Debug 783"
     in
