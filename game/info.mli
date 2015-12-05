@@ -31,7 +31,7 @@ type endMove = BurnDmg | BreakBurn | BreakFreeze  | BreakPara  | BreakPoison | P
                TrapDamage of string * endMove | LeftOversHeal of endMove | WishEnd of endMove
 
 type guimove = SPoke of string*string | AttackMove of guiattack | Faint | NoAction | Continue | Next | Status of guistatus | EndMove of endMove | FaintNext | SFaint | ForceChoose of guiattack | ForceMove of string
-                | ForceNone
+                | ForceNone | ForceChooseS of guistatus
 
 type playerMove = Pl1 of guimove | Pl2 of guimove
 
@@ -68,16 +68,6 @@ type move = {name:string; priority: int; target: target; dmg_class: dmg_class;
     mutable power:int; effect_chance: int; accuracy: int; element: element;
     description: string; secondary: secondary_effects list}
 
-type terrain_element = LightScreen of int | Reflect of int | Spikes of int | StealthRock | ToxicSpikes of int | StickyWeb | Wish of int*int
-
-type terrain = {side1: terrain_element list ref; side2: terrain_element list ref}
-
-type weather = HarshSun of int | Hail of int | Rain of int | SandStorm of int
-  | HeavyRain of int | Sun of int | AirCurrent of int | ClearSkies
-
-(* We hope to implement all of these below but we will see *)
-type weather_terrain = {mutable weather: weather; terrain: terrain}
-
 type non_volatile_status = Burn | Freeze | Paralysis | Poisoned | Toxic of int | Sleep of int |
                           NoNon
 
@@ -109,6 +99,15 @@ type pokemon_stat_modifier = {mutable attack: stat_modifier; mutable defense: st
     mutable speed: stat_modifier; mutable special_attack: stat_modifier;
     mutable special_defense: stat_modifier; mutable evasion: stat_modifier;
     mutable accuracy: stat_modifier}
+
+type terrain_element = LightScreen of int | Reflect of int | Spikes of int | StealthRock | ToxicSpikes of int | StickyWeb | Wish of int*int | BatonPass of pokemon_stat_modifier * volatile_status list
+
+type terrain = {side1: terrain_element list ref; side2: terrain_element list ref}
+
+type weather = HarshSun of int | Hail of int | Rain of int | SandStorm of int
+  | HeavyRain of int | Sun of int | AirCurrent of int | ClearSkies
+
+type weather_terrain = {mutable weather: weather; terrain: terrain}
 
 type trainer_team = {mutable current: battle_poke; mutable alive: battle_poke list; mutable dead:
                         battle_poke list; mutable stat_enhance: pokemon_stat_modifier}

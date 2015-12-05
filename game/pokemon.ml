@@ -582,6 +582,7 @@ let getSecondaryEffect str = match str with
   | "aromatic-mist" -> [StageBoost [(SpecialDefense, 1)]]
   | "power-swap" -> [PowerSwap]
   | "gyro-ball" -> [GyroBall]
+  | "baton-pass" -> [SelfSwitch]
   | "guard-swap" -> [GuardSwap]
   | "heart-swap" -> [HeartSwap]
   | "fake-out" -> [FakeOut; FlinchMove]
