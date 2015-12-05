@@ -458,7 +458,7 @@ let getSecondaryEffect str = match str with
     | "energy-ball" | "focus-blast" | "earth-power" -> [StageAttack [(SpecialDefense, 1)]]
   | "mist-ball" | "moonblast" | "snarl" -> [StageAttack [(SpecialAttack, 1)]]
   | "bubble-beam" | "bubble" | "icy-wind" | "mud-shot" | "electroweb" | "constrict"
-    | "rock-tomb" -> [StageAttack [(Speed, 1)]]
+    | "rock-tomb" | "low-sweep" -> [StageAttack [(Speed, 1)]]
   | "hyper-beam"| "blast-burn" | "frenzy-plant" | "hydro-cannon"
       | "roar-of-time" | "giga-impact" | "rock-wrecker"  -> [RechargeMove]
   | "swift" | "feint-attack" | "vital-throw" | "aerial-ace" | "magnet-bomb"

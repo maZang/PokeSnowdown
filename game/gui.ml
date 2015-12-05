@@ -983,6 +983,23 @@ let rec getMoveStringEnd a =
   match a with
   | BurnDmg -> `BurnDmg
   | PoisonDmg -> `PoisonDmg
+  | LeftOversHeal s -> getMoveStringEnd s
+  | LeechDmg s -> getMoveStringEnd s
+  | LeechHeal s -> getMoveStringEnd s
+  | LightScreenFade s -> getMoveStringEnd s
+  | ReflectFade s -> getMoveStringEnd s
+  | SunFade s -> getMoveStringEnd s
+  | RainFade s -> getMoveStringEnd s
+  | SandStormFade s -> getMoveStringEnd s
+  | SandBuffetB s -> getMoveStringEnd s
+  | SandBuffet1 s -> getMoveStringEnd s
+  | SandBuffet2 s -> getMoveStringEnd s
+  | HailFade s -> getMoveStringEnd s
+  | HailBuffetB s -> getMoveStringEnd s
+  | HailBuffet1 s -> getMoveStringEnd s
+  | HailBuffet2 s -> getMoveStringEnd s
+  | TauntFade s -> getMoveStringEnd s
+  | TrapDamage (_, s) -> getMoveStringEnd s
   | _ -> `DontMove
 
 let rec getAttackString starter a =
@@ -1142,39 +1159,62 @@ let animate_attack (animbox : GPack.fixed) img startx starty nextx' nexty (movea
       moveanim#move move_img#coerce startx (starty-30);
       for i = 0 to 2 do
         move_img#set_file "../data/fx/sleep1.png";
-        for i = 0 to 40 do
+        for i = 0 to 20 do
           busywait_small ()
         done;
         move_img#set_file "../data/fx/sleep2.png";
-        for i = 0 to 40 do
+        for i = 0 to 20 do
           busywait_small ()
         done;
         move_img#set_file "../data/fx/sleep3.png";
-        for i = 0 to 40 do
+        for i = 0 to 20 do
           busywait_small ()
         done
       done; move_img#misc#hide ())
-  | `FrozenMiss -> ()
   | `ParaMiss ->
       ( move_img#misc#show ();
       moveanim#move move_img#coerce (startx-30) starty;
       for i = 0 to 2 do
         move_img#set_file "../data/fx/paralysis1.png";
-        for i = 0 to 40 do
+        for i = 0 to 20 do
           busywait_small ()
         done;
         move_img#set_file "../data/fx/paralysis2.png";
-        for i = 0 to 40 do
+        for i = 0 to 20 do
           busywait_small ()
         done;
         move_img#set_file "../data/fx/paralysis3.png";
-        for i = 0 to 40 do
+        for i = 0 to 20 do
           busywait_small ()
         done
       done; move_img#misc#hide ())
   | `FlinchMiss -> ()
   | `ConfuseMiss -> ()
-  | `DontMissStatus -> ()
+  | `FrozenMiss -> ()
+  | `DontMissStatus ->
+      ( move_img#misc#show ();
+      moveanim#move move_img#coerce startx starty;
+      move_img#set_file "../data/fx/status5.png";
+      for i = 0 to 25 do
+        busywait_small ()
+      done;
+      move_img#set_file "../data/fx/status4.png";
+      for i = 0 to 25 do
+        busywait_small ()
+      done;
+      move_img#set_file "../data/fx/status3.png";
+      for i = 0 to 25 do
+        busywait_small ()
+      done;
+      move_img#set_file "../data/fx/status4.png";
+      for i = 0 to 25 do
+        busywait_small ()
+      done;
+      move_img#set_file "../data/fx/status5.png";
+      for i = 0 to 40 do
+        busywait_small ()
+      done;
+      move_img#misc#hide ())
   | `SubStatus -> ()
   | `ShieldStatus -> ()
   | `SpikesStatus -> ()
@@ -1187,15 +1227,15 @@ let animate_attack (animbox : GPack.fixed) img startx starty nextx' nexty (movea
       moveanim#move move_img#coerce (startx-30) starty;
       for i = 0 to 2 do
         move_img#set_file "../data/fx/burn1.png";
-        for i = 0 to 40 do
+        for i = 0 to 20 do
           busywait_small ()
         done;
         move_img#set_file "../data/fx/burn2.png";
-        for i = 0 to 40 do
+        for i = 0 to 20 do
           busywait_small ()
         done;
         move_img#set_file "../data/fx/burn3.png";
-        for i = 0 to 40 do
+        for i = 0 to 20 do
           busywait_small ()
         done
       done; move_img#misc#hide ())
@@ -1204,15 +1244,15 @@ let animate_attack (animbox : GPack.fixed) img startx starty nextx' nexty (movea
       moveanim#move move_img#coerce (startx-30) starty;
       for i = 0 to 2 do
         move_img#set_file "../data/fx/poison1.png";
-        for i = 0 to 40 do
+        for i = 0 to 20 do
           busywait_small ()
         done;
         move_img#set_file "../data/fx/poison2.png";
-        for i = 0 to 40 do
+        for i = 0 to 20 do
           busywait_small ()
         done;
         move_img#set_file "../data/fx/poison3.png";
-        for i = 0 to 40 do
+        for i = 0 to 20 do
           busywait_small ()
         done
       done; move_img#misc#hide ())
