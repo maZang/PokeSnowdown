@@ -590,7 +590,7 @@ let getSecondaryEffect str = match str with
   | "parting-shot" -> [StageAttack [(Attack, 1); (SpecialAttack, 1)]; SelfSwitch]
   | "gastro-acid" -> [GastroAcid]
   | "smelling-salts" -> [SmellingSalts]
-  | "counter" | "mirror-coat" | "metal-burst" | "revenge" | "avalanche" -> [Counter]
+  | "counter" | "mirror-coat" | "metal-burst" | "revenge" | "avalanche" | "payback" -> [Counter]
   | "psycho-shift" -> [PsychoShift]
   | "endeavor" -> [Endeavor]
   | _ -> []
