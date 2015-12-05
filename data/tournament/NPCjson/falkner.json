@@ -1,3 +1,203 @@
 {
+	"aerodactyl": {
+    "name": "aerodactyl",
+    "moves": [
+      "taunt",
+      "roost",
+      "stone-edge",
+      "aqua-tail"
+    ],
+    "ability": "pressure",
+    "nature": "jolly",
+    "item": "MegaStone",
+    "evs": {
+      "hp": "4",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "blastoise": {
+    "name": "blastoise",
+    "moves": [
+      "scald",
+      "rapid-spin",
+      "roar",
+      "toxic"
+    ],
+    "ability": "torrent",
+    "nature": "bold",
+    "item": "leftovers",
+    "evs": {
+      "hp": "252",
+      "attack": "0",
+      "special-attack": "4",
+      "defense": "252",
+      "special-defense": "4",
+      "speed": "0"
+    }
+  },
+  "crobat": {
+    "name": "crobat",
+    "moves": [
+      "brave-bird",
+      "u-turn",
+      "cross-poison",
+      "sleep-talk"
+    ],
+    "ability": "infiltrator",
+    "nature": "jolly",
+    "item": "choice band",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "0",
+      "special-defense": "4",
+      "speed": "252"
+    }
+  },
+  "feraligatr": {
+    "name": "feraligatr",
+    "moves": [
+      "swords-dance",
+      "waterfall",
+      "crunch",
+      "aqua-jet"
+    ],
+    "ability": "sheer-force",
+    "nature": "jolly",
+    "item": "life orb",
+    "evs": {
+      "hp": "0",
+      "attack": "220",
+      "special-attack": "0",
+      "defense": "0",
+      "special-defense": "36",
+      "speed": "252"
+    }
+  },
+  "gliscor": {
+    "name": "gliscor",
+    "moves": [
+      "swords-dance",
+      "earthquake",
+      "facade",
+      "roost"
+    ],
+    "ability": "poison-heal",
+    "nature": "careful",
+    "item": "nothing",
+    "evs": {
+      "hp": "244",
+      "attack": "0",
+      "special-attack": "0",
+      "defense": "8",
+      "special-defense": "200",
+      "speed": "56"
+    }
+  },
+  "gyarados": {
+    "name": "gyarados",
+    "moves": [
+      "dragon-dance",
+      "bounce",
+      "waterfall",
+      "substitute"
+    ],
+    "ability": "intimidate",
+    "nature": "jolly",
+    "item": "leftovers",
+    "evs": {
+      "hp": "88",
+      "attack": "220",
+      "special-attack": "0",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "196"
+    }
+  },
+  "manaphy": {
+    "name": "manaphy",
+    "moves": [
+      "tail-glow",
+      "scald",
+      "ice-beam",
+      "psychic"
+    ],
+    "ability": "hydration",
+    "nature": "timid",
+    "item": "leftovers",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "noivern": {
+    "name": "noivern",
+    "moves": [
+      "draco-meteor",
+      "hurricane",
+      "air-slash",
+      "switcheroo"
+    ],
+    "ability": "infiltrator",
+    "nature": "timid",
+    "item": "choice specs",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "4",
+      "speed": "252"
+    }
+  },
+  "pangoro": {
+    "name": "pangoro",
+    "moves": [
+      "superpower",
+      "knock-off",
+      "gunk-shot",
+      "parting-shot"
+    ],
+    "ability": "scrappy",
+    "nature": "adamant",
+    "item": "choice band",
+    "evs": {
+      "hp": "4",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "shuckle": {
+    "name": "shuckle",
+    "moves": [
+      "sticky-web",
+      "stealth-rock",
+      "encore",
+      "infestation"
+    ],
+    "ability": "sturdy",
+    "nature": "bold",
+    "item": "nothing",
+    "evs": {
+      "hp": "252",
+      "attack": "0",
+      "special-attack": "0",
+      "defense": "252",
+      "special-defense": "4",
+      "speed": "0"
+    }
+  },
 	"pokemon": [ "aerodactyl", "blastoise", "crobat", "feraligatr", "gliscor", "gyarados", "manaphy", "noivern", "pangoro", "shuckle", "tornadus", "vaporeon", "venomoth", "yanmega", "zoroark" ]
 }
