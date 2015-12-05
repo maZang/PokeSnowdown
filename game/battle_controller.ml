@@ -1005,6 +1005,11 @@ let move_handler atk def wt move =
     | FinalGambit::t ->
         (def.current.curr_hp <- max 0 (def.current.curr_hp - atk.current.curr_hp);
         atk.current.curr_hp <- 0; secondary_effects t)
+    | FakeOut::t ->
+        let current = float_of_int def.current.curr_hp in
+        let base = float_of_int def.current.bhp in
+        if (current /. base >= 0.85) then secondary_effects t
+        else newmove := FailA "Fake Out"
     | [] -> ()
     | _ -> failwith "Faulty Game Logic: Debug 783"
     in
@@ -1590,11 +1595,6 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
         let tmp7 = fst astats.accuracy in
         astats.accuracy <- (fst dstats.accuracy, snd astats.accuracy);
         dstats.accuracy <- (tmp7, snd dstats.accuracy); secondary_effects t)
-    | FakeOut::t ->
-        let current = float_of_int def.current.curr_hp in
-        let base = float_of_int def.current.bhp in
-        if (current /. base >= 0.75) then secondary_effects t
-        else newmove := Fail "Fake Out"
     | [] -> ()
     | _ -> failwith "Faulty Game Logic: Debug 1188"
   in
