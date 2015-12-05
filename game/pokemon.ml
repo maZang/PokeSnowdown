@@ -456,7 +456,7 @@ let getSecondaryEffect str = match str with
     | "needle-arm" | "rock-slide" | "rolling-kick" | "steamroller"
     | "stomp" | "zen-headbutt" -> [FlinchMove]
   | "acid" | "psychic" | "shadow-ball" | "flash-cannon" | "bug-buzz"
-    | "energy-ball" | "focus-blast" | "earth-power" -> [StageAttack [(SpecialDefense, 1)]]
+    | "energy-ball" | "focus-blast" | "earth-power" | "luster-purge" -> [StageAttack [(SpecialDefense, 1)]]
   | "mist-ball" | "moonblast" | "snarl" -> [StageAttack [(SpecialAttack, 1)]]
   | "bubble-beam" | "bubble" | "icy-wind" | "mud-shot" | "electroweb" | "constrict"
     | "rock-tomb" | "low-sweep" | "bulldoze"-> [StageAttack [(Speed, 1)]]
@@ -542,7 +542,7 @@ let getSecondaryEffect str = match str with
   | "tickle" -> [StageAttack [(Attack,1);(Defense,1)]]
   | "captivate" | "eerie-impulse" -> [StageAttack [(SpecialAttack, 2)]]
   | "fake-tears" | "acid-spray" | "seed-flare" -> [StageAttack [(SpecialDefense, 2)]]
-  | "knock-off" -> [KnockOff]
+  | "knock-off" | "embargo" -> [KnockOff]
   | "frost-breath" | "storm-throw" -> [IncCrit 3]
   | "hone-claws" -> [StageBoost [(Attack,1);(Accuracy,1)]]
   | "ominous-wind" | "silver-wind" | "ancient-power" -> [ChanceStageBoost]
@@ -580,8 +580,11 @@ let getSecondaryEffect str = match str with
   | "final-gambit" -> [FinalGambit]
   | "curse" -> [StageBoost[(Speed,-1);(Attack,1);(Defense,1)]]
   | "aromatic-mist" -> [StageBoost [(SpecialDefense, 1)]]
+  | "power-swap" -> [PowerSwap]
   | "gyro-ball" -> [GyroBall]
   | "baton-pass" -> [SelfSwitch]
+  | "guard-swap" -> [GuardSwap]
+  | "heart-swap" -> [HeartSwap]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -737,19 +740,19 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "baton-pass"; move2 =
-  getMoveFromString "calm-mind"; move3 = getMoveFromString "substitute";
-  move4 = getMoveFromString "skill-swap"; hp = 98; attack = 100; special_attack = 400; defense = 65;
-  speed = 0; special_defense = 200; ability="drizzle"; evs; nature; item}
+  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "luster-purge"; move2 =
+  getMoveFromString "leaf-blade"; move3 = getMoveFromString "ice-beam";
+  move4 = getMoveFromString "embargo"; hp = 98; attack = 100; special_attack = 400; defense = 65;
+  speed = 120; special_defense = 200; ability="drizzle"; evs; nature; item}
 
 let getTestOpp () =
   let evs = {attack = 255; defense =  0; special_attack= 0; special_defense= 255;
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gallade-mega"; element=[Grass]; move1= getMoveFromString "will-o-wisp"; move2 =
-  getMoveFromString "high-jump-kick"; move3 = getMoveFromString "baton-pass";
-  move4 = getMoveFromString "high-jump-kick"; hp = 300; attack = 255; special_attack = 300; defense = 65;
+  {name="gallade-mega"; element=[Grass]; move1= getMoveFromString "high-jump-kick"; move2 =
+  getMoveFromString "work-up"; move3 = getMoveFromString "high-jump-kick";
+  move4 = getMoveFromString "cosmic-power"; hp = 300; attack = 255; special_attack = 300; defense = 65;
   speed = 100; special_defense = 50; ability="gale-wings"; evs; nature; item}
 
 let getPokeToolTip t =

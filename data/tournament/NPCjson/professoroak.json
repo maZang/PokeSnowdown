@@ -139,5 +139,165 @@
       "speed": "12"
     }
   },
-	"pokemon": [ "arceus", "deoxsys", "dialga", "genesect", "giratina", "groudon", "ho-oh", "kyogre", "lugia", "mewtwo", "palkia", "rayquaza", "reshiram", "xerneas", "yvetal" ]
+  "kyogre": {
+    "name": "kyogre",
+    "moves": [
+      "calm-mind",
+      "origin-pulse",
+      "blizzard",
+      "thunder"
+    ],
+    "ability": "drizzle",
+    "nature": "modest",
+    "item": "nothing",
+    "evs": {
+      "hp": "172",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "84"
+    }
+  },
+  "lugia": {
+    "name": "lugia",
+    "moves": [
+      "roost",
+      "whirlwind",
+      "toxic",
+      "reflect"
+    ],
+    "ability": "multiscale",
+    "nature": "bold",
+    "item": "leftovers",
+    "evs": {
+      "hp": "252",
+      "attack": "0",
+      "special-attack": "0",
+      "defense": "252",
+      "special-defense": "4",
+      "speed": "0"
+    }
+  },
+  "mewtwo": {
+    "name": "mewtwo",
+    "moves": [
+      "psystrike",
+      "focus-blast",
+      "ice-beam",
+      "fire-blast"
+    ],
+    "ability": "pressure",
+    "nature": "timid",
+    "item": "MegaStoneY",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "palkia": {
+    "name": "palkia",
+    "moves": [
+      "spacial-rend",
+      "hydro-pump",
+      "fire-blast",
+      "dragon-tail"
+    ],
+    "ability": "pressure",
+    "nature": "timid",
+    "item": "nothing",
+    "evs": {
+      "hp": "4",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "rayquaza": {
+    "name": "rayquaza",
+    "moves": [
+      "draco-meteor",
+      "earthquake",
+      "dragon-ascent",
+      "extreme-speed"
+    ],
+    "ability": "air-lock",
+    "nature": "naive",
+    "item": "nothing",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "40",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "216"
+    }
+  },
+  "reshiram": {
+    "name": "reshiram",
+    "moves": [
+      "blue-flare",
+      "draco-meteor",
+      "roost",
+      "tailwind"
+    ],
+    "ability": "turboblaze",
+    "nature": "timid",
+    "item": "life orb",
+    "evs": {
+      "hp": "0",
+      "attack": "4",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "xerneas": {
+    "name": "xerneas",
+    "moves": [
+      "moonblast",
+      "focus-blast",
+      "sleep-talk",
+      "grass-knot"
+    ],
+    "ability": "fairy-aura",
+    "nature": "modest",
+    "item": "choice scarf",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "32",
+      "special-defense": "0",
+      "speed": "224"
+    }
+  },
+  "yveltal": {
+    "name": "yveltal",
+    "moves": [
+      "dark-pulse",
+      "oblivion-wing",
+      "sucker-punch",
+      "heat-wave"
+    ],
+    "ability": "dark-aura",
+    "nature": "rash",
+    "item": "life orb",
+    "evs": {
+      "hp": "132",
+      "attack": "28",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "96"
+    }
+  },
+	"pokemon": [ "arceus", "deoxsys", "dialga", "genesect", "giratina", "groudon", "ho-oh", "kyogre", "lugia", "mewtwo", "palkia", "rayquaza", "reshiram", "xerneas", "yveltal" ]
 }

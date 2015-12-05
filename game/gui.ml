@@ -891,7 +891,7 @@ let rec string_from_stat s =
   | Attack -> "Attack"
   | Defense -> "Defense"
   | SpecialAttack -> "Special Attack"
-  | SpecialDefense -> "Sepcial Defense"
+  | SpecialDefense -> "Special Defense"
   | Speed -> "Speed"
   | Accuracy -> "Accuracy"
   | Evasion -> "Evasion"
@@ -1008,6 +1008,7 @@ let rec getMoveStringStatus a =
   | ItemSwapS s -> getMoveStringStatus s
   | WishS s -> getMoveStringStatus s
   | AbilityChangeS s -> getMoveStringStatus s
+  | KnockedOffS (_, s) -> getMoveStringStatus s
 
 let rec getMoveStringEnd a =
   match a with
@@ -1157,6 +1158,7 @@ let rec getStatusString starter s =
   | RandMoveA s -> starter ^ " used a random move." ^ getAttackString starter s
   | WishS s -> getStatusString starter s ^ "A wish was made."
   | AbilityChangeS s -> getStatusString starter s ^ starter ^ " changed the opponent's ability."
+  | KnockedOffS (item, s) -> getStatusString starter s ^ starter ^ " made the opponent's " ^ (Pokemon.string_of_item item) ^ " unusable."
   | SwitchOut s -> (match !secondaryEffect with
                     | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
                     | `P2 -> current_command := (Some (Poke "random"), Some NoMove));
