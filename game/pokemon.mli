@@ -106,3 +106,6 @@ val getAllMoves : string -> string list
 (* [getAllAbilities] returns a string list containing all the abilities a
 * Pokemon can have *)
 val getAllAbilities: string -> string list
+
+
+val getRandomElement: 'a list -> 'a

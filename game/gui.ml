@@ -978,6 +978,8 @@ let rec getMoveStringStatus a =
   | SleepTalkS (_, s) -> getMoveStringStatus s
   | SleepAttackS s -> getMoveStringStatus s
   | SwitchOut s -> `DontMove
+  | RandMoveS s -> getMoveStringStatus s
+  | RandMoveA s -> getMoveString s
 
 let rec getMoveStringEnd a =
   match a with
@@ -1102,10 +1104,13 @@ let rec getStatusString starter s =
   | StickyWebS s -> getStatusString starter s ^ starter ^ " has placed a sticky web on the opponent's side."
   | SleepTalkA (s1, s2) -> getStatusString starter s1 ^ getAttackString starter s2
   | SleepTalkS (s1, s2) -> getStatusString starter s1 ^ getStatusString starter s2
+  | RandMoveS s -> getStatusString starter s
+  | RandMoveA s -> getAttackString starter s
   | SwitchOut s -> (match !secondaryEffect with
                     | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
                     | `P2 -> current_command := (Some (Poke "random"), Some NoMove));
                     endTurnEarly := true; getStatusString starter s ^ "The opponent was forced out!"
+
 
 let rec getEndString starter s =
   match s with

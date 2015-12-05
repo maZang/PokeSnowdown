@@ -22,7 +22,7 @@ type guistatus = StatBoost of stat * int * guistatus | NormStatus of string | Th
                    Fail of string | SpikesS of guistatus | BurnStatus of guistatus | HealBellS of guistatus | RefreshS of guistatus | PsychUpS of guistatus | SunnyDayS of guistatus |
                    RainDanceS of guistatus | SandStormS of guistatus | HailS of guistatus | EncoreS of guistatus | EncoreFail | CopyPrevMoveS of guistatus | CopyPrevMoveA of guiattack
                    | CopyFail | TauntS of guistatus | TauntFail | Taunted of string | StealthRockS of guistatus | ToxicSpikesS of guistatus | StickyWebS of guistatus
-                   | SleepTalkS of guistatus * guistatus | SleepTalkA of guistatus * guiattack | SleepAttackS of guistatus | UserFaintS of guistatus
+                   | SleepTalkS of guistatus * guistatus | SleepTalkA of guistatus * guiattack | SleepAttackS of guistatus | UserFaintS of guistatus | RandMoveS of guistatus | RandMoveA of guiattack
 
 type endMove = BurnDmg | BreakBurn | BreakFreeze  | BreakPara  | BreakPoison | PoisonDmg | LeechDmg of endMove | LeechHeal of endMove | Base | LightScreenFade of endMove |
                ReflectFade of endMove | SunFade of endMove | RainFade of endMove | SandStormFade of endMove | SandBuffetB of endMove | SandBuffet1 of endMove |
@@ -58,8 +58,9 @@ type secondary_effects = MultHit of int | StageBoost of (stat * int) list | IncC
                          WeightDamage | DrainMove | LeechSeed | ChargeInSunlight of string | ToxicChance | StageBoostSunlight of (stat * int) list | Recovery | LightScreenMake
                          | Haze | ReflectMake | UserFaint | NeverMiss | DrainMoveSleep | VariableDamage | Rest | SuperFang | SubstituteMake | Flail | Protect | BellyDrum
                          | Spikes | HealBell | SunHeal | MaxHealthDmg | SunnyDay | FalseSwipe | Refresh | PsychUp | RandStageBoost | FlowerShield | RainDance | SandStormMake
-                         | HailMake | Encore of int | PainSplit | SelfEncore | ConfuseUser | CopyPrevMove | KnockOff |ChanceStageBoost | SelfSwitch | FoulPlay | TauntMove |
-                         StealthRockMake | TSpikes | StickyWebMake | Rototiller | SleepEffect | BeatUp | CausePartialTrapping | DoublePower | StoredPower | VenomDrench
+                         | HailMake | Encore of int | PainSplit | SelfEncore | ConfuseUser | CopyPrevMove | KnockOff | ChanceStageBoost | SelfSwitch | FoulPlay | TauntMove
+                         | StealthRockMake | TSpikes | StickyWebMake | Rototiller | SleepEffect | BeatUp | CausePartialTrapping | DoublePower | StoredPower | VenomDrench
+                         | RandMove
 
 type move = {name:string; priority: int; target: target; dmg_class: dmg_class;
     mutable power:int; effect_chance: int; accuracy: int; element: element;
