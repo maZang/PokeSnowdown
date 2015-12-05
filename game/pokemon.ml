@@ -456,7 +456,7 @@ let getSecondaryEffect str = match str with
     | "needle-arm" | "rock-slide" | "rolling-kick" | "steamroller"
     | "stomp" | "zen-headbutt" -> [FlinchMove]
   | "acid" | "psychic" | "shadow-ball" | "flash-cannon" | "bug-buzz"
-    | "energy-ball" | "focus-blast" | "earth-power" -> [StageAttack [(SpecialDefense, 1)]]
+    | "energy-ball" | "focus-blast" | "earth-power" | "luster-purge" -> [StageAttack [(SpecialDefense, 1)]]
   | "mist-ball" | "moonblast" | "snarl" -> [StageAttack [(SpecialAttack, 1)]]
   | "bubble-beam" | "bubble" | "icy-wind" | "mud-shot" | "electroweb" | "constrict"
     | "rock-tomb" | "low-sweep" | "bulldoze"-> [StageAttack [(Speed, 1)]]
@@ -739,7 +739,7 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "last-resort"; move2 =
+  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "luster-purge"; move2 =
   getMoveFromString "leaf-blade"; move3 = getMoveFromString "ice-beam";
   move4 = getMoveFromString "embargo"; hp = 98; attack = 100; special_attack = 400; defense = 65;
   speed = 120; special_defense = 200; ability="drizzle"; evs; nature; item}

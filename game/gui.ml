@@ -891,7 +891,7 @@ let rec string_from_stat s =
   | Attack -> "Attack"
   | Defense -> "Defense"
   | SpecialAttack -> "Special Attack"
-  | SpecialDefense -> "Sepcial Defense"
+  | SpecialDefense -> "Special Defense"
   | Speed -> "Speed"
   | Accuracy -> "Accuracy"
   | Evasion -> "Evasion"
