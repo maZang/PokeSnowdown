@@ -574,7 +574,7 @@ let getSecondaryEffect str = match str with
   | "switcheroo" | "trick" -> [ItemSwitch]
   | "close-combat" -> [StageBoost [(Defense, -1); (SpecialDefense, -1)]]
   | "wish" -> [WishMake]
-  | "simple-beam" | "entrainment" | "worry-seed" -> [AbilityChange]
+  | "simple-beam" | "entrainment" | "worry-seed" | "skill-swap" -> [AbilityChange]
   | "magnitude" | "present" -> [ChancePower]
   | "topsy-turvy" -> [ReverseStats]
   | "final-gambit" -> [FinalGambit]
@@ -593,7 +593,7 @@ let getMoveFromString str =
             | "return" | "frustration" -> 102
             | "heavy-slam" | "heat-crash" -> 120
             | "trump-card" -> 80
-            | "natural-gift" -> 100
+            | "natural-gift" | "last-resort" -> 100
             | _ ->  (try int_of_string powerstr with |_ -> 0) in
   let dmg_class = move |> member "dmg_class" |> to_string |> getDmgClass in
   let target = move |> member "target" |> to_string |> getTarget in
@@ -734,9 +734,9 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "entrainment"; move2 =
+  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "last-resort"; move2 =
   getMoveFromString "leaf-blade"; move3 = getMoveFromString "ice-beam";
-  move4 = getMoveFromString "simple-beam"; hp = 98; attack = 100; special_attack = 400; defense = 65;
+  move4 = getMoveFromString "skill-swap"; hp = 98; attack = 100; special_attack = 400; defense = 65;
   speed = 120; special_defense = 200; ability="drizzle"; evs; nature; item}
 
 let getTestOpp () =

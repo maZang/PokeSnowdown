@@ -1511,6 +1511,9 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
              | "simple-beam" -> def.current.curr_abil <- "simple"
              | "worry-seed" -> def.current.curr_abil <- "insomnia"
              | "entrainment" -> def.current.curr_abil <- atk.current.curr_abil
+             | "skill-swap" -> (let tmp = atk.current.curr_abil in
+                               atk.current.curr_abil <- def.current.curr_abil;
+                               def.current.curr_abil <- tmp)
              | _ -> ());
              newmove := AbilityChangeS !newmove;
              secondary_effects t
