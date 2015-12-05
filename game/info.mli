@@ -116,10 +116,10 @@ type trainer_team = {mutable current: battle_poke; mutable alive: battle_poke li
 one turn, the one with the Poke standing the latest wins *)
 type outcome = WinnerP1 | WinnerP2
 
-type battle_mode = Random1p | Random2p | Preset1p of pokemon list | TournBattle of pokemon list
+type battle_mode = Random1p | Random2p | Preset1p of pokemon list | TournBattle of pokemon list | Preset2p of pokemon list * pokemon list
 
 type screen = SwitchPoke | ChooseMove | Faint | BothFaint | SwitchPokeF
 
 type battle_state = InGame of trainer_team * trainer_team * weather_terrain * playerMove ref * playerMove ref | Loading | P1 of screen| P2 of screen | Processing
 
-type game_state = MainMenu | Menu1P | Quit | Battle of battle_state | Menu2P | Menu0P | Preset1PChoose | Tourney | TourneyChoose | PokeEdit | PokeEditor
+type game_state = MainMenu | Menu1P | Quit | Battle of battle_state | Menu2P | Menu0P | Preset1PChoose | Tourney | TourneyChoose | PokeEdit | PokeEditor | Preset2PChoose |  Preset2PChooseAgain of pokemon list
