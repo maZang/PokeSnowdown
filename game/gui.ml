@@ -308,8 +308,10 @@ let make_battle_screen ?packing () =
      () in
   (* Container used to hold health bars to force the health bars to be a
   certain size *)
-  let health_bar_holder1 = GPack.box `VERTICAL ~width:200 ~height:12 () in
-  let health_bar_holder2 = GPack.box `VERTICAL ~width:200 ~height:12 () in
+  let health_bar_holder1 = GPack.vbox ~width:200 ~height:12 () in
+  let health_bar_holder2 = GPack.vbox ~width:200 ~height:12 () in
+  let status_img1 = GMisc.image ~file:"../data/fx/status/healthy.png" ~packing:(health_bar_holder1#pack) () in
+  let status_img2 = GMisc.image ~file:"../data/fx/status/healthy.png" ~packing:(health_bar_holder2#pack) () in
   (* Actual health bars implemented with progress bars *)
   let health_bar1 = GRange.progress_bar
                           ~packing:(health_bar_holder1#pack ~expand:false) () in

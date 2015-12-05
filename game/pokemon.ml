@@ -459,7 +459,7 @@ let getSecondaryEffect str = match str with
     | "energy-ball" | "focus-blast" | "earth-power" -> [StageAttack [(SpecialDefense, 1)]]
   | "mist-ball" | "moonblast" | "snarl" -> [StageAttack [(SpecialAttack, 1)]]
   | "bubble-beam" | "bubble" | "icy-wind" | "mud-shot" | "electroweb" | "constrict"
-    | "rock-tomb" | "low-sweep" -> [StageAttack [(Speed, 1)]]
+    | "rock-tomb" | "low-sweep" | "bulldoze"-> [StageAttack [(Speed, 1)]]
   | "hyper-beam"| "blast-burn" | "frenzy-plant" | "hydro-cannon"
       | "roar-of-time" | "giga-impact" | "rock-wrecker"  -> [RechargeMove]
   | "swift" | "feint-attack" | "vital-throw" | "aerial-ace" | "magnet-bomb"
@@ -504,7 +504,7 @@ let getSecondaryEffect str = match str with
   | "substitute" -> [SubstituteMake]
   | "triple-kick" -> [MultHit 3]
   | "flail" | "reversal" -> [Flail]
-  | "protect" | "detect"| "quick-guard" | "wide-guard" | "crafty-shield"-> [Protect]
+  | "protect" | "detect"| "quick-guard" | "wide-guard" | "crafty-shield" | "mat-block" -> [Protect]
   | "belly-drum" -> [BellyDrum]
   | "spikes" -> [Spikes]
   | "swagger" -> [StageAttack [(Attack, -2)]; ConfuseOpp]
@@ -574,8 +574,11 @@ let getSecondaryEffect str = match str with
   | "switcheroo" | "trick" -> [ItemSwitch]
   | "close-combat" -> [StageBoost [(Defense, -1); (SpecialDefense, -1)]]
   | "wish" -> [WishMake]
-  | "magnitude" -> [ChancePower]
   | "simple-beam" | "entrainment" | "worry-seed" -> [AbilityChange]
+  | "magnitude" | "present" -> [ChancePower]
+  | "topsy-turvy" -> [ReverseStats]
+  | "final-gambit" -> [FinalGambit]
+  | "curse" -> [StageBoost[(Speed,-1);(Attack,1);(Defense,1)]]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;

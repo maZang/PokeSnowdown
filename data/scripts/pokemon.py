@@ -305,10 +305,52 @@ def generate_abilities_json ():
 	with open("../abilities.json", "w") as outfile:
 		json.dump(ability_list, outfile)
 
+def generate_unlock_json(): 
+	#pokemon type dict 
+	type_dict = generate_type_dictionary () 
+	pokemon_type = {}
+	csvfile = open("../pokemon_types.csv")
+	csvfile.seek(0)
+	next(csvfile)
+	fieldnames = ("pokemon_id", "type_id", "slot")
+	reader = csv.DictReader(csvfile, fieldnames) 
+	for row in reader:
+		type_list = [] 
+		if (row["pokemon_id"] in pokemon_type):
+			type_list = pokemon_type[row["pokemon_id"]]
+		type_list.append(type_dict[row["type_id"]])
+		pokemon_type[row["pokemon_id"]] = type_list 
+	#fix move_dict to include pre-evolution moves
+	csvfile = open("../pokemon_species.csv")
+	csvfile.seek(0)
+	next(csvfile)
+	fieldnames = ("id", "identifier", "gen_id", "evovles_from_id", "evo_chain", "color_id", "shape_id", "habitat_id", "gender_rate", "capture_rate", "base_happiness")
+	reader = csv.DictReader(csvfile, fieldnames)
+	list_evolves_from = [] 
+	for row in reader:
+		if (row['evovles_from_id'] != ''):
+			list_evolves_from.append (row["evovles_from_id"])
+	csvfile.seek(0)
+	next(csvfile) 
+	fieldnames = ("id", "identifier", "gen_id", "evovles_from_id", "evo_chain", "color_id", "shape_id", "habitat_id", "gender_rate", "capture_rate", "base_happiness")
+	reader = csv.DictReader(csvfile, fieldnames)
+	unlock_dict = {} 
+	for row in reader:
+		if row["id"] not in list_evolves_from:
+			for i in range(len(pokemon_type[row["id"]])):
+				poke_list = [] 
+				if (pokemon_type[row["id"]][i] in unlock_dict):
+					poke_list = unlock_dict[pokemon_type[row["id"]][i]]
+				poke_list.append(row["identifier"])
+				unlock_dict[pokemon_type[row["id"]][i]] = poke_list 
+	with open("../unlock_list.json", "w") as outfile:
+		json.dump(unlock_dict, outfile)
+
 def main():
 	generate_abilities_json () 
 	generate_moves_json () 
 	generate_pokemon_json () 
+	generate_unlock_json () 
 
 if __name__ == "__main__":
 	main() 

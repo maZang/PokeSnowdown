@@ -100,8 +100,8 @@ let convertToMega t =
 let initialize_battle team1 team2 =
   convertToMega team1;
   convertToMega team2;
-  team1.current <- getBattlePoke (getTestPoke ());
-  team2.current <- getBattlePoke (getTestOpp ()); Battle (InGame
+  (* team1.current <- getBattlePoke (getTestPoke ());
+  team2.current <- getBattlePoke (getTestOpp ());*) Battle (InGame
     (team1, team2, {weather = ClearSkies; terrain = {side1= ref []; side2= ref []}}, ref (Pl1 NoAction), ref (Pl2 NoAction)))
 
 (* Gets a random team of pokemon for initialization *)
@@ -935,14 +935,14 @@ let move_handler atk def wt move =
                         (def.current.curr_hp <- def.current.curr_hp + !damage;
                           newmove := SleepAttackFail move.name)
     | ChancePower::t ->
-        (Printf.printf "aksdjlkj\n%!";let randum = Random.int 100 in
-        (if (randum < 5) then move.power <- 10
+        (let randum = Random.int 100 in
+        if (randum < 5) then move.power <- 10
         else if (randum >= 5 && randum < 15) then move.power <- 30
         else if (randum >= 15 && randum < 35) then move.power <- 50
         else if (randum >= 35 && randum < 65) then move.power <- 70
         else if (randum >= 65 && randum < 85) then move.power <- 90
         else if (randum >= 85 && randum < 95) then move.power <- 110
-        else move.power <- 150);
+        else move.power <- 150;
         let moveDescript', fdamage' = damageCalculation atk def weather move in
         let damage' = int_of_float fdamage' in
         def.current.curr_hp <- max 0 (def.current.curr_hp - damage' + !damage);
@@ -994,6 +994,9 @@ let move_handler atk def wt move =
                       (atk.current.curr_status <- (fst atk.current.curr_status, filter_nonvola (snd atk.current.curr_status));
                       ter1 := filter_terrain (!ter1);
                       newmove := RapidSpinA !newmove)
+    | FinalGambit::t ->
+        (def.current.curr_hp <- max 0 (def.current.curr_hp - atk.current.curr_hp);
+        atk.current.curr_hp <- 0; secondary_effects t)
     | [] -> ()
     | _ -> failwith "Faulty Game Logic: Debug 783"
     in
@@ -1511,6 +1514,15 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
              | _ -> ());
              newmove := AbilityChangeS !newmove;
              secondary_effects t
+    | ReverseStats::t ->
+        (let stats = atk.stat_enhance in
+        stats.attack <- (-fst stats.attack, snd stats.attack);
+        stats.defense <- (-fst stats.defense, snd stats.defense);
+        stats.speed <- (-fst stats.speed, snd stats.speed);
+        stats.special_attack <- (-fst stats.special_attack, snd stats.special_attack);
+        stats.special_defense <- (-fst stats.special_defense, snd stats.special_defense);
+        stats.evasion <- (-fst stats.evasion, snd stats.evasion);
+        stats.accuracy <- (-fst stats.accuracy, snd stats.accuracy); secondary_effects t)
     | [] -> ()
     | _ -> failwith "Faulty Game Logic: Debug 1188"
   in
@@ -1646,7 +1658,7 @@ let handle_preprocessing t1 t2 w m1 m2 =
                        else
                         fix_terrain t ((Reflect (n-1))::acc) descript t'
   | (Wish (n, heal)::t') -> if n = 0 then
-                            (t.current.curr_hp <- t.current.curr_hp + heal;
+                            (if t.current.curr_hp > 0 then t.current.curr_hp <- t.current.curr_hp + heal else ();
                             fix_terrain t acc (WishEnd descript) t')
                           else
                             (fix_terrain t ((Wish ((n-1), heal))::acc) descript  t')
