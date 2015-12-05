@@ -1037,7 +1037,10 @@ let move_handler atk def wt move =
             def.current.curr_hp <- max 0 (def.current.curr_hp - !damage);
             def.current.curr_status <- (NoNon, x); secondary_effects t
         | _ -> secondary_effects t)
-
+    | Endeavor::t ->
+        (let tmp = atk.current.curr_hp in
+        if tmp < def.current.curr_hp then
+        def.current.curr_hp <- tmp; secondary_effects t)
     | [] -> ()
     | _ -> failwith "Faulty Game Logic: Debug 783"
     in
