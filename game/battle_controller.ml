@@ -247,7 +247,7 @@ let damageCalculation t1 t2 (w,ter1, ter2) (move : move) =
   let weather_amplifier = get_weather_amplifier w move in
   let modifier =
       (* type effectiveness *)
-      type_mod *. abil_modifier *. (if (type_mod = 1 && t2.current.pokeinfo.ability = "wonder-guard") then 0. else 1.) *.
+      type_mod *. abil_modifier *. (if (type_mod = 1. && t2.current.pokeinfo.ability = "wonder-guard") then 0. else 1.) *.
       (* STAB bonus *)
       if (List.mem move.element t1.current.pokeinfo.element) then 1.5 else 1. *.
       (* Crit bonus *)
