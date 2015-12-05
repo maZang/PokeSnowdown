@@ -832,6 +832,14 @@ let move_handler atk def wt move =
       let damage' = int_of_float fdamage' in
       def.current.curr_hp <- max 0 (def.current.curr_hp - damage' + !damage));
       secondary_effects t
+    (* Moves based upon weight are instead based on current health *)
+    | GyroBall::t ->
+      (let base_power = min 150 (int_of_float (25. *. (float_of_int def.current.bspeed /. float_of_int atk.current.bspeed))) in
+      move.power <- base_power;
+      let moveDescript', fdamage' = damageCalculation atk def weather move in
+      let damage' = int_of_float fdamage' in
+      def.current.curr_hp <- max 0 (def.current.curr_hp - damage' + !damage));
+      secondary_effects t
     (* Damage that varies *)
     | VariableDamage::t ->
       (let base_power = int_of_float ((Random.float 1. +. 0.5) *. 100.) in

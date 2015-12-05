@@ -312,6 +312,7 @@ let make_battle_screen ?packing () =
      () in
   (* Container used to hold health bars to force the health bars to be a
   certain size *)
+  let healthbaranim1 = GPack.fixed ~width:screen_width ~height:(2 * screen_height/3) () in
   let healthbaranim2 = GPack.fixed ~width:screen_width ~height:(2 * screen_height/3) () in
   let health_bar_holder1 = GPack.vbox ~width:200 ~height:12 () in
   let health_bar_holder2 = GPack.vbox ~width:200 ~height:12 () in
@@ -362,6 +363,7 @@ let make_battle_screen ?packing () =
       (Pango.Font.from_string "arial,monospace condensed 10");
   (* Place pokemon in animation box *)
   healthbaranim2#put health_bar_holder2#coerce (poke2x-80) (poke2y-50);
+  healthbaranim1#put health_bar_holder1#coerce (poke1x -40) (poke1y + 105);
   pokeanim1#put poke1_img#coerce poke1x poke1y;
   pokeanim2#put poke2_img#coerce poke2x poke2y;
   moveanim#put move_img#coerce 200 200;
@@ -370,8 +372,8 @@ let make_battle_screen ?packing () =
   battle#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH moveanim#coerce;
   battle#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH pokeanim1#coerce;
   battle#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH pokeanim2#coerce;
-  battle#attach ~left:0 ~top:3 ~right:2 ~bottom:4
-                  ~fill:`NONE health_bar_holder1#coerce;
+  battle#attach ~left:0 ~top:0 ~right:4 ~bottom:4
+                  ~fill:`BOTH healthbaranim1#coerce;
   battle#attach ~left:0 ~top:0 ~right:4 ~bottom:4
                   ~fill:`BOTH healthbaranim2#coerce;
   battle#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH bg_img#coerce;

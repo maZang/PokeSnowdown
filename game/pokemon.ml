@@ -580,6 +580,7 @@ let getSecondaryEffect str = match str with
   | "final-gambit" -> [FinalGambit]
   | "curse" -> [StageBoost[(Speed,-1);(Attack,1);(Defense,1)]]
   | "aromatic-mist" -> [StageBoost [(SpecialDefense, 1)]]
+  | "gyro-ball" -> [GyroBall]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -735,10 +736,10 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "last-resort"; move2 =
+  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "gyro-ball"; move2 =
   getMoveFromString "leaf-blade"; move3 = getMoveFromString "ice-beam";
   move4 = getMoveFromString "skill-swap"; hp = 98; attack = 100; special_attack = 400; defense = 65;
-  speed = 120; special_defense = 200; ability="drizzle"; evs; nature; item}
+  speed = 0; special_defense = 200; ability="drizzle"; evs; nature; item}
 
 let getTestOpp () =
   let evs = {attack = 255; defense =  0; special_attack= 0; special_defense= 255;
