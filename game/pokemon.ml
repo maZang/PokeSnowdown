@@ -589,6 +589,7 @@ let getSecondaryEffect str = match str with
   | "facade" -> [Facade]
   | "parting-shot" -> [StageAttack [(Attack, 1); (SpecialAttack, 1)]; SelfSwitch]
   | "gastro-acid" -> [GastroAcid]
+  | "smelling-smalts" -> [SmellingSmalts]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -745,7 +746,7 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Nothing in
-  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "flamethrower"; move2 =
+  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "smelling-smalts"; move2 =
   getMoveFromString "parting-shot"; move3 = getMoveFromString "ice-beam";
   move4 = getMoveFromString "thunder-wave"; hp = 120; attack = 100; special_attack = 150; defense = 85;
   speed = 120; special_defense = 200; ability="speed-boost"; evs; nature; item}

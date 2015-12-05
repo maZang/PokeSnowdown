@@ -76,24 +76,26 @@ let convertToMega t =
   let found = ref false in
   let helper bpoke =
     match bpoke.pokeinfo.item with
-    | MegaStone -> if findMega bpoke.pokeinfo.name then
-                      (found := true; getBattlePoke (convertToMega bpoke.pokeinfo "-mega"))
-                    else
-                      bpoke
-    | MegaStoneY -> if findMegaX bpoke.pokeinfo.name then
-                      (found := true; getBattlePoke (convertToMega bpoke.pokeinfo "-mega-y"))
-                    else
-                      bpoke
-    | MegaStoneX -> if findMegaX bpoke.pokeinfo.name then
-                      (found := true; getBattlePoke (convertToMega bpoke.pokeinfo "-mega-x"))
-                    else
-                       bpoke
+    | MegaStone ->
+        if findMega bpoke.pokeinfo.name then
+        (found := true; getBattlePoke (convertToMega bpoke.pokeinfo "-mega"))
+        else
+          bpoke
+    | MegaStoneY ->
+        if findMegaX bpoke.pokeinfo.name then
+        (found := true; getBattlePoke (convertToMega bpoke.pokeinfo "-mega-y"))
+        else
+          bpoke
+    | MegaStoneX ->
+        if findMegaX bpoke.pokeinfo.name then
+        (found := true; getBattlePoke (convertToMega bpoke.pokeinfo "-mega-x"))
+        else
+          bpoke
     | _ -> bpoke  in
     t.current <- helper (t.current);
-    if !found then
-      ()
+    if !found then ()
     else
-    (t.alive <- List.map (fun x -> if !found then x else helper x) t.alive)
+      (t.alive <- List.map (fun x -> if !found then x else helper x) t.alive)
 
 
 (* Initializes the game state *)
@@ -1024,6 +1026,13 @@ let move_handler atk def wt move =
         | NoNon -> secondary_effects t
         | _ -> (def.current.curr_hp <- max 0 (def.current.curr_hp - !damage);
                secondary_effects t))
+    | SmellingSmalts::t ->
+        (match def.current.curr_status with
+        | (Paralysis, x) ->
+            def.current.curr_hp <- max 0 (def.current.curr_hp - !damage);
+            def.current.curr_status <- (NoNon, x); secondary_effects t
+        | _ -> secondary_effects t)
+
     | [] -> ()
     | _ -> failwith "Faulty Game Logic: Debug 783"
     in
