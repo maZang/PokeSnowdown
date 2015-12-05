@@ -581,6 +581,7 @@ let getSecondaryEffect str = match str with
   | "curse" -> [StageBoost[(Speed,-1);(Attack,1);(Defense,1)]]
   | "aromatic-mist" -> [StageBoost [(SpecialDefense, 1)]]
   | "gyro-ball" -> [GyroBall]
+  | "baton-pass" -> [SelfSwitch]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -736,8 +737,8 @@ let getTestPoke () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "gyro-ball"; move2 =
-  getMoveFromString "leaf-blade"; move3 = getMoveFromString "ice-beam";
+  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "baton-pass"; move2 =
+  getMoveFromString "calm-mind"; move3 = getMoveFromString "substitute";
   move4 = getMoveFromString "skill-swap"; hp = 98; attack = 100; special_attack = 400; defense = 65;
   speed = 0; special_defense = 200; ability="drizzle"; evs; nature; item}
 
@@ -746,8 +747,8 @@ let getTestOpp () =
             hp=255; speed=255} in
   let nature = Bold in
   let item = Leftovers in
-  {name="gallade-mega"; element=[Grass]; move1= getMoveFromString "high-jump-kick"; move2 =
-  getMoveFromString "high-jump-kick"; move3 = getMoveFromString "high-jump-kick";
+  {name="gallade-mega"; element=[Grass]; move1= getMoveFromString "will-o-wisp"; move2 =
+  getMoveFromString "high-jump-kick"; move3 = getMoveFromString "baton-pass";
   move4 = getMoveFromString "high-jump-kick"; hp = 300; attack = 255; special_attack = 300; defense = 65;
   speed = 100; special_defense = 50; ability="gale-wings"; evs; nature; item}
 
