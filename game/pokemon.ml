@@ -587,6 +587,7 @@ let getSecondaryEffect str = match str with
   | "heart-swap" -> [HeartSwap]
   | "fake-out" -> [FakeOut; FlinchMove]
   | "facade" -> [Facade]
+  | "gastro-acid" -> [GastroAcid]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -744,7 +745,7 @@ let getTestPoke () =
   let item = Nothing in
   {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "facade"; move2 =
   getMoveFromString "leaf-blade"; move3 = getMoveFromString "ice-beam";
-  move4 = getMoveFromString "will-o-wisp"; hp = 120; attack = 100; special_attack = 150; defense = 85;
+  move4 = getMoveFromString "gastro-acid"; hp = 120; attack = 100; special_attack = 150; defense = 85;
   speed = 120; special_defense = 200; ability="wonder-guard"; evs; nature; item}
 
 let getTestOpp () =
