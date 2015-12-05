@@ -586,6 +586,7 @@ let getSecondaryEffect str = match str with
   | "guard-swap" -> [GuardSwap]
   | "heart-swap" -> [HeartSwap]
   | "fake-out" -> [FakeOut; FlinchMove]
+  | "facade" -> [Facade]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
