@@ -79,8 +79,8 @@
       "speed": "28"
     }
   },
-  "frosslass": {
-    "name": "frosslass",
+  "froslass": {
+    "name": "froslass",
     "moves": [
       "taunt",
       "spikes",
@@ -95,6 +95,26 @@
       "attack": "0",
       "special-attack": "252",
       "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "garchomp": {
+    "name": "garchomp",
+    "moves": [
+      "swords-dance",
+      "earthquake",
+      "dragon-claw",
+      "substitute"
+    ],
+    "ability": "rough-skin",
+    "nature": "jolly",
+    "item": "leftovers",
+    "evs": {
+      "hp": "12",
+      "attack": "244",
+      "special-attack": "0",
+      "defense": "0",
       "special-defense": "0",
       "speed": "252"
     }
@@ -219,26 +239,6 @@
       "speed": "252"
     }
   },
-  "garchomp": {
-    "name": "garchomp",
-    "moves": [
-      "swords-dance",
-      "earthquake",
-      "dragon-claw",
-      "substitute"
-    ],
-    "ability": "rough-skin",
-    "nature": "jolly",
-    "item": "leftovers",
-    "evs": {
-      "hp": "12",
-      "attack": "244",
-      "special-attack": "0",
-      "defense": "0",
-      "special-defense": "0",
-      "speed": "252"
-    }
-  },
   "salamence": {
     "name": "salamence",
     "moves": [
@@ -299,6 +299,6 @@
       "speed": "252"
     }
   },
-	"pokemon": [ "bisharp", "crawdaunt", "dragonite", "dragalge", "frosslass", "haxorus", "kingdra", "kyurem", "moltres", "latias", "latios", "garchomp", "salamence", "skarmory", "victini" ], 
+	"pokemon": [ "bisharp", "crawdaunt", "dragonite", "dragalge", "froslass", "garchomp", "haxorus", "kingdra", "kyurem", "moltres", "latias", "latios", "salamence", "skarmory", "victini" ],
   "unlockable": ["dragonite", "kingdra", "flygon", "altaria", "salamence", "garchomp", "haxorus", "druddigon", "hydreigon", "dragalge", "tyrantrum", "goodra", "noivern", "forretress", "steelix", "scizor", "skarmory", "mawile", "aggron", "metagross", "empoleon", "bastiodon", "bronzong", "lucario", "magnezone", "probopass","excadrill", "escavalier", "ferrothorn", "klinklang", "bisharp", "durant", "aegislash", "klefki"]
 }

@@ -288,7 +288,7 @@
       "heat-wave"
     ],
     "ability": "pressure",
-    "nature": "hold",
+    "nature": "bold",
     "item": "leftovers",
     "evs": {
       "hp": "248",
