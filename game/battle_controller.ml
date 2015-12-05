@@ -1530,6 +1530,11 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
         stats.special_defense <- (-fst stats.special_defense, snd stats.special_defense);
         stats.evasion <- (-fst stats.evasion, snd stats.evasion);
         stats.accuracy <- (-fst stats.accuracy, snd stats.accuracy); secondary_effects t)
+    (* For the move embargo,  *)
+    | KnockOff::t -> (match def.current.curr_item with
+                      | Nothing -> secondary_effects t
+                      | _ -> newmove := KnockedOffS (def.current.curr_item, !newmove);
+                             def.current.curr_item <- Nothing; secondary_effects t)
     | [] -> ()
     | _ -> failwith "Faulty Game Logic: Debug 1188"
   in

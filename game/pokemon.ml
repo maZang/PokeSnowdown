@@ -542,7 +542,7 @@ let getSecondaryEffect str = match str with
   | "tickle" -> [StageAttack [(Attack,1);(Defense,1)]]
   | "captivate" | "eerie-impulse" -> [StageAttack [(SpecialAttack, 2)]]
   | "fake-tears" | "acid-spray" | "seed-flare" -> [StageAttack [(SpecialDefense, 2)]]
-  | "knock-off" -> [KnockOff]
+  | "knock-off" | "embargo" -> [KnockOff]
   | "frost-breath" | "storm-throw" -> [IncCrit 3]
   | "hone-claws" -> [StageBoost [(Attack,1);(Accuracy,1)]]
   | "ominous-wind" | "silver-wind" | "ancient-power" -> [ChanceStageBoost]
@@ -737,7 +737,7 @@ let getTestPoke () =
   let item = Leftovers in
   {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "last-resort"; move2 =
   getMoveFromString "leaf-blade"; move3 = getMoveFromString "ice-beam";
-  move4 = getMoveFromString "skill-swap"; hp = 98; attack = 100; special_attack = 400; defense = 65;
+  move4 = getMoveFromString "embargo"; hp = 98; attack = 100; special_attack = 400; defense = 65;
   speed = 120; special_defense = 200; ability="drizzle"; evs; nature; item}
 
 let getTestOpp () =
