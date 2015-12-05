@@ -100,8 +100,8 @@ let convertToMega t =
 let initialize_battle team1 team2 =
   convertToMega team1;
   convertToMega team2;
-  team1.current <- getBattlePoke (getTestPoke ());
-  team2.current <- getBattlePoke (getTestOpp ()); Battle (InGame
+  (* team1.current <- getBattlePoke (getTestPoke ());
+  team2.current <- getBattlePoke (getTestOpp ());*) Battle (InGame
     (team1, team2, {weather = ClearSkies; terrain = {side1= ref []; side2= ref []}}, ref (Pl1 NoAction), ref (Pl2 NoAction)))
 
 (* Gets a random team of pokemon for initialization *)
@@ -1647,7 +1647,7 @@ let handle_preprocessing t1 t2 w m1 m2 =
                        else
                         fix_terrain t ((Reflect (n-1))::acc) descript t'
   | (Wish (n, heal)::t') -> if n = 0 then
-                            (t.current.curr_hp <- t.current.curr_hp + heal;
+                            (if t.current.curr_hp > 0 then t.current.curr_hp <- t.current.curr_hp + heal else ();
                             fix_terrain t acc (WishEnd descript) t')
                           else
                             (fix_terrain t ((Wish ((n-1), heal))::acc) descript  t')

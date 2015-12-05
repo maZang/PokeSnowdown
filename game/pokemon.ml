@@ -504,7 +504,7 @@ let getSecondaryEffect str = match str with
   | "substitute" -> [SubstituteMake]
   | "triple-kick" -> [MultHit 3]
   | "flail" | "reversal" -> [Flail]
-  | "protect" | "detect"| "quick-guard" | "wide-guard" | "crafty-shield"-> [Protect]
+  | "protect" | "detect"| "quick-guard" | "wide-guard" | "crafty-shield" | "mat-block" -> [Protect]
   | "belly-drum" -> [BellyDrum]
   | "spikes" -> [Spikes]
   | "swagger" -> [StageAttack [(Attack, -2)]; ConfuseOpp]
