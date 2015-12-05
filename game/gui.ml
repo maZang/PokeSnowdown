@@ -945,6 +945,7 @@ let rec getMoveString a =
   | RapidSpinA s -> getMoveString s
   | KnockedOff (_, s) -> getMoveString s
   | HitSelf s -> getMoveString s
+  | FailA s -> `DontMove
 
 let rec getMoveStringStatus a =
   match a with
@@ -1085,6 +1086,7 @@ let rec getAttackString starter a =
   | LifeOrbA s -> getAttackString starter s ^ starter ^ " has lost some health from its life orb."
   | RapidSpinA s -> getAttackString starter s ^ starter ^ " has removed some terrain elements."
   | HitSelf s -> getAttackString starter s ^ starter ^ " has lost half of it's max hp."
+  | FailA s -> starter ^ " used " ^ s ^ " but it failed."
   | SwitchOutA s -> (match !secondaryEffect with
                     | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
                     | `P2 -> current_command := (Some (Poke "random"), Some NoMove));
