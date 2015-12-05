@@ -590,6 +590,7 @@ let getSecondaryEffect str = match str with
   | "parting-shot" -> [StageAttack [(Attack, 1); (SpecialAttack, 1)]; SelfSwitch]
   | "gastro-acid" -> [GastroAcid]
   | "smelling-salts" -> [SmellingSalts]
+  | "psycho-shift" -> [PsychoShift]
   | _ -> []
 
 (* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
@@ -747,7 +748,7 @@ let getTestPoke () =
   let nature = Bold in
   let item = Nothing in
   {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "smelling-salts"; move2 =
-  getMoveFromString "parting-shot"; move3 = getMoveFromString "ice-beam";
+  getMoveFromString "psycho-shift"; move3 = getMoveFromString "ice-beam";
   move4 = getMoveFromString "thunder-wave"; hp = 120; attack = 100; special_attack = 150; defense = 85;
   speed = 120; special_defense = 200; ability="speed-boost"; evs; nature; item}
 
@@ -757,8 +758,8 @@ let getTestOpp () =
   let nature = Bold in
   let item = Nothing in
   {name="gallade-mega"; element=[Grass]; move1= getMoveFromString "will-o-wisp"; move2 =
-  getMoveFromString "work-up"; move3 = getMoveFromString "ice-beam";
-  move4 = getMoveFromString "cosmic-power"; hp = 100; attack = 100; special_attack = 80; defense = 40;
+  getMoveFromString "work-up"; move3 = getMoveFromString "toxic";
+  move4 = getMoveFromString "thunder-wave"; hp = 100; attack = 100; special_attack = 80; defense = 40;
   speed = 100; special_defense = 50; ability=""; evs; nature; item}
 
 let getPokeToolTip t =
