@@ -1042,21 +1042,22 @@ let move_handler atk def wt move =
         if tmp < def.current.curr_hp then
         def.current.curr_hp <- tmp; secondary_effects t)
     | Counter::t ->
-        (let prevstring, prevpoke = if wt'.terrain.side1 == ter1 then !prevmove2, !prevpoke1
+        (let prevstring, prevpoke = if wt'.terrain.side1 == ter1 then (!prevmove2, !prevpoke1)
                                  else
-                                  if wt'.terrain.side1 == ter2 then !prevmove1, !prevpoke2
+                                  if wt'.terrain.side1 == ter2 then (!prevmove1, !prevpoke2)
                                   else failwith "Faulty Game Logic: Debug 1044" in
+        Printf.printf "%s\n%!" prevpoke.pokeinfo.name;
         (match move.name with
         | "counter" -> (try (let prevmove = Pokemon.getMoveFromString prevstring in
                         match prevmove.dmg_class with
                         | Physical -> (let hpdamage = prevpoke.curr_hp - atk.current.curr_hp in
-                                      def.current.curr_hp <- max 0 (def.current.curr_hp - (2*hpdamage));
+                                      def.current.curr_hp <- max 0 (def.current.curr_hp - (2*hpdamage) + !damage);
                                       secondary_effects t)
                         | _ -> newmove := FailA "Counter") with | _ -> newmove := FailA "Counter")
         | "mirror-coat" -> (try (let prevmove = Pokemon.getMoveFromString prevstring in
                           match prevmove.dmg_class with
                             | Special -> (let hpdamage = prevpoke.curr_hp - atk.current.curr_hp in
-                                         def.current.curr_hp <- max 0 (def.current.curr_hp - (2*hpdamage));
+                                         def.current.curr_hp <- max 0 (def.current.curr_hp - (2*hpdamage) + !damage);
                                          secondary_effects t)
                         | _ -> newmove := FailA "Mirror Coat") with | _ -> newmove := FailA "Mirror Coat")
         | _ -> ()))
@@ -2139,7 +2140,7 @@ let handle_action state action1 action2 =
   let t1, t2, w, m1, m2 = match get_game_status state with
     | Battle InGame (t1, t2, w, m1, m2) -> t1, t2, w, m1, m2
     | _ -> failwith "Faulty Game Logic" in
-  let () = prevpoke1 := t1.current; prevpoke2 := t1.current in
+  let () = prevpoke1 := t1.current; prevpoke2 := t2.current in
   match action1 with
   | Poke p' -> let p = if p' = "random" then getRandomPoke t1 else p' in
       (match action2 with
