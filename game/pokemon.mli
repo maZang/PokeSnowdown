@@ -107,5 +107,12 @@ val getAllMoves : string -> string list
 * Pokemon can have *)
 val getAllAbilities: string -> string list
 
-
 val getRandomElement: 'a list -> 'a
+
+val findMegaX: string -> bool
+
+val findMegaY: string -> bool
+
+val findMega: string -> bool
+
+val convertToMega: pokemon -> string -> pokemon

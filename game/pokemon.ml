@@ -24,7 +24,7 @@ let nature_list =  ["hardy"; "lonely";"adamant";"naughty";"brave";"bold";"docile
   "careful";"quirky";"sassy";"timid";"hasty";"jolly";"naive";"serious"]
 
 let item_list = ["leftovers";"choice band";"life orb";"choice specs"
-  ;"nothing"]
+  ;"choice scarf"; "MegaStone"; "MegaStoneX"; "MegaStoneY"; "nothing"]
 
 let unlocked_poke_string_list () =
   List.map (to_string) (unlocked_pokemon () |> member "pokemon" |> to_list)
@@ -121,6 +121,10 @@ let string_of_item item =
   | ChoiceBand -> "choice band"
   | LifeOrb -> "life orb"
   | ChoiceSpecs -> "choice specs"
+  | ChoiceScarf -> "choice scarf"
+  | MegaStone -> "MegaStone"
+  | MegaStoneX -> "MegaStoneX"
+  | MegaStoneY -> "MegaStoneY"
   | Nothing -> "nothing"
 
 let getItemFromString str =
@@ -129,15 +133,18 @@ let getItemFromString str =
   | "choice band" -> ChoiceBand
   | "leftovers" -> Leftovers
   | "choice specs" -> ChoiceSpecs
+  | "choice scarf" -> ChoiceScarf
   | "nothing" -> Nothing
+  | "MegaStone" -> MegaStone
+  | "MegaStoneX" -> MegaStoneX
+  | "MegaStoneY" -> MegaStoneY
   | _ -> failwith "Does not occur"
 
 let getRandomItem () =
-  match Random.int 4 with
+  match Random.int 3 with
   | 0 -> Leftovers
-  | 1 -> ChoiceBand
+  | 1 -> Nothing
   | 2 -> LifeOrb
-  | 3 -> ChoiceSpecs
   | _ -> failwith "Does not occur"
 
 let string_of_element elm =
@@ -595,6 +602,37 @@ let getAllMoves poke =
 let getAllAbilities poke =
   List.map (to_string) (poke_json |> member poke |> member "ability" |> to_list)
 
+let convertToMega pokeinfo str =
+  let newpokename = pokeinfo.name ^ str in
+  let newpoke = poke_json |> member newpokename in
+  let hp = newpoke |> member "stats" |> member "hp" |> to_string
+            |> int_of_string in
+  let attack = newpoke |> member "stats" |> member "attack" |> to_string
+            |> int_of_string in
+  let defense = newpoke |> member "stats" |> member "defense" |> to_string
+            |> int_of_string in
+  let special_defense = newpoke |> member "stats" |> member "special-defense"
+            |> to_string |> int_of_string in
+  let special_attack = newpoke |> member "stats" |> member "special-attack"
+            |> to_string |> int_of_string in
+  let speed = newpoke |> member "stats" |> member "speed" |> to_string
+            |> int_of_string in
+  let ability = getRandomElement (newpoke |> member "ability" |> to_list)
+            |> to_string in
+  {name = newpokename; element = pokeinfo.element; move1 = pokeinfo.move1;
+  move2 = pokeinfo.move2; move3 = pokeinfo.move3; move4 = pokeinfo.move4;
+  hp; attack; defense; special_defense; special_attack; speed; evs = pokeinfo.evs;
+  nature = pokeinfo.nature; item = pokeinfo.item; ability}
+
+let findMegaY pokename =
+  (poke_json |> member (pokename ^ "-mega-y") <> `Null)
+
+let findMegaX pokename =
+  (poke_json |> member (pokename ^ "-mega-x") <> `Null)
+
+let findMega pokename =
+  (poke_json |> member (pokename ^ "-mega") <> `Null)
+
 let generatePokemon str =
   let randomPoke = poke_json |> member str in
   let element_string = randomPoke |> member "type" |> to_list|> filter_string in
@@ -693,7 +731,7 @@ let getTestOpp () =
   let evs = {attack = 255; defense =  0; special_attack= 0; special_defense= 255;
             hp=255; speed=255} in
   let nature = Bold in
-  let item = Leftovers in
+  let item = ChoiceScarf in
   {name="gallade-mega"; element=[Grass;Flying]; move1= getMoveFromString "roost"; move2 =
   getMoveFromString "sand-tomb"; move3 = getMoveFromString "earthquake";
   move4 = getMoveFromString "toxic"; hp = 68; attack = 255; special_attack = 165; defense = 65;
