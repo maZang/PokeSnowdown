@@ -174,12 +174,17 @@ let get_weather_amplifier w (move : move) =
 
 (* Damage calculation following the equation given by Bulbapedia.
    Stat boosts are taken into account in the beginning *)
-let damageCalculation t1 t2 (w,ter1, ter2) move =
+let damageCalculation t1 t2 (w,ter1, ter2) (move : move) =
+  let abil_modifier, move_type = match t1.current.pokeinfo.ability with
+      | "pixilate" -> if move.element = Normal then (1.3, Fairy) else (1., move.element)
+      | "refrigerate" -> if move.element = Normal then (1.3, Ice) else (1., move.element)
+      | "aerilate" -> if move.element = Normal then (1.3, Ice) else (1., move.element)
+      | _ -> (1., move.element) in
   let defense = match move.dmg_class with
     | Physical ->
       let rec findReflect ter = match ter with
       | [] -> false
-      | (Reflect _)::t -> true
+      | (Reflect _)::t -> truet
       | h::t -> findReflect t in
       (match findReflect !ter2 with
       | true -> 2.0
@@ -236,13 +241,13 @@ let damageCalculation t1 t2 (w,ter1, ter2) move =
     | Status -> failwith "Faulty Game Logic: Debug 178") in
   let crit_bool, crit  = getCrit t1.current move in
   let type_mod = List.fold_left (fun acc x -> acc *. getElementEffect
-      move.element x) 1. t2.current.pokeinfo.element *. (if
+      move_type x) 1. t2.current.pokeinfo.element *. (if
       t2.current.pokeinfo.ability = "levitate" && move.element = Ground then
       0. else 1.) in
   let weather_amplifier = get_weather_amplifier w move in
   let modifier =
       (* type effectiveness *)
-      type_mod *.
+      type_mod *. abil_modifier *. (if (type_mod = 1 && t2.current.pokeinfo.ability = "wonder-guard") then 0. else 1.) *.
       (* STAB bonus *)
       if (List.mem move.element t1.current.pokeinfo.element) then 1.5 else 1. *.
       (* Crit bonus *)
@@ -2037,8 +2042,8 @@ let switchPokeHandler faint nextpoke t ter1 t2 w =
     | "intimidate" -> t2.stat_enhance.attack <- (fst t2.stat_enhance.attack - 1, snd t2.stat_enhance.attack); ("." ^ t.current.pokeinfo.name ^ "'s intimidate lowered the opponent's attack.")
     | "drizzle" -> w.weather <- Rain 5; ("." ^ t.current.pokeinfo.name ^ " caused the Rain to fall.")
     | "drought" -> w.weather <- Sun 5; ("." ^ t.current.pokeinfo.name ^ " cause the Sun to come up.")
-    | "snow-warning" -> w.weather <- Hail 5 ("." ^ t.current.pokeinfo.name ^ " has created a giant blizzard.")
-    | "sand-stream" -> w.weather <- SandStorm 5 ("." ^ t.current.pokeinfo.name ^ " whipped up a sand storm.")
+    | "snow-warning" -> w.weather <- Hail 5; ("." ^ t.current.pokeinfo.name ^ " has created a giant blizzard.")
+    | "sand-stream" -> w.weather <- SandStorm 5; ("." ^ t.current.pokeinfo.name ^ " whipped up a sand storm.")
     | _ -> "")
   else
     ""
