@@ -2,48 +2,53 @@ open Info
 
 (* This module is responsible for getting valid Pokemon. *)
 
-(* item list is a list of valid items for a pokemon *)
-val item_list: string list
+(* [item_list lst] is a list of valid items for a Pokemon. *)
+val item_list : string list
 
-(* nature list is a list of valid natures for a pokemon *)
-val nature_list: string list
+(* [nature_list lst] is a list of valid natures for a Pokemon. *)
+val nature_list : string list
 
-(* gets the unlocked pokemon json save file *)
-val unlocked_pokemon: unit -> Yojson.Basic.json
+(* [unlocked_pokemon ()] gets the unlocked Pokemon JSON save file. *)
+val unlocked_pokemon : unit -> Yojson.Basic.json
 
 (* [unlocked_poke_string_list ()] generates a string list of Pokemon by reading
- *  data from a JSON file.
- *)
+ *  data from a JSON file. *)
 val unlocked_poke_string_list : unit -> string list
 
-(* [generatePokemon str] generates the pokemon [str] with random attributes*)
-val generatePokemon: string -> pokemon
+(* [generatePokemon str] generates the pokemon [str] with random attributes.
+ *
+ *  - [str] is the name of the Pokemon, represented as a string.
+ *)
+val generatePokemon : string -> pokemon
 
 (* [getRandomPokemon ()] returns a random Pokemon, filled with its own abilities
- *  and initialized with the appropriate characteristics (moves, etc.).
- *)
+ *  and initialized with the appropriate characteristics (moves, etc.). *)
 val getRandomPokemon : unit -> pokemon
 
-(* [getPresetPokemon str] returns an unlocked pokemon, filled with its own
- *   abilities and initialized with the appropriate characteristics
- * (moves, etc.), loading from a json file
+(* [getPresetPokemon str] returns an unlocked Pokemon, filled with its own
+ *  abilities and initialized with the appropriate characteristics (moves,etc.),
+ *  loading from a JSON file.
+ *
+ *  - [str] is the name of the unlocked Pokemon, represented as a string.
  *)
 val getPresetPokemon : ?pjson:Yojson.Basic.json -> string -> pokemon
 
-(* [getRandomPreset str] returns a random unlocked pokemon, filled with its own
- *   abilities and initialized with the appropriate characteristics
- * (moves, etc.), loading from a json file
- *)
-
+(* [getRandomPreset ()] returns a random unlocked Pokemon, filled with its own
+ *  abilities and initialized with the appropriate characteristics (moves,etc.),
+ *  loading from a JSON file. *)
 val getRandomPreset : ?pjson:Yojson.Basic.json -> unit -> pokemon
 
-(* Turns the nature variant to a string
-*)
-val string_of_nature: nature -> string
+(* [string_of_nature nat] returns the nature variant, encoded as a string.
+ *
+ *  - [nat] is the nature of the Pokemon (adamant, modest, timid, calm, etc.).
+ *)
+val string_of_nature : nature -> string
 
-(* Turns the item variant to a string
-*)
-val string_of_item: item -> string
+(* [string_of_item item] retrns the item variant, encoded as a string.
+ *
+ *  - [item] is the item of the Pokemon (life orb, choice scarf, etc.).
+ *)
+val string_of_item : item -> string
 
 (* [getPokeToolTip t] returns a string containing relevant tool-tip information
  *  (stats, etc.) for team t's current Pokemon.
@@ -98,21 +103,49 @@ val getMoveFromString : string -> move
  *)
 val string_of_element : element -> string
 
-(* [getAllMoves poke] returns a move list containing all the moves a Pokemon
-*  can learn
-*)
+(* [getAllMoves str] returns a move list containing all the moves a Pokemon
+ *  can learn.
+ *
+ *  - [str] is the name of the Pokemon. 
+ *)
 val getAllMoves : string -> string list
 
 (* [getAllAbilities] returns a string list containing all the abilities a
-* Pokemon can have *)
-val getAllAbilities: string -> string list
+ * Pokemon can have *)
+val getAllAbilities : string -> string list
 
-val getRandomElement: 'a list -> 'a
+(* [getRandomElement lst] returns a random element of the list.
+ *
+ *  - [lst] is a list of elements.
+ *)
+val getRandomElement : 'a list -> 'a
 
-val findMegaX: string -> bool
+(* [findMegaX str] returns whether or not the Pokemon can mega-evolve with mega
+ *  stone X or not.
+ *
+ *  - [str] is the name of the Pokemon.
+ *)
+val findMegaX : string -> bool
 
-val findMegaY: string -> bool
+(* [findMegaY str] returns whether or not the Pokemon can mega-evolve with mega
+ *  stone Y or not.
+ *
+ *  - [str] is the name of the Pokemon.
+ *)
+val findMegaY : string -> bool
 
-val findMega: string -> bool
+(* [findMega str] returns whether or not the Pokemon can mega-evolve with mega
+ *  stone (generic) or not.
+ *
+ *  - [str] is the name of the Pokemon.
+ *)
+val findMega : string -> bool
 
-val convertToMega: pokemon -> string -> pokemon
+(* [convertToMega poke str] converts the Pokemon to a mega-evolved version of
+ *  itself, choosing X or Y evolution based on the string specified. Requires
+ *  that the Pokemon is mega-evolvable.
+ *
+ *  - [poke] is the actual Pokemon object.
+ *  - [str] denotes whether the Pokemon mega-evolves to X/Y version of itself.
+ *)
+val convertToMega : pokemon -> string -> pokemon
