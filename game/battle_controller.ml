@@ -527,7 +527,7 @@ let rec link_multmove_descript m1 m2 =
   | x -> link_multmove_descript m1 (HitMult (1, x))
 
 (* Handles the moves that deal damage *)
-let move_handler atk def wt move =
+let move_handler atk def wt (move : move) =
   let wt', weather, ter1, ter2 = match wt with
                 | (wt', ter1, ter2) -> wt', (wt'.weather, ter1, ter2), ter1, ter2 in
 
@@ -537,6 +537,10 @@ let move_handler atk def wt move =
   let () = recomputeStat def in
   (* Call damage calculation to get preliminary move description and damage
       -- ignores secondary effects *)
+  (if atk.current.curr_abil = "protean" then
+    atk.current.curr_type <- [move.element]
+  else
+    ());
   let moveDescript, fdamage = damageCalculation atk def weather move in
   (* creates a reference to move description to allow mutation *)
   let newmove = ref moveDescript in
@@ -1136,6 +1140,10 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
   let () = recomputeStat def in
   (* Similar code to move_handler *)
   let newmove = ref (NormStatus move.name) in
+  (if atk.current.curr_abil = "protean" then
+    atk.current.curr_type <- [move.element]
+  else
+    ());
   let rec secondary_effects lst = match lst with
     | (StageBoostSunlight l)::t ->
         (match w with

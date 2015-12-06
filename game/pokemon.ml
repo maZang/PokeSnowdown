@@ -770,7 +770,7 @@ let getTestOpp () =
 let getPokeToolTip t =
   let battlePoke = t.current in
   "Name: " ^ battlePoke.pokeinfo.name ^
-  "\nType: " ^ string_of_type battlePoke.pokeinfo.element ^
+  "\nType: " ^ string_of_type battlePoke.curr_type ^
   "\nAbility: " ^ battlePoke.curr_abil ^
   "\nAttack: " ^ string_of_int battlePoke.battack ^ "                  Modified: " ^ string_of_float (float_of_int battlePoke.battack *. getStageAD (fst t.stat_enhance.attack) *. (snd t.stat_enhance.attack)) ^
   "\nDefense: " ^ string_of_int battlePoke.bdefense ^ "               Modified: " ^ string_of_float (float_of_int battlePoke.bdefense *. getStageAD (fst t.stat_enhance.defense) *. (snd t.stat_enhance.defense)) ^
