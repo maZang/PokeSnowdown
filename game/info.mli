@@ -90,7 +90,7 @@ type pokemon = {name: string; element: element list; move1: move; move2: move;
 
 type battle_poke = {pokeinfo: pokemon; mutable curr_hp:int; mutable curr_status: status;
   mutable curr_item: item; bhp:int; battack:int; bdefense:int; bspecial_attack:int;
-  bspecial_defense:int; bspeed:int; mutable curr_abil:string}
+  bspecial_defense:int; bspeed:int; mutable curr_abil:string; mutable curr_type: element list}
 
 (* stat modifier represents number of stages followed by multiplier *)
 type stat_modifier = int * float

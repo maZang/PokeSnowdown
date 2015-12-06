@@ -64,7 +64,8 @@ let getBattlePoke poke =
   (* Returns the new battle pokemon as a record *)
   {pokeinfo = poke; curr_hp = bhp; curr_status = (NoNon, []);
   curr_item = poke.item; bhp; battack; bdefense; bspecial_attack;
-  bspecial_defense; bspeed; curr_abil = poke.ability}
+  bspecial_defense; bspeed; curr_abil = poke.ability;
+  curr_type = poke.element}
 
 (* Used for some secondary conditions *)
 let prevmove1 = ref ""
@@ -202,7 +203,7 @@ let damageCalculation t1 t2 (w,ter1, ter2) (move : move) =
       | true -> 2.0
       | false -> 1.0) *.
       (match w with
-      | SandStorm _ -> if (List.mem Rock t2.current.pokeinfo.element) then 1.5 else 1.0
+      | SandStorm _ -> if (List.mem Rock t2.current.curr_type) then 1.5 else 1.0
       | _ -> 1.0) *.
       float_of_int t2.current.bspecial_defense *.
       getStageAD (fst t2.stat_enhance.special_defense) *.
@@ -244,7 +245,7 @@ let damageCalculation t1 t2 (w,ter1, ter2) (move : move) =
     | Status -> failwith "Faulty Game Logic: Debug 178") in
   let crit_bool, crit  = getCrit t1.current move in
   let type_mod' = List.fold_left (fun acc x -> acc *. getElementEffect
-      move_type x) 1. t2.current.pokeinfo.element *. (if
+      move_type x) 1. t2.current.curr_type  *. (if
       t2.current.curr_abil = "levitate" && move.element = Ground then
       0. else 1.) in
   let type_mod = (if type_mod' = 1. && t2.current.curr_abil = "wonder-guard" then 0. else type_mod') in
@@ -253,7 +254,7 @@ let damageCalculation t1 t2 (w,ter1, ter2) (move : move) =
       (* type effectiveness *)
       type_mod *. abil_modifier *.
       (* STAB bonus *)
-      if (List.mem move.element t1.current.pokeinfo.element) then 1.5 else 1. *.
+      if (List.mem move.element t1.current.curr_type) then 1.5 else 1. *.
       (* Crit bonus *)
       crit *.
       (* weather bonus *)
@@ -392,7 +393,7 @@ let hitMoveDueToStatus atk moveDescript move =
       | (RechargingStatus)::t -> helperVolaStatus t moveDescript' in
   let nvola, vola = atk.current.curr_status in
   match nvola with
-  | Freeze -> if List.mem Ice atk.current.pokeinfo.element then (
+  | Freeze -> if List.mem Ice atk.current.curr_type then (
                 atk.current.curr_status <- (NoNon, snd atk.current.curr_status);
                 helperVolaStatus vola (`NoFreeze moveDescript))
               else if 20 > Random.int 100 then (
@@ -400,12 +401,12 @@ let hitMoveDueToStatus atk moveDescript move =
                 helperVolaStatus vola (`Thaw moveDescript))
               else
                 (false, `FrozenSolid)
-  | Burn -> if List.mem Fire atk.current.pokeinfo.element then (
+  | Burn -> if List.mem Fire atk.current.curr_type then (
               atk.current.curr_status <- (NoNon, snd atk.current.curr_status);
               helperVolaStatus vola (`NoBurn moveDescript))
             else
               helperVolaStatus vola (moveDescript)
-  | Paralysis -> if List.mem Electric atk.current.pokeinfo.element || atk.current.curr_abil = "limber" then (
+  | Paralysis -> if List.mem Electric atk.current.curr_type || atk.current.curr_abil = "limber" then (
                 atk.current.curr_status <- (NoNon, snd atk.current.curr_status);
                 helperVolaStatus vola (`NoPara moveDescript))
                 else if 75 > Random.int 100 then (
@@ -617,7 +618,7 @@ let move_handler atk def wt move =
     (* For the move super fang *)
     | SuperFang::t ->
           (let type_mod = List.fold_left (fun acc x -> acc *. getElementEffect
-              move.element x) 1. def.current.pokeinfo.element in
+              move.element x) 1. def.current.curr_type in
             if type_mod > 0. then
               (def.current.curr_hp <- (def.current.curr_hp + !damage)/2;
               secondary_effects t)
@@ -626,7 +627,7 @@ let move_handler atk def wt move =
     (* One hit KO moves *)
     | OHKO::t ->
             (let type_mod = List.fold_left (fun acc x -> acc *. getElementEffect
-              move.element x) 1. def.current.pokeinfo.element in
+              move.element x) 1. def.current.curr_type in
             if type_mod > 0. then
               (def.current.curr_hp <- 0; newmove := OHKill !newmove; secondary_effects t)
             else
@@ -661,7 +662,7 @@ let move_handler atk def wt move =
     (* Constant damage moves -- note these moves have a power level of 0 *)
     | (ConstantDmg n)::t ->
           let type_mod = List.fold_left (fun acc x -> acc *. getElementEffect
-            move.element x) 1. def.current.pokeinfo.element in
+            move.element x) 1. def.current.curr_type in
           if type_mod > 0. then
             (def.current.curr_hp <- max 0 (def.current.curr_hp - n + !damage);
             secondary_effects t)
@@ -696,10 +697,11 @@ let move_handler atk def wt move =
     | (StageBoost l)::t ->
         (match l with
           | [] -> secondary_effects t
-          | (s,n)::t' ->
+          | (s,n')::t' ->
           let randnum = Random.int 100 in
           if (effect_chance > randnum) then
-            (match s with
+            (let n = if atk.current.curr_abil = "contrary" then -n' else n' in
+              match s with
               | Attack ->
                   let stage, multiplier = atk.stat_enhance.attack in
                   let boost = max (min 6 (stage + n)) (-6) in
@@ -750,10 +752,11 @@ let move_handler atk def wt move =
     | (StageAttack l)::t ->
         (match l with
           | [] -> secondary_effects t
-          | (s,n)::t' ->
+          | (s,n')::t' ->
             let randnum = Random.int 100 in
             if (effect_chance > randnum) then
-            (match s with
+            (let n = if def.current.curr_abil = "contrary" then -n' else n' in
+              match s with
               | Attack ->
                   let stage, multiplier = def.stat_enhance.attack in
                   let boost = max (min 6 (stage - n)) (-6) in
@@ -1144,8 +1147,9 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
     | (StageBoost l)::t ->
         (match l with
           | [] -> secondary_effects t
-          | (s,n)::t' ->
-            (match s with
+          | (s,n')::t' ->
+            ( let n = if atk.current.curr_abil = "contrary" then -n' else n' in
+              match s with
               | Attack ->
                   let stage, multiplier = atk.stat_enhance.attack in
                   let boost = max (min 6 (stage + n)) (-6) in
@@ -1213,8 +1217,9 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
     | StageAttack l::t ->
         (match l with
           | [] -> secondary_effects t
-          | (s,n)::t' ->
-            (match s with
+          | (s,n')::t' ->
+            (let n = if def.current.curr_abil = "contrary" then -n' else n' in
+              match s with
               | Attack ->
                   let stage, multiplier = def.stat_enhance.attack in
                   let boost = max (min 6 (stage - n)) (-6) in
@@ -1479,15 +1484,15 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
                     newmove := PsychUpS !newmove; secondary_effects t)
     (* Flower Shield raises the Defense stat of all Grass-type Pokémon in the battle by one stage. *)
     | FlowerShield::t ->
-        ((match ((List.mem Grass atk.current.pokeinfo.element),
-              (List.mem Grass def.current.pokeinfo.element)) with
+        ((match ((List.mem Grass atk.current.curr_type),
+              (List.mem Grass def.current.curr_type)) with
         | (true, true) -> secondary_effects ((StageBoost[(Defense,1)])::(StageAttack[(Defense,-1)])::t)
         | (true, false) -> secondary_effects ((StageBoost[(Defense,1)])::t)
         | (false, true) -> secondary_effects ((StageAttack[(Defense,-1)])::t)
         | _ -> ()); secondary_effects t)
     | Rototiller::t ->
-        ((match ((List.mem Grass atk.current.pokeinfo.element),
-              (List.mem Grass def.current.pokeinfo.element)) with
+        ((match ((List.mem Grass atk.current.curr_type),
+              (List.mem Grass def.current.curr_type)) with
         | (true, true) -> secondary_effects ((StageBoost[(Attack,1);(SpecialAttack, 1)])::(StageAttack[(Attack,-1);(SpecialAttack, -1)])::t)
         | (true, false) -> secondary_effects ((StageBoost[(Attack ,1); (SpecialAttack, 1)])::t)
         | (false, true) -> secondary_effects ((StageAttack[(Attack,-1); (SpecialAttack, -1)])::t)
@@ -1804,8 +1809,8 @@ let handle_preprocessing t1 t2 w m1 m2 =
                     (w.weather <- ClearSkies; SandStormFade descript)
                    else
                     (w.weather <- (SandStorm (n-1));
-                    match (List.mem Rock t1.current.pokeinfo.element || List.mem Ground t1.current.pokeinfo.element || List.mem Steel t1.current.pokeinfo.element || t1.current.curr_abil = "sand-rush" || t1.current.curr_abil = "sand-force" || t1.current.curr_abil = "magic-guard"),
-                          (List.mem Rock t2.current.pokeinfo.element || List.mem Ground t2.current.pokeinfo.element || List.mem Steel t2.current.pokeinfo.element || t2.current.curr_abil = "sand-rush" || t2.current.curr_abil = "sand-force" || t2.current.curr_abil = "magic-guard") with
+                    match (List.mem Rock t1.current.curr_type || List.mem Ground t1.current.curr_type || List.mem Steel t1.current.curr_type || t1.current.curr_abil = "sand-rush" || t1.current.curr_abil = "sand-force" || t1.current.curr_abil = "magic-guard"),
+                          (List.mem Rock t2.current.curr_type || List.mem Ground t2.current.curr_type || List.mem Steel t2.current.curr_type || t2.current.curr_abil = "sand-rush" || t2.current.curr_abil = "sand-force" || t2.current.curr_abil = "magic-guard") with
                     | (false, false) -> (t1.current.curr_hp <- t1.current.curr_hp - t1.current.bhp/16;
                                       t2.current.curr_hp <- t2.current.curr_hp - t2.current.bhp/16;
                                       SandBuffetB descript)
@@ -1818,7 +1823,7 @@ let handle_preprocessing t1 t2 w m1 m2 =
                 (w.weather <- ClearSkies; HailFade descript)
               else
                 (w.weather <- (Hail (n-1));
-                match (List.mem Ice t1.current.pokeinfo.element || t1.current.curr_abil = "magic-guard "), (List.mem Ice t2.current.pokeinfo.element || t2.current.curr_abil = "magic-guard") with
+                match (List.mem Ice t1.current.curr_type || t1.current.curr_abil = "magic-guard "), (List.mem Ice t2.current.curr_type || t2.current.curr_abil = "magic-guard") with
                 | (false, false) -> (t1.current.curr_hp <- t1.current.curr_hp - t1.current.bhp/16;
                                     t2.current.curr_hp <- t2.current.curr_hp - t2.current.bhp/16;
                                     HailBuffetB descript)
@@ -1864,31 +1869,31 @@ let handle_preprocessing t1 t2 w m1 m2 =
   | h::t -> fix_vstatus t1 t2 descript1 descript2 t in
   let fix_nstatus nstatus t =
   match nstatus with
-  | Burn -> if List.mem Fire t.current.pokeinfo.element then
+  | Burn -> if List.mem Fire t.current.curr_type then
               (t.current.curr_status <- (NoNon, snd t1.current.curr_status);
                BreakBurn)
             else if t.current.curr_abil = "magic-guard" then Base
             else
               (t.current.curr_hp <- t.current.curr_hp - 1 * t.current.bhp / 8;
               BurnDmg)
-  | Freeze -> if List.mem Ice t.current.pokeinfo.element then
+  | Freeze -> if List.mem Ice t.current.curr_type then
               (t.current.curr_status <- (NoNon, snd t1.current.curr_status);
               BreakFreeze)
             else
               Base
-  | Paralysis -> if List.mem Electric t.current.pokeinfo.element then
+  | Paralysis -> if List.mem Electric t.current.curr_type then
                   (t.current.curr_status <- (NoNon, snd t.current.curr_status);
                   BreakPara)
                 else
                   Base
-  | Poisoned -> if List.mem Poison t.current.pokeinfo.element || List.mem Steel t.current.pokeinfo.element then
+  | Poisoned -> if List.mem Poison t.current.curr_type || List.mem Steel t.current.curr_type then
                   (t.current.curr_status <- (NoNon, snd t.current.curr_status);
                   BreakPoison)
                 else if t.current.curr_abil = "magic-guard" then Base
                 else
                   (t.current.curr_hp <- t.current.curr_hp - 1 * t.current.bhp / 8;
                     PoisonDmg)
-  | Toxic n -> if List.mem Poison t.current.pokeinfo.element || List.mem Steel t.current.pokeinfo.element then
+  | Toxic n -> if List.mem Poison t.current.curr_type || List.mem Steel t.current.curr_type then
                   (t.current.curr_status <- (NoNon, snd t.current.curr_status);
                   BreakPoison)
                 else if t.current.curr_abil = "magic-guard" then Base
@@ -2095,25 +2100,25 @@ let handle_two_moves t1 t2 w m1 m2 a1 a2 =
 let getEntryHazardDmg t ter1=
   let rec helper acc lst = match lst with
   | [] -> acc
-  | StickyWeb::t' -> if List.mem Flying t.current.pokeinfo.element then helper acc t'
+  | StickyWeb::t' -> if List.mem Flying t.current.curr_type then helper acc t'
                     else
                       (let (s, f) = t.stat_enhance.speed in
                       t.stat_enhance.speed <- ((max (-6) (s-1)), f);
                       helper acc t')
-  | (Spikes n)::t' ->if List.mem Flying t.current.pokeinfo.element || t.current.curr_abil = "levitate" then helper acc t'
+  | (Spikes n)::t' ->if List.mem Flying t.current.curr_type || t.current.curr_abil = "levitate" then helper acc t'
                     else
                       (if n = 1 then (helper (0.125 +. acc) t')
                       else if n = 2 then (helper (1. /. 6. +. acc) t')
                       else (helper (0.25 +. acc) t'))
   | StealthRock::t' -> (let typeeffect = List.fold_left (fun acc x -> acc *. getElementEffect
-                        Rock x) 1. t.current.pokeinfo.element in
+                        Rock x) 1. t.current.curr_type in
                         match typeeffect with
                         | 0.25 -> helper (0.03125 +. acc) t'
                         | 0.50 -> helper (0.0625 +. acc) t'
                         | 2. -> helper (0.25 +. acc) t'
                         | 4. -> helper (0.5 +. acc) t'
                         | _ -> helper (0.125 +. acc) t')
-  | (ToxicSpikes n)::t' -> if List.mem Flying t.current.pokeinfo.element || t.current.curr_abil = "levitate" then helper acc t'
+  | (ToxicSpikes n)::t' -> if List.mem Flying t.current.curr_type || t.current.curr_abil = "levitate" then helper acc t'
                       else
                         ((match t.current.curr_status with
                         | (NoNon, x) -> (if n = 1 then (t.current.curr_status <- (Poisoned, x)) else (t.current.curr_status <- (Toxic 0, x)))
@@ -2139,6 +2144,7 @@ let switchPokeHandler faint nextpoke t ter1 t2 w =
   t.stat_enhance <- new_stat_enhance;
   t.current.curr_status <- switchOutStatus t.current;
   t.current.curr_abil <- t.current.pokeinfo.ability;
+  t.current.curr_type <- t.current.pokeinfo.element;
   t.current <- switchPoke;
   t.current.curr_status <- (fst t.current.curr_status, new_vola_status);
   (if faint then
