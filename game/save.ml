@@ -106,7 +106,8 @@ let rec incPlayOak () =
   | _ -> raise FaultyGameSave in
   Yojson.Basic.to_file "../data/factorysets.json" newSave
 
-(*
+(*adds a Pokemon to your save file and increments the amount of times you beat
+  someone.
 *)
 let addPoke beat str =
   if List.mem str (unlocked_poke_string_list ()) then
@@ -122,6 +123,7 @@ let addPoke beat str =
     | _ -> raise FaultyGameSave in
     Yojson.Basic.to_file "../data/factorysets.json" newSave)
 
+(* Gets the stat message to be printed out *)
 let getFileMessage () =
   let open Yojson.Basic.Util in
   let save = unlocked_pokemon () in
@@ -152,6 +154,7 @@ let getFileMessage () =
                   ^ " times\n" else "")
   | _ -> raise FaultyGameSave
 
+(* Returns true if you beat the game *)
 let beat_game () =
   let open Yojson.Basic.Util in
   match unlocked_pokemon () with
