@@ -104,7 +104,9 @@ let initialize_battle team1 team2 =
   convertToMega team1;
   convertToMega team2;
    Battle (InGame
-    (team1, team2, {weather = ClearSkies; terrain = {side1= ref []; side2= ref []}}, ref (Pl1 NoAction), ref (Pl2 NoAction)))
+    (team1, team2, {weather = ClearSkies;
+      terrain = {side1= ref []; side2= ref []}},
+      ref (Pl1 NoAction), ref (Pl2 NoAction)))
 
 (* Gets a random team of pokemon for initialization *)
 let getRandomTeam mode =
@@ -178,9 +180,12 @@ let get_weather_amplifier w (move : move) =
    Stat boosts are taken into account in the beginning *)
 let damageCalculation t1 t2 (w,ter1, ter2) (move : move) =
   let abil_modifier, move_type = match t1.current.curr_abil with
-      | "pixilate" -> if move.element = Normal then (1.3, Fairy) else (1., move.element)
-      | "refrigerate" -> if move.element = Normal then (1.3, Ice) else (1., move.element)
-      | "aerilate" -> if move.element = Normal then (1.3, Ice) else (1., move.element)
+      | "pixilate" ->
+         if move.element = Normal then (1.3, Fairy) else (1., move.element)
+      | "refrigerate" ->
+         if move.element = Normal then (1.3, Ice) else (1., move.element)
+      | "aerilate" ->
+         if move.element = Normal then (1.3, Ice) else (1., move.element)
       | _ -> (1., move.element) in
   let defense = match move.dmg_class with
     | Physical ->
@@ -211,11 +216,21 @@ let damageCalculation t1 t2 (w,ter1, ter2) (move : move) =
     | Status -> failwith "Faulty Game Logic: Debug 44" in
   let attack =
     (match t1.current.curr_abil with
-    | "swarm" -> if move.element = Bug && t1.current.curr_hp * 3 <= t1.current.bhp then 1.5 else 1.0
-    | "blaze" ->if move.element = Fire && t1.current.curr_hp * 3 <= t1.current.bhp then 1.5 else 1.0
-    | "overgrow" -> if move.element = Grass && t1.current.curr_hp * 3 <= t1.current.bhp then 1.5 else 1.0
-    | "torrent" -> if move.element = Water && t1.current.curr_hp * 3 <= t1.current.bhp then 1.5 else 1.0
-    | "sand-force" -> if move.element = Rock || move.element = Ground || move.element = Steel then 1.3 else 1.0
+    | "swarm" ->
+    if move.element = Bug && t1.current.curr_hp * 3 <= t1.current.bhp then 1.5
+    else 1.0
+    | "blaze" ->
+    if move.element = Fire && t1.current.curr_hp * 3 <= t1.current.bhp then 1.5
+    else 1.0
+    | "overgrow" ->
+    if move.element = Grass && t1.current.curr_hp * 3 <= t1.current.bhp then 1.5
+    else 1.0
+    | "torrent" ->
+    if move.element = Water && t1.current.curr_hp * 3 <= t1.current.bhp then 1.5
+    else 1.0
+    | "sand-force" ->
+    if move.element = Rock || move.element = Ground || move.element = Steel
+    then 1.3 else 1.0
     | "technician" -> if move.power <= 60 then 1.5 else 1.0
     | _ -> 1.0 ) *.
     (match t1.current.curr_item with
@@ -248,7 +263,8 @@ let damageCalculation t1 t2 (w,ter1, ter2) (move : move) =
       move_type x) 1. t2.current.curr_type  *. (if
       t2.current.curr_abil = "levitate" && move.element = Ground then
       0. else 1.) in
-  let type_mod = (if type_mod' = 1. && t2.current.curr_abil = "wonder-guard" then 0. else type_mod') in
+  let type_mod = (if type_mod' = 1. && t2.current.curr_abil = "wonder-guard"
+                 then 0. else type_mod') in
   let weather_amplifier = get_weather_amplifier w move in
   let modifier =
       (* type effectiveness *)
@@ -406,15 +422,16 @@ let hitMoveDueToStatus atk moveDescript move =
               helperVolaStatus vola (`NoBurn moveDescript))
             else
               helperVolaStatus vola (moveDescript)
-  | Paralysis -> if List.mem Electric atk.current.curr_type || atk.current.curr_abil = "limber" then (
-                atk.current.curr_status <- (NoNon, snd atk.current.curr_status);
-                helperVolaStatus vola (`NoPara moveDescript))
-                else if 75 > Random.int 100 then (
-                  helperVolaStatus vola (moveDescript))
-              else
-                  (false, `Para)
+  | Paralysis ->
+      if List.mem Electric atk.current.curr_type ||
+         atk.current.curr_abil = "limber"
+      then (atk.current.curr_status <- (NoNon, snd atk.current.curr_status);
+           helperVolaStatus vola (`NoPara moveDescript))
+      else if 75 > Random.int 100
+      then (helperVolaStatus vola (moveDescript))
+      else (false, `Para)
   | Sleep n -> if n <= 0 || atk.current.curr_abil = "insomnia" then
-                (atk.current.curr_status <- (NoNon, snd atk.current.curr_status);
+               (atk.current.curr_status <- (NoNon, snd atk.current.curr_status);
                 helperVolaStatus vola (`Wake moveDescript))
                else if List.mem SleepEffect move.secondary then
                 helperVolaStatus vola (`AsleepEffect moveDescript)
@@ -450,15 +467,18 @@ let hitAttack atk def (w,t1,t2) (move : move) damage moveDescript =
   | (Substitute n)::_  -> Some n
   | h::t -> get_substitute_health t in
   let hit_move () =
-    if probability > randnum || List.mem NeverMiss move.secondary || atk.current.curr_abil = "no-guard" || def.current.curr_abil= "no-guard" then
+    if probability > randnum || List.mem NeverMiss move.secondary
+    || atk.current.curr_abil = "no-guard" || def.current.curr_abil= "no-guard"
+    then
       match get_substitute_health (snd def.current.curr_status) with
       | None -> (if find_protect (snd def.current.curr_status) then
                   (false, ProtectedA move.name)
                 else
                   (true, moveDescript))
       | Some n -> let sub_damage = max 0 (n - damage) in
-                  let newvola = filter_substitute sub_damage (snd def.current.curr_status) in
-                  def.current.curr_status <- (fst def.current.curr_status, newvola);
+                  let newvola = filter_substitute sub_damage
+                                (snd def.current.curr_status) in
+              def.current.curr_status <- (fst def.current.curr_status, newvola);
                   if sub_damage = 0 then
                     (false, BreakSub moveDescript)
                   else
@@ -469,12 +489,14 @@ let hitAttack atk def (w,t1,t2) (move : move) damage moveDescript =
     if need_charge then
       if List.mem (Charge) (snd atk.current.curr_status) then
         let volatile_list =
-          List.filter (fun s -> not (s = Charge)) (snd atk.current.curr_status) in
-          atk.current.curr_status <- (fst atk.current.curr_status, volatile_list);
+          List.filter (fun s -> not (s = Charge)) (snd atk.current.curr_status)
+          in
+          atk.current.curr_status<-(fst atk.current.curr_status, volatile_list);
           hit_move ()
       else
         (atk.current.curr_status <-
-        (fst atk.current.curr_status, (ForcedMoveNoSwitch (1, move.name))::(Charge)::(snd atk.current.curr_status));
+        (fst atk.current.curr_status, (ForcedMoveNoSwitch (1, move.name))
+                                     ::(Charge)::(snd atk.current.curr_status));
         (false, ChargingMove (charge_string, move.name)))
     else
       hit_move ()
@@ -528,8 +550,9 @@ let rec link_multmove_descript m1 m2 =
 
 (* Handles the moves that deal damage *)
 let move_handler atk def wt (move : move) =
-  let wt', weather, ter1, ter2 = match wt with
-                | (wt', ter1, ter2) -> wt', (wt'.weather, ter1, ter2), ter1, ter2 in
+  let wt', weather, ter1, ter2 =
+  match wt with
+  | (wt', ter1, ter2) -> wt', (wt'.weather, ter1, ter2), ter1, ter2 in
 
   (* Recomputes stats before a move is made -- this happens because a burn
     or some status can occur right before a move is made. *)
@@ -546,7 +569,8 @@ let move_handler atk def wt (move : move) =
   let newmove = ref moveDescript in
   (* damage does not need to be mutated *)
   let damage = ref (int_of_float fdamage) in
-  let effect_chance = move.effect_chance * (if atk.current.curr_abil = "serene-grace" then 2 else 1) in
+  let effect_chance = move.effect_chance *
+                    (if atk.current.curr_abil = "serene-grace" then 2 else 1) in
   (* helper function to deal with secondary effects *)
   let rec secondary_effects lst = match lst with
     (* MultiHit is any move that can occur more than once e.g. Double Slap;
@@ -630,12 +654,13 @@ let move_handler atk def wt (move : move) =
               newmove := NoEffAll move.name)
     (* One hit KO moves *)
     | OHKO::t ->
-            (let type_mod = List.fold_left (fun acc x -> acc *. getElementEffect
-              move.element x) 1. def.current.curr_type in
-            if type_mod > 0. then
-              (def.current.curr_hp <- 0; newmove := OHKill !newmove; secondary_effects t)
-            else
-              newmove := NoEffAll move.name)
+        (let type_mod = List.fold_left (fun acc x -> acc *. getElementEffect
+        move.element x) 1. def.current.curr_type in
+        if type_mod > 0. then
+        (def.current.curr_hp <- 0; newmove := OHKill !newmove;
+        secondary_effects t)
+        else
+          newmove := NoEffAll move.name)
     (* Charging Moves dealt with in hit moves-- nothing to do here *)
     | (ChargeMove _)::t | (ChargeInSunlight _)::t -> secondary_effects t
     (* Flinch Moves have a certain chance to make target flinch *)
@@ -672,30 +697,32 @@ let move_handler atk def wt (move : move) =
             secondary_effects t)
           else
             newmove := NoEffAll move.name
-      (* ChanceStageBoost has a 10% chance of boosting all stats except accuracy and evasion*)
+    (* ChanceStageBoost has a 10% chance of boosting all stats
+     * except accuracy and evasion *)
     | ChanceStageBoost::t ->
         (match Random.int 10 with
-        | 0 -> (let stage1, multiplier1 = atk.stat_enhance.attack in
-                let boost1 = max (min 6 (stage1 + 1)) (-6) in
-                atk.stat_enhance.attack <- (boost1, multiplier1);
-                newmove := StatBoostA (Attack, (boost1 - stage1), !newmove);
-                let stage2, multiplier2 = atk.stat_enhance.defense in
-                let boost2 = max (min 6 (stage2 + 1)) (-6) in
-                atk.stat_enhance.defense <- (boost2, multiplier2);
-                newmove := StatBoostA (Defense, (boost2 - stage2), !newmove);
-                let stage3, multiplier3 = atk.stat_enhance.special_attack in
-                let boost3 = max (min 6 (stage3 + 1)) (-6) in
-                atk.stat_enhance.special_attack <- (boost3, multiplier3);
-                newmove := StatBoostA (SpecialAttack, (boost3 - stage3), !newmove);
-                let stage4, multiplier4 = atk.stat_enhance.special_defense in
-                let boost4 = max (min 6 (stage4 + 1)) (-6) in
-                atk.stat_enhance.special_defense <- (boost4, multiplier4);
-                newmove := StatBoostA (SpecialDefense, (boost4 - stage4), !newmove);
-                let stage5, multiplier5 = atk.stat_enhance.speed in
-                let boost5 = max (min 6 (stage5 + 1)) (-6) in
-                atk.stat_enhance.speed <- (boost5, multiplier5);
-                newmove := StatBoostA (Speed, (boost5 - stage5), !newmove);
-                secondary_effects t)
+        | 0 ->
+          (let stage1, multiplier1 = atk.stat_enhance.attack in
+          let boost1 = max (min 6 (stage1 + 1)) (-6) in
+          atk.stat_enhance.attack <- (boost1, multiplier1);
+          newmove := StatBoostA (Attack, (boost1 - stage1), !newmove);
+          let stage2, multiplier2 = atk.stat_enhance.defense in
+          let boost2 = max (min 6 (stage2 + 1)) (-6) in
+          atk.stat_enhance.defense <- (boost2, multiplier2);
+          newmove := StatBoostA (Defense, (boost2 - stage2), !newmove);
+          let stage3, multiplier3 = atk.stat_enhance.special_attack in
+          let boost3 = max (min 6 (stage3 + 1)) (-6) in
+          atk.stat_enhance.special_attack <- (boost3, multiplier3);
+          newmove := StatBoostA (SpecialAttack, (boost3 - stage3), !newmove);
+          let stage4, multiplier4 = atk.stat_enhance.special_defense in
+          let boost4 = max (min 6 (stage4 + 1)) (-6) in
+          atk.stat_enhance.special_defense <- (boost4, multiplier4);
+          newmove := StatBoostA (SpecialDefense, (boost4 - stage4), !newmove);
+          let stage5, multiplier5 = atk.stat_enhance.speed in
+          let boost5 = max (min 6 (stage5 + 1)) (-6) in
+          atk.stat_enhance.speed <- (boost5, multiplier5);
+          newmove := StatBoostA (Speed, (boost5 - stage5), !newmove);
+          secondary_effects t)
         | _ -> secondary_effects t)
     (* StageBoost is any status move that boosts stats *)
     | (StageBoost l)::t ->
@@ -838,13 +865,17 @@ let move_handler atk def wt (move : move) =
                             else
                             (atk.current.curr_status <-
                               (novola, (Confusion confuse_turns)::x);
-                            newmove := ConfuseUserA !newmove))); secondary_effects t
+                            newmove :=
+                                  ConfuseUserA !newmove))); secondary_effects t
     (* Moves that take a turn of recharge after use e.g. hyperbeam *)
-    | RechargeMove::t -> (atk.current.curr_status <- (fst atk.current.curr_status, RechargingStatus::(snd atk.current.curr_status));
+    | RechargeMove::t ->
+        (atk.current.curr_status <- (fst atk.current.curr_status,
+                               RechargingStatus::(snd atk.current.curr_status));
                           newmove := Recharging !newmove; secondary_effects t)
     (* Moves based upon weight are instead based on current health *)
     | WeightDamage::t ->
-      (let base_power = max 20 ((def.current.curr_hp + !damage) * 120 / def.current.bhp) in
+      (let base_power = max 20
+                    ((def.current.curr_hp + !damage) * 120 / def.current.bhp) in
       move.power <- base_power;
       let moveDescript', fdamage' = damageCalculation atk def weather move in
       let damage' = int_of_float fdamage' in
@@ -852,7 +883,9 @@ let move_handler atk def wt (move : move) =
       secondary_effects t
     (* Moves based upon weight are instead based on current health *)
     | GyroBall::t ->
-      (let base_power = min 150 (int_of_float (25. *. (float_of_int def.current.bspeed /. float_of_int atk.current.bspeed))) in
+      (let base_power = min 150 (int_of_float
+          (25. *. (float_of_int def.current.bspeed
+          /. float_of_int atk.current.bspeed))) in
       move.power <- base_power;
       let moveDescript', fdamage' = damageCalculation atk def weather move in
       let damage' = int_of_float fdamage' in
@@ -868,7 +901,8 @@ let move_handler atk def wt (move : move) =
         secondary_effects t
     (* for the move flail *)
     | Flail::t ->
-        (let base_power = max 20 ((atk.current.bhp - atk.current.curr_hp) * 200 / atk.current.bhp) in
+        (let base_power = max 20 ((atk.current.bhp - atk.current.curr_hp) * 200
+                                                          / atk.current.bhp) in
         move.power <- base_power;
         let moveDescript', fdamage' = damageCalculation atk def weather move in
         let damage' = int_of_float fdamage' in
@@ -876,7 +910,8 @@ let move_handler atk def wt (move : move) =
         secondary_effects t
     (* Max health damage *)
     | MaxHealthDmg::t ->
-         (let base_power = max 20 (atk.current.curr_hp * 150 / atk.current.bhp) in
+         (let base_power = max 20 (atk.current.curr_hp * 150
+                                       / atk.current.bhp) in
         move.power <- base_power;
         let moveDescript', fdamage' = damageCalculation atk def weather move in
         let damage' = int_of_float fdamage' in
@@ -892,9 +927,12 @@ let move_handler atk def wt (move : move) =
         secondary_effects t
     (* Stored Power *)
     | StoredPower::t ->
-      (let base_power =  (fst atk.stat_enhance.attack + fst atk.stat_enhance.defense +
-      fst atk.stat_enhance.special_attack + fst atk.stat_enhance.special_defense +
-    fst atk.stat_enhance.speed + fst atk.stat_enhance.accuracy + fst atk.stat_enhance.evasion) * 20 + 20 in
+      (let base_power =
+          (fst atk.stat_enhance.attack + fst atk.stat_enhance.defense +
+          fst atk.stat_enhance.special_attack +
+          fst atk.stat_enhance.special_defense +
+          fst atk.stat_enhance.speed + fst atk.stat_enhance.accuracy +
+          fst atk.stat_enhance.evasion) * 20 + 20 in
         move.power <- base_power;
         let moveDescript', fdamage' = damageCalculation atk def weather move in
         let damage' = int_of_float fdamage' in
@@ -933,27 +971,34 @@ let move_handler atk def wt (move : move) =
                         | (ForcedMoveNoSwitch (n,_))::t ->(true, n)
                         | h::t -> findForcedMove t
                         | [] -> (false,0) in
-                        let found, num = findForcedMove (snd atk.current.curr_status) in
+                        let found, num = findForcedMove
+                                                (snd atk.current.curr_status) in
                         if found then
                           (if num = 0 then
                             (secondary_effects (ConfuseUser::t))
                           else
                             ())
                         else
-                          ( let n = Random.int 2 + 1 in
-                            atk.current.curr_status <- (fst atk.current.curr_status, (ForcedMoveNoSwitch (n, move.name))::(snd atk.current.curr_status)))
+                          (let n = Random.int 2 + 1 in
+                            atk.current.curr_status <-
+                            (fst atk.current.curr_status,
+                            (ForcedMoveNoSwitch (n, move.name))
+                            ::(snd atk.current.curr_status)))
     (* For the move knock off *)
-    | KnockOff::t -> (match def.current.curr_item with
-                      | Nothing -> secondary_effects t
-                      | _ -> def.current.curr_hp <- max 0 (def.current.curr_hp - !damage/2);
-                             newmove := KnockedOff (def.current.curr_item, !newmove);
-                             def.current.curr_item <- Nothing; secondary_effects t)
+    | KnockOff::t ->
+        (match def.current.curr_item with
+        | Nothing -> secondary_effects t
+        | _ ->
+          def.current.curr_hp <- max 0 (def.current.curr_hp - !damage/2);
+          newmove := KnockedOff (def.current.curr_item, !newmove);
+          def.current.curr_item <- Nothing; secondary_effects t)
     (* Volt Switch and Bug Buzz Dealt with Elsewhere *)
     | SelfSwitch::t -> secondary_effects t
     (* For the move Foul Play *)
-    | FoulPlay::t -> (let moveDescript', fdamage' = damageCalculation def def weather move in
-                      let damage' = int_of_float fdamage' in
-                      def.current.curr_hp <- max 0 (def.current.curr_hp - damage' + !damage);
+    | FoulPlay::t ->
+        (let moveDescript', fdamage' = damageCalculation def def weather move in
+        let damage' = int_of_float fdamage' in def.current.curr_hp <- max 0
+                                  (def.current.curr_hp - damage' + !damage);
                       secondary_effects t)
     (* for the move snore *)
     | SleepEffect::t -> let findSleep x = match x with
@@ -978,23 +1023,33 @@ let move_handler atk def wt (move : move) =
         def.current.curr_hp <- max 0 (def.current.curr_hp - damage' + !damage);
         secondary_effects t)
     (* for the trapping moves *)
-    | CausePartialTrapping::t -> let rec findPartialTrapping = function
-                                  | (PartialTrapping (s, _))::t -> if s = move.name then true else findPartialTrapping t
-                                  | h::t -> findPartialTrapping t
-                                  | [] -> false in
-                                if findPartialTrapping (snd def.current.curr_status) then
-                                  ()
-                                else
-                                  (let turns = Random.int 3 + 2 in
-                                  def.current.curr_status <- (fst def.current.curr_status, (PartialTrapping (move.name, turns))::(snd def.current.curr_status));
-                                  newmove := TrappingMove !newmove)
+    | CausePartialTrapping::t ->
+        let rec findPartialTrapping = function
+        | (PartialTrapping (s, _))::t -> if s = move.name then true
+                                         else findPartialTrapping t
+        | h::t -> findPartialTrapping t
+        | [] -> false in
+        if findPartialTrapping (snd def.current.curr_status) then ()
+        else
+          (let turns = Random.int 3 + 2 in
+          def.current.curr_status <- (fst def.current.curr_status,
+           (PartialTrapping (move.name, turns))::(snd def.current.curr_status));
+            newmove := TrappingMove !newmove)
     (* moves that double in power *)
-    | DoublePower::t -> (match move.name with
-                | "brine" -> if def.current.curr_hp * 2 <= def.current.bhp then def.current.curr_hp <- max 0 (def.current.curr_hp - !damage) else ()
-                | "hex" ->  if fst atk.current.curr_status = NoNon then () else def.current.curr_hp <- max 0 (def.current.curr_hp - !damage)
-                | "venoshock" -> (match (fst atk.current.curr_status) with
-                                  | Poisoned | Toxic _ -> def.current.curr_hp <- max 0 (def.current.curr_hp - !damage)
-                                  | _ -> ())
+    | DoublePower::t ->
+          (match move.name with
+          | "brine" ->
+              if def.current.curr_hp * 2 <= def.current.bhp
+              then def.current.curr_hp <- max 0 (def.current.curr_hp - !damage)
+              else ()
+          | "hex" ->
+              if fst atk.current.curr_status = NoNon then ()
+              else def.current.curr_hp <- max 0 (def.current.curr_hp - !damage)
+          | "venoshock" -> (match (fst atk.current.curr_status) with
+                           | Poisoned | Toxic _ ->
+                            def.current.curr_hp <- max 0
+                                                (def.current.curr_hp - !damage)
+                           | _ -> ())
                 | _ -> ())
     (* for the move electro ball *)
     | ElectroBall::t ->
@@ -1021,11 +1076,13 @@ let move_handler atk def wt (move : move) =
                       | ToxicSpikes _::t | Spikes _::t -> filter_terrain t
                       | h::t -> h::(filter_terrain t)
                       | [] -> [] in
-                      (atk.current.curr_status <- (fst atk.current.curr_status, filter_nonvola (snd atk.current.curr_status));
+                      (atk.current.curr_status <- (fst atk.current.curr_status,
+                                  filter_nonvola (snd atk.current.curr_status));
                       ter1 := filter_terrain (!ter1);
                       newmove := RapidSpinA !newmove)
     | FinalGambit::t ->
-        (def.current.curr_hp <- max 0 (def.current.curr_hp - atk.current.curr_hp);
+        (def.current.curr_hp <- max 0 (def.current.curr_hp -
+                                       atk.current.curr_hp);
         atk.current.curr_hp <- 0; secondary_effects t)
     | FakeOut::t ->
         let current = float_of_int def.current.curr_hp in
@@ -1743,16 +1800,19 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
     | _ ->
       secondary_effects move.secondary;
       (match atk.current.curr_item with
-      | ChoiceBand | ChoiceSpecs | ChoiceScarf -> atk.current.curr_status <- (fst atk.current.curr_status, ForcedMove (1, move.name)::(snd atk.current.curr_status) )
+      | ChoiceBand | ChoiceSpecs | ChoiceScarf ->
+           atk.current.curr_status <- (fst atk.current.curr_status,
+           ForcedMove (1, move.name)::(snd atk.current.curr_status))
       | _ -> ()));
 
       !newmove)
       (* returns a move description *)
-
     else
       newreason)
   else
-    (atk.current.curr_status <- (fst atk.current.curr_status, List.filter (fun s -> s <> Charge) (snd atk.current.curr_status)); reason')
+    (atk.current.curr_status <-
+    (fst atk.current.curr_status,
+    List.filter (fun s -> s <> Charge) (snd atk.current.curr_status)); reason')
 
 let rec filterNonvola lst = match lst with
   (* Confusion decremented in hit move due to status *)
@@ -1799,8 +1859,8 @@ let handle_preprocessing t1 t2 w m1 m2 =
   Printf.printf "Handling preprocessing for move\n%!";
   let fix_items t descript = match t.current.curr_item with
   | Leftovers ->  if t.current.curr_hp > 0 then
-                      (t.current.curr_hp <- t.current.curr_hp + t.current.bhp/16;
-                      LeftOversHeal descript)
+                  (t.current.curr_hp <- t.current.curr_hp + t.current.bhp/16;
+                  LeftOversHeal descript)
                   else
                     descript
   | _ -> descript in
@@ -1813,33 +1873,53 @@ let handle_preprocessing t1 t2 w m1 m2 =
                   (w.weather <- ClearSkies; RainFade descript)
               else
                   (w.weather <- Rain (n-1); descript)
-  | SandStorm n -> if n <= 0 then
-                    (w.weather <- ClearSkies; SandStormFade descript)
-                   else
-                    (w.weather <- (SandStorm (n-1));
-                    match (List.mem Rock t1.current.curr_type || List.mem Ground t1.current.curr_type || List.mem Steel t1.current.curr_type || t1.current.curr_abil = "sand-rush" || t1.current.curr_abil = "sand-force" || t1.current.curr_abil = "magic-guard"),
-                          (List.mem Rock t2.current.curr_type || List.mem Ground t2.current.curr_type || List.mem Steel t2.current.curr_type || t2.current.curr_abil = "sand-rush" || t2.current.curr_abil = "sand-force" || t2.current.curr_abil = "magic-guard") with
-                    | (false, false) -> (t1.current.curr_hp <- t1.current.curr_hp - t1.current.bhp/16;
-                                      t2.current.curr_hp <- t2.current.curr_hp - t2.current.bhp/16;
-                                      SandBuffetB descript)
-                    | (false, true) -> (t1.current.curr_hp <- t1.current.curr_hp - t1.current.bhp/16;
-                                      SandBuffet1 descript)
-                    | (true, false) -> (t2.current.curr_hp <- t2.current.curr_hp - t2.current.bhp/16;
-                                      SandBuffet2 descript)
-                    | (true, true) -> descript)
-  | Hail n -> if n <= 0 then
-                (w.weather <- ClearSkies; HailFade descript)
-              else
-                (w.weather <- (Hail (n-1));
-                match (List.mem Ice t1.current.curr_type || t1.current.curr_abil = "magic-guard "), (List.mem Ice t2.current.curr_type || t2.current.curr_abil = "magic-guard") with
-                | (false, false) -> (t1.current.curr_hp <- t1.current.curr_hp - t1.current.bhp/16;
-                                    t2.current.curr_hp <- t2.current.curr_hp - t2.current.bhp/16;
-                                    HailBuffetB descript)
-                | (false, true) -> (t1.current.curr_hp <- t1.current.curr_hp - t1.current.bhp/16;
-                                    HailBuffet1 descript)
-                | (true, false) -> (t2.current.curr_hp <- t2.current.curr_hp - t2.current.bhp/16;
-                                    HailBuffet2 descript)
-                | (true, true) -> descript )
+  | SandStorm n ->
+      if n <= 0 then (w.weather <- ClearSkies; SandStormFade descript)
+      else
+        (w.weather <- (SandStorm (n-1));
+        match (List.mem Rock t1.current.curr_type
+              || List.mem Ground t1.current.curr_type
+              || List.mem Steel t1.current.curr_type
+              || t1.current.curr_abil = "sand-rush"
+              || t1.current.curr_abil = "sand-force"
+              || t1.current.curr_abil = "magic-guard"),
+              (List.mem Rock t2.current.curr_type
+              || List.mem Ground t2.current.curr_type
+              || List.mem Steel t2.current.curr_type
+              || t2.current.curr_abil = "sand-rush"
+              || t2.current.curr_abil = "sand-force"
+              || t2.current.curr_abil = "magic-guard") with
+                | (false, false) ->
+                  (t1.current.curr_hp <- t1.current.curr_hp - t1.current.bhp/16;
+                   t2.current.curr_hp <- t2.current.curr_hp - t2.current.bhp/16;
+                   SandBuffetB descript)
+                | (false, true) ->
+                  (t1.current.curr_hp <- t1.current.curr_hp - t1.current.bhp/16;
+                   SandBuffet1 descript)
+                | (true, false) ->
+                  (t2.current.curr_hp <- t2.current.curr_hp - t2.current.bhp/16;
+                   SandBuffet2 descript)
+                | (true, true) -> descript)
+  | Hail n ->
+      if n <= 0 then
+      (w.weather <- ClearSkies; HailFade descript)
+      else
+        (w.weather <- (Hail (n-1));
+        match (List.mem Ice t1.current.curr_type
+              || t1.current.curr_abil = "magic-guard "),
+              (List.mem Ice t2.current.curr_type
+              || t2.current.curr_abil = "magic-guard") with
+                | (false, false) ->
+                  (t1.current.curr_hp <- t1.current.curr_hp - t1.current.bhp/16;
+                  t2.current.curr_hp <- t2.current.curr_hp - t2.current.bhp/16;
+                  HailBuffetB descript)
+                | (false, true) ->
+                  (t1.current.curr_hp <- t1.current.curr_hp - t1.current.bhp/16;
+                  HailBuffet1 descript)
+                | (true, false) ->
+                  (t2.current.curr_hp <- t2.current.curr_hp - t2.current.bhp/16;
+                  HailBuffet2 descript)
+                | (true, true) -> descript)
   | _ -> descript in
   let rec fix_terrain t acc descript =  function
   | (LightScreen n)::t' -> if n = 0 then
@@ -1851,10 +1931,11 @@ let handle_preprocessing t1 t2 w m1 m2 =
                        else
                         fix_terrain t ((Reflect (n-1))::acc) descript t'
   | (Wish (n, heal)::t') -> if n = 0 then
-                            (if t.current.curr_hp > 0 then t.current.curr_hp <- t.current.curr_hp + heal else ();
+                            (if t.current.curr_hp > 0 then
+                            t.current.curr_hp <- t.current.curr_hp + heal else ();
                             fix_terrain t acc (WishEnd descript) t')
                           else
-                            (fix_terrain t ((Wish ((n-1), heal))::acc) descript  t')
+                            (fix_terrain t ((Wish ((n-1), heal))::acc) descript t')
   | h::t' -> fix_terrain t (h::acc) descript t'
   | [] -> (acc, descript) in
   let rec fix_vstatus t1 t2 descript1 descript2 = function
