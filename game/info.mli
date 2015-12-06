@@ -28,24 +28,55 @@ type guiattack =
   | RapidSpinA of guiattack | HitSelf of guiattack | FailA of string
   | HealOppA of guiattack
 
-type guistatus = StatBoost of stat * int * guistatus | NormStatus of string | ThawS of guistatus | FrozenSolidS | MissStatus of string | NoFreezeS of guistatus | NoBurnS of guistatus |
-                  NoParaS of guistatus | ParaS | SwitchOut of guistatus | FlinchS | StatAttack of stat * int * guistatus | AsleepS | WakeS of guistatus | MakeSleep of guistatus
-                  | ConfusedS | BreakConfuseS of guistatus | ConfuseMove of guistatus | LeechS of guistatus | PoisonStatus of guistatus | ParaStatus of guistatus
-                  | BadPoisonStatus of guistatus | HealHealth of guistatus | LightScreenS of guistatus | HazeS of guistatus | ReflectS of guistatus | RestS of guistatus
-                  | SubBlock of guistatus | SubFail of guistatus | SubMake of guistatus | ProtectedS of string | ProtectS of guistatus | ProtectFail of guistatus |
-                   Fail of string | SpikesS of guistatus | BurnStatus of guistatus | HealBellS of guistatus | RefreshS of guistatus | PsychUpS of guistatus | SunnyDayS of guistatus |
-                   RainDanceS of guistatus | SandStormS of guistatus | HailS of guistatus | EncoreS of guistatus | EncoreFail | CopyPrevMoveS of guistatus | CopyPrevMoveA of guiattack
-                   | CopyFail | TauntS of guistatus | TauntFail | Taunted of string | StealthRockS of guistatus | ToxicSpikesS of guistatus | StickyWebS of guistatus
-                   | SleepTalkS of guistatus * guistatus | SleepTalkA of guistatus * guiattack | SleepAttackS of guistatus | UserFaintS of guistatus | RandMoveS of guistatus | RandMoveA of guiattack |
-                   ItemSwapS of guistatus | WishS of guistatus | AbilityChangeS of guistatus | KnockedOffS of item * guistatus | GastroAcidS of guistatus | HealOppS of guistatus
+type guistatus = StatBoost of stat * int * guistatus | NormStatus of string
+                | ThawS of guistatus | FrozenSolidS | MissStatus of string
+                | NoFreezeS of guistatus | NoBurnS of guistatus
+                | NoParaS of guistatus | ParaS | SwitchOut of guistatus
+                | FlinchS | StatAttack of stat * int * guistatus | AsleepS
+                | WakeS of guistatus | MakeSleep of guistatus
+                | ConfusedS | BreakConfuseS of guistatus
+                | ConfuseMove of guistatus | LeechS of guistatus
+                | PoisonStatus of guistatus | ParaStatus of guistatus
+                | BadPoisonStatus of guistatus | HealHealth of guistatus
+                | LightScreenS of guistatus | HazeS of guistatus
+                | ReflectS of guistatus | RestS of guistatus
+                | SubBlock of guistatus | SubFail of guistatus
+                | SubMake of guistatus | ProtectedS of string
+                | ProtectS of guistatus | ProtectFail of guistatus
+                | Fail of string | SpikesS of guistatus
+                | BurnStatus of guistatus | HealBellS of guistatus
+                | RefreshS of guistatus | PsychUpS of guistatus
+                | SunnyDayS of guistatus | RainDanceS of guistatus
+                | SandStormS of guistatus | HailS of guistatus
+                | EncoreS of guistatus | EncoreFail
+                | CopyPrevMoveS of guistatus | CopyPrevMoveA of guiattack
+                | CopyFail | TauntS of guistatus | TauntFail | Taunted of string
+                | StealthRockS of guistatus | ToxicSpikesS of guistatus
+                | StickyWebS of guistatus | SleepTalkS of guistatus * guistatus
+                | SleepTalkA of guistatus * guiattack
+                | SleepAttackS of guistatus | UserFaintS of guistatus
+                | RandMoveS of guistatus | RandMoveA of guiattack
+                | ItemSwapS of guistatus | WishS of guistatus
+                | AbilityChangeS of guistatus | KnockedOffS of item * guistatus
+                | GastroAcidS of guistatus | HealOppS of guistatus
 
-type endMove = BurnDmg | BreakBurn | BreakFreeze  | BreakPara  | BreakPoison | PoisonDmg | LeechDmg of endMove | LeechHeal of endMove | Base | LightScreenFade of endMove |
-               ReflectFade of endMove | SunFade of endMove | RainFade of endMove | SandStormFade of endMove | SandBuffetB of endMove | SandBuffet1 of endMove |
-               SandBuffet2 of endMove | HailFade of endMove | HailBuffetB of endMove | HailBuffet1 of endMove | HailBuffet2 of endMove | TauntFade of endMove |
-               TrapDamage of string * endMove | LeftOversHeal of endMove | WishEnd of endMove | SpeedBoost of endMove
+type endMove = BurnDmg | BreakBurn | BreakFreeze  | BreakPara  | BreakPoison
+              | PoisonDmg | LeechDmg of endMove | LeechHeal of endMove | Base
+              | LightScreenFade of endMove | ReflectFade of endMove
+              | SunFade of endMove | RainFade of endMove
+              | SandStormFade of endMove | SandBuffetB of endMove
+              | SandBuffet1 of endMove | SandBuffet2 of endMove
+              | HailFade of endMove | HailBuffetB of endMove
+              | HailBuffet1 of endMove | HailBuffet2 of endMove
+              | TauntFade of endMove | TrapDamage of string * endMove
+              | LeftOversHeal of endMove | WishEnd of endMove
+              | SpeedBoost of endMove
 
-type guimove = SPoke of string*string | AttackMove of guiattack | Faint | NoAction | Continue | Next | Status of guistatus | EndMove of endMove | FaintNext | SFaint | ForceChoose of guiattack | ForceMove of string
-                | ForceNone | ForceChooseS of guistatus
+type guimove = SPoke of string*string | AttackMove of guiattack | Faint
+              | NoAction | Continue | Next | Status of guistatus
+              | EndMove of endMove | FaintNext | SFaint
+              | ForceChoose of guiattack | ForceMove of string
+              | ForceNone | ForceChooseS of guistatus
 
 type playerMove = Pl1 of guimove | Pl2 of guimove
 
@@ -156,7 +187,8 @@ type battle_mode =
 type screen = SwitchPoke | ChooseMove | Faint | BothFaint | SwitchPokeF
 
 type battle_state =
-  InGame of trainer_team * trainer_team * weather_terrain * playerMove ref * playerMove ref
+  InGame of trainer_team * trainer_team * weather_terrain * playerMove ref
+    * playerMove ref
   | Loading | P1 of screen| P2 of screen | Processing
 
 type game_state = MainMenu | Menu1P | Quit | Battle of battle_state | Menu2P
