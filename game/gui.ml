@@ -58,12 +58,13 @@ let locale = GtkMain.Main.init ()
 (* randomize battle background *)
 let bg_string = ref ("../data/backgrounds/bg-volcanocave.png")
 
+(* test strings *)
 let rec test_string n () =
   match n with
   | 0 -> []
   | n -> (string_of_int n)::test_string (n-1) ()
 
-(* Global references to Poke-edit for fast and memory low destruction*)
+(* Global references to Poke-edit for fast and memory low destruction *)
 let pokedit_screen = GPack.hbox ()
 let pokedit_labels = GPack.vbox ~packing:(pokedit_screen#pack)()
 let pokedit_combos = GPack.vbox ~packing:(pokedit_screen#pack)()
@@ -174,6 +175,7 @@ let playerDirection = ref Down
 
 let obstacle_coordinates = ref (getObstacleCoordinates ())
 
+(* move up *)
 let rec move_up () =
   (if List.mem (!x, !y - 1) !obstacle_coordinates then
     ((match (!x, !y) with
@@ -198,6 +200,7 @@ let rec move_up () =
     sprite#set_file "../data/tournament/Player/Up.png";
     y := !y - 1)); playerDirection := Up
 
+(* move down *)
 let rec move_down () =
   (if List.mem (!x, !y + 1) !obstacle_coordinates then
     ((match (!x, !y) with
@@ -222,6 +225,7 @@ let rec move_down () =
     sprite#set_file "../data/tournament/Player/Down.png";
     y := !y + 1)); playerDirection := Down
 
+(* move right gui *)
 let rec move_right () =
   (if List.mem (!x + 1, !y) !obstacle_coordinates then
     (sprite#set_file "../data/tournament/Player/Right.png")
@@ -239,6 +243,7 @@ let rec move_right () =
     sprite#set_file "../data/tournament/Player/Right.png";
     x := !x + 1)); playerDirection := Right
 
+(* move left gui *)
 let rec move_left () =
   (if List.mem (!x - 1, !y) !obstacle_coordinates then
     (sprite#set_file "../data/tournament/Player/Left.png")
@@ -256,6 +261,7 @@ let rec move_left () =
     sprite#set_file "../data/tournament/Player/Left.png";
     x := !x - 1)); playerDirection := Left
 
+(* talking tournament gui *)
 let talk tournament =
   match (!x, !y) with
   | (7,3) -> if !playerDirection = Up then (List.iter
@@ -273,6 +279,7 @@ let talk tournament =
         tournament#clicked ()) else ()
   | _ -> ()
 
+(* move *)
 let rec move () =
   upon (Ivar.read !move_ivar) (fun (s,tournament) -> (match s with
   | Up -> move_up ()
@@ -281,6 +288,7 @@ let rec move () =
   | Right -> move_right ()
   | Interact -> talk tournament); move_ivar := Ivar.create (); move ())
 
+(* handling key presses *)
 let handle_key_press tournament s =
   let key = GdkEvent.Key.keyval s in
   Printf.printf "Key value pressed: %d\n%!" key;
@@ -646,6 +654,7 @@ let load_battle_load engine img bg_img load_screen battle text buttonhide
   else
     ()
 
+(* tournament gui*)
 let load_tournament engine img bg_img load_screen battle text buttonhide buttonshow
   (battle_status, gui_ready, ready, ready_gui) main_menu
   (battle_screen : GPack.box) poke1_img poke2_img text_buffer health_holders
@@ -744,7 +753,7 @@ let load_tournament engine img bg_img load_screen battle text buttonhide buttons
                                        error_win#show ())
   | _ -> failwith "Faulty Game Logic: Debug 524"
 
-
+(* random battle gui *)
 let load_random  engine img bg_img load_screen battle text buttonhide buttonshow
   (battle_status, gui_ready, ready, ready_gui) main_menu battle_screen
   poke1_img poke2_img text_buffer health_holders menu_holder () =
@@ -763,6 +772,7 @@ let load_random  engine img bg_img load_screen battle text buttonhide buttonshow
               health_holders menu_holder ()
   | _ -> failwith "Faulty Game Logic: Debug 298"
 
+(* poke edit gui *)
 let load_poke_edit engine img bg_img load_screen battle text buttonhide
                    (poke_edit : GButton.button) buttonshow (battle_status,
                    gui_ready, ready, ready_gui) main_menu
@@ -883,6 +893,7 @@ let load_poke_edit engine img bg_img load_screen battle text buttonhide
                                       error_win#show ()))
   | _ -> failwith "Faulty Game Logic: Debug 550"
 
+(* load preset *)
 let load_preset engine img bg_img load_screen battle text buttonhide preset
                 buttonshow (battle_status, gui_ready, ready, ready_gui)
                 main_menu (battle_screen : GPack.box) poke1_img poke2_img
@@ -1053,6 +1064,7 @@ let load_preset engine img bg_img load_screen battle text buttonhide preset
                                       error_win#show ())
     | _ -> failwith "Faulty Game Logic: Debug 314")
 
+(* load menu *)
 let load_menu engine button_show button_hide img screen () =
   if Ivar.is_empty (!engine) then
     (List.iter (fun s -> s#misc#hide ()) button_hide;
@@ -1066,6 +1078,7 @@ let load_menu engine button_show button_hide img screen () =
   else
     ()
 
+(* load main menu from battle *)
 let load_main_menu_from_battle engine one_player two_player no_player
  button_hide main_menu_bg battle text (battle_status,gui_ready,ready,ready_gui)
  () =
@@ -1083,7 +1096,7 @@ let load_main_menu_from_battle engine one_player two_player no_player
   gui_ready := Ivar.create ())
 else
   ()
-
+(* go back engine *)
 let go_back engine (menu_holder, main_menu, battle_screen, one_player,
     two_player, no_player, random, preset, touranment, back_button, poke_edit,
     main_menu_bg, load_screen)(battle, text, bg_img, move1, move2, move3, move4,
@@ -1155,6 +1168,7 @@ let go_back engine (menu_holder, main_menu, battle_screen, one_player,
           main_menu_bg Menu2P ()
   | _ -> () ); ()
 
+(* get status files *)
 let getStatusFile status =
   match status with
   | NoNon -> "../data/fx/status/healthy.png"
@@ -1164,15 +1178,18 @@ let getStatusFile status =
   | Burn -> "../data/fx/status/burned.png"
   | Sleep _ -> "../data/fx/status/asleep.png"
 
+(* Change statuses *)
 let changeStatus t1 t2 =
   status_img1#set_file (getStatusFile (fst t1.current.curr_status));
   status_img2#set_file (getStatusFile (fst t2.current.curr_status))
 
+(* Find trapped poke*)
 let rec findTrapped = function
   | (PartialTrapping _)::t -> true
   | h::t -> findTrapped t
   | [] -> false
 
+(* Switch poke *)
 let switch_poke engine pokebuttons battlebuttons back_button () =
   let poke1,poke2,poke3,poke4,poke5 = match pokebuttons with
   | [poke1;poke2;poke3;poke4;poke5] -> (poke1, poke2, poke3, poke4, poke5)
@@ -1221,6 +1238,7 @@ let switch_poke engine pokebuttons battlebuttons back_button () =
     List.iteri switch_poke_helper team.alive
   )
 
+(* get crit number *)
 let rec getNumCritSuperNoAndFinal c s n v=
   match v with
   | NormMove str -> (c, s, n, str)
@@ -1232,6 +1250,7 @@ let rec getNumCritSuperNoAndFinal c s n v=
 let secondaryEffect = ref `P1
 let endTurnEarly = ref false
 
+(* string of stats *)
 let rec string_from_stat s =
   match s with
   | Attack -> "Attack"
@@ -1242,6 +1261,7 @@ let rec string_from_stat s =
   | Accuracy -> "Accuracy"
   | Evasion -> "Evasion"
 
+(* get name of move *)
 let rec getMoveString a =
   match a with
   | NormMove s -> `DontMiss s
@@ -1294,6 +1314,7 @@ let rec getMoveString a =
   | HealOppA s -> getMoveString s
   | FailA s -> `DontMove
 
+(* get move string statuses *)
 let rec getMoveStringStatus a =
   match a with
   | NormStatus s -> `DontMissStatus
@@ -1360,6 +1381,7 @@ let rec getMoveStringStatus a =
   | HealOppS s -> getMoveStringStatus s
   | GastroAcidS s -> getMoveStringStatus s
 
+(* get moves strings *)
 let rec getMoveStringEnd a =
   match a with
   | BurnDmg -> `BurnDmg
@@ -1385,6 +1407,7 @@ let rec getMoveStringEnd a =
   | SpeedBoost s -> getMoveStringEnd s
   | _ -> `DontMove
 
+(* Gets attack strings *)
 let rec getAttackString starter a =
   match a with
   | NormMove s -> starter ^ " used " ^ s ^"."
@@ -1582,7 +1605,7 @@ let rec getStatusString starter s =
                     endTurnEarly := true; getStatusString starter s ^
                         "The opponent was forced out!"
 
-
+(* Gets end string for starter. *)
 let rec getEndString starter s =
   match s with
   | Base -> ""
@@ -1622,7 +1645,7 @@ let rec getEndString starter s =
   | SpeedBoost s -> getEndString starter s ^ starter ^
       "'s speed boost has raised its speed."
 
-
+(* GUI for animation attacks *)
 let animate_attack (animbox : GPack.fixed) img startx starty nextx' nexty
   (moveanim : GPack.fixed) move_img movestring =
   match movestring with
@@ -1831,6 +1854,7 @@ let animate_attack (animbox : GPack.fixed) img startx starty nextx' nexty
       move_img#misc#hide ())
     | Status -> failwith "Faulty Game Logic: Debug 512")
 
+(* Update buttons for GUI*)
 let update_buttons engine move1 move2 move3 move4 =
   let team = (match get_game_status engine with
   | Battle (InGame (t1, t2, _, _, _)) ->
@@ -1852,6 +1876,7 @@ let update_buttons engine move1 move2 move3 move4 =
   move4#misc#set_tooltip_text (Pokemon.getMoveToolTip
     team.current.pokeinfo.move4)
 
+(* Gets weather string *)
 let getWeatherString w =
   match w with
   | Sun _ -> "../data/fx/weather-sun.png"
@@ -1860,12 +1885,14 @@ let getWeatherString w =
   | SandStorm _ -> "../data/fx/weather-sandstorm.png"
   | _ -> !bg_string
 
+(* Find forced move *)
 let rec findForcedMove lst =
   match lst with
   | (ForcedMoveNoSwitch (_,s))::_ -> (true, s)
   | h::t -> findForcedMove t
   | [] -> (false, "")
 
+(* Game animation main loop *)
 let rec game_animation engine buttons (battle: GPack.table) text
   (battle_status, gui_ready, ready, ready_gui) bg_img poke1_img poke2_img
     move_img text_buffer (health_bar_holder1, health_bar_holder2, health_bar1,
@@ -2097,7 +2124,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
                       snd !current_command)
                    | _ -> failwith "Faulty Game Logic: Debug 1353" );
                    (match get_game_status battle_status with
-                    | Random1p | Preset1p _ | TournBattle _ 
+                    | Random1p | Preset1p _ | TournBattle _
                     | Random0p-> busywait (); current_command :=
                         (fst !current_command), Some (Poke "random");
                               simple_move()
@@ -2380,6 +2407,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
                               [move1;move2;move3;move4;switch] back_button ())
   | _ -> failwith "unimplement")
 
+ (* process commands *)
  let process_command engine buttons battle text
   (battle_status, gui_ready, ready, ready_gui) bg_img poke1_img poke2_img
   move_img text_buffer health_holders pokeanim1 pokeanim2 moveanim back_button =
@@ -2425,6 +2453,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
                        poke1_img poke2_img move_img text_buffer health_holders
                        pokeanim1 pokeanim2 moveanim back_button ())
 
+(* Poke moves commmand logic *)
 let poke_move_cmd button engine buttons battle text
   (battle_status, gui_ready, ready, ready_gui) bg_img poke1_img poke2_img
     move_img text_buffer health_holders pokeanim1 pokeanim2 moveanim back_button
@@ -2444,6 +2473,7 @@ let poke_move_cmd button engine buttons battle text
   (battle_status, gui_ready, ready, ready_gui) bg_img poke1_img poke2_img
     move_img text_buffer health_holders pokeanim1 pokeanim2 moveanim back_button
 
+(* switch poke commands *)
  let switch_poke_cmd button engine buttons battle text
   (battle_status, gui_ready, ready, ready_gui) bg_img poke1_img poke2_img
     move_img text_buffer health_holders pokeanim1 pokeanim2 moveanim back_button
@@ -2484,7 +2514,7 @@ let poke_move_cmd button engine buttons battle text
       Some (Poke (button#label))); next ()
   | _ -> failwith "Faulty Game Logic: Debug 449"
 
-
+(* quit engine *)
 let quit engine ready () =
   match !current_screen with
   | Battle _ -> engine := Ivar.create (); Thread.delay 0.1;
