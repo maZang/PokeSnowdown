@@ -1,15 +1,15 @@
-\contentsline {section}{\numberline {1}Update Log}{3}{section.0.1}
-\contentsline {section}{\numberline {2}System Description}{4}{section.0.2}
-\contentsline {subsection}{\numberline {2.1}Core Vision}{4}{subsection.0.2.1}
-\contentsline {subsection}{\numberline {2.2}Key Features}{4}{subsection.0.2.2}
-\contentsline {subsection}{\numberline {2.3}Narrative Description}{4}{subsection.0.2.3}
-\contentsline {section}{\numberline {3}Architecture}{5}{section.0.3}
-\contentsline {section}{\numberline {4}System Design}{5}{section.0.4}
-\contentsline {subsection}{\numberline {4.1}Important Modules}{5}{subsection.0.4.1}
-\contentsline {subsection}{\numberline {4.2}Module Dependency Diagram}{6}{subsection.0.4.2}
-\contentsline {section}{\numberline {5}Data}{6}{section.0.5}
-\contentsline {subsection}{\numberline {5.1}Internal Data}{6}{subsection.0.5.1}
-\contentsline {subsection}{\numberline {5.2}Communication}{6}{subsection.0.5.2}
-\contentsline {subsection}{\numberline {5.3}Data Structures}{7}{subsection.0.5.3}
-\contentsline {section}{\numberline {6}External Dependencies}{7}{section.0.6}
-\contentsline {section}{\numberline {7}Testing Plan}{7}{section.0.7}
+\contentsline {section}{\numberline {1}System Description}{3}{section.0.1}
+\contentsline {subsection}{\numberline {1.1}Core Vision}{3}{subsection.0.1.1}
+\contentsline {subsection}{\numberline {1.2}Key Features}{3}{subsection.0.1.2}
+\contentsline {subsection}{\numberline {1.3}Narrative Description}{4}{subsection.0.1.3}
+\contentsline {section}{\numberline {2}Architecture}{4}{section.0.2}
+\contentsline {section}{\numberline {3}System Design}{4}{section.0.3}
+\contentsline {subsection}{\numberline {3.1}Important Modules}{4}{subsection.0.3.1}
+\contentsline {subsection}{\numberline {3.2}Module Dependency Diagram}{5}{subsection.0.3.2}
+\contentsline {section}{\numberline {4}Data}{6}{section.0.4}
+\contentsline {subsection}{\numberline {4.1}Internal Data}{6}{subsection.0.4.1}
+\contentsline {subsection}{\numberline {4.2}Communication}{6}{subsection.0.4.2}
+\contentsline {subsection}{\numberline {4.3}Data Structures}{6}{subsection.0.4.3}
+\contentsline {section}{\numberline {5}External Dependencies}{6}{section.0.5}
+\contentsline {section}{\numberline {6}Testing Plan}{6}{section.0.6}
+\contentsline {section}{\numberline {7}Division of Labor}{7}{section.0.7}
