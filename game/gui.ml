@@ -2,11 +2,6 @@ open Async.Std
 open Info
 open Tournament
 
-(*
-  Communication Details:
-  TODO
-*)
-
 (* Wait function to allow GUI to wait for some animations/text to be
   displayed.
 *)
