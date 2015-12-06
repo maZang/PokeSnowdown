@@ -97,7 +97,7 @@ let rec get_advantage_value (elst1:element list) (elst2:element list) : float =
  *  - [poke] is a battle Pokemon to be compared against.
  *  - [alivelst] is a list of battle Pokemon.
  *)
-let replace_dead_better (poke:battle_poke) (alivelst:battle_poke list) : string =
+let replace_dead_better (poke:battle_poke) (alivelst:battle_poke list) :string =
   let type2 = poke.pokeinfo.element in
   let rec get_poke_max_advantage p maxv = function
     | [] -> p
