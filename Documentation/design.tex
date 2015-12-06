@@ -104,7 +104,7 @@ We have the following incorporated in our following project.
 \section{Data}
 %TODO Fill in internal data
 \subsection{Internal Data}
-We have all the json files to represent all the Pok\'emon, moves, abilities, etc... Since json files aren't readily available online with all the Pok\'emon data, we wrote \texttt{Python} scripts to fetch the data from databases and convert them to a json format. To load the data, we used the \texttt{Yojson} module, similar to how we used it in A2. In addition, we have many jpgs and gifs that represent the Pok\'emon. 
+We have all the json files to represent all the Pok\'emon, moves, abilities, etc... Since json files aren't readily available online with all the Pok\'emon data, we wrote \texttt{Python} scripts to fetch the data from databases and convert them to a json format. To load the data, we used the \texttt{Yojson} module, similar to how we used it in A2. In addition, we have many jpgs and gifs that represent the Pok\'emon. We used many of the resources on Smogon and Bulbapedia to obtain information.
 
 %TODO Fill in communication
 \subsection{Communication}
@@ -116,7 +116,7 @@ We held all the Pok\'emon data in Json files. We did have many Variants to hold 
 
 %TODO See if you can expand
 \section{External Dependencies}
-We used  \texttt{Lablgtk2} to create the GUI and \texttt{Yojson} to parse json files. The json data will primarily be collected from \url{https://github.com/veekun/pokedex/tree/master/pokedex/data/csv} using \texttt{Python}. 
+We used  \texttt{Lablgtk2} to create the GUI and \texttt{Yojson} to parse json files. The json data will primarily be collected from \url{https://github.com/veekun/pokedex/tree/master/pokedex/data/csv} using \texttt{Python}.
 
 %TODO Fill in testing plan 
 \section{Testing Plan}
@@ -137,19 +137,19 @@ After GUI Creation, we had to do the hard coding. We hard coded all the differen
 
 \textbf{Matthew Zang:}
 
-He primarily did the GUI, managing the team, getting the data, and setting up the project. He also assigned tasks to everyone. He made the menu for the GUI, the loading screens, battle animations, and made the Game Logic. He also wrote the Poke Editor and the main menu screens.
+He primarily did the GUI, managing the team, getting the json data, and setting up the project. He also assigned tasks to everyone. He made the menu for the GUI, the loading screens, battle animations, and designed the overall Game Logic. He also wrote the Poke Editor and the main menu screens.
 
-\textbf{Nick Shieh}
+\textbf{Nick Shieh:}
 
-He was primarily in charge of hard coding the moves. He helped code the majority of the moves and making sure the interactions were clear. Nick was also in charge of coding the AI for the game. He had two different difficulty levels for the AI, a simple one and a more complex one. However, only the complex one was included as an opponent in the game, as the simpler one served to be way too useless and essentially lost to even ones that have never played Pok\'emon before. 
+He was primarily in charge of hard coding the moves. He helped code the majority of the moves and making sure the interactions were clear. Nick was also in charge of coding the AI for the game. He and Young made two different difficulty levels for the AI, a simple one and a more complex one. However, only the complex one was included as an opponent in the game, as the simpler one served to be way too naive to even people that have never played Pok\'emon before. 
 
-\textbf{Chirag Bhardawaj} 
+\textbf{Chirag Bhardawaj:} 
 
-He was in charge of testing, code verification, and getting the game animations and images. He also made the Tournament mode, the tile-maps, and got the sprites for the opponents. He also coded the Save File handler. He was also in charge of graphics design. 
+He was in charge of testing, code verification, and getting the game animations and images. He also made the Tournament mode of our game, the tile-maps, and retrieved the sprites for the opponents. He also coded the Save File handler, which was vital for the saved state of our game. Additionally, he was in charge of the graphics design of our game. 
 
-\textbf{Young Kim} 
+\textbf{Young Chan Kim:} 
  
- He was also in charge of hard coding the moves. In addition he also was in primarily in charge of coding the abilties and items. He also designed the formats for the Data structures, such as the records for the Pok\'emon, records for the moves. 
+He was also in charge of hard coding the moves. He helped code the majority of the moves and handling the GUI interactions for the Pokemon moves. He also made a major contribution to the AI of the game. In addition, he also was primarily in charge of coding the abilties and items that were used throughout the game. He also designed the formats for the Data structures, such as the records for the Pok\'emon, records for the moves, variants for elements and secondary effects, etc.
  
 % add other chapters and sections to suit
 \end{document}
