@@ -1,15 +1,15 @@
-\BOOKMARK [1][-]{section.0.1}{Update Log}{}% 1
-\BOOKMARK [1][-]{section.0.2}{System Description}{}% 2
-\BOOKMARK [2][-]{subsection.0.2.1}{Core Vision}{section.0.2}% 3
-\BOOKMARK [2][-]{subsection.0.2.2}{Key Features}{section.0.2}% 4
-\BOOKMARK [2][-]{subsection.0.2.3}{Narrative Description}{section.0.2}% 5
-\BOOKMARK [1][-]{section.0.3}{Architecture}{}% 6
-\BOOKMARK [1][-]{section.0.4}{System Design}{}% 7
-\BOOKMARK [2][-]{subsection.0.4.1}{Important Modules}{section.0.4}% 8
-\BOOKMARK [2][-]{subsection.0.4.2}{Module Dependency Diagram}{section.0.4}% 9
-\BOOKMARK [1][-]{section.0.5}{Data}{}% 10
-\BOOKMARK [2][-]{subsection.0.5.1}{Internal Data}{section.0.5}% 11
-\BOOKMARK [2][-]{subsection.0.5.2}{Communication}{section.0.5}% 12
-\BOOKMARK [2][-]{subsection.0.5.3}{Data Structures}{section.0.5}% 13
-\BOOKMARK [1][-]{section.0.6}{External Dependencies}{}% 14
-\BOOKMARK [1][-]{section.0.7}{Testing Plan}{}% 15
+\BOOKMARK [1][-]{section.0.1}{System Description}{}% 1
+\BOOKMARK [2][-]{subsection.0.1.1}{Core Vision}{section.0.1}% 2
+\BOOKMARK [2][-]{subsection.0.1.2}{Key Features}{section.0.1}% 3
+\BOOKMARK [2][-]{subsection.0.1.3}{Narrative Description}{section.0.1}% 4
+\BOOKMARK [1][-]{section.0.2}{Architecture}{}% 5
+\BOOKMARK [1][-]{section.0.3}{System Design}{}% 6
+\BOOKMARK [2][-]{subsection.0.3.1}{Important Modules}{section.0.3}% 7
+\BOOKMARK [2][-]{subsection.0.3.2}{Module Dependency Diagram}{section.0.3}% 8
+\BOOKMARK [1][-]{section.0.4}{Data}{}% 9
+\BOOKMARK [2][-]{subsection.0.4.1}{Internal Data}{section.0.4}% 10
+\BOOKMARK [2][-]{subsection.0.4.2}{Communication}{section.0.4}% 11
+\BOOKMARK [2][-]{subsection.0.4.3}{Data Structures}{section.0.4}% 12
+\BOOKMARK [1][-]{section.0.5}{External Dependencies}{}% 13
+\BOOKMARK [1][-]{section.0.6}{Testing Plan}{}% 14
+\BOOKMARK [1][-]{section.0.7}{Division of Labor}{}% 15
