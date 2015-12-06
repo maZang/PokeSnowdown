@@ -36,12 +36,16 @@ let poke2x = 450
 let poke2y = 80
 
 (* Status condition over health bar *)
-let status_img1 = GMisc.image ~file:"../data/fx/status/healthy.png" ()
-let status_img2 = GMisc.image ~file:"../data/fx/status/healthy.png" ()
+let status_img1 = GMisc.image
+  ~file:"../data/fx/status/healthy.png" ()
+let status_img2 = GMisc.image
+  ~file:"../data/fx/status/healthy.png" ()
 
 (* loading screen images *)
-let player_img = GMisc.image ~file:"../data/backgrounds/player_versus/player1.gif" ()
-let versus_img = GMisc.image ~file:"../data/backgrounds/player_versus/player2.gif" ()
+let player_img = GMisc.image
+  ~file:"../data/backgrounds/player_versus/player1.gif" ()
+let versus_img = GMisc.image
+  ~file:"../data/backgrounds/player_versus/player2.gif" ()
 
 (* used for user input *)
 let continue = ref false
@@ -70,25 +74,50 @@ let pokedit_labels = GPack.vbox ~packing:(pokedit_screen#pack)()
 let pokedit_combos = GPack.vbox ~packing:(pokedit_screen#pack)()
 let pokedit_labels2 = GPack.vbox ~packing:(pokedit_screen#pack)()
 let pokedit_scale = GPack.vbox ~packing:(pokedit_screen#pack) ~width:170 ()
-let label1 = GMisc.label ~text:"Move 1" ~height:16 ~ypad:5 ~xpad:15 ~packing:(pokedit_labels#pack ~expand:true) ()
-let label2 = GMisc.label ~text:"Move 2" ~height:16 ~ypad:5 ~xpad:15 ~packing:(pokedit_labels#pack ~expand:true) ()
-let label3 = GMisc.label ~text:"Move 3" ~height:16 ~ypad:5 ~xpad:15 ~packing:(pokedit_labels#pack ~expand:true) ()
-let label4 = GMisc.label ~text:"Move 4" ~height:16 ~ypad:5 ~xpad:15 ~packing:(pokedit_labels#pack ~expand:true) ()
-let label5 = GMisc.label ~text:"Ability" ~height:16 ~ypad:5 ~xpad:15 ~packing:(pokedit_labels#pack ~expand:true) ()
-let label6 = GMisc.label ~text:"Nature" ~height:16 ~ypad:5 ~xpad:15 ~packing:(pokedit_labels#pack ~expand:true) ()
-let label7 = GMisc.label ~text:"Item" ~height:16 ~ypad:5 ~xpad:15 ~packing:(pokedit_labels#pack ~expand:true) ()
-let label8 = GMisc.label ~text:"HP EVs" ~height:16 ~ypad:8 ~xpad:15 ~packing:(pokedit_labels2#pack ~expand:true) ()
-let label9 = GMisc.label ~text:"Attack EVs" ~height:16 ~ypad:8 ~xpad:15 ~packing:(pokedit_labels2#pack ~expand:true) ()
-let label10 = GMisc.label ~text:"Defense EVs" ~height:16 ~ypad:8 ~xpad:15 ~packing:(pokedit_labels2#pack ~expand:true) ()
-let label11 = GMisc.label ~text:"Special Attack EVs" ~height:16 ~ypad:8 ~xpad:15 ~packing:(pokedit_labels2#pack ~expand:true) ()
-let label12 = GMisc.label ~text:"Special Defense EVs" ~height:16 ~ypad:8 ~xpad:15 ~packing:(pokedit_labels2#pack ~expand:true) ()
-let label13 = GMisc.label ~text:"Speed EVs" ~height:16 ~ypad:8 ~xpad:15 ~packing:(pokedit_labels2#pack ~expand:true) ()
-let hp_evs = GRange.scale `HORIZONTAL ~digits:0 ~adjustment:(GData.adjustment ~upper:252. ~page_size:0. ()) ~draw_value:true ~packing:(pokedit_scale#pack ~expand:true) ()
-let atk_evs = GRange.scale `HORIZONTAL ~digits:0 ~adjustment:(GData.adjustment ~upper:252. ~page_size:0. ()) ~draw_value:true ~packing:(pokedit_scale#pack ~expand:true) ()
-let def_evs = GRange.scale `HORIZONTAL ~digits:0 ~adjustment:(GData.adjustment ~upper:252. ~page_size:0. ()) ~draw_value:true ~packing:(pokedit_scale#pack ~expand:true) ()
-let special_attack_evs = GRange.scale `HORIZONTAL ~digits:0 ~adjustment:(GData.adjustment ~upper:252. ~page_size:0. ()) ~draw_value:true ~packing:(pokedit_scale#pack ~expand:true) ()
-let special_defense_evs = GRange.scale `HORIZONTAL ~digits:0 ~adjustment:(GData.adjustment ~upper:252. ~page_size:0. ()) ~draw_value:true ~packing:(pokedit_scale#pack ~expand:true) ()
-let speed_evs = GRange.scale `HORIZONTAL ~digits:0 ~adjustment:(GData.adjustment ~upper:252. ~page_size:0. ()) ~draw_value:true ~packing:(pokedit_scale#pack ~expand:true) ()
+let label1 = GMisc.label ~text:"Move 1" ~height:16 ~ypad:5 ~xpad:15
+  ~packing:(pokedit_labels#pack ~expand:true) ()
+let label2 = GMisc.label ~text:"Move 2" ~height:16 ~ypad:5 ~xpad:15
+  ~packing:(pokedit_labels#pack ~expand:true) ()
+let label3 = GMisc.label ~text:"Move 3" ~height:16 ~ypad:5 ~xpad:15
+  ~packing:(pokedit_labels#pack ~expand:true) ()
+let label4 = GMisc.label ~text:"Move 4" ~height:16 ~ypad:5 ~xpad:15
+  ~packing:(pokedit_labels#pack ~expand:true) ()
+let label5 = GMisc.label ~text:"Ability" ~height:16 ~ypad:5 ~xpad:15
+  ~packing:(pokedit_labels#pack ~expand:true) ()
+let label6 = GMisc.label ~text:"Nature" ~height:16 ~ypad:5 ~xpad:15
+  ~packing:(pokedit_labels#pack ~expand:true) ()
+let label7 = GMisc.label ~text:"Item" ~height:16 ~ypad:5 ~xpad:15
+  ~packing:(pokedit_labels#pack ~expand:true) ()
+let label8 = GMisc.label ~text:"HP EVs" ~height:16 ~ypad:8 ~xpad:15
+  ~packing:(pokedit_labels2#pack ~expand:true) ()
+let label9 = GMisc.label ~text:"Attack EVs" ~height:16 ~ypad:8 ~xpad:15
+  ~packing:(pokedit_labels2#pack ~expand:true) ()
+let label10 = GMisc.label ~text:"Defense EVs" ~height:16 ~ypad:8 ~xpad:15
+  ~packing:(pokedit_labels2#pack ~expand:true) ()
+let label11 = GMisc.label ~text:"Special Attack EVs" ~height:16 ~ypad:8 ~xpad:15
+  ~packing:(pokedit_labels2#pack ~expand:true) ()
+let label12 = GMisc.label ~text:"Special Defense EVs"~height:16 ~ypad:8 ~xpad:15
+  ~packing:(pokedit_labels2#pack ~expand:true) ()
+let label13 = GMisc.label ~text:"Speed EVs" ~height:16 ~ypad:8 ~xpad:15
+  ~packing:(pokedit_labels2#pack ~expand:true) ()
+let hp_evs = GRange.scale `HORIZONTAL ~digits:0 ~adjustment:(GData.adjustment
+  ~upper:252. ~page_size:0. ()) ~draw_value:true ~packing:(pokedit_scale#pack
+    ~expand:true) ()
+let atk_evs = GRange.scale `HORIZONTAL ~digits:0 ~adjustment:(GData.adjustment
+  ~upper:252. ~page_size:0. ()) ~draw_value:true ~packing:(pokedit_scale#pack
+    ~expand:true) ()
+let def_evs = GRange.scale `HORIZONTAL ~digits:0 ~adjustment:(GData.adjustment
+  ~upper:252. ~page_size:0. ()) ~draw_value:true ~packing:(pokedit_scale#pack
+    ~expand:true) ()
+let special_attack_evs = GRange.scale `HORIZONTAL ~digits:0
+  ~adjustment:(GData.adjustment ~upper:252. ~page_size:0. ()) ~draw_value:true
+    ~packing:(pokedit_scale#pack ~expand:true) ()
+let special_defense_evs = GRange.scale `HORIZONTAL ~digits:0
+  ~adjustment:(GData.adjustment ~upper:252. ~page_size:0. ()) ~draw_value:true
+    ~packing:(pokedit_scale#pack ~expand:true) ()
+let speed_evs = GRange.scale `HORIZONTAL ~digits:0 ~adjustment:(GData.adjustment
+    ~upper:252. ~page_size:0. ()) ~draw_value:true ~packing:(pokedit_scale#pack
+      ~expand:true) ()
 
 (* Global references to an object for easy destruction *)
 let selecttext = ref (GMisc.label ())
@@ -121,20 +150,28 @@ let opp1anim = GPack.fixed ~width:screen_width ~height:(2 * screen_height/3) ()
 let opp2anim = GPack.fixed ~width:screen_width ~height:(2 * screen_height/3) ()
 let tilemap = GMisc.image ~file:"../data/tournament/tilemap1.png" ()
 (* 600 x 320 *)
-let gameBoard = GPack.table ~rows:4 ~columns: 4 ~height: (2* screen_height/3) ~width:screen_width  ()
+let gameBoard = GPack.table ~rows:4 ~columns: 4 ~height: (2* screen_height/3)
+  ~width:screen_width  ()
 let sprite = GMisc.image ~file:"../data/tournament/Player/Down.png" ()
 let gameText = GEdit.entry ~width:600 ~height:80
-              ~text:"Use W,A,S,D to move. Press H to interact with Prof. Oak and space bar to talk." ~editable:false ()
+              ~text:"Use W,A,S,D to move. Press H to interact with Prof. Oak and space bar to talk."
+              ~editable:false ()
 let boss = GMisc.image ~file:"../data/tournament/NPC/ProfOak.png" ()
 let opp1 = GMisc.image ~file:"../data/tournament/NPC/dragontamer.png" ()
 let opp2 = GMisc.image ~file:"../data/tournament/NPC/psychic.png" ()
-let () =  (spriteanim#put sprite#coerce (40 * !x) (40 * !y); bossanim#put boss#coerce 280 100;
+let () =  (spriteanim#put sprite#coerce (40 * !x) (40 * !y);
+             bossanim#put boss#coerce 280 100;
            opp1anim#put opp1#coerce 160 20; opp2anim#put opp2#coerce 400 20;
-           gameBoard#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH spriteanim#coerce;
-           gameBoard#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH bossanim#coerce;
-           gameBoard#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH opp1anim#coerce;
-           gameBoard#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH opp2anim#coerce;
-           gameBoard#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH tilemap#coerce)
+           gameBoard#attach ~left:0 ~top:0 ~right:4 ~bottom:4
+             ~fill:`BOTH spriteanim#coerce;
+           gameBoard#attach ~left:0 ~top:0 ~right:4 ~bottom:4
+             ~fill:`BOTH bossanim#coerce;
+           gameBoard#attach ~left:0 ~top:0 ~right:4 ~bottom:4
+             ~fill:`BOTH opp1anim#coerce;
+           gameBoard#attach ~left:0 ~top:0 ~right:4 ~bottom:4
+             ~fill:`BOTH opp2anim#coerce;
+           gameBoard#attach ~left:0 ~top:0 ~right:4 ~bottom:4
+             ~fill:`BOTH tilemap#coerce)
 
 type gameMovement = Up | Down | Left | Right | Interact
 
@@ -148,7 +185,7 @@ let rec move_up () =
     ((match (!x, !y) with
     | (7,2) -> opp1#misc#hide (); opp2#misc#hide ();
                tilemap#set_file "../data/tournament/tilemap2.png";
-               x := 7; y := 7; spriteanim#move sprite#coerce (40 * !x) (40 * !y);
+               x := 7; y := 7; spriteanim#move sprite#coerce (40 * !x)(40 * !y);
                bossanim#move boss#coerce 280 20;
                boss#misc#show ();
                obstacle_coordinates := ice_obstacles;
@@ -172,7 +209,7 @@ let rec move_down () =
     ((match (!x, !y) with
     | (7,7) -> opp1#misc#show (); opp2#misc#show ();
                tilemap#set_file "../data/tournament/tilemap1.png";
-               x := 7; y := 2; spriteanim#move sprite#coerce (40 * !x) (40 * !y);
+               x := 7; y := 2; spriteanim#move sprite#coerce (40 * !x)(40 * !y);
                bossanim#move boss#coerce 280 100;
                boss#misc#hide ();
                obstacle_coordinates := tilemap_nooak;
@@ -227,10 +264,18 @@ let rec move_left () =
 
 let talk tournament =
   match (!x, !y) with
-  | (7,3) -> if !playerDirection = Up then (List.iter (fun s -> gameText#set_text s; busywait ()) profOakQuotes; gameText#set_text "Use W,A,S,D to move. Press H to interact with Prof. Oak and space bar to talk.") else ()
-  | (7, 1) -> if !playerDirection = Up then (List.iter (fun s -> gameText#set_text s; busywait ()) (getProfOakQuotes ()); Save.incPlayOak (); tournament#clicked ()) else ()
-  | (4,1) -> if !playerDirection = Up then (List.iter (fun s -> gameText#set_text s; busywait ()) (opp1Quotes ()); tournament#clicked ()) else ()
-  | (10,1) -> if !playerDirection = Up then (List.iter (fun s -> gameText#set_text s; busywait ()) (opp2Quotes ()); tournament#clicked ()) else ()
+  | (7,3) -> if !playerDirection = Up then (List.iter
+      (fun s -> gameText#set_text s; busywait ()) profOakQuotes;
+        gameText#set_text "Use W,A,S,D to move. Press H to interact with Prof. Oak and space bar to talk.") else ()
+  | (7, 1) -> if !playerDirection = Up then (List.iter
+      (fun s -> gameText#set_text s; busywait ()) (getProfOakQuotes ());
+        Save.incPlayOak (); tournament#clicked ()) else ()
+  | (4,1) -> if !playerDirection = Up then (List.iter
+      (fun s -> gameText#set_text s; busywait ()) (opp1Quotes ());
+        tournament#clicked ()) else ()
+  | (10,1) -> if !playerDirection = Up then (List.iter
+      (fun s -> gameText#set_text s; busywait ()) (opp2Quotes ());
+        tournament#clicked ()) else ()
   | _ -> ()
 
 let rec move () =
@@ -250,13 +295,13 @@ let handle_key_press tournament s =
                         | 32 -> continue := true; true
                         | _ -> false)
   | Tourney -> (match key with
-                | 119 -> Ivar.fill_if_empty !move_ivar (Up,tournament); true
-                | 115 -> Ivar.fill_if_empty !move_ivar (Down,tournament); true
-                | 100 -> Ivar.fill_if_empty !move_ivar (Right,tournament); true
-                | 97 -> Ivar.fill_if_empty !move_ivar (Left,tournament); true
-                | 104 -> Ivar.fill_if_empty !move_ivar (Interact,tournament); true
-                | 32 -> continue := true; true
-                | _ -> false )
+              | 119 -> Ivar.fill_if_empty !move_ivar (Up,tournament); true
+              | 115 -> Ivar.fill_if_empty !move_ivar (Down,tournament); true
+              | 100 -> Ivar.fill_if_empty !move_ivar (Right,tournament); true
+              | 97 -> Ivar.fill_if_empty !move_ivar (Left,tournament); true
+              | 104 -> Ivar.fill_if_empty !move_ivar (Interact,tournament); true
+              | 32 -> continue := true; true
+              | _ -> false)
   | _ -> false
 
 let () = move ()
@@ -316,14 +361,17 @@ let make_battle_screen ?packing () =
      () in
   (* Container used to hold health bars to force the health bars to be a
   certain size *)
-  let healthbaranim1 = GPack.fixed ~width:screen_width ~height:(2 * screen_height/3) () in
-  let healthbaranim2 = GPack.fixed ~width:screen_width ~height:(2 * screen_height/3) () in
+  let healthbaranim1 = GPack.fixed ~width:screen_width
+    ~height:(2 * screen_height/3) () in
+  let healthbaranim2 = GPack.fixed ~width:screen_width
+    ~height:(2 * screen_height/3) () in
   let health_bar_holder1 = GPack.vbox ~width:200 ~height:12 () in
   let health_bar_holder2 = GPack.vbox ~width:200 ~height:12 () in
   let () = health_bar_holder1#pack status_img1#coerce in
   let () = health_bar_holder2#pack status_img2#coerce in
   (* Holder to hold the text buffer *)
-  let text = GPack.hbox ?packing ~height: (1 * screen_height / 6) ~show:false () in
+  let text = GPack.hbox ?packing ~height: (1 * screen_height / 6)
+    ~show:false () in
   (* Background image of the battle: TODO RANDOMIZE BACKGROUND *)
   let bg_img = GMisc.image ~file:!bg_string
      () in
@@ -349,9 +397,12 @@ let make_battle_screen ?packing () =
   let poke4 = GButton.button ~label:"Poke4" ~show:false () in
   let poke5 = GButton.button ~label:"Poke5" ~show:false () in
   (* animation boxes for the pokemon and moves *)
-  let pokeanim1 = GPack.fixed ~width:screen_width ~height:(2 * screen_height/3) () in
-  let pokeanim2 = GPack.fixed ~width:screen_width ~height:(2 * screen_height/3) () in
-  let moveanim = GPack.fixed ~width:screen_width ~height:(2 * screen_height/3) () in
+  let pokeanim1 = GPack.fixed ~width:screen_width
+    ~height:(2 * screen_height/3) () in
+  let pokeanim2 = GPack.fixed ~width:screen_width
+    ~height:(2 * screen_height/3) () in
+  let moveanim = GPack.fixed ~width:screen_width
+    ~height:(2 * screen_height/3) () in
    (* Actual health bars implemented with progress bars *)
   let health_bar1 = GRange.progress_bar
                           ~packing:(health_bar_holder1#pack ~expand:false) () in
@@ -413,17 +464,25 @@ let make_menu ?packing () =
   let help_menu = factory#add_submenu "Help" in
   let _ = factory#add_item "Stats" ~callback:(fun () ->
     let error_win = GWindow.message_dialog ~message:(Save.getFileMessage ())
-    ~buttons:GWindow.Buttons.close  ~message_type:`INFO () in ignore(error_win#connect#close ~callback:(error_win#destroy));
-    ignore (error_win#connect#response ~callback:(fun s -> error_win#destroy ())); error_win#show ()) in
+    ~buttons:GWindow.Buttons.close  ~message_type:`INFO () in
+      ignore(error_win#connect#close ~callback:(error_win#destroy));
+      ignore (error_win#connect#response
+        ~callback:(fun s -> error_win#destroy ())); error_win#show ()) in
   (* Help menu *)
   let factory = new GMenu.factory help_menu in
   ignore(factory#add_item "About" ~callback: (fun () ->
     let error_win = GWindow.message_dialog ~message:("To find more about this game, please read the Documentation that comes along with it. The most common key commands are W, A, S, D for movement and Space bar for skipping text.")
-    ~buttons:GWindow.Buttons.close  ~message_type:`INFO () in ignore(error_win#connect#close ~callback:(error_win#destroy));
-    ignore (error_win#connect#response ~callback:(fun s -> error_win#destroy ())); error_win#show ()));
-  ignore(factory#add_item "Errors" ~callback: (fun () ->let error_win = GWindow.message_dialog  ~message:("Instructions to fix corrupted save file are in the Documentation. Please do not edit the save files yourself.")
-    ~buttons:GWindow.Buttons.close  ~message_type:`INFO () in ignore(error_win#connect#close ~callback:(error_win#destroy));
-    ignore (error_win#connect#response ~callback:(fun s -> error_win#destroy ())); error_win#show ()));
+    ~buttons:GWindow.Buttons.close  ~message_type:`INFO () in
+      ignore(error_win#connect#close ~callback:(error_win#destroy));
+    ignore (error_win#connect#response
+        ~callback:(fun s -> error_win#destroy ())); error_win#show ()));
+  ignore(factory#add_item "Errors"
+      ~callback: (fun () ->let error_win = GWindow.message_dialog
+        ~message:("Instructions to fix corrupted save file are in the Documentation. Please do not edit the save files yourself.")
+    ~buttons:GWindow.Buttons.close  ~message_type:`INFO () in
+      ignore(error_win#connect#close ~callback:(error_win#destroy));
+    ignore (error_win#connect#response
+        ~callback:(fun s -> error_win#destroy ())); error_win#show ()));
   (* hbox2 is known as battle_screen outside of this function *)
   let hbox2 = GPack.vbox ~packing:(vbox#pack) () in
   (* button1 is known as one_player outside of this function*)
@@ -456,14 +515,18 @@ let make_menu ?packing () =
   (* load_screen is a gif that plays before battle (during initialization)*)
   let load_screen = GPack.table ~rows:4 ~columns: 4 ~width:screen_width
     ~height:screen_height  () in
-  let load_screen_img = GMisc.image ~file:"../data/backgrounds/versus_screen.png" () in
+  let load_screen_img = GMisc.image
+    ~file:"../data/backgrounds/versus_screen.png" () in
   let playeranim = GPack.fixed ~width:screen_width ~height:screen_height () in
   let versusanim = GPack.fixed ~width:screen_width ~height:screen_height () in
   versusanim#put versus_img#coerce (300) (100);
   playeranim#put player_img#coerce (300) (320);
-  load_screen#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH playeranim#coerce;
-  load_screen#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH versusanim#coerce;
-  load_screen#attach ~left:0 ~top:0 ~right:4 ~bottom:4 ~fill:`BOTH load_screen_img#coerce;
+  load_screen#attach ~left:0 ~top:0 ~right:4 ~bottom:4
+    ~fill:`BOTH playeranim#coerce;
+  load_screen#attach ~left:0 ~top:0 ~right:4 ~bottom:4
+    ~fill:`BOTH versusanim#coerce;
+  load_screen#attach ~left:0 ~top:0 ~right:4 ~bottom:4
+    ~fill:`BOTH load_screen_img#coerce;
   (* Return all objects created *)
   (vbox, hbox1, hbox2, button1, button2, button3, button4,
     button5, button6, button7, button8, img, load_screen)
@@ -539,11 +602,13 @@ let load_battle_screen engine img bg_img battle text buttonhide buttonshow
   (* set health bar information; give tooltips to health bars *)
   health_bar1#misc#set_has_tooltip true;
   health_bar1#set_fraction 1.;
-  health_bar1#set_text (string_of_int team1.current.curr_hp ^ "/" ^ string_of_int team1.current.bhp);
+  health_bar1#set_text (string_of_int team1.current.curr_hp ^ "/" ^
+    string_of_int team1.current.bhp);
   health_bar1#misc#set_tooltip_text (Pokemon.getPokeToolTip team1);
   health_bar2#misc#set_has_tooltip true;
   health_bar2#set_fraction 1.;
-  health_bar2#set_text (string_of_int team2.current.curr_hp ^ "/" ^ string_of_int team2.current.bhp);
+  health_bar2#set_text (string_of_int team2.current.curr_hp ^ "/" ^
+    string_of_int team2.current.bhp);
   health_bar2#misc#set_tooltip_text (Pokemon.getPokeToolTip team2)
 
 (* In contrast to other cases, after engine is filled up with a battle status
@@ -555,14 +620,15 @@ After the callback is initiated, the battle information is read and the battle
 is loaded.Then
 engine -- Battle InGame
 *)
-let load_battle_load engine img bg_img load_screen battle text buttonhide buttonshow
-  (battle_status, gui_ready, ready, ready_gui) mode main_menu battle_screen
-  poke1_img poke2_img text_buffer health_holders menu_holder () =
+let load_battle_load engine img bg_img load_screen battle text buttonhide
+  buttonshow (battle_status, gui_ready, ready, ready_gui) mode main_menu
+  battle_screen poke1_img poke2_img text_buffer health_holders menu_holder () =
   (* wait for engine to be filled by the battle controller *)
   if (Ivar.is_empty (!engine)) then
     ((main_menu#misc#hide (); battle_screen#misc#hide ();
      (match mode with
-    | TournBattle _ -> versus_img#set_file ("../data/backgrounds/player_versus/" ^ (getStringOfEnemy ()) ^ ".gif")
+    | TournBattle _ -> versus_img#set_file ("../data/backgrounds/player_versus/"
+        ^ (getStringOfEnemy ()) ^ ".gif")
     | _ -> versus_img#set_file "../data/backgrounds/player_versus/player2.gif");
      menu_holder#add load_screen#coerce;
     current_screen :=
@@ -586,21 +652,25 @@ let load_battle_load engine img bg_img load_screen battle text buttonhide button
     ()
 
 let load_tournament engine img bg_img load_screen battle text buttonhide buttonshow
-  (battle_status, gui_ready, ready, ready_gui) main_menu (battle_screen : GPack.box)
-  poke1_img poke2_img text_buffer health_holders menu_holder () =
+  (battle_status, gui_ready, ready, ready_gui) main_menu
+  (battle_screen : GPack.box) poke1_img poke2_img text_buffer health_holders
+    menu_holder () =
   let tournament = match buttonhide with
     | [_;_;tournament;_] -> tournament
     | _ -> failwith "Faulty Game Logic: Debug 508" in
   match !current_screen with
   | Menu1P -> (gameText#set_text "Use W,A,S,D to move. Press H to interact with Prof. Oak and space bar to talk.";
-              current_screen := Tourney; List.iter (fun s -> s#misc#hide ()) buttonhide;
+              current_screen := Tourney; List.iter
+                (fun s -> s#misc#hide ()) buttonhide;
               img#misc#hide ();
               obstacle_coordinates := getObstacleCoordinates ();
               x := 7; y := 5;
               spriteanim#move sprite#coerce (40 * !x) (40 * !y);
               tilemap#set_file "../data/tournament/tilemap1.png";
-              opp1#set_file ("../data/tournament/NPC/" ^ (getRandomOpp1 ()) ^ ".png");
-              opp2#set_file ("../data/tournament/NPC/" ^ (getRandomOpp2 ()) ^ ".png");
+              opp1#set_file ("../data/tournament/NPC/" ^
+                (getRandomOpp1 ()) ^ ".png");
+              opp2#set_file ("../data/tournament/NPC/" ^
+                (getRandomOpp2 ()) ^ ".png");
               opp1#misc#show (); opp2#misc#show ();
               bossanim#move boss#coerce 280 100;
               (if !obstacle_coordinates = tilemap_nooak then
@@ -614,31 +684,68 @@ let load_tournament engine img bg_img load_screen battle text buttonhide buttons
                 battle_screen#remove gameBoard#coerce;
                 battle_screen#remove gameText#coerce;
                 selecttext := GMisc.label ~text:"Tournament Time: Choose your Pokemon." ~packing:(battle_screen#pack) ();
-                select1 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
-                select2 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
-                select3 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
-                select4 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
-                select5 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
-                select6 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
+                select1 := GEdit.combo
+                  ~popdown_strings:(Pokemon.unlocked_poke_string_list ())
+                    ~case_sensitive:false ~allow_empty:false
+                      ~packing:(battle_screen#pack) ();
+                select2 := GEdit.combo
+                  ~popdown_strings:(Pokemon.unlocked_poke_string_list ())
+                    ~case_sensitive:false ~allow_empty:false
+                      ~packing:(battle_screen#pack) ();
+                select3 := GEdit.combo
+                  ~popdown_strings:(Pokemon.unlocked_poke_string_list ())
+                    ~case_sensitive:false ~allow_empty:false
+                      ~packing:(battle_screen#pack) ();
+                select4 := GEdit.combo
+                  ~popdown_strings:(Pokemon.unlocked_poke_string_list ())
+                    ~case_sensitive:false ~allow_empty:false
+                      ~packing:(battle_screen#pack) ();
+                select5 := GEdit.combo
+                  ~popdown_strings:(Pokemon.unlocked_poke_string_list ())
+                    ~case_sensitive:false ~allow_empty:false
+                      ~packing:(battle_screen#pack) ();
+                select6 := GEdit.combo
+                  ~popdown_strings:(Pokemon.unlocked_poke_string_list ())
+                    ~case_sensitive:false ~allow_empty:false
+                      ~packing:(battle_screen#pack) ();
                 battle_screen#pack selectimg#coerce;
                 ())
   | TourneyChoose -> (try (
-                          let poke1 = Pokemon.getPresetPokemon (!select1#entry#text) in
-                          let poke2 = Pokemon.getPresetPokemon (!select2#entry#text) in
-                          let poke3 = Pokemon.getPresetPokemon (!select3#entry#text) in
-                          let poke4 = Pokemon.getPresetPokemon (!select4#entry#text) in
-                          let poke5 = Pokemon.getPresetPokemon (!select5#entry#text) in
-                          let poke6 = Pokemon.getPresetPokemon (!select6#entry#text) in
-                          battle_screen#remove selectimg#coerce; !selecttext#destroy (); tournament#misc#hide ();
-                          !select1#destroy (); !select2#destroy (); !select3#destroy ();
-                          !select4#destroy (); !select5#destroy (); !select6#destroy ();
+                          let poke1 = Pokemon.getPresetPokemon
+                            (!select1#entry#text) in
+                          let poke2 = Pokemon.getPresetPokemon
+                            (!select2#entry#text) in
+                          let poke3 = Pokemon.getPresetPokemon
+                            (!select3#entry#text) in
+                          let poke4 = Pokemon.getPresetPokemon
+                            (!select4#entry#text) in
+                          let poke5 = Pokemon.getPresetPokemon
+                            (!select5#entry#text) in
+                          let poke6 = Pokemon.getPresetPokemon
+                            (!select6#entry#text) in
+                          battle_screen#remove selectimg#coerce;
+                            !selecttext#destroy (); tournament#misc#hide ();
+                          !select1#destroy (); !select2#destroy ();
+                            !select3#destroy ();
+                          !select4#destroy (); !select5#destroy ();
+                            !select6#destroy ();
                           tournament#set_label "Tournament";
-                          load_battle_load engine img bg_img load_screen battle text buttonhide buttonshow
-                          (battle_status, gui_ready, ready, ready_gui) (TournBattle [poke1;poke2;poke3;poke4;poke5;poke6]) main_menu battle_screen
-                          poke1_img poke2_img text_buffer health_holders menu_holder ()
-                      ) with _ -> let error_win = GWindow.message_dialog ~message:"Error in your Pokemon selection. Try making sure everything is spelled correctly."
-                                  ~buttons:GWindow.Buttons.close  ~message_type:`ERROR () in ignore(error_win#connect#close ~callback:(error_win#destroy));
-                                  ignore (error_win#connect#response ~callback:(fun s -> error_win#destroy ())); error_win#show ())
+                          load_battle_load engine img bg_img load_screen
+                            battle text buttonhide buttonshow
+                          (battle_status, gui_ready, ready, ready_gui)
+                            (TournBattle [poke1;poke2;poke3;poke4;poke5;poke6])
+                              main_menu battle_screen
+                          poke1_img poke2_img text_buffer health_holders
+                            menu_holder ()
+                      ) with _ -> let error_win = GWindow.message_dialog
+                          ~message:"Error in your Pokemon selection. Try making sure everything is spelled correctly."
+                                  ~buttons:GWindow.Buttons.close
+                                    ~message_type:`ERROR () in
+                                      ignore(error_win#connect#close
+                                          ~callback:(error_win#destroy));
+                                  ignore (error_win#connect#response
+                                     ~callback:(fun s -> error_win#destroy ()));
+                                       error_win#show ())
   | _ -> failwith "Faulty Game Logic: Debug 524"
 
 
@@ -646,114 +753,212 @@ let load_random  engine img bg_img load_screen battle text buttonhide buttonshow
   (battle_status, gui_ready, ready, ready_gui) main_menu battle_screen
   poke1_img poke2_img text_buffer health_holders menu_holder () =
   match !current_screen with
-  | Menu1P ->  load_battle_load engine img bg_img load_screen battle text buttonhide buttonshow
-              (battle_status, gui_ready, ready, ready_gui) Random1p main_menu battle_screen
-              poke1_img poke2_img text_buffer health_holders menu_holder ()
-  | Menu2P -> load_battle_load engine img bg_img load_screen battle text buttonhide buttonshow
-              (battle_status, gui_ready, ready, ready_gui) Random2p main_menu battle_screen
-              poke1_img poke2_img text_buffer health_holders menu_holder ()
-  | Menu0P -> load_battle_load engine img bg_img load_screen battle text buttonhide buttonshow
-              (battle_status, gui_ready, ready, ready_gui) Random0p main_menu battle_screen
-              poke1_img poke2_img text_buffer health_holders menu_holder ()
+  | Menu1P -> load_battle_load engine img bg_img load_screen battle text
+              buttonhide buttonshow (battle_status, gui_ready, ready, ready_gui)
+              Random1p main_menu battle_screen poke1_img poke2_img text_buffer
+              health_holders menu_holder ()
+  | Menu2P -> load_battle_load engine img bg_img load_screen battle text
+              buttonhide buttonshow (battle_status, gui_ready, ready, ready_gui)
+              Random2p main_menu battle_screen poke1_img poke2_img text_buffer
+              health_holders menu_holder ()
+  | Menu0P -> load_battle_load engine img bg_img load_screen battle text
+              buttonhide buttonshow (battle_status, gui_ready, ready, ready_gui)
+              Random0p main_menu battle_screen poke1_img poke2_img text_buffer
+              health_holders menu_holder ()
   | _ -> failwith "Faulty Game Logic: Debug 298"
 
-let load_poke_edit engine img bg_img load_screen battle text buttonhide (poke_edit : GButton.button)
-  buttonshow (battle_status, gui_ready, ready, ready_gui) main_menu (battle_screen : GPack.box)
-  poke1_img poke2_img text_buffer health_holders () =
+let load_poke_edit engine img bg_img load_screen battle text buttonhide
+                   (poke_edit : GButton.button) buttonshow (battle_status,
+                   gui_ready, ready, ready_gui) main_menu
+                   (battle_screen : GPack.box) poke1_img poke2_img text_buffer
+                   health_holders () =
   match !current_screen with
   | Menu1P -> current_screen := PokeEdit;
               List.iter (fun s -> s#misc#hide ()) buttonhide;
-              selecttext := GMisc.label ~text:"Choose One of Your Unlocked Pokemon to Edit:" ~packing:(battle_screen#pack) ();
+              selecttext := GMisc.label ~text:"Choose One of Your Unlocked Pokemon to Edit:"
+                ~packing:(battle_screen#pack) ();
               poke_edit#set_label "Continue";
               img#misc#hide ();
-              select1 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
-              editimg#set_file "../data/backgrounds/pokeedit.jpg"; battle_screen#pack editimg#coerce;
-              ()
+              select1 := GEdit.combo
+                ~popdown_strings:(Pokemon.unlocked_poke_string_list ())
+                  ~case_sensitive:false ~allow_empty:false
+                    ~packing:(battle_screen#pack) ();
+              editimg#set_file "../data/backgrounds/pokeedit.jpg";
+                battle_screen#pack editimg#coerce; ()
   | PokeEdit -> (try (let pokename = !select1#entry#text in
                       let poke = Pokemon.getPresetPokemon pokename in
                       let move_lst = Pokemon.getAllMoves pokename in
                       let abil_lst = Pokemon.getAllAbilities pokename in
-                      !select1#destroy (); !selecttext#set_text ("Now editing " ^ pokename ^ "! Your current values are already loaded in.");
+                      !select1#destroy (); !selecttext#set_text ("Now editing "
+                      ^pokename^"! Your current values are already loaded in.");
                       editimg#set_file ("../data/sprites/" ^ pokename ^ ".gif");
                       battle_screen#pack pokedit_screen#coerce;
-                      select1 := GEdit.combo ~popdown_strings:(move_lst) ~case_sensitive:false ~allow_empty:false ~packing:(pokedit_combos#pack ~expand:true) ();
+                      select1 := GEdit.combo ~popdown_strings:(move_lst)
+                        ~case_sensitive:false ~allow_empty:false
+                          ~packing:(pokedit_combos#pack ~expand:true) ();
                       !select1#entry#set_text poke.move1.name;
-                      select2 := GEdit.combo ~popdown_strings:(move_lst) ~case_sensitive:false ~allow_empty:false ~packing:(pokedit_combos#pack ~expand:true) ();
+                      select2 := GEdit.combo ~popdown_strings:(move_lst)
+                        ~case_sensitive:false ~allow_empty:false
+                          ~packing:(pokedit_combos#pack ~expand:true) ();
                       !select2#entry#set_text poke.move2.name;
-                      select3 := GEdit.combo ~popdown_strings:(move_lst) ~case_sensitive:false ~allow_empty:false ~packing:(pokedit_combos#pack ~expand:true) ();
+                      select3 := GEdit.combo ~popdown_strings:(move_lst)
+                        ~case_sensitive:false ~allow_empty:false
+                          ~packing:(pokedit_combos#pack ~expand:true) ();
                       !select3#entry#set_text poke.move3.name;
-                      select4 := GEdit.combo ~popdown_strings:(move_lst) ~case_sensitive:false ~allow_empty:false ~packing:(pokedit_combos#pack ~expand:true) ();
+                      select4 := GEdit.combo ~popdown_strings:(move_lst)
+                        ~case_sensitive:false ~allow_empty:false
+                          ~packing:(pokedit_combos#pack ~expand:true) ();
                       !select4#entry#set_text poke.move4.name;
-                      select5 := GEdit.combo ~popdown_strings:(abil_lst) ~case_sensitive:false ~allow_empty:false ~packing:(pokedit_combos#pack ~expand:true) ();
+                      select5 := GEdit.combo ~popdown_strings:(abil_lst)
+                        ~case_sensitive:false ~allow_empty:false
+                          ~packing:(pokedit_combos#pack ~expand:true) ();
                       !select5#entry#set_text poke.ability;
-                      select6 := GEdit.combo ~popdown_strings:(Pokemon.nature_list) ~case_sensitive:false ~allow_empty:false ~packing:(pokedit_combos#pack ~expand:true) ();
+                      select6 := GEdit.combo
+                        ~popdown_strings:(Pokemon.nature_list)
+                          ~case_sensitive:false ~allow_empty:false
+                            ~packing:(pokedit_combos#pack ~expand:true) ();
                       !select6#entry#set_text (Pokemon.string_of_nature poke.nature);
-                      select7 := GEdit.combo ~popdown_strings:(Pokemon.item_list) ~case_sensitive:false ~allow_empty:false ~packing:(pokedit_combos#pack ~expand:true) ();
+                      select7 := GEdit.combo
+                        ~popdown_strings:(Pokemon.item_list)
+                          ~case_sensitive:false ~allow_empty:false
+                            ~packing:(pokedit_combos#pack ~expand:true) ();
                       !select7#entry#set_text (Pokemon.string_of_item poke.item);
                       poke_edit#set_label ("Save " ^ pokename);
-                      hp_evs#set_adjustment (GData.adjustment ~upper:252. ~page_size:0. ~value:(float_of_int poke.evs.hp) ());
-                      atk_evs#set_adjustment (GData.adjustment ~upper:252. ~page_size:0. ~value:(float_of_int poke.evs.attack) ());
-                      def_evs#set_adjustment (GData.adjustment ~upper:252. ~page_size:0. ~value:(float_of_int poke.evs.defense) ());
-                      special_attack_evs#set_adjustment (GData.adjustment ~upper:252. ~page_size:0. ~value:(float_of_int poke.evs.special_attack) ());
-                      special_defense_evs#set_adjustment (GData.adjustment ~upper:252. ~page_size:0. ~value:(float_of_int poke.evs.special_defense) ());
-                      speed_evs#set_adjustment (GData.adjustment ~upper:252. ~page_size:0. ~value:(float_of_int poke.evs.speed) ()); current_screen := PokeEditor;
+                      hp_evs#set_adjustment (GData.adjustment ~upper:252.
+                        ~page_size:0. ~value:(float_of_int poke.evs.hp) ());
+                      atk_evs#set_adjustment (GData.adjustment ~upper:252.
+                        ~page_size:0. ~value:(float_of_int poke.evs.attack) ());
+                      def_evs#set_adjustment (GData.adjustment ~upper:252.
+                        ~page_size:0. ~value:(float_of_int poke.evs.defense)());
+                      special_attack_evs#set_adjustment (GData.adjustment
+                        ~upper:252. ~page_size:0.
+                          ~value:(float_of_int poke.evs.special_attack) ());
+                      special_defense_evs#set_adjustment (GData.adjustment
+                        ~upper:252. ~page_size:0.
+                          ~value:(float_of_int poke.evs.special_defense) ());
+                      speed_evs#set_adjustment (GData.adjustment ~upper:252.
+                         ~page_size:0. ~value:(float_of_int poke.evs.speed) ());
+                          current_screen := PokeEditor;
                   ()
-                ) with _ -> let error_win = GWindow.message_dialog ~message:"Error in your Pokemon selection. Try making sure everything is spelled correctly."
-                                  ~buttons:GWindow.Buttons.close  ~message_type:`ERROR () in ignore(error_win#connect#close ~callback:(error_win#destroy));
-                                  ignore (error_win#connect#response ~callback:(fun s -> error_win#destroy ())); error_win#show ())
-  | PokeEditor -> (try (let pokename = String.sub poke_edit#label 5 (String.length poke_edit#label - 5) in
-                  Save.createSavePokeEdit pokename !select1#entry#text !select2#entry#text
-                    !select3#entry#text !select4#entry#text !select5#entry#text !select6#entry#text
-                    !select7#entry#text (int_of_float hp_evs#adjustment#value) (int_of_float atk_evs#adjustment#value)
-                    (int_of_float def_evs#adjustment#value) (int_of_float special_attack_evs#adjustment#value) (int_of_float special_defense_evs#adjustment#value)
+                ) with _ -> let error_win = GWindow.message_dialog
+                            ~message:"Error in your Pokemon selection. Try making sure everything is spelled correctly."
+                                  ~buttons:GWindow.Buttons.close
+                                    ~message_type:`ERROR () in
+                                      ignore(error_win#connect#close
+                                          ~callback:(error_win#destroy));
+                                  ignore (error_win#connect#response
+                                     ~callback:(fun s -> error_win#destroy ()));
+                                      error_win#show ())
+  | PokeEditor -> (try (let pokename = String.sub poke_edit#label 5
+                    (String.length poke_edit#label - 5) in
+                  Save.createSavePokeEdit pokename !select1#entry#text
+                    !select2#entry#text !select3#entry#text !select4#entry#text
+                    !select5#entry#text !select6#entry#text !select7#entry#text
+                    (int_of_float hp_evs#adjustment#value)
+                    (int_of_float atk_evs#adjustment#value)
+                    (int_of_float def_evs#adjustment#value)
+                    (int_of_float special_attack_evs#adjustment#value)
+                    (int_of_float special_defense_evs#adjustment#value)
                     (int_of_float speed_evs#adjustment#value);
-                    let success_win = GWindow.message_dialog ~message:"Save successful!"
-                                  ~buttons:GWindow.Buttons.close  ~message_type:`INFO () in ignore(success_win#connect#close ~callback:(success_win#destroy));
-                                  ignore (success_win#connect#response ~callback:(fun s -> success_win#destroy ())); success_win#show ())
+                    let success_win = GWindow.message_dialog
+                      ~message:"Save successful!"
+                                  ~buttons:GWindow.Buttons.close
+                                  ~message_type:`INFO () in
+                                    ignore(success_win#connect#close
+                                      ~callback:(success_win#destroy));
+                                  ignore (success_win#connect#response
+                                   ~callback:(fun s -> success_win#destroy ()));
+                                    success_win#show ())
                    with | err ->  (let message = match err with
-                                  | Save.FaultyGameSave -> "Corrupted Save File."
-                                  | Save.BadFieldOption -> "Error in Moves/Items/Ability/Nature. Make sure everything is spelled correctly."
+                                  | Save.FaultyGameSave ->"Corrupted Save File."
+                                  | Save.BadFieldOption ->
+                                    "Error in Moves/Items/Ability/Nature. Make sure everything is spelled correctly."
                                   | Save.BadEVInput -> "The maximum EVs can add up to is 510."
                                   | _ -> "Unknown Error" in
-                                  let error_win = GWindow.message_dialog ~message:message
-                                  ~buttons:GWindow.Buttons.close  ~message_type:`ERROR () in ignore(error_win#connect#close ~callback:(error_win#destroy));
-                                  ignore (error_win#connect#response ~callback:(fun s -> error_win#destroy ())); error_win#show ()))
+                                  let error_win = GWindow.message_dialog
+                                    ~message:message
+                                  ~buttons:GWindow.Buttons.close
+                                    ~message_type:`ERROR () in
+                                      ignore(error_win#connect#close
+                                        ~callback:(error_win#destroy));
+                                  ignore (error_win#connect#response
+                                    ~callback:(fun s -> error_win#destroy ()));
+                                      error_win#show ()))
   | _ -> failwith "Faulty Game Logic: Debug 550"
 
-let load_preset engine img bg_img load_screen battle text buttonhide preset buttonshow
-  (battle_status, gui_ready, ready, ready_gui) main_menu (battle_screen : GPack.box)
-  poke1_img poke2_img text_buffer health_holders menu_holder () =
+let load_preset engine img bg_img load_screen battle text buttonhide preset
+                buttonshow (battle_status, gui_ready, ready, ready_gui)
+                main_menu (battle_screen : GPack.box) poke1_img poke2_img
+                text_buffer health_holders menu_holder () =
   (match !current_screen with
-    | Menu1P | Menu2P -> ( (if !current_screen = Menu1P then current_screen := Preset1PChoose else current_screen := Preset2PChoose);
+    | Menu1P | Menu2P -> ( (if !current_screen = Menu1P then
+      current_screen := Preset1PChoose else current_screen := Preset2PChoose);
                 List.iter (fun s -> s#misc#hide ()) buttonhide;
                 preset#set_label "Continue";
                 img#misc#hide ();
-                selecttext := GMisc.label ~text:"Choose your 6 Pokemon from the drop down menus." ~packing:(battle_screen#pack) ();
-                select1 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
-                select2 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
-                select3 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
-                select4 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
-                select5 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
-                select6 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
-                battle_screen#pack selectimg#coerce;
-                ())
+                selecttext := GMisc.label
+                  ~text:"Choose your 6 Pokemon from the drop down menus."
+                    ~packing:(battle_screen#pack) ();
+                select1 := GEdit.combo
+                  ~popdown_strings:(Pokemon.unlocked_poke_string_list ())
+                    ~case_sensitive:false ~allow_empty:false
+                      ~packing:(battle_screen#pack) ();
+                select2 := GEdit.combo
+                  ~popdown_strings:(Pokemon.unlocked_poke_string_list ())
+                    ~case_sensitive:false ~allow_empty:false
+                      ~packing:(battle_screen#pack) ();
+                select3 := GEdit.combo
+                  ~popdown_strings:(Pokemon.unlocked_poke_string_list ())
+                    ~case_sensitive:false ~allow_empty:false
+                      ~packing:(battle_screen#pack) ();
+                select4 := GEdit.combo
+                  ~popdown_strings:(Pokemon.unlocked_poke_string_list ())
+                    ~case_sensitive:false ~allow_empty:false
+                      ~packing:(battle_screen#pack) ();
+                select5 := GEdit.combo
+                  ~popdown_strings:(Pokemon.unlocked_poke_string_list ())
+                    ~case_sensitive:false ~allow_empty:false
+                      ~packing:(battle_screen#pack) ();
+                select6 := GEdit.combo
+                  ~popdown_strings:(Pokemon.unlocked_poke_string_list ())
+                    ~case_sensitive:false ~allow_empty:false
+                      ~packing:(battle_screen#pack) ();
+                battle_screen#pack selectimg#coerce; ())
     | Preset1PChoose -> (try (
-                          let poke1 = Pokemon.getPresetPokemon (!select1#entry#text) in
-                          let poke2 = Pokemon.getPresetPokemon (!select2#entry#text) in
-                          let poke3 = Pokemon.getPresetPokemon (!select3#entry#text) in
-                          let poke4 = Pokemon.getPresetPokemon (!select4#entry#text) in
-                          let poke5 = Pokemon.getPresetPokemon (!select5#entry#text) in
-                          let poke6 = Pokemon.getPresetPokemon (!select6#entry#text) in
-                          battle_screen#remove selectimg#coerce; !selecttext#destroy (); preset#misc#hide ();
-                          !select1#destroy (); !select2#destroy (); !select3#destroy ();
-                          !select4#destroy (); !select5#destroy (); !select6#destroy ();
+                          let poke1 = Pokemon.getPresetPokemon
+                            (!select1#entry#text) in
+                          let poke2 = Pokemon.getPresetPokemon
+                            (!select2#entry#text) in
+                          let poke3 = Pokemon.getPresetPokemon
+                            (!select3#entry#text) in
+                          let poke4 = Pokemon.getPresetPokemon
+                            (!select4#entry#text) in
+                          let poke5 = Pokemon.getPresetPokemon
+                            (!select5#entry#text) in
+                          let poke6 = Pokemon.getPresetPokemon
+                            (!select6#entry#text) in
+                          battle_screen#remove selectimg#coerce;
+                            !selecttext#destroy (); preset#misc#hide ();
+                          !select1#destroy (); !select2#destroy ();
+                            !select3#destroy ();
+                          !select4#destroy (); !select5#destroy ();
+                            !select6#destroy ();
                           preset#set_label "Preset Battle";
-                          load_battle_load engine img bg_img load_screen battle text buttonhide buttonshow
-                          (battle_status, gui_ready, ready, ready_gui) (Preset1p [poke1;poke2;poke3;poke4;poke5;poke6]) main_menu battle_screen
-                          poke1_img poke2_img text_buffer health_holders menu_holder ()
-                      ) with _ -> let error_win = GWindow.message_dialog ~message:"Error in your Pokemon selection. Try making sure everything is spelled correctly."
-                                  ~buttons:GWindow.Buttons.close  ~message_type:`ERROR () in ignore(error_win#connect#close ~callback:(error_win#destroy));
-                                  ignore (error_win#connect#response ~callback:(fun s -> error_win#destroy ())); error_win#show ())
+                          load_battle_load engine img bg_img load_screen battle
+                            text buttonhide buttonshow (battle_status,gui_ready,
+                              ready, ready_gui) (Preset1p
+                                [poke1;poke2;poke3;poke4;poke5;poke6]) main_menu
+                                  battle_screen poke1_img poke2_img text_buffer
+                                    health_holders menu_holder ()
+                      ) with _ -> let error_win = GWindow.message_dialog
+                                    ~message:"Error in your Pokemon selection. Try making sure everything is spelled correctly."
+                                  ~buttons:GWindow.Buttons.close
+                                    ~message_type:`ERROR () in
+                                      ignore(error_win#connect#close
+                                        ~callback:(error_win#destroy));
+                                  ignore (error_win#connect#response
+                                     ~callback:(fun s -> error_win#destroy ()));
+                                      error_win#show ())
     | Preset2PChoose -> (try (
                           let poke1 = Pokemon.getPresetPokemon (!select1#entry#text) in
                           let poke2 = Pokemon.getPresetPokemon (!select2#entry#text) in
