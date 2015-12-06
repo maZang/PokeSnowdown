@@ -5,6 +5,8 @@ open Pokemon
 (* All pokemon IVs in this game will be max at 31 *)
 let pokeIV = 31
 
+(* A mutable queue to process the battle commands *)
+
 (* Peeks into the Ivar for the game state *)
 let get_game_status engine =
   match Deferred.peek (Ivar.read !engine) with
@@ -17,7 +19,8 @@ let unpack opt =
   | Some v -> v
   | None -> AIMove
 
-(* Status of Pokemon is changed after switching out *)
+(* Status of Pokemon is changed after switching out depending on Pokemon's ability
+ *)
 let switchOutStatus bpoke =
   if bpoke.curr_abil = "natural-cure" then
     (NoNon, [])
