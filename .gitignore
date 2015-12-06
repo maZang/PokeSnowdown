@@ -7,3 +7,4 @@ a.out
 *.cmi
 _build
 game.zip
+.git
