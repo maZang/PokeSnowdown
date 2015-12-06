@@ -134,7 +134,6 @@ let () = !select1#destroy (); !select2#destroy (); !select3#destroy ();
 *)
 let current_screen = ref MainMenu
 
-(* PUT THIS IN ANOTHER FILE LATER  *)
 (* ---------------------------------------------------------------------------*)
 let x = ref 7
 let y = ref 5
