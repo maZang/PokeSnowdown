@@ -1225,6 +1225,7 @@ let rec getMoveString a =
   | RapidSpinA s -> getMoveString s
   | KnockedOff (_, s) -> getMoveString s
   | HitSelf s -> getMoveString s
+  | HealOppA s -> getMoveString s
   | FailA s -> `DontMove
 
 let rec getMoveStringStatus a =
@@ -1290,6 +1291,7 @@ let rec getMoveStringStatus a =
   | WishS s -> getMoveStringStatus s
   | AbilityChangeS s -> getMoveStringStatus s
   | KnockedOffS (_, s) -> getMoveStringStatus s
+  | HealOppS s -> getMoveStringStatus s
   | GastroAcidS s -> getMoveStringStatus s
 
 let rec getMoveStringEnd a =
@@ -1369,6 +1371,7 @@ let rec getAttackString starter a =
   | RapidSpinA s -> getAttackString starter s ^ starter ^ " has removed some terrain elements."
   | HitSelf s -> getAttackString starter s ^ starter ^ " has lost half of it's max hp."
   | FailA s -> starter ^ " used " ^ s ^ " but it failed."
+  | HealOppA s -> getAttackString starter s ^ starter ^ " healed the opponent."
   | SwitchOutA s -> (match !secondaryEffect with
                     | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
                     | `P2 -> current_command := (Some (Poke "random"), Some NoMove));
@@ -1441,6 +1444,7 @@ let rec getStatusString starter s =
   | RandMoveS s -> starter ^ " used a random move." ^ getStatusString starter s
   | RandMoveA s -> starter ^ " used a random move." ^ getAttackString starter s
   | WishS s -> getStatusString starter s ^ "A wish was made."
+  | HealOppS s -> getStatusString starter s ^ starter ^ " healed its opponent."
   | AbilityChangeS s -> getStatusString starter s ^ starter ^ " changed the opponent's ability."
   | KnockedOffS (item, s) -> getStatusString starter s ^ starter ^ " made the opponent's " ^ (Pokemon.string_of_item item) ^ " unusable."
   | GastroAcidS s -> getStatusString starter s ^ starter ^ " suppressed the opponent's ability."

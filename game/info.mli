@@ -3,7 +3,7 @@ type battlemove = Poke of string | UseAttack of string | NoMove | FaintPoke of s
 
 type stat = Attack | Defense | SpecialAttack | SpecialDefense | Speed | Accuracy | Evasion
 
-type item = Nothing | Leftovers | ChoiceBand | LifeOrb | ChoiceSpecs | ChoiceScarf | MegaStone | MegaStoneX | MegaStoneY
+type item = Nothing | Leftovers | ChoiceBand | LifeOrb | ChoiceSpecs | ChoiceScarf | MegaStone | MegaStoneX | MegaStoneY | LightBall
 
 type guiattack = NormMove of string | Crit of guiattack |
                   SEff of guiattack | NoEff of guiattack | HitMult of int * guiattack | BurnMove of guiattack | FreezeMove of guiattack | ParaMove of guiattack | MissMove of string | FrozenSolid |
@@ -12,7 +12,7 @@ type guiattack = NormMove of string | Crit of guiattack |
                   | ConfuseMoveA of guiattack | Recharging of guiattack | DrainA of guiattack | UserFaintA of guiattack | NoEffAll of string | DrainSleepFail of string
                   | BreakSub of guiattack | SubDmg of guiattack | ProtectedA of string | StatBoostA of stat * int * guiattack | SwitchOutA of guiattack | FalseSwipeA of guiattack
                   | ConfuseUserA of guiattack | KnockedOff of item * guiattack | SleepMove of guiattack | SleepAttack of guiattack | SleepAttackFail of string
-                  | TrappingMove of guiattack | NoRecoil of guiattack | LifeOrbA of guiattack | RapidSpinA of guiattack | HitSelf of guiattack | FailA of string
+                  | TrappingMove of guiattack | NoRecoil of guiattack | LifeOrbA of guiattack | RapidSpinA of guiattack | HitSelf of guiattack | FailA of string | HealOppA of guiattack
 
 type guistatus = StatBoost of stat * int * guistatus | NormStatus of string | ThawS of guistatus | FrozenSolidS | MissStatus of string | NoFreezeS of guistatus | NoBurnS of guistatus |
                   NoParaS of guistatus | ParaS | SwitchOut of guistatus | FlinchS | StatAttack of stat * int * guistatus | AsleepS | WakeS of guistatus | MakeSleep of guistatus
@@ -23,7 +23,7 @@ type guistatus = StatBoost of stat * int * guistatus | NormStatus of string | Th
                    RainDanceS of guistatus | SandStormS of guistatus | HailS of guistatus | EncoreS of guistatus | EncoreFail | CopyPrevMoveS of guistatus | CopyPrevMoveA of guiattack
                    | CopyFail | TauntS of guistatus | TauntFail | Taunted of string | StealthRockS of guistatus | ToxicSpikesS of guistatus | StickyWebS of guistatus
                    | SleepTalkS of guistatus * guistatus | SleepTalkA of guistatus * guiattack | SleepAttackS of guistatus | UserFaintS of guistatus | RandMoveS of guistatus | RandMoveA of guiattack |
-                   ItemSwapS of guistatus | WishS of guistatus | AbilityChangeS of guistatus | KnockedOffS of item * guistatus | GastroAcidS of guistatus
+                   ItemSwapS of guistatus | WishS of guistatus | AbilityChangeS of guistatus | KnockedOffS of item * guistatus | GastroAcidS of guistatus | HealOppS of guistatus
 
 type endMove = BurnDmg | BreakBurn | BreakFreeze  | BreakPara  | BreakPoison | PoisonDmg | LeechDmg of endMove | LeechHeal of endMove | Base | LightScreenFade of endMove |
                ReflectFade of endMove | SunFade of endMove | RainFade of endMove | SandStormFade of endMove | SandBuffetB of endMove | SandBuffet1 of endMove |

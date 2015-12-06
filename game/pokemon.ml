@@ -125,6 +125,7 @@ let string_of_item item =
   | MegaStone -> "MegaStone"
   | MegaStoneX -> "MegaStoneX"
   | MegaStoneY -> "MegaStoneY"
+  | LightBall -> "light ball"
   | Nothing -> "nothing"
 
 let getItemFromString str =
@@ -138,6 +139,7 @@ let getItemFromString str =
   | "MegaStone" -> MegaStone
   | "MegaStoneX" -> MegaStoneX
   | "MegaStoneY" -> MegaStoneY
+  | "light ball" -> LightBall
   | _ -> failwith "Does not occur"
 
 let getRandomItem () =
@@ -707,7 +709,7 @@ let getRandomPokemon () =
   generatePokemon randomPokeName
 
 let getPresetPokemon ?pjson:(pjson=unlocked_pokemon ()) str =
-  (* Printf.printf "%s\n%!" str; *)
+  Printf.printf "%s\n%!" str;
   let poke = poke_json |> member str in
   let presetpoke = pjson |> member str in
   let ev_helper str =
