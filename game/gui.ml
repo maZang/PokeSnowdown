@@ -683,7 +683,8 @@ let load_tournament engine img bg_img load_screen battle text buttonhide buttons
                 tournament#misc#show ();
                 battle_screen#remove gameBoard#coerce;
                 battle_screen#remove gameText#coerce;
-                selecttext := GMisc.label ~text:"Tournament Time: Choose your Pokemon." ~packing:(battle_screen#pack) ();
+                selecttext := GMisc.label ~text:"Tournament Time: Choose your Pokemon."
+                  ~packing:(battle_screen#pack) ();
                 select1 := GEdit.combo
                   ~popdown_strings:(Pokemon.unlocked_poke_string_list ())
                     ~case_sensitive:false ~allow_empty:false
@@ -960,43 +961,100 @@ let load_preset engine img bg_img load_screen battle text buttonhide preset
                                      ~callback:(fun s -> error_win#destroy ()));
                                       error_win#show ())
     | Preset2PChoose -> (try (
-                          let poke1 = Pokemon.getPresetPokemon (!select1#entry#text) in
-                          let poke2 = Pokemon.getPresetPokemon (!select2#entry#text) in
-                          let poke3 = Pokemon.getPresetPokemon (!select3#entry#text) in
-                          let poke4 = Pokemon.getPresetPokemon (!select4#entry#text) in
-                          let poke5 = Pokemon.getPresetPokemon (!select5#entry#text) in
-                          let poke6 = Pokemon.getPresetPokemon (!select6#entry#text) in
+                          let poke1 = Pokemon.getPresetPokemon
+                            (!select1#entry#text) in
+                          let poke2 = Pokemon.getPresetPokemon
+                            (!select2#entry#text) in
+                          let poke3 = Pokemon.getPresetPokemon
+                            (!select3#entry#text) in
+                          let poke4 = Pokemon.getPresetPokemon
+                            (!select4#entry#text) in
+                          let poke5 = Pokemon.getPresetPokemon
+                            (!select5#entry#text) in
+                          let poke6 = Pokemon.getPresetPokemon
+                            (!select6#entry#text) in
                           !selecttext#destroy ();
-                          !select1#destroy (); !select2#destroy (); !select3#destroy ();
-                          !select4#destroy (); !select5#destroy (); !select6#destroy ();
-                          current_screen := Preset2PChooseAgain [poke1;poke2;poke3;poke4;poke5;poke6];
-                          selecttext := GMisc.label ~text:"Choose Player Twos' 6 Pokemon from the drop down menus." ~packing:(battle_screen#pack) ();
-                          select1 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
-                          select2 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
-                          select3 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
-                          select4 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
-                          select5 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
-                          select6 := GEdit.combo ~popdown_strings:(Pokemon.unlocked_poke_string_list ()) ~case_sensitive:false ~allow_empty:false ~packing:(battle_screen#pack) ();
-                          ())  with _ -> let error_win = GWindow.message_dialog ~message:"Error in your Pokemon selection. Try making sure everything is spelled correctly."
-                                  ~buttons:GWindow.Buttons.close  ~message_type:`ERROR () in ignore(error_win#connect#close ~callback:(error_win#destroy));
-                                  ignore (error_win#connect#response ~callback:(fun s -> error_win#destroy ())); error_win#show ())
+                          !select1#destroy (); !select2#destroy ();
+                            !select3#destroy ();
+                          !select4#destroy (); !select5#destroy ();
+                            !select6#destroy ();
+                          current_screen := Preset2PChooseAgain
+                            [poke1;poke2;poke3;poke4;poke5;poke6];
+                          selecttext := GMisc.label
+                            ~text:"Choose Player Twos' 6 Pokemon from the drop down menus."
+                              ~packing:(battle_screen#pack) ();
+                          select1 := GEdit.combo
+                          ~popdown_strings:(Pokemon.unlocked_poke_string_list())
+                              ~case_sensitive:false ~allow_empty:false
+                                ~packing:(battle_screen#pack) ();
+                          select2 := GEdit.combo
+                          ~popdown_strings:(Pokemon.unlocked_poke_string_list())
+                              ~case_sensitive:false ~allow_empty:false
+                                ~packing:(battle_screen#pack) ();
+                          select3 := GEdit.combo
+                          ~popdown_strings:(Pokemon.unlocked_poke_string_list())
+                            ~case_sensitive:false ~allow_empty:false
+                              ~packing:(battle_screen#pack) ();
+                          select4 := GEdit.combo
+                          ~popdown_strings:(Pokemon.unlocked_poke_string_list())
+                            ~case_sensitive:false ~allow_empty:false
+                              ~packing:(battle_screen#pack) ();
+                          select5 := GEdit.combo
+                          ~popdown_strings:(Pokemon.unlocked_poke_string_list())
+                            ~case_sensitive:false ~allow_empty:false
+                              ~packing:(battle_screen#pack) ();
+                          select6 := GEdit.combo
+                          ~popdown_strings:(Pokemon.unlocked_poke_string_list())
+                            ~case_sensitive:false ~allow_empty:false
+                              ~packing:(battle_screen#pack) ();
+                          ())  with _ -> let error_win = GWindow.message_dialog
+                            ~message:"Error in your Pokemon selection. Try making sure everything is spelled correctly."
+                                  ~buttons:GWindow.Buttons.close
+                                    ~message_type:`ERROR () in
+                                      ignore(error_win#connect#close
+                                        ~callback:(error_win#destroy));
+                                  ignore (error_win#connect#response
+                                    ~callback:(fun s -> error_win#destroy ()));
+                                      error_win#show ())
     | Preset2PChooseAgain lst1 -> (try (
-                                      let poke1 = Pokemon.getPresetPokemon (!select1#entry#text) in
-                                      let poke2 = Pokemon.getPresetPokemon (!select2#entry#text) in
-                                      let poke3 = Pokemon.getPresetPokemon (!select3#entry#text) in
-                                      let poke4 = Pokemon.getPresetPokemon (!select4#entry#text) in
-                                      let poke5 = Pokemon.getPresetPokemon (!select5#entry#text) in
-                                      let poke6 = Pokemon.getPresetPokemon (!select6#entry#text) in
-                                      battle_screen#remove selectimg#coerce; !selecttext#destroy (); preset#misc#hide ();
-                                      !select1#destroy (); !select2#destroy (); !select3#destroy ();
-                                      !select4#destroy (); !select5#destroy (); !select6#destroy ();
+                                      let poke1 = Pokemon.getPresetPokemon
+                                        (!select1#entry#text) in
+                                      let poke2 = Pokemon.getPresetPokemon
+                                        (!select2#entry#text) in
+                                      let poke3 = Pokemon.getPresetPokemon
+                                        (!select3#entry#text) in
+                                      let poke4 = Pokemon.getPresetPokemon
+                                        (!select4#entry#text) in
+                                      let poke5 = Pokemon.getPresetPokemon
+                                        (!select5#entry#text) in
+                                      let poke6 = Pokemon.getPresetPokemon
+                                        (!select6#entry#text) in
+                                      battle_screen#remove selectimg#coerce;
+                                        !selecttext#destroy ();
+                                          preset#misc#hide ();
+                                      !select1#destroy (); !select2#destroy ();
+                                        !select3#destroy ();
+                                      !select4#destroy (); !select5#destroy ();
+                                        !select6#destroy ();
                                       preset#set_label "Preset Battle";
-                                      load_battle_load engine img bg_img load_screen battle text buttonhide buttonshow
-                                      (battle_status, gui_ready, ready, ready_gui) (Preset2p (lst1,[poke1;poke2;poke3;poke4;poke5;poke6])) main_menu battle_screen
-                                      poke1_img poke2_img text_buffer health_holders menu_holder ()
-                      ) with _ -> let error_win = GWindow.message_dialog ~message:"Error in your Pokemon selection. Try making sure everything is spelled correctly."
-                                  ~buttons:GWindow.Buttons.close  ~message_type:`ERROR () in ignore(error_win#connect#close ~callback:(error_win#destroy));
-                                  ignore (error_win#connect#response ~callback:(fun s -> error_win#destroy ())); error_win#show ())
+                                      load_battle_load engine img bg_img
+                                        load_screen battle text buttonhide
+                                          buttonshow
+                                      (battle_status, gui_ready, ready,
+                                        ready_gui) (Preset2p (lst1,
+                                        [poke1;poke2;poke3;poke4;poke5;poke6]))
+                                          main_menu battle_screen poke1_img
+                                          poke2_img text_buffer health_holders
+                                          menu_holder ()
+                      ) with _ -> let error_win = GWindow.message_dialog
+                            ~message:"Error in your Pokemon selection. Try making sure everything is spelled correctly."
+                                  ~buttons:GWindow.Buttons.close
+                                    ~message_type:`ERROR () in
+                                      ignore(error_win#connect#close
+                                        ~callback:(error_win#destroy));
+                                  ignore (error_win#connect#response
+                                     ~callback:(fun s -> error_win#destroy ()));
+                                      error_win#show ())
     | _ -> failwith "Faulty Game Logic: Debug 314")
 
 let load_menu engine button_show button_hide img screen () =
@@ -1012,8 +1070,9 @@ let load_menu engine button_show button_hide img screen () =
   else
     ()
 
-let load_main_menu_from_battle engine one_player two_player no_player button_hide
- main_menu_bg battle text (battle_status, gui_ready, ready, ready_gui) () =
+let load_main_menu_from_battle engine one_player two_player no_player
+ button_hide main_menu_bg battle text (battle_status,gui_ready,ready,ready_gui)
+ () =
  if (match Deferred.peek (Ivar.read (!engine)) with
       | Some Battle InGame _ -> true
       | _ -> false) then
@@ -1030,23 +1089,25 @@ else
   ()
 
 let go_back engine (menu_holder, main_menu, battle_screen, one_player,
-    two_player, no_player, random, preset, touranment, back_button,
-    poke_edit, main_menu_bg, load_screen) (battle, text, bg_img, move1, move2,
-    move3, move4, switch, poke1_img, poke2_img, move_img, text_buffer, poke1, poke2,
-    poke3, poke4, poke5, health_holders, pokeanim1, pokeanim2, moveanim) battle_engine () =
-  (if !current_screen = Menu1P || !current_screen = Menu2P || !current_screen = Menu0P then
-    load_menu engine [one_player;two_player;no_player]
-    [random; preset ;touranment; poke_edit; back_button] main_menu_bg
-    MainMenu ());
+    two_player, no_player, random, preset, touranment, back_button, poke_edit,
+    main_menu_bg, load_screen)(battle, text, bg_img, move1, move2, move3, move4,
+    switch, poke1_img, poke2_img, move_img, text_buffer, poke1, poke2, poke3,
+    poke4, poke5, health_holders, pokeanim1, pokeanim2, moveanim) battle_engine
+    () =
+  (if !current_screen = Menu1P || !current_screen = Menu2P ||
+    !current_screen = Menu0P then
+      load_menu engine [one_player;two_player;no_player] [random; preset;
+        touranment; poke_edit; back_button] main_menu_bg MainMenu ());
   if (match !current_screen with
     | Battle (P1 ChooseMove)  | Battle (P2 ChooseMove)-> true
     | _ -> false ) then
     (load_main_menu_from_battle engine one_player two_player no_player [move1;
     move2; move3; move4; switch; back_button] main_menu_bg battle text
     battle_engine ());
-  if (!current_screen = Battle (P1 SwitchPoke) || !current_screen = Battle (P2 SwitchPoke))  then
-    (List.iter (fun s -> s#misc#show ()) [move1;move2;move3;move4;switch];
-    List.iter (fun s -> s#misc#hide ()) [poke1;poke2;poke3;poke4;poke5];
+  if (!current_screen = Battle (P1 SwitchPoke) ||
+    !current_screen = Battle (P2 SwitchPoke)) then
+      (List.iter (fun s -> s#misc#show ()) [move1;move2;move3;move4;switch];
+      List.iter (fun s -> s#misc#hide ()) [poke1;poke2;poke3;poke4;poke5];
     if (!current_screen = Battle (P1 SwitchPoke)) then
       current_screen := Battle (P1 ChooseMove)
     else
@@ -1056,7 +1117,8 @@ let go_back engine (menu_holder, main_menu, battle_screen, one_player,
     Printf.printf "DID I FILL IT %B\n%!" (Ivar.is_full !gui_ready));
   if (!current_screen = Preset1PChoose ) then
     (preset#set_label "Preset Battle";
-    battle_screen#remove selectimg#coerce; main_menu_bg#misc#show (); !selecttext#destroy ();
+    battle_screen#remove selectimg#coerce; main_menu_bg#misc#show ();
+      !selecttext#destroy ();
     !select1#destroy (); !select2#destroy (); !select3#destroy ();
     !select4#destroy (); !select5#destroy (); !select6#destroy ();
     load_menu engine [random; touranment; poke_edit] [] main_menu_bg Menu1P ());
@@ -1068,7 +1130,8 @@ let go_back engine (menu_holder, main_menu, battle_screen, one_player,
   if (!current_screen = TourneyChoose) then
     (current_screen := Menu1P;
     touranment#set_label "Tournament";
-    battle_screen#remove selectimg#coerce; main_menu_bg#misc#show (); !selecttext#destroy ();
+    battle_screen#remove selectimg#coerce; main_menu_bg#misc#show ();
+      !selecttext#destroy ();
     !select1#destroy (); !select2#destroy (); !select3#destroy ();
     !select4#destroy (); !select5#destroy (); !select6#destroy ();
     load_menu engine [random; preset ; poke_edit] [] main_menu_bg Menu1P ());
@@ -1089,12 +1152,12 @@ let go_back engine (menu_holder, main_menu, battle_screen, one_player,
     load_menu engine [random;touranment;preset] [] main_menu_bg Menu1P ());
   (match !current_screen with
   | Preset2PChooseAgain _  | Preset2PChoose->
-  preset#set_label "Preset Battle"; battle_screen#remove selectimg#coerce; main_menu_bg#misc#show (); !selecttext#destroy ();
-    !select1#destroy (); !select2#destroy (); !select3#destroy ();
-    !select4#destroy (); !select5#destroy (); !select6#destroy ();
-    load_menu engine [random] [] main_menu_bg Menu2P ()
-  | _ -> () );
-  ()
+  preset#set_label "Preset Battle"; battle_screen#remove selectimg#coerce;
+    main_menu_bg#misc#show (); !selecttext#destroy (); !select1#destroy ();
+      !select2#destroy (); !select3#destroy (); !select4#destroy ();
+        !select5#destroy (); !select6#destroy (); load_menu engine [random] []
+          main_menu_bg Menu2P ()
+  | _ -> () ); ()
 
 let getStatusFile status =
   match status with
@@ -1134,17 +1197,24 @@ let switch_poke engine pokebuttons battlebuttons back_button () =
   | Battle (InGame (t1, t2, _, _, _)) ->
       (match !current_screen with
       | Battle (P1 BothFaint) -> back_button#misc#hide (); t1
-      | Battle (P1 Faint) | Battle (P1 SwitchPokeF) -> back_button#misc#hide (); t1
-      | Battle (P2 Faint) | Battle (P2 SwitchPokeF) -> back_button#misc#hide (); t2
+      | Battle (P1 Faint) | Battle (P1 SwitchPokeF) -> back_button#misc#hide ();
+        t1
+      | Battle (P2 Faint) | Battle (P2 SwitchPokeF) -> back_button#misc#hide ();
+        t2
       | Battle (P1 _) -> current_screen := Battle (P1 SwitchPoke); t1
       | Battle (P2 _) -> current_screen := Battle (P2 SwitchPoke); t2
       | _ -> failwith "Faulty Game logic")
   | _ -> failwith "Fauly game Logic") in
-  if findTrapped (snd team.current.curr_status) && (!current_screen = Battle (P1 SwitchPoke) || !current_screen = Battle (P2 SwitchPoke)) then
+  if findTrapped (snd team.current.curr_status) && (
+    !current_screen = Battle (P1 SwitchPoke) ||
+    !current_screen = Battle (P2 SwitchPoke)) then
     (
-      let error_win = GWindow.message_dialog ~message:"You're Pokemon is trapped!"
-       ~buttons:GWindow.Buttons.close  ~message_type:`ERROR () in ignore(error_win#connect#close ~callback:(error_win#destroy));
-       ignore (error_win#connect#response ~callback:(fun s -> error_win#destroy ())); error_win#show ();
+      let error_win = GWindow.message_dialog
+       ~message:"You're Pokemon is trapped!" ~buttons:GWindow.Buttons.close
+       ~message_type:`ERROR () in ignore(error_win#connect#close
+        ~callback:(error_win#destroy));
+       ignore (error_win#connect#response
+        ~callback:(fun s -> error_win#destroy ())); error_win#show ();
        (match !current_screen with
        | Battle (P1 _) -> current_screen := Battle (P1 ChooseMove)
        | Battle (P2 _) -> current_screen := Battle (P2 ChooseMove)
@@ -1325,19 +1395,24 @@ let rec getAttackString starter a =
   | Crit s -> getAttackString starter s ^ "It was a critical hit."
   | SEff s -> getAttackString starter s ^ "It was super effective."
   | NoEff s -> getAttackString starter s ^ "It was not very effective."
-  | NoEffAll s -> starter ^ " used " ^ s ^ " but it had no effect."
-  | StatBoostA (stat, i, s) -> getAttackString starter s ^ string_from_stat stat ^ " was boosted " ^ string_of_int i ^ " stage."
-  | StatAttackA (stat, i, s) -> getAttackString starter s ^ "Opponent's " ^ string_from_stat stat ^ " was lowered " ^ string_of_int (-1 * i) ^ " stage."
+  | NoEffAll s -> starter ^ " used " ^ s ^ ", but it had no effect."
+  | StatBoostA (stat, i, s) -> getAttackString starter s ^ string_from_stat stat
+      ^ " was boosted " ^ string_of_int i ^ " stage."
+  | StatAttackA (stat, i, s) -> getAttackString starter s ^ "Opponent's "
+      ^ string_from_stat stat ^" was lowered "^string_of_int (-1 * i)^ " stage."
   | HitMult (n, s) ->
       let c, s', n', str = getNumCritSuperNoAndFinal 0 0 0 s in
-      starter ^ " used " ^ str ^ ". The move hit " ^ string_of_int n ^ " times with " ^ string_of_int
-      c ^ " crits." ^ (if s' > 0 then "It was supereffective." else if n' > 0 then
+      starter ^ " used " ^ str ^ ". The move hit " ^ string_of_int n ^
+        " times with " ^ string_of_int
+      c ^ " crits." ^ (if s' > 0 then "It was super effective." else if n' > 0
+        then
       "It was not very effective." else "")
   | BurnMove s -> getAttackString starter s ^ "The opponent has been burned."
   | FreezeMove s -> getAttackString starter s ^ "The opponent is frozen solid."
   | ParaMove s -> getAttackString starter s ^ "The opponent has been paralyzed."
-  | SleepMove s -> getAttackString starter s ^ "The opponent has been put to sleep."
-  | MissMove s ->  starter ^ " used " ^ s ^ " but it missed."
+  | SleepMove s ->getAttackString starter s ^
+      "The opponent has been put to sleep."
+  | MissMove s ->  starter ^ " used " ^ s ^ ", but it missed."
   | Asleep -> starter ^ " was fast asleep!"
   | Wake s -> starter ^ " woke up." ^ getAttackString starter s
   | FrozenSolid -> starter ^ " was frozen solid!"
@@ -1348,50 +1423,73 @@ let rec getAttackString starter a =
   | Para -> starter ^ " couldn't move due to paralysis!"
   | OHKill s -> getAttackString starter s ^"This move is a one hit KO!"
   | FlinchA -> starter ^ " flinched!"
-  | PoisonMove s -> getAttackString starter s ^ "The opponent has been poisoned"
-  | Recoil s -> getAttackString starter s ^"The user suffered some recoil damage!"
-  | BreakConfuse s -> starter ^ " has broken out of its confusion." ^ getAttackString starter s
+  | PoisonMove s -> getAttackString starter s ^"The opponent has been poisoned."
+  | Recoil s -> getAttackString starter s ^
+      "The user suffered some recoil damage!"
+  | BreakConfuse s -> starter ^ " has broken out of its confusion." ^
+      getAttackString starter s
   | Confused -> starter ^ " hit itself in its confusion."
-  | DrainA s-> getAttackString starter s ^ starter ^ " drained some of it's opponents health."
+  | DrainA s-> getAttackString starter s ^ starter ^
+      " drained some of it's opponents health."
   | ConfuseMoveA s -> getAttackString starter s ^ "The opponent is confused."
-  | UserFaintA s -> getAttackString starter s ^ starter ^ " takes damage from the move and is about to faint!"
-  | DrainSleepFail s -> starter ^ " used " ^ s ^ " but the opponent is not asleep!"
-  | BreakSub s -> getAttackString starter s ^ starter ^ " has broken the opponent's substitute."
-  | SubDmg s -> getAttackString starter s ^ "The opponent's substitute took the damage instead."
+  | UserFaintA s -> getAttackString starter s ^ starter ^
+      " takes damage from the move and is about to faint!"
+  | DrainSleepFail s -> starter^" used " ^s^ ", but the opponent is not asleep!"
+  | BreakSub s -> getAttackString starter s ^ starter ^
+      " has broken the opponent's substitute."
+  | SubDmg s -> getAttackString starter s ^
+      "The opponent's substitute took the damage instead."
   | ProtectedA s -> starter ^ " used " ^ s ^ " but opponent protected itself."
-  | FalseSwipeA s -> getAttackString starter s ^ "The opponent cannot go below 1 HP."
+  | FalseSwipeA s -> getAttackString starter s ^
+      "The opponent cannot go below 1 HP."
   | ChargingMove (s, n) -> starter ^ " is charging up." ^ s
-  | ConfuseUserA s -> getAttackString starter s ^ starter ^ " has confused itself."
-  | KnockedOff (item, s) -> getAttackString starter s ^ starter ^ " has knocked off the opponent's " ^ (Pokemon.string_of_item item)
+  | ConfuseUserA s -> getAttackString starter s^starter ^" has confused itself."
+  | KnockedOff (item, s) -> getAttackString starter s ^ starter ^
+      " has knocked off the opponent's " ^ (Pokemon.string_of_item item)
   | SleepAttack s -> starter ^ " is fast asleep." ^ getAttackString starter s
   | SleepAttackFail s -> starter ^ " used " ^ s ^ " but it wasn't asleep."
-  | TrappingMove s -> getAttackString starter s ^ "The opponent has been trapped."
-  | NoRecoil s -> getAttackString starter s ^ starter ^ "'s ability prevented the recoil damage."
-  | LifeOrbA s -> getAttackString starter s ^ starter ^ " has lost some health from its life orb."
-  | RapidSpinA s -> getAttackString starter s ^ starter ^ " has removed some terrain elements."
-  | HitSelf s -> getAttackString starter s ^ starter ^ " has lost half of it's max hp."
-  | FailA s -> starter ^ " used " ^ s ^ " but it failed."
+  | TrappingMove s -> getAttackString starter s^"The opponent has been trapped."
+  | NoRecoil s -> getAttackString starter s ^ starter ^
+      "'s ability prevented the recoil damage."
+  | LifeOrbA s -> getAttackString starter s ^ starter ^
+      " has lost some health from its life orb."
+  | RapidSpinA s -> getAttackString starter s ^ starter ^
+      " has removed some terrain elements."
+  | HitSelf s -> getAttackString starter s ^ starter ^
+      " has lost half of it's max hp."
+  | FailA s -> starter ^ " used " ^ s ^ ", but it failed."
   | HealOppA s -> getAttackString starter s ^ starter ^ " healed the opponent."
   | SwitchOutA s -> (match !secondaryEffect with
-                    | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
-                    | `P2 -> current_command := (Some (Poke "random"), Some NoMove));
-                    endTurnEarly := true; getAttackString starter s ^ "The opponent was forced out!"
+                    | `P1 -> current_command :=
+                      (Some NoMove, Some (Poke "random"))
+                    | `P2 -> current_command :=
+                      (Some (Poke "random"), Some NoMove));
+                    endTurnEarly := true; getAttackString starter s ^
+                      "The opponent was forced out!"
   | Recharging s -> (match !secondaryEffect with
-                        | `P1 -> current_command := (Some (NoMove), snd !current_command)
-                        | `P2 -> current_command := (fst !current_command, Some NoMove)); getAttackString starter s ^ starter ^ " will need a turn to recharge."
+                        | `P1 -> current_command :=
+                          (Some (NoMove), snd !current_command)
+                        | `P2 -> current_command :=
+                          (fst !current_command, Some NoMove));
+                          getAttackString starter s ^ starter ^
+                            " will need a turn to recharge."
 
 (* starter is either 'Player One' or 'Player Two'*)
 let rec getStatusString starter s =
   match s with
   | NormStatus s -> starter ^ " used " ^ s ^ "."
-  | StatBoost (stat, i, s) -> getStatusString starter s ^ string_from_stat stat ^ " was boosted " ^ string_of_int i ^ " stage."
-  | StatAttack (stat, i, s) -> getStatusString starter s ^ "Opponent's " ^ string_from_stat stat ^ " was lowered " ^ string_of_int (-1 * i) ^ " stage."
-  | MissStatus s -> starter ^ " used " ^ s ^ " but it missed."
+  | StatBoost (stat, i, s) -> getStatusString starter s ^ string_from_stat stat
+      ^ " was boosted " ^ string_of_int i ^ " stage."
+  | StatAttack (stat, i, s) -> getStatusString starter s ^ "Opponent's "
+      ^ string_from_stat stat ^" was lowered "^string_of_int (-1 * i)^ " stage."
+  | MissStatus s -> starter ^ " used " ^ s ^ ", but it missed."
   | FrozenSolidS -> starter ^  " was frozen solid."
-  | PoisonStatus s-> getStatusString starter s ^ "The opponent has been poisoned."
+  | PoisonStatus s-> getStatusString starter s ^
+      "The opponent has been poisoned."
   | BurnStatus s -> getStatusString starter s ^ "The opponent has been burned."
-  | BadPoisonStatus s -> getStatusString starter s ^ "The opponent has been badly poisoned."
-  | ParaStatus s -> getStatusString starter s ^ "The opponent has been paralyzed."
+  | BadPoisonStatus s -> getStatusString starter s ^
+      "The opponent has been badly poisoned."
+  | ParaStatus s -> getStatusString starter s^"The opponent has been paralyzed."
   | SleepAttackS s -> starter ^ " was asleep." ^ getStatusString starter s
   | ThawS s -> " unfroze." ^ getStatusString starter s
   | NoFreezeS s -> starter ^ " cannot freeze. " ^ getStatusString starter s
@@ -1402,56 +1500,91 @@ let rec getStatusString starter s =
   | WakeS s -> starter ^ " woke up." ^ getStatusString starter s
   | MakeSleep s -> getStatusString starter s ^ "The opponent has fallen asleep."
   | FlinchS -> starter ^ " flinched."
-  | BreakConfuseS s-> starter ^ " has broken out of its confusion." ^ getStatusString starter s
+  | BreakConfuseS s-> starter ^ " has broken out of its confusion." ^
+      getStatusString starter s
   | ConfusedS -> starter ^ " hit itself in its confusion."
   | ConfuseMove s -> getStatusString starter s ^ "The opponent is confused."
-  | LeechS s -> getStatusString starter s ^ "Seeds were spread around the opponent."
-  | HealHealth s -> getStatusString starter s ^ starter ^ " healed itself for some of its health."
-  | LightScreenS s -> getStatusString starter s ^ starter ^ " has put up a field protecting it from special attacks."
-  | HazeS s -> getStatusString starter s ^ "Both Pokemon's stat changes were removed."
-  | ReflectS s -> getStatusString starter s ^ starter ^ " has put up a field protecting it from physical attacks."
-  | RestS s -> getStatusString starter s ^ starter ^ " has fallen asleep and been completely restored."
-  | SubBlock s -> getStatusString starter s ^ "The move was blocked by the opponent's substitute."
-  | SubFail s -> getStatusString starter s ^ "The substitute failed."
-  | SubMake s -> getStatusString starter s ^ starter ^ " has created a substitute."
-  | ProtectedS s -> starter ^ " used " ^ s ^ " but opponent protected itself."
-  | ProtectS s-> getStatusString starter s ^ starter ^ " has protected itself."
-  | ProtectFail s-> getStatusString starter s ^ starter ^ " has failed to protect itself."
-  | SpikesS s -> getStatusString starter s ^ starter ^ " has depositied a layer of spikes."
-  | HealBellS s -> getStatusString starter s ^ starter ^ " has healed itself and its allies of status ailments."
-  | RefreshS s -> getStatusString starter s ^ starter ^ " has healed itself of any burns, poisons, paralysis."
-  | Fail s -> starter ^ " used " ^ s ^ " but it failed."
-  | PsychUpS s -> getStatusString starter s ^ starter ^ " has copied opponent's status changes."
-  | SunnyDayS s -> getStatusString starter s ^ starter ^ " has called out the sun."
-  | RainDanceS s -> getStatusString starter s ^ starter ^ " has called out the rain."
-  | SandStormS s -> getStatusString starter s ^ starter ^ " has created a large sandstorm."
-  | HailS s -> getStatusString starter s ^ starter ^ " has made large pellets of hail fall down."
-  | EncoreS s -> getStatusString starter s ^ starter ^ " has trapped the opponent in an encore."
-  | UserFaintS s -> getStatusString starter s ^ starter ^ " took damage from the move and is about to faint."
+  | LeechS s -> getStatusString starter s ^
+      "Seeds were spread around the opponent."
+  | HealHealth s -> getStatusString starter s ^ starter ^
+      " healed itself for some of its health."
+  | LightScreenS s -> getStatusString starter s ^ starter ^
+      " has put up a field, protecting it from special attacks."
+  | HazeS s -> getStatusString starter s ^
+      "Both Pokemon's stat changes were removed."
+  | ReflectS s -> getStatusString starter s ^ starter ^
+      " has put up a field, protecting it from physical attacks."
+  | RestS s -> getStatusString starter s ^ starter ^
+      " has fallen asleep and been completely restored."
+  | SubBlock s -> getStatusString starter s ^
+      "The move was blocked by the opponent's substitute."
+  | SubFail s -> getStatusString starter s ^
+      "The substitute failed."
+  | SubMake s -> getStatusString starter s ^ starter ^
+      " has created a substitute."
+  | ProtectedS s -> starter ^ " used " ^ s ^
+      ", but opponent protected itself."
+  | ProtectS s-> getStatusString starter s ^ starter ^
+      " has protected itself."
+  | ProtectFail s-> getStatusString starter s ^ starter ^
+      " has failed to protect itself."
+  | SpikesS s -> getStatusString starter s ^ starter ^
+      " has depositied a layer of spikes."
+  | HealBellS s -> getStatusString starter s ^ starter ^
+      " has healed itself and its allies of status ailments."
+  | RefreshS s -> getStatusString starter s ^ starter ^
+      " has healed itself of any burns, poisons, and paralysis."
+  | Fail s -> starter ^ " used " ^ s ^ ", but it failed."
+  | PsychUpS s -> getStatusString starter s ^ starter ^
+      " has copied the opponent's status changes."
+  | SunnyDayS s -> getStatusString starter s ^ starter ^
+      " has called out the sun."
+  | RainDanceS s -> getStatusString starter s ^ starter ^
+      " has called out the rain."
+  | SandStormS s -> getStatusString starter s ^ starter ^
+      " has created a large sandstorm. Darude would be proud."
+  | HailS s -> getStatusString starter s ^ starter ^
+      " has made large pellets of hail fall down."
+  | EncoreS s -> getStatusString starter s ^ starter ^
+      " has trapped the opponent in an encore."
+  | UserFaintS s -> getStatusString starter s ^ starter ^
+      " took damage from the move and is about to faint."
   | EncoreFail -> starter ^ " used encore but it failed."
-  | CopyPrevMoveS s -> starter ^ " copied the opponent's move." ^ getStatusString starter s
-  | CopyPrevMoveA s -> starter ^ " copied the opponent's move." ^ getAttackString starter s
+  | CopyPrevMoveS s -> starter ^ " copied the opponent's move." ^
+      getStatusString starter s
+  | CopyPrevMoveA s -> starter ^ " copied the opponent's move." ^
+      getAttackString starter s
   | CopyFail -> starter ^ " tried to copy the previous move but failed."
   | TauntS s -> getStatusString starter s ^ "The opponent has been taunted."
-  | ToxicSpikesS s -> getStatusString starter s ^ starter ^ " has deposited a layer of toxic spikes."
-  | TauntFail -> starter ^ " used Taunt but it failed."
+  | ToxicSpikesS s -> getStatusString starter s ^ starter ^
+      " has deposited a layer of toxic spikes."
+  | TauntFail -> starter ^ " used Taunt, but it failed."
   | Taunted s -> starter ^ " couldn't use " ^ s ^ " because it was taunted."
-  | StealthRockS s -> getStatusString starter s ^ "Rocks were put on the opponent's side."
-  | StickyWebS s -> getStatusString starter s ^ starter ^ " has placed a sticky web on the opponent's side."
-  | SleepTalkA (s1, s2) -> getStatusString starter s1 ^ getAttackString starter s2
-  | SleepTalkS (s1, s2) -> getStatusString starter s1 ^ getStatusString starter s2
-  | ItemSwapS s -> getStatusString starter s ^ starter ^ " has swapped items with its opponent."
+  | StealthRockS s -> getStatusString starter s ^
+      "Rocks were put on the opponent's side."
+  | StickyWebS s -> getStatusString starter s ^ starter ^
+      " has placed a sticky web on the opponent's side."
+  | SleepTalkA (s1, s2) -> getStatusString starter s1^getAttackString starter s2
+  | SleepTalkS (s1, s2) -> getStatusString starter s1^getStatusString starter s2
+  | ItemSwapS s -> getStatusString starter s ^ starter ^
+      " has swapped items with its opponent."
   | RandMoveS s -> starter ^ " used a random move." ^ getStatusString starter s
   | RandMoveA s -> starter ^ " used a random move." ^ getAttackString starter s
   | WishS s -> getStatusString starter s ^ "A wish was made."
   | HealOppS s -> getStatusString starter s ^ starter ^ " healed its opponent."
-  | AbilityChangeS s -> getStatusString starter s ^ starter ^ " changed the opponent's ability."
-  | KnockedOffS (item, s) -> getStatusString starter s ^ starter ^ " made the opponent's " ^ (Pokemon.string_of_item item) ^ " unusable."
-  | GastroAcidS s -> getStatusString starter s ^ starter ^ " suppressed the opponent's ability."
+  | AbilityChangeS s -> getStatusString starter s ^ starter ^
+      " changed the opponent's ability."
+  | KnockedOffS (item, s) -> getStatusString starter s ^ starter ^
+      " made the opponent's " ^ (Pokemon.string_of_item item) ^ " unusable."
+  | GastroAcidS s -> getStatusString starter s ^ starter ^
+      " suppressed the opponent's ability."
   | SwitchOut s -> (match !secondaryEffect with
-                    | `P1 -> current_command := (Some NoMove, Some (Poke "random"))
-                    | `P2 -> current_command := (Some (Poke "random"), Some NoMove));
-                    endTurnEarly := true; getStatusString starter s ^ "The opponent was forced out!"
+                    | `P1 -> current_command :=
+                        (Some NoMove, Some (Poke "random"))
+                    | `P2 -> current_command :=
+                        (Some (Poke "random"), Some NoMove));
+                    endTurnEarly := true; getStatusString starter s ^
+                        "The opponent was forced out!"
 
 
 let rec getEndString starter s =
@@ -1463,28 +1596,39 @@ let rec getEndString starter s =
   | BreakPoison -> starter ^ " cannot be posioned."
   | BurnDmg -> starter ^ " has taken burn damage."
   | PoisonDmg -> starter ^ " has taken poison damage."
-  | LeechDmg s -> starter ^ " has taken leech seed damage." ^ getEndString starter s
-  | LeechHeal s -> starter ^ " has healed from leech seeds." ^ getEndString starter s
-  | TrapDamage (s, s') -> starter ^ " has taken damage from " ^ s ^ "." ^ getEndString starter s'
-  | LightScreenFade s -> getEndString starter s ^ starter ^ "'s Light Screen has faded."
+  | LeechDmg s -> starter ^ " has taken leech seed damage." ^
+      getEndString starter s
+  | LeechHeal s -> starter ^ " has healed from leech seeds." ^
+      getEndString starter s
+  | TrapDamage (s, s') -> starter ^ " has taken damage from " ^ s ^ "." ^
+      getEndString starter s'
+  | LightScreenFade s -> getEndString starter s ^ starter ^
+      "'s Light Screen has faded."
   | TauntFade s -> getEndString starter s ^ starter ^ "'s Taunt has faded."
   | ReflectFade s -> getEndString starter s ^ starter ^ "'s Reflect has faded."
   | SunFade s-> getEndString starter s ^ "The sunlight has faded."
   | RainFade s -> getEndString starter s ^ "The rain has faded."
   | SandStormFade s -> getEndString starter s ^ "The sandstorm has faded."
-  | SandBuffetB s -> getEndString starter s ^ "Both Pokemon got buffeted by the sandstorm."
-  | SandBuffet1 s -> getEndString starter s ^ "Player one got buffeted by the sandstorm."
-  | SandBuffet2 s -> getEndString starter s ^ "Player two got buffeted by the sandstorm"
+  | SandBuffetB s -> getEndString starter s ^
+      "Both Pokemon got buffeted by the sandstorm."
+  | SandBuffet1 s -> getEndString starter s ^
+      "Player One got buffeted by the sandstorm."
+  | SandBuffet2 s -> getEndString starter s ^
+      "Player Two got buffeted by the sandstorm"
   | HailFade s -> getEndString starter s ^ "The hail has faded."
-  | HailBuffetB s -> getEndString starter s ^ "Both Pokemon get hit by the hail."
-  | HailBuffet1 s -> getEndString starter s ^ "Player one gets hit by the hail."
-  | HailBuffet2 s -> getEndString starter s ^ "Player two gets hit by the hail."
-  | LeftOversHeal s -> getEndString starter s ^ starter ^ " has healed from the leftovers."
-  | WishEnd s-> getEndString starter s ^ starter ^ " has been healed by the wish."
-  | SpeedBoost s -> getEndString starter s ^ starter ^ "'s speed boost has raised its speed."
+  | HailBuffetB s -> getEndString starter s ^"Both Pokemon get hit by the hail."
+  | HailBuffet1 s -> getEndString starter s ^ "Player One gets hit by the hail."
+  | HailBuffet2 s -> getEndString starter s ^ "Player Two gets hit by the hail."
+  | LeftOversHeal s -> getEndString starter s ^ starter ^
+      " has healed from the leftovers."
+  | WishEnd s-> getEndString starter s ^ starter ^
+      " has been healed by the wish."
+  | SpeedBoost s -> getEndString starter s ^ starter ^
+      "'s speed boost has raised its speed."
 
 
-let animate_attack (animbox : GPack.fixed) img startx starty nextx' nexty (moveanim : GPack.fixed) move_img movestring =
+let animate_attack (animbox : GPack.fixed) img startx starty nextx' nexty
+  (moveanim : GPack.fixed) move_img movestring =
   match movestring with
   | `SleepMiss ->
       ( move_img#misc#show ();
@@ -1649,7 +1793,8 @@ let animate_attack (animbox : GPack.fixed) img startx starty nextx' nexty (movea
   | `DontMove -> ()
   | `DontMiss s | `Miss s ->
     (let themove = Pokemon.getMoveFromString s in
-     let nextx = (if movestring = `DontMiss s then nextx' else screen_width / 2) in
+     let nextx = (if movestring = `DontMiss s then nextx' else screen_width / 2)
+      in
       match themove.dmg_class with
       | Physical ->
         (let incx = (nextx - startx) / 80 in
@@ -1664,7 +1809,9 @@ let animate_attack (animbox : GPack.fixed) img startx starty nextx' nexty (movea
         for l = 1 to 10 do
           busywait_small ()
         done;
-        move_img#set_file ("../data/fx/" ^ (String.lowercase (Pokemon.string_of_element (Pokemon.getMoveFromString s).element)) ^ "wisp.png");
+        move_img#set_file ("../data/fx/" ^ (String.lowercase
+          (Pokemon.string_of_element (Pokemon.getMoveFromString s).element)) ^
+            "wisp.png");
         for l = 1 to 10 do
           busywait_small ()
         done;
@@ -1674,7 +1821,9 @@ let animate_attack (animbox : GPack.fixed) img startx starty nextx' nexty (movea
           busywait_small ()
         done)
     | Special ->
-      (move_img#set_file ("../data/fx/" ^ (String.lowercase (Pokemon.string_of_element (Pokemon.getMoveFromString s).element)) ^ "wisp.png");
+      (move_img#set_file ("../data/fx/" ^ (String.lowercase
+          (Pokemon.string_of_element (Pokemon.getMoveFromString s).element)) ^
+            "wisp.png");
       moveanim#move move_img#coerce startx starty;
       move_img#misc#show ();
       let incx = (nextx - startx) / 80 in
@@ -1698,10 +1847,14 @@ let update_buttons engine move1 move2 move3 move4 =
   move2#set_label team.current.pokeinfo.move2.name;
   move3#set_label team.current.pokeinfo.move3.name;
   move4#set_label team.current.pokeinfo.move4.name;
-  move1#misc#set_tooltip_text (Pokemon.getMoveToolTip team.current.pokeinfo.move1);
-  move2#misc#set_tooltip_text (Pokemon.getMoveToolTip team.current.pokeinfo.move2);
-  move3#misc#set_tooltip_text (Pokemon.getMoveToolTip team.current.pokeinfo.move3);
-  move4#misc#set_tooltip_text (Pokemon.getMoveToolTip team.current.pokeinfo.move4)
+  move1#misc#set_tooltip_text (Pokemon.getMoveToolTip
+    team.current.pokeinfo.move1);
+  move2#misc#set_tooltip_text (Pokemon.getMoveToolTip
+    team.current.pokeinfo.move2);
+  move3#misc#set_tooltip_text (Pokemon.getMoveToolTip
+    team.current.pokeinfo.move3);
+  move4#misc#set_tooltip_text (Pokemon.getMoveToolTip
+    team.current.pokeinfo.move4)
 
 let getWeatherString w =
   match w with
@@ -1718,9 +1871,13 @@ let rec findForcedMove lst =
   | [] -> (false, "")
 
 let rec game_animation engine buttons (battle: GPack.table) text
-  (battle_status, gui_ready, ready, ready_gui) bg_img poke1_img poke2_img move_img text_buffer (health_bar_holder1, health_bar_holder2, health_bar1, health_bar2)  pokeanim1 pokeanim2 moveanim back_button () =
-  let move1, move2, move3, move4, poke1, poke2, poke3, poke4, poke5, switch = match buttons with
- | [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] -> move1, move2, move3, move4, poke1, poke2, poke3, poke4, poke5, switch
+  (battle_status, gui_ready, ready, ready_gui) bg_img poke1_img poke2_img
+    move_img text_buffer (health_bar_holder1, health_bar_holder2, health_bar1,
+      health_bar2)  pokeanim1 pokeanim2 moveanim back_button () =
+  let move1, move2, move3, move4, poke1, poke2, poke3, poke4, poke5, switch =
+    match buttons with
+ | [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] ->
+    move1, move2, move3, move4, poke1, poke2, poke3, poke4, poke5, switch
  | _ -> failwith "Faulty Game Logic: Debug 982" in
   let battle_buttons = [move1; move2; move3; move4; switch; back_button] in
   List.iter (fun s -> s#misc#hide ()) battle_buttons;
@@ -1732,26 +1889,36 @@ let rec game_animation engine buttons (battle: GPack.table) text
     upon (Ivar.read !ready_gui) (fun _ -> ready_gui := Ivar.create ();
     game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3;
     poke4; poke5; switch] battle text (battle_status, gui_ready, ready,
-    ready_gui) bg_img poke1_img poke2_img move_img text_buffer (health_bar_holder1,
-    health_bar_holder2, health_bar1, health_bar2) pokeanim1 pokeanim2 moveanim back_button ()) in
+    ready_gui) bg_img poke1_img poke2_img move_img text_buffer
+    (health_bar_holder1, health_bar_holder2, health_bar1, health_bar2) pokeanim1
+    pokeanim2 moveanim back_button ()) in
   let updatehealth1 () =
-    health_bar1#set_fraction (float_of_int (t1.current).curr_hp /. float_of_int (t1.current).bhp);
-    health_bar1#set_text (string_of_int t1.current.curr_hp ^ "/" ^ string_of_int t1.current.bhp) in
+    health_bar1#set_fraction (float_of_int (t1.current).curr_hp /.
+      float_of_int (t1.current).bhp);
+    health_bar1#set_text (string_of_int t1.current.curr_hp ^ "/" ^
+      string_of_int t1.current.bhp) in
   let updatehealth2 () =
-    health_bar2#set_fraction (float_of_int (t2.current).curr_hp /. float_of_int (t2.current).bhp);
-    health_bar2#set_text (string_of_int t2.current.curr_hp ^ "/" ^ string_of_int t2.current.bhp) in
+    health_bar2#set_fraction (float_of_int (t2.current).curr_hp /.
+      float_of_int (t2.current).bhp); health_bar2#set_text
+      (string_of_int t2.current.curr_hp ^ "/" ^ string_of_int t2.current.bhp) in
   let updatetools () =
-    poke1_img#set_file ("../data/back-sprites/" ^ t1.current.pokeinfo.name  ^ ".gif");
-    poke2_img#set_file ("../data/sprites/" ^ t2.current.pokeinfo.name  ^ ".gif");
+    poke1_img#set_file ("../data/back-sprites/" ^ t1.current.pokeinfo.name  ^
+      ".gif");
+    poke2_img#set_file ("../data/sprites/" ^ t2.current.pokeinfo.name  ^
+      ".gif");
     changeStatus t1 t2;
     move1#set_label (t1.current).pokeinfo.move1.name;
     move2#set_label (t1.current).pokeinfo.move2.name;
     move3#set_label (t1.current).pokeinfo.move3.name;
     move4#set_label (t1.current).pokeinfo.move4.name;
-    move1#misc#set_tooltip_text (Pokemon.getMoveToolTip t1.current.pokeinfo.move1);
-    move2#misc#set_tooltip_text (Pokemon.getMoveToolTip t1.current.pokeinfo.move2);
-    move3#misc#set_tooltip_text (Pokemon.getMoveToolTip t1.current.pokeinfo.move3);
-    move4#misc#set_tooltip_text (Pokemon.getMoveToolTip t1.current.pokeinfo.move4);
+    move1#misc#set_tooltip_text (Pokemon.getMoveToolTip
+      t1.current.pokeinfo.move1);
+    move2#misc#set_tooltip_text (Pokemon.getMoveToolTip
+      t1.current.pokeinfo.move2);
+    move3#misc#set_tooltip_text (Pokemon.getMoveToolTip
+      t1.current.pokeinfo.move3);
+    move4#misc#set_tooltip_text (Pokemon.getMoveToolTip
+      t1.current.pokeinfo.move4);
     health_bar1#misc#set_tooltip_text (Pokemon.getPokeToolTip t1);
     health_bar2#misc#set_tooltip_text (Pokemon.getPokeToolTip t2) in
   let update_current_command () =
@@ -1771,19 +1938,33 @@ let rec game_animation engine buttons (battle: GPack.table) text
       (current_command := (fst !current_command, Some NoMove))
     else
       ());
-    (t1.current.curr_status <- (fst t1.current.curr_status, List.filter (fun s -> s <> RechargingStatus) (snd t1.current.curr_status)));
-    (t2.current.curr_status <- (fst t2.current.curr_status, List.filter (fun s -> s <> RechargingStatus) (snd t2.current.curr_status))) in
+    (t1.current.curr_status <- (fst t1.current.curr_status, List.filter
+        (fun s -> s <> RechargingStatus) (snd t1.current.curr_status)));
+    (t2.current.curr_status <- (fst t2.current.curr_status, List.filter
+        (fun s -> s <> RechargingStatus) (snd t2.current.curr_status))) in
   let skipturn () =
     update_current_command ();
     match get_game_status battle_status with
-    | Random0p -> Ivar.fill !gui_ready !current_command; current_command := (None, None); game_step ()
+    | Random0p -> Ivar.fill !gui_ready !current_command; current_command :=
+      (None, None); game_step ()
     | Random1p | Preset1p _| TournBattle _ -> (match !current_command with
-                  | (None, _) -> text_buffer#set_text (Pokemon.string_of_weather w.weather); List.iter (fun s -> s#misc#show ()) battle_buttons; current_screen := Battle (P1 ChooseMove); update_buttons engine move1 move2 move3 move4
-                  | _ -> Ivar.fill !gui_ready !current_command; current_command := (None, None); game_step ())
+                  | (None, _) -> text_buffer#set_text (Pokemon.string_of_weather
+                    w.weather); List.iter (fun s -> s#misc#show ())
+                    battle_buttons; current_screen := Battle (P1 ChooseMove);
+                      update_buttons engine move1 move2 move3 move4
+                  | _ -> Ivar.fill !gui_ready !current_command; current_command
+                    := (None, None); game_step ())
     | Random2p  | Preset2p _-> (match !current_command with
-                  | (None, _) -> text_buffer#set_text (Pokemon.string_of_weather w.weather); List.iter (fun s -> s#misc#show ()) battle_buttons; current_screen := Battle (P1 ChooseMove); update_buttons engine move1 move2 move3 move4
-                  | (_, None) -> text_buffer#set_text (Pokemon.string_of_weather w.weather); List.iter (fun s -> s#misc#show ()) battle_buttons; current_screen := Battle (P2 ChooseMove); update_buttons engine move1 move2 move3 move4
-                  | _ -> Ivar.fill !gui_ready !current_command; current_command := (None, None); game_step ()) in
+                  | (None, _) -> text_buffer#set_text (Pokemon.string_of_weather
+                    w.weather); List.iter (fun s -> s#misc#show ())
+                    battle_buttons; current_screen := Battle (P1 ChooseMove);
+                      update_buttons engine move1 move2 move3 move4
+                  | (_, None) -> text_buffer#set_text (Pokemon.string_of_weather
+                    w.weather); List.iter (fun s -> s#misc#show ())
+                    battle_buttons; current_screen := Battle (P2 ChooseMove);
+                      update_buttons engine move1 move2 move3 move4
+                  | _ -> Ivar.fill !gui_ready !current_command; current_command
+                    := (None, None); game_step ()) in
   let simple_move () =
     updatetools (); updatehealth1 (); updatehealth2 ();
     skipturn () in
@@ -1796,12 +1977,16 @@ let rec game_animation engine buttons (battle: GPack.table) text
       (Ivar.fill !gui_ready (Some Preprocess, Some Preprocess);
       game_step ()) in
   (match !m1 with
-  | Pl1 SPoke (p,mess) -> (let switch_string = ("Player One has switched to " ^ p ^ mess) in updatetools ();
+  | Pl1 SPoke (p,mess) -> (let switch_string = ("Player One has switched to " ^
+                   p ^ mess) in updatetools ();
                    let str_list = Str.split (Str.regexp "\\.") switch_string in
-                   continue := false; List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list)
-  | Pl2 SPoke (p,mess) ->  (let switch_string = ("Player One has switched to " ^ p ^ mess) in updatetools ();
-                           let str_list = Str.split (Str.regexp "\\.") switch_string in
-                           continue := false; List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list)
+                   continue := false; List.iter (fun s ->text_buffer#set_text s;
+                      busywait ()) str_list)
+  | Pl2 SPoke (p,mess) ->  (let switch_string = ("Player One has switched to " ^
+                   p ^ mess) in updatetools ();
+                   let str_list = Str.split (Str.regexp "\\.") switch_string in
+                   continue := false; List.iter (fun s ->text_buffer#set_text s;
+                      busywait ()) str_list)
   | Pl1 AttackMove a ->secondaryEffect := `P1;
                    let atk_string = getAttackString t1.current.pokeinfo.name a in
                    let str_list = Str.split (Str.regexp "\\.") atk_string in
