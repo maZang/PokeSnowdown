@@ -481,7 +481,7 @@ let make_menu ?packing () =
         ~callback:(fun s -> error_win#destroy ())); error_win#show ()));
   ignore(factory#add_item "Errors"
       ~callback: (fun () ->let error_win = GWindow.message_dialog
-        ~message:("Instructions to fix corrupted save file are in the Documentation. Please do not edit the save files yourself.")
+        ~message:("Replace any corrupted save files with a back factorysets.json that is put inside of the tournament folder. Please do not edit the save files yourself. If your game seems frozen, try pressing Space Bar to get to the next text command. However, if you experience the infinite loading screen, just quit out of the game and re-enter. ")
     ~buttons:GWindow.Buttons.close  ~message_type:`INFO () in
       ignore(error_win#connect#close ~callback:(error_win#destroy));
     ignore (error_win#connect#response
