@@ -1642,7 +1642,7 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
                       else
                         (newmove := EncoreFail)
                       )
-    | PainSplit::t -> let half_health = (atk.current.curr_hp + 
+    | PainSplit::t -> let half_health = (atk.current.curr_hp +
                         def.current.curr_hp)/2 in
                       atk.current.curr_hp <- min atk.current.bhp half_health;
                       def.current.curr_hp <- min def.current.bhp half_health;
@@ -2323,6 +2323,7 @@ let handle_two_moves t1 t2 w m1 m2 a1 a2 =
               ))
     )
 
+(* Gets entry hazard damage. *)
 let getEntryHazardDmg t ter1=
   let rec helper acc lst = match lst with
   | [] -> acc
@@ -2358,6 +2359,7 @@ let getEntryHazardDmg t ter1=
   let damage = int_of_float (helper 0. !ter1 *. float_of_int t.current.bhp) in
   t.current.curr_hp <- max 0 (t.current.curr_hp - damage)
 
+(* Switches poke handlers *)
 let switchPokeHandler faint nextpoke t ter1 t2 w =
   let rec findBatonPass = function
   | BatonPass (enhance, vola)::t -> Some (enhance, vola)
@@ -2699,6 +2701,7 @@ let rec main_controller_random2p engine gui_ready ready ready_gui =
   Ivar.fill !ready_gui true in
   main_loop_2p engine gui_ready ready ready_gui ()
 
+(* Main controller for 1 player preset battle *)
 let rec main_controller_preset1p engine gui_ready ready ready_gui t =
   Printf.printf "Initializing battle p1p\n%!";
   let stat_enhance = {attack=(0,1.); defense=(0,1.); speed=(0,1.);
@@ -2713,6 +2716,7 @@ let rec main_controller_preset1p engine gui_ready ready ready_gui t =
   Ivar.fill !ready_gui true in
   main_loop_1p engine gui_ready ready ready_gui ()
 
+(* Main controller for 2 player preset battle *)
 let rec main_controller_preset2p engine gui_ready ready ready_gui t t'=
   Printf.printf "Initializing battle p1p\n%!";
   let stat_enhance = {attack=(0,1.); defense=(0,1.); speed=(0,1.);
@@ -2732,6 +2736,7 @@ let rec main_controller_preset2p engine gui_ready ready ready_gui t t'=
   Ivar.fill !ready_gui true in
   main_loop_1p engine gui_ready ready ready_gui ()
 
+(* Main controller for tournament mode *)
 let rec main_controller_tourn engine gui_ready ready ready_gui t =
   Printf.printf "Initializing battle t\n%!";
   let stat_enhance = {attack=(0,1.); defense=(0,1.); speed=(0,1.);
