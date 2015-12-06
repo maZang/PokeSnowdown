@@ -121,7 +121,7 @@ let getFileMessage () =
   let open Yojson.Basic.Util in
   let save = unlocked_pokemon () in
   match save with
-  | `Assoc l -> "Unlocked Pokemon: " ^ (List.assoc "Unlocked" l |> to_int
+  | `Assoc l -> "Unlocked Pokemon: " ^ (List.assoc "unlocked" l |> to_int
                                             |> string_of_int) ^ "\n" ^
                 "You beat baldman " ^ (List.assoc "baldman" l |> to_int
                                           |> string_of_int) ^ " times!\n" ^

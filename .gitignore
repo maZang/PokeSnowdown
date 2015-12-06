@@ -8,3 +8,4 @@ a.out
 _build
 game.zip
 .git
+./data/factorysets.json
