@@ -102,8 +102,6 @@ let convertToMega t =
 let initialize_battle team1 team2 =
   convertToMega team1;
   convertToMega team2;
-  team1.current <- getBattlePoke (getTestPoke ());
-  team2.current <- getBattlePoke (getTestOpp ());
    Battle (InGame
     (team1, team2, {weather = ClearSkies; terrain = {side1= ref []; side2= ref []}}, ref (Pl1 NoAction), ref (Pl2 NoAction)))
 
@@ -230,6 +228,7 @@ let damageCalculation t1 t2 (w,ter1, ter2) (move : move) =
       | _ -> 1.0 ) *.
       ( match t1.current.curr_item with
       | ChoiceBand -> 1.5
+      | LightBall -> if t1.current.pokeinfo.name = "pikachu" then 2.0 else 1.0
       | _ -> 1.0) *.
       float_of_int t1.current.battack *.
       getStageAD (fst t1.stat_enhance.attack) *.
@@ -237,6 +236,7 @@ let damageCalculation t1 t2 (w,ter1, ter2) (move : move) =
     | Special ->
       ( match t1.current.curr_item with
       | ChoiceSpecs -> 1.5
+      | LightBall -> if t1.current.pokeinfo.name = "pikachu" then 2.0 else 1.0
       | _ -> 1.0) *.
       float_of_int t1.current.bspecial_attack *.
       getStageAD (fst t1.stat_enhance.special_attack) *.
@@ -1098,15 +1098,24 @@ let move_handler atk def wt move =
     (* damage is always dealt before secondary effects calculated *)
     if hit' then (
       newmove := newreason;
-      damage := min def.current.curr_hp !damage;
-      def.current.curr_hp <-def.current.curr_hp - !damage;
-      (* returns a move description *)
-      secondary_effects move.secondary;
-      (match atk.current.curr_item with
-      | LifeOrb -> atk.current.curr_hp <- max 0 (atk.current.curr_hp - atk.current.bhp/10); newmove := LifeOrbA !newmove
-      | ChoiceBand | ChoiceSpecs | ChoiceScarf -> atk.current.curr_status <- (fst atk.current.curr_status, ForcedMove (1, move.name)::(snd atk.current.curr_status) )
-      | _ -> ());
-      !newmove)
+      (match def.current.curr_abil with
+      | "lightning-rod" when move.element = Electric ->
+          (newmove := StatAttackA (SpecialAttack, 1,(FailA move.name));
+            def.stat_enhance.special_attack <- (min 6 (fst def.stat_enhance.special_attack + 1), snd def.stat_enhance.special_attack))
+      | "volt-absorb" when move.element = Electric ->
+          (newmove := HealOppA (FailA move.name);
+          def.current.curr_hp <- min def.current.bhp (def.current.curr_hp +
+          def.current.bhp/4))
+      | _ ->
+          (damage := min def.current.curr_hp !damage;
+          def.current.curr_hp <-def.current.curr_hp - !damage;
+          (* returns a move description *)
+          secondary_effects move.secondary;
+          (match atk.current.curr_item with
+          | LifeOrb -> atk.current.curr_hp <- max 0 (atk.current.curr_hp - atk.current.bhp/10); newmove := LifeOrbA !newmove
+          | ChoiceBand | ChoiceSpecs | ChoiceScarf -> atk.current.curr_status <- (fst atk.current.curr_status, ForcedMove (1, move.name)::(snd atk.current.curr_status) )
+          | _ -> ())));
+          !newmove)
    else
       (newmove := newreason;
       if (!newmove = MissMove move.name && (move.name = "high-jump-kick" || move.name = "jump-kick")) then
@@ -1710,10 +1719,19 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
     if hit' then (
       newmove := newreason;
       (* Returns a description of the status *)
+    (match def.current.curr_abil with
+    | "lightning-rod" when move.element = Electric ->
+          (newmove := StatAttack (SpecialAttack, 1,(Fail move.name));
+            def.stat_enhance.special_attack <- (min 6 (fst def.stat_enhance.special_attack + 1), snd def.stat_enhance.special_attack))
+    | "volt-absorb" when move.element = Electric ->
+          (newmove := HealOppS (Fail move.name);
+          def.current.curr_hp <- min def.current.bhp (def.current.curr_hp +
+          def.current.bhp/4))
+    | _ ->
       secondary_effects move.secondary;
       (match atk.current.curr_item with
       | ChoiceBand | ChoiceSpecs | ChoiceScarf -> atk.current.curr_status <- (fst atk.current.curr_status, ForcedMove (1, move.name)::(snd atk.current.curr_status) )
-      | _ -> ());
+      | _ -> ()));
 
       !newmove)
       (* returns a move description *)
@@ -2405,12 +2423,15 @@ let rec main_controller_preset2p engine gui_ready ready ready_gui t t'=
   let stat_enhance = {attack=(0,1.); defense=(0,1.); speed=(0,1.);
       special_attack=(0,1.); special_defense=(0,1.); evasion=(0,1.);
       accuracy=(0,1.)} in
+  let stat_enhance2 = {attack=(0,1.); defense=(0,1.); speed=(0,1.);
+      special_attack=(0,1.); special_defense=(0,1.); evasion=(0,1.);
+      accuracy=(0,1.)} in
   let team1' = List.map getBattlePoke t in
   let team1 = {current = List.hd team1'; alive = List.tl team1'; dead = [];
                   stat_enhance} in
   let team2' = List.map getBattlePoke t' in
   let team2 = {current = List.hd team2'; alive = List.tl team2'; dead = [];
-                stat_enhance} in
+                stat_enhance = stat_enhance2} in
   let battle = initialize_battle team1 team2 in
   let () = engine := Ivar.create (); Ivar.fill !engine battle;
   Ivar.fill !ready_gui true in

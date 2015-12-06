@@ -19,8 +19,8 @@
       "speed": "0"
     }
   },
-  "deoxsys": {
-    "name": "deoxsys",
+  "deoxys": {
+    "name": "deoxys",
     "moves": [
       "psycho-boost",
       "stealth-rock",
@@ -79,8 +79,8 @@
       "speed": "252"
     }
   },
-  "giratina": {
-    "name": "giratina",
+  "giratina-origin": {
+    "name": "giratina-origin",
     "moves": [
       "will-o-wisp",
       "roar",
@@ -114,7 +114,7 @@
       "hp": "252",
       "attack": "0",
       "special-attack": "0",
-      "defense": "%6",
+      "defense": "6",
       "special-defense": "200",
       "speed": "0"
     }
@@ -299,6 +299,6 @@
       "speed": "96"
     }
   },
-	"pokemon": [ "arceus", "deoxsys", "dialga", "genesect", "giratina", "groudon", "hooh", "kyogre", "lugia", "mewtwo", "palkia", "rayquaza", "reshiram", "xerneas", "yveltal" ],
-  "unlockable": ["xerneas", "diancie", "kyurem", "regice", "articuno", "darkrai", "yveltal", "genesect", "celebi", "shaymin", "virizion", "moltres", "entei", "hooh", "heatran", "victini", "reshiram", "volcanion", "zapdos", "raikou", "thundurus", "zekrom", "latias", "latios", "rayquaza", "dialga", "palkia", "giratina", "reshiram", "zekrom", "kyurem", "zygarde", "registeel", "jirachi",  "cobalion", "genesect", "yveltal", "articuno", "zapdos", "moltres", "lugia", "hooh", "rayquaza", "tornadus", "thundurus", "landorus", "suicune", "kyogre", "palkia", "manaphy", "keldeo", "volcanion", "cobalion", "terrakion", "virizion", "keldeo", "diancie", "terrakion", "mewtwo", "mew", "lugia", "celebi", "latias", "latios", "jirachi", "deoxys", "uxie", "mesprit", "azelf", "cresselia", "victini", "meloetta", "hoopa", "rotom", "giratina", "arceus",  "meloetta",  "zygarde", "landorus", "groudon"]
+	"pokemon": [ "arceus", "deoxys", "dialga", "genesect", "giratina-origin", "groudon", "hooh", "kyogre", "lugia", "mewtwo", "palkia", "rayquaza", "reshiram", "xerneas", "yveltal" ],
+  "unlockable": ["xerneas", "diancie", "kyurem", "regice", "articuno", "darkrai", "yveltal", "genesect", "celebi", "shaymin", "virizion", "moltres", "entei", "hooh", "heatran", "victini", "reshiram", "volcanion", "zapdos", "raikou", "thundurus", "zekrom", "latias", "latios", "rayquaza", "dialga", "palkia", "giratina-origin", "reshiram", "zekrom", "kyurem", "zygarde", "registeel", "jirachi",  "cobalion", "genesect", "yveltal", "articuno", "zapdos", "moltres", "lugia", "hooh", "rayquaza", "tornadus", "thundurus", "landorus", "suicune", "kyogre", "palkia", "manaphy", "keldeo", "volcanion", "cobalion", "terrakion", "virizion", "keldeo", "diancie", "terrakion", "mewtwo", "mew", "lugia", "celebi", "latias", "latios", "jirachi", "deoxys", "uxie", "mesprit", "azelf", "cresselia", "victini", "meloetta", "hoopa", "rotom", "giratina", "arceus",  "meloetta",  "zygarde", "landorus", "groudon"]
 }
