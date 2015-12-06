@@ -1107,32 +1107,49 @@ let move_handler atk def wt (move : move) =
         if tmp < def.current.curr_hp then
         def.current.curr_hp <- tmp; secondary_effects t)
     | Counter::t ->
-        (let prevstring, prevpoke = if wt'.terrain.side1 == ter1 then (!prevmove2, !prevpoke1)
+        (let prevstring, prevpoke = if wt'.terrain.side1 == ter1 then
+                                  (!prevmove2, !prevpoke1)
                                  else
-                                  if wt'.terrain.side1 == ter2 then (!prevmove1, !prevpoke2)
-                                  else failwith "Faulty Game Logic: Debug 1044" in
+                                  if wt'.terrain.side1 == ter2 then
+                                    (!prevmove1, !prevpoke2)
+                                else failwith "Faulty Game Logic: Debug 1044" in
         Printf.printf "%s\n%!" prevpoke.pokeinfo.name;
         (match move.name with
-        | "counter" -> (try (let prevmove = Pokemon.getMoveFromString prevstring in
+       | "counter"->(try (let prevmove = Pokemon.getMoveFromString prevstring in
                         match prevmove.dmg_class with
-                        | Physical -> (let hpdamage = prevpoke.curr_hp - atk.current.curr_hp in
-                                      def.current.curr_hp <- max 0 (def.current.curr_hp - (2*hpdamage) + !damage);
+                        | Physical -> (let hpdamage = prevpoke.curr_hp -
+                            atk.current.curr_hp in
+                                      def.current.curr_hp <- max 0
+                                        (def.current.curr_hp -
+                                            (2*hpdamage) + !damage);
                                       secondary_effects t)
-                        | _ -> def.current.curr_hp <- def.current.curr_hp + !damage; newmove := FailA "Counter") with | _ -> newmove := FailA "Counter")
-        | "mirror-coat" -> (try (let prevmove = Pokemon.getMoveFromString prevstring in
+                        | _ -> def.current.curr_hp <- def.current.curr_hp +
+                          !damage; newmove := FailA "Counter") with | _ ->
+                            newmove := FailA "Counter")
+        | "mirror-coat" -> (try (let prevmove = Pokemon.getMoveFromString
+                            prevstring in
                           match prevmove.dmg_class with
-                            | Special -> (let hpdamage = prevpoke.curr_hp - atk.current.curr_hp in
-                                         def.current.curr_hp <- max 0 (def.current.curr_hp - (2*hpdamage) + !damage);
+                            | Special -> (let hpdamage = prevpoke.curr_hp -
+                                atk.current.curr_hp in
+                                         def.current.curr_hp <- max 0
+                                          (def.current.curr_hp - (2*hpdamage) +
+                                            !damage);
                                          secondary_effects t)
-                        | _ -> def.current.curr_hp <- def.current.curr_hp + !damage; newmove := FailA "Mirror Coat") with | _ -> newmove := FailA "Mirror Coat")
-        | "metal-burst" -> (let hpdamage = float_of_int (prevpoke.curr_hp - atk.current.curr_hp) in
-                           let newhp = (float_of_int def.current.curr_hp) -. 1.5*.hpdamage +. float_of_int (!damage) in
+                        | _ -> def.current.curr_hp <- def.current.curr_hp +
+                          !damage; newmove := FailA "Mirror Coat") with | _ ->
+                              newmove := FailA "Mirror Coat")
+        | "metal-burst" -> (let hpdamage = float_of_int (prevpoke.curr_hp -
+                              atk.current.curr_hp) in
+                           let newhp = (float_of_int def.current.curr_hp) -.
+                            1.5*.hpdamage +. float_of_int (!damage) in
                            def.current.curr_hp <- max 0 (int_of_float newhp);
                            secondary_effects t)
         | "revenge" | "avalanche" | "payback" ->
-                           (let hpdamage = prevpoke.curr_hp - atk.current.curr_hp in
+                           (let hpdamage = prevpoke.curr_hp -
+                              atk.current.curr_hp in
                            if (hpdamage > 0) then
-                              (def.current.curr_hp <- max 0 (def.current.curr_hp - !damage);
+                              (def.current.curr_hp <- max 0 (def.current.curr_hp
+                                - !damage);
                               secondary_effects t)
                            else ())
 
@@ -1165,7 +1182,9 @@ let move_handler atk def wt (move : move) =
       (match def.current.curr_abil with
       | "lightning-rod" when move.element = Electric ->
           (newmove := StatAttackA (SpecialAttack, 1,(FailA move.name));
-            def.stat_enhance.special_attack <- (min 6 (fst def.stat_enhance.special_attack + 1), snd def.stat_enhance.special_attack))
+            def.stat_enhance.special_attack <- (min 6
+              (fst def.stat_enhance.special_attack + 1),
+              snd def.stat_enhance.special_attack))
       | "volt-absorb" when move.element = Electric ->
           (newmove := HealOppA (FailA move.name);
           def.current.curr_hp <- min def.current.bhp (def.current.curr_hp +
@@ -1176,15 +1195,20 @@ let move_handler atk def wt (move : move) =
           (* returns a move description *)
           secondary_effects move.secondary;
           (match atk.current.curr_item with
-          | LifeOrb -> atk.current.curr_hp <- max 0 (atk.current.curr_hp - atk.current.bhp/10); newmove := LifeOrbA !newmove
-          | ChoiceBand | ChoiceSpecs | ChoiceScarf -> atk.current.curr_status <- (fst atk.current.curr_status, ForcedMove (1, move.name)::(snd atk.current.curr_status) )
+          | LifeOrb -> atk.current.curr_hp <- max 0 (atk.current.curr_hp -
+              atk.current.bhp/10); newmove := LifeOrbA !newmove
+          | ChoiceBand | ChoiceSpecs | ChoiceScarf -> atk.current.curr_status <-
+            (fst atk.current.curr_status, ForcedMove (1, move.name)::
+              (snd atk.current.curr_status) )
           | _ -> ())));
           !newmove)
    else
       (newmove := newreason;
-      if (!newmove = MissMove move.name && (move.name = "high-jump-kick" || move.name = "jump-kick")) then
+      if (!newmove = MissMove move.name && (move.name = "high-jump-kick" ||
+          move.name = "jump-kick")) then
         (newmove := HitSelf !newmove;
-        (atk.current.curr_hp <- max 0 (atk.current.curr_hp - atk.current.bhp/2)));
+        (atk.current.curr_hp <- max 0 (atk.current.curr_hp -
+          atk.current.bhp/2)));
       !newmove))
   else
     reason'
@@ -1433,11 +1457,15 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
                               atk.current.curr_hp <- atk.current.bhp;
                               newmove := RestS !newmove); secondary_effects t
     (* for the move substitute *)
-    | SubstituteMake::t -> (if find_substitute (snd atk.current.curr_status) || atk.current.curr_hp <= atk.current.bhp / 4 then
+    | SubstituteMake::t -> (if find_substitute (snd atk.current.curr_status) ||
+                        atk.current.curr_hp <= atk.current.bhp / 4 then
                         newmove := SubFail !newmove
                       else
-                        (atk.current.curr_hp <- atk.current.curr_hp - atk.current.bhp / 4;
-                        atk.current.curr_status <- (fst atk.current.curr_status, (Substitute (atk.current.bhp/4))::(snd atk.current.curr_status));
+                        (atk.current.curr_hp <- atk.current.curr_hp -
+                            atk.current.bhp / 4;
+                        atk.current.curr_status <- (fst atk.current.curr_status,
+                            (Substitute (atk.current.bhp/4))::
+                              (snd atk.current.curr_status));
                         newmove := SubMake !newmove)); secondary_effects t
     (* protect has 1/4 chance of working on subsequent use  *)
     | Protect::t -> let rec find = function
@@ -1446,16 +1474,19 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
                     | h::t -> find t in
                    (if find (snd atk.current.curr_status) then
                     (if 1 > Random.int 4 then
-                      (atk.current.curr_status <- (fst atk.current.curr_status, Protected::(snd atk.current.curr_status));
+                      (atk.current.curr_status <- (fst atk.current.curr_status,
+                          Protected::(snd atk.current.curr_status));
                       newmove := ProtectS !newmove)
                     else
                       newmove := ProtectFail !newmove)
                     else
-                      (atk.current.curr_status <- (fst atk.current.curr_status, Protected::(snd atk.current.curr_status));
+                      (atk.current.curr_status <- (fst atk.current.curr_status,
+                          Protected::(snd atk.current.curr_status));
                       newmove := ProtectS !newmove)); secondary_effects t
     (* For the move belly drum *)
     | BellyDrum::t -> if atk.current.curr_hp > atk.current.bhp / 2 then
-                        (atk.current.curr_hp <- atk.current.curr_hp - atk.current.bhp / 2;
+                        (atk.current.curr_hp <- atk.current.curr_hp -
+                            atk.current.bhp / 2;
                           secondary_effects ((StageBoost [(Attack,6)])::t))
                       else
                         newmove := Fail "Belly Drum"
@@ -1479,7 +1510,8 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
                         | (ToxicSpikes n)::t ->if n >= 2 then
                                             (false, acc2 @ (ToxicSpikes 2)::t)
                                           else
-                                            (true, acc2 @ (ToxicSpikes (n+1))::t)
+                                            (true, acc2 @
+                                                (ToxicSpikes (n+1))::t)
                         | h::t -> addSpikes acc1 (h::acc2) t
                         | [] -> (acc1, (ToxicSpikes 1)::acc2) in
                   let success, newter = addSpikes true [] !t2 in
@@ -1507,7 +1539,8 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
                     | (Toxic _, x) -> atk.current.curr_status <- (NoNon, x)
                     | (Paralysis, x) -> atk.current.curr_status <- (NoNon, x)
                     | (Burn, x) -> atk.current.curr_status <- (NoNon, x)
-                    | _ -> ()); newmove := RefreshS !newmove; secondary_effects t
+                    | _ -> ()); newmove := RefreshS !newmove;
+                        secondary_effects t
     | PsychoShift::t ->
         (let tmp = ref NoNon in
         (match (atk.current.curr_status, def.current.curr_status) with
@@ -1547,30 +1580,38 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
                     atk.stat_enhance.evasion <- (i6,f6);
                     atk.stat_enhance.accuracy <- (i7,f7);
                     newmove := PsychUpS !newmove; secondary_effects t)
-    (* Flower Shield raises the Defense stat of all Grass-type Pokémon in the battle by one stage. *)
+    (* Flower Shield raises the Defense stat of all Grass-type Pokémon in the
+      battle by one stage. *)
     | FlowerShield::t ->
         ((match ((List.mem Grass atk.current.curr_type),
               (List.mem Grass def.current.curr_type)) with
-        | (true, true) -> secondary_effects ((StageBoost[(Defense,1)])::(StageAttack[(Defense,-1)])::t)
+        | (true, true) -> secondary_effects ((StageBoost[(Defense,1)])::
+            (StageAttack[(Defense,-1)])::t)
         | (true, false) -> secondary_effects ((StageBoost[(Defense,1)])::t)
         | (false, true) -> secondary_effects ((StageAttack[(Defense,-1)])::t)
         | _ -> ()); secondary_effects t)
     | Rototiller::t ->
         ((match ((List.mem Grass atk.current.curr_type),
               (List.mem Grass def.current.curr_type)) with
-        | (true, true) -> secondary_effects ((StageBoost[(Attack,1);(SpecialAttack, 1)])::(StageAttack[(Attack,-1);(SpecialAttack, -1)])::t)
-        | (true, false) -> secondary_effects ((StageBoost[(Attack ,1); (SpecialAttack, 1)])::t)
-        | (false, true) -> secondary_effects ((StageAttack[(Attack,-1); (SpecialAttack, -1)])::t)
+        | (true, true) -> secondary_effects ((StageBoost[(Attack,1);
+            (SpecialAttack, 1)])::(StageAttack[(Attack,-1);
+              (SpecialAttack, -1)])::t)
+        | (true, false) -> secondary_effects ((StageBoost[(Attack ,1);
+            (SpecialAttack, 1)])::t)
+        | (false, true) -> secondary_effects ((StageAttack[(Attack,-1);
+            (SpecialAttack, -1)])::t)
         | _ -> ()); secondary_effects t)
     (* For the move rain dance *)
     | RainDance::t -> ((match w with
                     | Rain _ | HeavyRain _ -> ()
-                    | _ -> (wt.weather <- Rain 5; newmove := RainDanceS !newmove));
+                    | _ -> (wt.weather <- Rain 5; newmove
+                      := RainDanceS !newmove));
                     secondary_effects t)
     (* For the move sand storm *)
     | SandStormMake::t -> ((match w with
                     | SandStorm _ -> ()
-                    | _ -> (wt.weather <- SandStorm 5; newmove := SandStormS !newmove));
+                    | _ -> (wt.weather <- SandStorm 5; newmove
+                      := SandStormS !newmove));
                     secondary_effects t)
     (* For the move hail *)
     | HailMake::t -> ((match w with
@@ -1586,29 +1627,41 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
                         poke.pokeinfo.move2.name = str ||
                         poke.pokeinfo.move3.name = str ||
                         poke.pokeinfo.move4.name = str in
-                      let prevmove = if wt.terrain.side1 == t1 then !prevmove2 else
-                                     if wt.terrain.side1 == t2 then !prevmove1 else
-                                      failwith "Faulty Game Logic: Debug 1135" in
-                      (if findForcedMove (snd def.current.curr_status) then (newmove := EncoreFail)
+                      let prevmove = if wt.terrain.side1 == t1
+                                      then !prevmove2 else
+                                     if wt.terrain.side1 == t2
+                                      then !prevmove1 else
+                                     failwith "Faulty Game Logic: Debug 1135" in
+                      (if findForcedMove (snd def.current.curr_status)
+                          then (newmove := EncoreFail)
                       else if containsMove def.current prevmove then
-                        (def.current.curr_status <- (fst def.current.curr_status, (ForcedMove (n, prevmove))::(snd def.current.curr_status));
+                        (def.current.curr_status <-(fst def.current.curr_status,
+                            (ForcedMove (n, prevmove))::
+                              (snd def.current.curr_status));
                         newmove := EncoreS !newmove; secondary_effects t)
                       else
                         (newmove := EncoreFail)
                       )
-    | PainSplit::t -> let half_health = (atk.current.curr_hp + def.current.curr_hp)/2 in
+    | PainSplit::t -> let half_health = (atk.current.curr_hp + 
+                        def.current.curr_hp)/2 in
                       atk.current.curr_hp <- min atk.current.bhp half_health;
                       def.current.curr_hp <- min def.current.bhp half_health;
                       secondary_effects t
     (* dangerous secondary move with no other additional secondary effects *)
-    | CopyPrevMove::[] -> let prevmove = if wt.terrain.side1 == t1 then !prevmove2 else
+    | CopyPrevMove::[] -> let prevmove = if wt.terrain.side1 == t1 then
+                          !prevmove2 else
                          if wt.terrain.side1 == t2 then !prevmove1 else
                          failwith "Faulty Game Logic: Debug 1135" in
-                         let validmove = try (let move' = getMoveFromString prevmove in not (List.mem CopyPrevMove move'.secondary)) with _ -> false in
+                         let validmove = try (let move' = getMoveFromString
+                            prevmove in not (List.mem
+                              CopyPrevMove move'.secondary)) with _ -> false in
                          if validmove then
-                          (let move' = getMoveFromString prevmove in match move'.dmg_class with
-                          | Status -> newmove := CopyPrevMoveS (status_move_handler atk def (wt, t1, t2) move')
-                          | _ ->  newmove := CopyPrevMoveA (move_handler atk def (wt, t1, t2) move'))
+                          (let move' = getMoveFromString prevmove in
+                              match move'.dmg_class with
+                          | Status -> newmove := CopyPrevMoveS
+                            (status_move_handler atk def (wt, t1, t2) move')
+                          | _ ->  newmove := CopyPrevMoveA (move_handler atk def
+                              (wt, t1, t2) move'))
                           else
                             (newmove := CopyFail)
     (* Literally just for the move taunt *)
@@ -1620,7 +1673,8 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
                       (newmove := TauntFail)
                     else
                       (newmove := TauntS !newmove;
-                      def.current.curr_status <- (fst def.current.curr_status, (Taunt 3)::(snd def.current.curr_status)))
+                      def.current.curr_status <- (fst def.current.curr_status,
+                          (Taunt 3)::(snd def.current.curr_status)))
     (* for the move stealth rocks *)
     | StealthRockMake::t -> if List.mem StealthRock !t2 then
                                 (newmove := Fail "Stealth Rock")
@@ -1688,7 +1742,8 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
     | SelfSwitch::t ->
         if List.length atk.alive > 0 then
           ((match move.name with
-          | "baton-pass" -> t1 := (BatonPass (atk.stat_enhance, snd atk.current.curr_status))::!t1
+          | "baton-pass" -> t1 := (BatonPass (atk.stat_enhance,
+              snd atk.current.curr_status))::!t1
           | _ -> ());
             secondary_effects t)
         else
@@ -1709,15 +1764,20 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
         stats.attack <- (-fst stats.attack, snd stats.attack);
         stats.defense <- (-fst stats.defense, snd stats.defense);
         stats.speed <- (-fst stats.speed, snd stats.speed);
-        stats.special_attack <- (-fst stats.special_attack, snd stats.special_attack);
-        stats.special_defense <- (-fst stats.special_defense, snd stats.special_defense);
+        stats.special_attack <- (-fst stats.special_attack,
+          snd stats.special_attack);
+        stats.special_defense <- (-fst stats.special_defense,
+          snd stats.special_defense);
         stats.evasion <- (-fst stats.evasion, snd stats.evasion);
-        stats.accuracy <- (-fst stats.accuracy, snd stats.accuracy); secondary_effects t)
+        stats.accuracy <- (-fst stats.accuracy, snd stats.accuracy);
+        secondary_effects t)
     (* For the move embargo,  *)
     | KnockOff::t -> (match def.current.curr_item with
                       | Nothing -> secondary_effects t
-                      | _ -> (newmove := KnockedOffS (def.current.curr_item, !newmove);
-                             def.current.curr_item <- Nothing; secondary_effects t))
+                      | _ -> (newmove := KnockedOffS (def.current.curr_item,
+                        !newmove);
+                             def.current.curr_item <- Nothing; secondary_effects
+                            t))
     | PowerSwap::t ->
         (let astats = atk.stat_enhance in
         let dstats = def.stat_enhance in
@@ -1725,8 +1785,10 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
         astats.attack <- (fst dstats.attack, snd astats.attack);
         dstats.attack <- (tmp, snd dstats.attack);
         let tmp2 = fst astats.special_attack in
-        astats.special_attack <- (fst dstats.special_attack, snd astats.special_attack);
-        dstats.special_attack <- (tmp2, snd dstats.special_attack); secondary_effects t)
+        astats.special_attack <- (fst dstats.special_attack,
+          snd astats.special_attack);
+        dstats.special_attack <- (tmp2, snd dstats.special_attack);
+          secondary_effects t)
     | GuardSwap::t ->
         (let astats = atk.stat_enhance in
         let dstats = def.stat_enhance in
@@ -1734,8 +1796,10 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
         astats.defense <- (fst dstats.defense, snd astats.defense);
         dstats.defense <- (tmp, snd dstats.defense);
         let tmp2 = fst astats.special_defense in
-        astats.special_defense <- (fst dstats.special_defense, snd astats.special_defense);
-        dstats.special_defense <- (tmp2, snd dstats.special_defense); secondary_effects t)
+        astats.special_defense <- (fst dstats.special_defense,
+          snd astats.special_defense);
+        dstats.special_defense <- (tmp2, snd dstats.special_defense);
+          secondary_effects t)
     | HeartSwap::t ->
         (let astats = atk.stat_enhance in
         let dstats = def.stat_enhance in
@@ -1743,13 +1807,15 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
         astats.attack <- (fst dstats.attack, snd astats.attack);
         dstats.attack <- (tmp, snd dstats.attack);
         let tmp2 = fst astats.special_attack in
-        astats.special_attack <- (fst dstats.special_attack, snd astats.special_attack);
+        astats.special_attack <- (fst dstats.special_attack,
+          snd astats.special_attack);
         dstats.special_attack <- (tmp2, snd dstats.special_attack);
         let tmp3 = fst astats.defense in
         astats.defense <- (fst dstats.defense, snd astats.defense);
         dstats.defense <- (tmp3, snd dstats.defense);
         let tmp4 = fst astats.special_defense in
-        astats.special_defense <- (fst dstats.special_defense, snd astats.special_defense);
+        astats.special_defense <- (fst dstats.special_defense,
+          snd astats.special_defense);
         dstats.special_defense <- (tmp4, snd dstats.special_defense);
         let tmp5 = fst astats.speed in
         astats.speed <- (fst dstats.speed, snd astats.speed);
@@ -1792,7 +1858,9 @@ let rec status_move_handler atk def (wt, t1, t2) (move: move) =
     (match def.current.curr_abil with
     | "lightning-rod" when move.element = Electric ->
           (newmove := StatAttack (SpecialAttack, 1,(Fail move.name));
-            def.stat_enhance.special_attack <- (min 6 (fst def.stat_enhance.special_attack + 1), snd def.stat_enhance.special_attack))
+            def.stat_enhance.special_attack <- (min 6
+              (fst def.stat_enhance.special_attack + 1),
+              snd def.stat_enhance.special_attack))
     | "volt-absorb" when move.element = Electric ->
           (newmove := HealOppS (Fail move.name);
           def.current.curr_hp <- min def.current.bhp (def.current.curr_hp +
@@ -1826,10 +1894,14 @@ let rec filterNonvola lst = match lst with
   | Protected::t -> UsedProtect::(filterNonvola t)
   | UsedProtect::t -> filterNonvola t
   | RechargingStatus::t -> RechargingStatus::(filterNonvola t)
-  | (ForcedMove (n, s))::t -> if n = 0 then filterNonvola t else (ForcedMove ((n-1), s))::(filterNonvola t)
-  | (Taunt n)::t -> if n = 0 then filterNonvola t else (Taunt (n-1))::(filterNonvola t)
-  | (ForcedMoveNoSwitch (n, s))::t -> if n <= 0 then filterNonvola t else (ForcedMoveNoSwitch (n-1,s))::(filterNonvola t)
-  | (PartialTrapping (s, n))::t -> if n <= 0 then filterNonvola t else (PartialTrapping (s, (n-1)))::(filterNonvola t)
+  | (ForcedMove (n, s))::t -> if n = 0 then filterNonvola t else
+      (ForcedMove ((n-1), s))::(filterNonvola t)
+  | (Taunt n)::t -> if n = 0 then filterNonvola t else (Taunt (n-1))::
+      (filterNonvola t)
+  | (ForcedMoveNoSwitch (n, s))::t -> if n <= 0 then filterNonvola t else
+      (ForcedMoveNoSwitch (n-1,s))::(filterNonvola t)
+  | (PartialTrapping (s, n))::t -> if n <= 0 then filterNonvola t else
+      (PartialTrapping (s, (n-1)))::(filterNonvola t)
 
 let remove_some_status bp =
   let nonvola, vola = bp.curr_status in
@@ -1932,10 +2004,10 @@ let handle_preprocessing t1 t2 w m1 m2 =
                         fix_terrain t ((Reflect (n-1))::acc) descript t'
   | (Wish (n, heal)::t') -> if n = 0 then
                             (if t.current.curr_hp > 0 then
-                            t.current.curr_hp <- t.current.curr_hp + heal else ();
+                           t.current.curr_hp <- t.current.curr_hp + heal else();
                             fix_terrain t acc (WishEnd descript) t')
                           else
-                            (fix_terrain t ((Wish ((n-1), heal))::acc) descript t')
+                         (fix_terrain t ((Wish ((n-1), heal))::acc) descript t')
   | h::t' -> fix_terrain t (h::acc) descript t'
   | [] -> (acc, descript) in
   let rec fix_vstatus t1 t2 descript1 descript2 = function
@@ -1975,14 +2047,16 @@ let handle_preprocessing t1 t2 w m1 m2 =
                   BreakPara)
                 else
                   Base
-  | Poisoned -> if List.mem Poison t.current.curr_type || List.mem Steel t.current.curr_type then
+  | Poisoned -> if List.mem Poison t.current.curr_type || List.mem Steel
+                  t.current.curr_type then
                   (t.current.curr_status <- (NoNon, snd t.current.curr_status);
                   BreakPoison)
                 else if t.current.curr_abil = "magic-guard" then Base
                 else
-                  (t.current.curr_hp <- t.current.curr_hp - 1 * t.current.bhp / 8;
+                  (t.current.curr_hp <- t.current.curr_hp - 1 * t.current.bhp/8;
                     PoisonDmg)
-  | Toxic n -> if List.mem Poison t.current.curr_type || List.mem Steel t.current.curr_type then
+  | Toxic n -> if List.mem Poison t.current.curr_type || List.mem Steel
+                    t.current.curr_type then
                   (t.current.curr_status <- (NoNon, snd t.current.curr_status);
                   BreakPoison)
                 else if t.current.curr_abil = "magic-guard" then Base
@@ -2041,12 +2115,18 @@ let handle_two_moves t1 t2 w m1 m2 a1 a2 =
     getStageAD (fst t2.stat_enhance.speed) *. (snd t2.stat_enhance.speed) *.
     (if t2.current.curr_item = ChoiceScarf then 1.5 else 1.0)) in
   (match w.weather with
-    | Rain _ | HeavyRain _  -> (if p1poke.curr_abil = "swift-swim" then p1speed := !p1speed *. 2.;
-                                if p2poke.curr_abil = "swift-swim" then p2speed := !p2speed *. 2.)
-    | Sun _ | HarshSun _ -> (if p1poke.curr_abil = "chlorophyll" then p1speed := !p1speed *. 2.;
-                                if p2poke.curr_abil = "chlorophyll" then p2speed := !p2speed *. 2.)
-    | SandStorm _-> (if p1poke.curr_abil = "sand-rush" then p1speed := !p1speed *. 2.;
-                                if p2poke.curr_abil = "sand-rush" then p2speed := !p2speed *. 2.)
+    | Rain _ | HeavyRain _  -> (if p1poke.curr_abil = "swift-swim" then p1speed
+                                  := !p1speed *. 2.;
+                                if p2poke.curr_abil = "swift-swim" then p2speed
+                                  := !p2speed *. 2.)
+    | Sun _ | HarshSun _ -> (if p1poke.curr_abil = "chlorophyll" then p1speed
+                                  := !p1speed *. 2.;
+                                if p2poke.curr_abil = "chlorophyll" then
+                                  p2speed := !p2speed *. 2.)
+    | SandStorm _-> (if p1poke.curr_abil = "sand-rush" then p1speed := !p1speed
+                                  *. 2.;
+                                if p2poke.curr_abil = "sand-rush" then p2speed
+                                  := !p2speed *. 2.)
     | _ -> ());
   let p1priority = curr_move.priority + findbonuspriority t1 curr_move in
   let p2priority = curr_move'.priority + findbonuspriority t2 curr_move' in
@@ -2067,38 +2147,54 @@ let handle_two_moves t1 t2 w m1 m2 a1 a2 =
     prevmove1 := a1;
     match curr_move.dmg_class with
     (* case where Player 1 uses a Status move *)
-    | Status -> let newmove = status_move_handler t1 t2 (w, w.terrain.side1, w.terrain.side2) curr_move in
-            if (List.mem ForceSwitch curr_move.secondary && List.length t2.alive > 0) then
+    | Status -> let newmove = status_move_handler t1 t2 (w, w.terrain.side1,
+            w.terrain.side2) curr_move in
+            if (List.mem ForceSwitch curr_move.secondary &&
+              List.length t2.alive > 0) then
               (m1 := Pl1(Status newmove); m2 := Pl2 NoAction)
             else
               (prevmove2 := a2;
               (match curr_move'.dmg_class with
                (* case where Player 2 uses a Status Move *)
               | Status ->
-                  if List.mem SelfSwitch curr_move.secondary && List.length t1.alive > 0 then
-                    (m1 := Pl1 (ForceChooseS newmove); m2 := Pl2 (ForceMove curr_move'.name))
-                  else if List.mem SelfSwitch curr_move'.secondary && List.length t2.alive > 0 then
-                    (let newmove' = status_move_handler t2 t1 (w, w.terrain.side2, w.terrain.side1) curr_move' in
-                      m1 := Pl1 (Status newmove); m2 := Pl2 (ForceChooseS newmove')
+                  if List.mem SelfSwitch curr_move.secondary &&
+                    List.length t1.alive > 0 then
+                    (m1 := Pl1 (ForceChooseS newmove); m2 :=
+                        Pl2 (ForceMove curr_move'.name))
+                  else if List.mem SelfSwitch curr_move'.secondary &&
+                    List.length t2.alive > 0 then
+                    (let newmove' = status_move_handler t2 t1
+                        (w, w.terrain.side2, w.terrain.side1) curr_move' in
+                      m1 := Pl1 (Status newmove); m2 :=
+                        Pl2 (ForceChooseS newmove')
                     )
                   else
-                    (let newmove' = status_move_handler t2 t1 (w, w.terrain.side2, w.terrain.side1) curr_move' in
+                    (let newmove' = status_move_handler t2 t1
+                        (w, w.terrain.side2, w.terrain.side1) curr_move' in
                       m1 := Pl1 (Status newmove); m2 := Pl2 (Status newmove'))
               (* case where Player 2 uses a Special/Physical Move *)
                | _ ->
                   if (List.mem SelfSwitch curr_move.secondary) then
-                    (m1 := Pl1 (ForceChooseS newmove); m2 := Pl2 (ForceMove curr_move'.name))
+                    (m1 := Pl1 (ForceChooseS newmove); m2 :=
+                        Pl2 (ForceMove curr_move'.name))
                   else(
-                    let newmove' = move_handler t2 t1 (w, w.terrain.side2, w.terrain.side1) curr_move' in
-                    if List.mem SelfSwitch curr_move'.secondary && List.length t2.alive > 0 then
-                      (m1 := Pl1 (Status newmove); m2 := Pl2 (ForceChoose newmove'))
+                    let newmove' = move_handler t2 t1 (w, w.terrain.side2,
+                      w.terrain.side1) curr_move' in
+                    if List.mem SelfSwitch curr_move'.secondary &&
+                      List.length t2.alive > 0 then
+                      (m1 := Pl1 (Status newmove); m2 :=
+                          Pl2 (ForceChoose newmove'))
                     else
-                      (m1 := Pl1 (Status newmove); m2 := Pl2 (AttackMove newmove')) )))
+                      (m1 := Pl1 (Status newmove); m2 :=
+                          Pl2 (AttackMove newmove')) )))
     (* Case where Player 1 uses a Physical/Special Move *)
-    | _ -> let newmove = move_handler t1 t2 (w, w.terrain.side1, w.terrain.side2) curr_move in
+    | _ -> let newmove = move_handler t1 t2 (w, w.terrain.side1,
+            w.terrain.side2) curr_move in
            (* Case where second pokemon faints before getting to move *)
-           if (p2poke.curr_hp = 0 || (List.mem ForceSwitch curr_move.secondary && List.length t2.alive > 0)) then
-              if List.mem SelfSwitch curr_move.secondary && List.length t1.alive > 0 then
+          if (p2poke.curr_hp = 0 || (List.mem ForceSwitch curr_move.secondary &&
+            List.length t2.alive > 0)) then
+              if List.mem SelfSwitch curr_move.secondary &&
+                List.length t1.alive > 0 then
                 (m1 := Pl1 (ForceChoose newmove); m2 := Pl2 ForceNone)
               else
                 (m1 := Pl1 (AttackMove newmove); m2 := Pl2 NoAction)
@@ -2107,22 +2203,35 @@ let handle_two_moves t1 t2 w m1 m2 a1 a2 =
               (prevmove2 := a2;
               (match curr_move'.dmg_class with
               (* Case where Player 2 uses a Status Move *)
-              | Status ->if List.mem SelfSwitch curr_move.secondary && List.length t1.alive > 0 then
-                          (m1 := Pl1 (ForceChoose newmove); m2 := Pl2 (ForceMove curr_move'.name))
+              | Status ->if List.mem SelfSwitch curr_move.secondary &&
+                  List.length t1.alive > 0 then
+                          (m1 := Pl1 (ForceChoose newmove); m2 :=
+                              Pl2 (ForceMove curr_move'.name))
                         else (
-                          let newmove' = status_move_handler t2 t1 (w, w.terrain.side2, w.terrain.side1) curr_move' in
-                          if List.mem SelfSwitch curr_move'.secondary && List.length t2.alive > 0 then
-                            (m1 := Pl1 (AttackMove newmove); m2 := Pl2 (ForceChooseS newmove'))
+                          let newmove' = status_move_handler t2 t1
+                            (w, w.terrain.side2, w.terrain.side1) curr_move' in
+                          if List.mem SelfSwitch curr_move'.secondary &&
+                            List.length t2.alive > 0 then
+                            (m1 := Pl1 (AttackMove newmove); m2 :=
+                                Pl2 (ForceChooseS newmove'))
                           else
-                            (m1 := Pl1 (AttackMove newmove); m2 := Pl2 (Status newmove')))
+                            (m1 := Pl1 (AttackMove newmove); m2 :=
+                                Pl2 (Status newmove')))
               (* Case where Player 2 Uses a Physical/Special Move *)
               | _      ->
-                      if List.mem SelfSwitch curr_move.secondary && List.length t1.alive > 0 then
-                        (m1 := Pl1 (ForceChoose newmove); m2 := Pl2 (ForceMove curr_move'.name))
-                      else if (List.mem SelfSwitch curr_move'.secondary) && (List.length t2.alive > 0) then
-                        (let newmove' = move_handler t2 t1 (w, w.terrain.side2, w.terrain.side1) curr_move' in m1 := Pl1 (AttackMove newmove); m2 := Pl2 (ForceChoose newmove'))
+                      if List.mem SelfSwitch curr_move.secondary &&
+                        List.length t1.alive > 0 then
+                        (m1 := Pl1 (ForceChoose newmove); m2 :=
+                            Pl2 (ForceMove curr_move'.name))
+                      else if (List.mem SelfSwitch curr_move'.secondary) &&
+                        (List.length t2.alive > 0) then
+                        (let newmove' = move_handler t2 t1 (w, w.terrain.side2,
+                          w.terrain.side1) curr_move' in m1 :=
+                            Pl1 (AttackMove newmove); m2 :=
+                              Pl2 (ForceChoose newmove'))
                       else
-                        (let newmove' = move_handler t2 t1 (w, w.terrain.side2, w.terrain.side1) curr_move' in
+                        (let newmove' = move_handler t2 t1 (w, w.terrain.side2,
+                          w.terrain.side1) curr_move' in
                         m1 := Pl1 (AttackMove newmove);
                         m2 := Pl2 (AttackMove newmove'))
               ))
@@ -2131,33 +2240,49 @@ let handle_two_moves t1 t2 w m1 m2 a1 a2 =
   else (
     prevmove2 := a2;
     match curr_move'.dmg_class with
-    | Status -> let newmove = status_move_handler t2 t1 (w, w.terrain.side2, w.terrain.side1) curr_move' in
-            if (List.mem ForceSwitch curr_move'.secondary && List.length t1.alive > 0) then
+    | Status -> let newmove = status_move_handler t2 t1 (w, w.terrain.side2,
+      w.terrain.side1) curr_move' in
+            if (List.mem ForceSwitch curr_move'.secondary &&
+              List.length t1.alive > 0) then
               (m1 := Pl2 (Status newmove); m2 := Pl1 NoAction)
             else
             (prevmove1 := a1;
             (match curr_move.dmg_class with
             | Status ->
-                if (List.mem SelfSwitch curr_move'.secondary && List.length t2.alive > 0) then
-                  (m1 := Pl2 (ForceChooseS newmove); m2 := Pl1 (ForceMove curr_move.name))
-                else (let newmove' = status_move_handler t1 t2 (w, w.terrain.side1, w.terrain.side2) curr_move in
-                  if List.mem SelfSwitch curr_move.secondary && List.length t1.alive > 0 then
-                    (m1 := Pl2 (Status newmove); m2 := Pl1 (ForceChooseS newmove'))
+                if (List.mem SelfSwitch curr_move'.secondary &&
+                  List.length t2.alive > 0) then
+                  (m1 := Pl2 (ForceChooseS newmove); m2 :=
+                      Pl1 (ForceMove curr_move.name))
+                else (let newmove' = status_move_handler t1 t2
+                    (w, w.terrain.side1, w.terrain.side2) curr_move in
+                  if List.mem SelfSwitch curr_move.secondary &&
+                    List.length t1.alive > 0 then
+                    (m1 := Pl2 (Status newmove); m2 :=
+                        Pl1 (ForceChooseS newmove'))
                   else
                     (m1 := Pl2 (Status newmove); m2 := Pl1 (Status newmove'))
                 )
             | _ ->
-                if (List.mem SelfSwitch curr_move'.secondary && List.length t2.alive > 0) then
-                  (m1 := Pl2 (ForceChooseS newmove); m2 := Pl1 (ForceMove curr_move.name))
-                else (let newmove' = move_handler t1 t2 (w, w.terrain.side1, w.terrain.side2) curr_move in
-                  if List.mem SelfSwitch curr_move.secondary && List.length t1.alive > 0 then
-                  (m1 := Pl2 (Status newmove); m2 := Pl1 (ForceChoose newmove'))
+                if (List.mem SelfSwitch curr_move'.secondary &&
+                  List.length t2.alive > 0) then
+                  (m1 := Pl2 (ForceChooseS newmove); m2 :=
+                      Pl1 (ForceMove curr_move.name))
+                else (let newmove' = move_handler t1 t2
+                    (w, w.terrain.side1, w.terrain.side2) curr_move in
+                  if List.mem SelfSwitch curr_move.secondary &&
+                    List.length t1.alive > 0 then
+                  (m1 := Pl2 (Status newmove); m2 :=
+                      Pl1 (ForceChoose newmove'))
                 else
-                  (m1 := Pl2 (Status newmove); m2 := Pl1 (AttackMove newmove'))))
+                  (m1 := Pl2 (Status newmove); m2 :=
+                      Pl1 (AttackMove newmove'))))
               )
-    | _ -> let newmove = move_handler t2 t1 (w, w.terrain.side2, w.terrain.side1) curr_move' in
-           if (p1poke.curr_hp = 0 || (List.mem ForceSwitch curr_move'.secondary && List.length t1.alive > 0)) then
-              (if List.mem SelfSwitch curr_move'.secondary && List.length t2.alive > 0 then
+    | _ -> let newmove = move_handler t2 t1
+        (w, w.terrain.side2, w.terrain.side1) curr_move' in
+           if (p1poke.curr_hp = 0 || (List.mem ForceSwitch curr_move'.secondary
+              && List.length t1.alive > 0)) then
+              (if List.mem SelfSwitch curr_move'.secondary &&
+                  List.length t2.alive > 0 then
                 (m1 := Pl2 (ForceChoose newmove); m2 := Pl1 ForceNone)
               else
                 (m1 := Pl2 (AttackMove newmove); m2 := Pl1 NoAction))
@@ -2165,22 +2290,34 @@ let handle_two_moves t1 t2 w m1 m2 a1 a2 =
               (prevmove1 := a1;
               (match curr_move.dmg_class with
               | Status ->
-                        if List.mem SelfSwitch curr_move'.secondary && List.length t2.alive > 0  then
-                          (m1 := Pl2 (ForceChoose newmove); m2 := Pl1 (ForceMove curr_move.name))
+                        if List.mem SelfSwitch curr_move'.secondary &&
+                          List.length t2.alive > 0  then
+                          (m1 := Pl2 (ForceChoose newmove); m2 :=
+                              Pl1 (ForceMove curr_move.name))
                         else
-                          (let newmove' = status_move_handler t1 t2 (w, w.terrain.side1, w.terrain.side2) curr_move in
-                          if List.mem SelfSwitch curr_move.secondary && List.length t1.alive > 0 then
-                            (m1 := Pl2 (AttackMove newmove); m2 := Pl1 (ForceChooseS newmove'))
+                          (let newmove' = status_move_handler t1 t2
+                              (w, w.terrain.side1, w.terrain.side2) curr_move in
+                          if List.mem SelfSwitch curr_move.secondary &&
+                            List.length t1.alive > 0 then
+                            (m1 := Pl2 (AttackMove newmove); m2 :=
+                                Pl1 (ForceChooseS newmove'))
                           else
                             (m1 := Pl2 (AttackMove newmove);
                              m2 := Pl1 (Status newmove')))
               | _      ->
-                        if List.mem SelfSwitch curr_move'.secondary && List.length t2.alive > 0 then
-                          (m1 := Pl2 (ForceChoose newmove); m2 := Pl1 (ForceMove curr_move.name))
-                        else if (List.mem SelfSwitch curr_move.secondary) && (List.length t1.alive > 0) then
-                          (let newmove'= move_handler t1 t2 (w, w.terrain.side1, w.terrain.side2) curr_move in m1 := Pl2 (AttackMove newmove); m2 := Pl1 (ForceChoose newmove'))
+                        if List.mem SelfSwitch curr_move'.secondary &&
+                          List.length t2.alive > 0 then
+                          (m1 := Pl2 (ForceChoose newmove); m2 :=
+                              Pl1 (ForceMove curr_move.name))
+                        else if (List.mem SelfSwitch curr_move.secondary) &&
+                          (List.length t1.alive > 0) then
+                          (let newmove'= move_handler t1 t2 (w, w.terrain.side1,
+                            w.terrain.side2) curr_move in m1 :=
+                            Pl2 (AttackMove newmove); m2 :=
+                              Pl1 (ForceChoose newmove'))
                         else
-                          (let newmove'= move_handler t1 t2 (w, w.terrain.side1, w.terrain.side2) curr_move in
+                          (let newmove'= move_handler t1 t2 (w, w.terrain.side1,
+                            w.terrain.side2) curr_move in
                           m1 := Pl2 (AttackMove newmove);
                           m2 := Pl1 (AttackMove newmove'))
               ))
@@ -2194,12 +2331,14 @@ let getEntryHazardDmg t ter1=
                       (let (s, f) = t.stat_enhance.speed in
                       t.stat_enhance.speed <- ((max (-6) (s-1)), f);
                       helper acc t')
-  | (Spikes n)::t' ->if List.mem Flying t.current.curr_type || t.current.curr_abil = "levitate" then helper acc t'
+  | (Spikes n)::t' ->if List.mem Flying t.current.curr_type ||
+      t.current.curr_abil = "levitate" then helper acc t'
                     else
                       (if n = 1 then (helper (0.125 +. acc) t')
                       else if n = 2 then (helper (1. /. 6. +. acc) t')
                       else (helper (0.25 +. acc) t'))
-  | StealthRock::t' -> (let typeeffect = List.fold_left (fun acc x -> acc *. getElementEffect
+  | StealthRock::t' -> (let typeeffect = List.fold_left (fun acc x ->
+      acc *. getElementEffect
                         Rock x) 1. t.current.curr_type in
                         match typeeffect with
                         | 0.25 -> helper (0.03125 +. acc) t'
@@ -2207,10 +2346,13 @@ let getEntryHazardDmg t ter1=
                         | 2. -> helper (0.25 +. acc) t'
                         | 4. -> helper (0.5 +. acc) t'
                         | _ -> helper (0.125 +. acc) t')
-  | (ToxicSpikes n)::t' -> if List.mem Flying t.current.curr_type || t.current.curr_abil = "levitate" then helper acc t'
+  | (ToxicSpikes n)::t' -> if List.mem Flying t.current.curr_type ||
+    t.current.curr_abil = "levitate" then helper acc t'
                       else
                         ((match t.current.curr_status with
-                        | (NoNon, x) -> (if n = 1 then (t.current.curr_status <- (Poisoned, x)) else (t.current.curr_status <- (Toxic 0, x)))
+                        | (NoNon, x) -> (if n = 1 then (t.current.curr_status <-
+                            (Poisoned, x)) else (t.current.curr_status <-
+                                (Toxic 0, x)))
                         | _ -> ()); helper acc t')
   | h::t -> helper acc t in
   let damage = int_of_float (helper 0. !ter1 *. float_of_int t.current.bhp) in
@@ -2244,11 +2386,17 @@ let switchPokeHandler faint nextpoke t ter1 t2 w =
   ter1 := filterBatonPass !ter1;
   if t.current.curr_hp > 0 then
     (match t.current.curr_abil with
-    | "intimidate" -> t2.stat_enhance.attack <- (fst t2.stat_enhance.attack - 1, snd t2.stat_enhance.attack); ("." ^ t.current.pokeinfo.name ^ "'s intimidate lowered the opponent's attack.")
-    | "drizzle" -> w.weather <- Rain 5; ("." ^ t.current.pokeinfo.name ^ " caused the Rain to fall.")
-    | "drought" -> w.weather <- Sun 5; ("." ^ t.current.pokeinfo.name ^ " cause the Sun to come up.")
-    | "snow-warning" -> w.weather <- Hail 5; ("." ^ t.current.pokeinfo.name ^ " has created a giant blizzard.")
-    | "sand-stream" -> w.weather <- SandStorm 5; ("." ^ t.current.pokeinfo.name ^ " whipped up a sand storm.")
+    | "intimidate" -> t2.stat_enhance.attack <- (fst t2.stat_enhance.attack - 1,
+      snd t2.stat_enhance.attack); ("." ^ t.current.pokeinfo.name ^
+        "'s intimidate lowered the opponent's attack.")
+    | "drizzle" -> w.weather <- Rain 5; ("." ^ t.current.pokeinfo.name ^
+        " caused rain to fall.")
+    | "drought" -> w.weather <- Sun 5; ("." ^ t.current.pokeinfo.name ^
+        " caused the Sun to come up.")
+    | "snow-warning" -> w.weather <- Hail 5; ("." ^ t.current.pokeinfo.name ^
+        " has created a giant blizzard.")
+    | "sand-stream" -> w.weather <- SandStorm 5; ("." ^ t.current.pokeinfo.name
+        ^ " whipped up a sandstorm. Darude would be proud.")
     | _ -> "")
   else
     ""
@@ -2265,13 +2413,16 @@ let handle_action state action1 action2 =
   let t1, t2, w, m1, m2 = match get_game_status state with
     | Battle InGame (t1, t2, w, m1, m2) -> t1, t2, w, m1, m2
     | _ -> failwith "Faulty Game Logic" in
-  let () = prevpoke1 := {t1.current with curr_hp = t1.current.curr_hp}; prevpoke2 := {t2.current with curr_hp = t2.current.curr_hp} in
+  let () = prevpoke1 := {t1.current with curr_hp = t1.current.curr_hp};
+    prevpoke2 := {t2.current with curr_hp = t2.current.curr_hp} in
   match action1 with
   | Poke p' -> let p = if p' = "random" then getRandomPoke t1 else p' in
       (match action2 with
       | Poke p2' -> let p2 = if p2' = "random" then getRandomPoke t2 else p2' in
-                    let t1switch = switchPokeHandler false p t1 w.terrain.side1 t2 w in
-                    let t2switch = switchPokeHandler false p2 t2 w.terrain.side2 t1 w in
+                    let t1switch = switchPokeHandler false p t1 w.terrain.side1
+                      t2 w in
+                    let t2switch = switchPokeHandler false p2 t2 w.terrain.side2
+                      t1 w in
                     if (t1.current.curr_hp = 0) then
                           if (t2.current.curr_hp = 0) then
                             (m1 := Pl1 SFaint; m2 := Pl2 Faint)
@@ -2281,38 +2432,52 @@ let handle_action state action1 action2 =
                           if (t2.current.curr_hp = 0) then
                             (m1 := Pl2 SFaint; m2 := Pl1 FaintNext)
                           else
-                            (m1 := Pl1 (SPoke (p, t1switch)); m2 := Pl2 (SPoke (p2, t2switch)))
-      | UseAttack a2' -> let t1switch = switchPokeHandler false p t1 w.terrain.side1 t2 w in
+                            (m1 := Pl1 (SPoke (p, t1switch)); m2 := Pl2 (SPoke
+                                (p2, t2switch)))
+      | UseAttack a2' -> let t1switch = switchPokeHandler false p t1
+                    w.terrain.side1 t2 w in
                        if (t1.current.curr_hp = 0) then
                         (m1 := Pl1 SFaint; m2 := Pl2 FaintNext)
                       else
-                       (let force2, force2s = getForcedMove (snd t2.current.curr_status) in
+                       (let force2, force2s = getForcedMove
+                          (snd t2.current.curr_status) in
                         let a2 = if force2 then force2s else a2' in
                         prevmove2 := a2;
                         let curr_move = findBattleMove t2.current.pokeinfo a2 in
                        if curr_move.dmg_class = Status then
-                          (let newmove = status_move_handler t2 t1 (w, w.terrain.side2, w.terrain.side1) curr_move in
-                            if List.mem SelfSwitch curr_move.secondary && List.length t2.alive > 0 then
-                              (m1 := Pl1 (SPoke (p, t1switch)); m2 := Pl2 (ForceChooseS newmove))
+                          (let newmove = status_move_handler t2 t1
+                              (w, w.terrain.side2, w.terrain.side1) curr_move in
+                            if List.mem SelfSwitch curr_move.secondary &&
+                              List.length t2.alive > 0 then
+                              (m1 := Pl1 (SPoke (p, t1switch)); m2 :=
+                                  Pl2 (ForceChooseS newmove))
                             else
-                             (m1 := Pl1 (SPoke (p,t1switch)); m2 := Pl2 (Status newmove)))
+                             (m1 := Pl1 (SPoke (p,t1switch)); m2 :=
+                                Pl2 (Status newmove)))
                        else (
-                        let newmove = move_handler t2 t1 (w, w.terrain.side2, w.terrain.side1) curr_move in
-                        if List.mem SelfSwitch curr_move.secondary && List.length t2.alive > 0 then
-                          (m1 := Pl1 (SPoke (p,t1switch)); m2 := Pl2 (ForceChoose newmove))
+                        let newmove = move_handler t2 t1 (w, w.terrain.side2,
+                          w.terrain.side1) curr_move in
+                        if List.mem SelfSwitch curr_move.secondary &&
+                          List.length t2.alive > 0 then
+                          (m1 := Pl1 (SPoke (p,t1switch)); m2 :=
+                              Pl2 (ForceChoose newmove))
                         else
-                          (m1 := Pl1 (SPoke (p, t1switch)); m2 := Pl2 (AttackMove newmove))))
-      | NoMove ->  let t1switch = switchPokeHandler false p t1 w.terrain.side1 t2 w in
+                          (m1 := Pl1 (SPoke (p, t1switch)); m2 :=
+                              Pl2 (AttackMove newmove))))
+      | NoMove ->  let t1switch = switchPokeHandler false p t1
+              w.terrain.side1 t2 w in
                     if (t1.current.curr_hp = 0) then
                       (m1 := Pl1 Faint; m2 := Pl2 FaintNext)
                     else
                        (m1 := Pl1 (SPoke (p, t1switch)); m2 := Pl2 NoAction)
       | _ -> failwith "Faulty Game Logic: Debug 444")
-  | UseAttack a1' -> let force1, force1s = getForcedMove (snd t1.current.curr_status) in
+  | UseAttack a1' -> let force1, force1s = getForcedMove
+              (snd t1.current.curr_status) in
                      let a1 = if force1 then force1s else a1' in
       (match action2 with
       | Poke p' -> (let p  = if p' = "random" then getRandomPoke t2 else p' in
-                   let t2switch = switchPokeHandler false p t2 w.terrain.side2 t1 w in
+                   let t2switch = switchPokeHandler false p t2 w.terrain.side2
+                    t1 w in
                     (if (t2.current.curr_hp = 0) then
                       (m1 := Pl2 SFaint; m2 := Pl1 FaintNext)
                     else
@@ -2320,72 +2485,99 @@ let handle_action state action1 action2 =
                       prevmove1 := a1;
                       if curr_move.dmg_class = Status then
                         (
-                          let newmove = status_move_handler t1 t2 (w, w.terrain.side1, w.terrain.side2) curr_move in
-                          if List.mem SelfSwitch curr_move.secondary && List.length t1.alive > 0 then
-                            (m1 := Pl2 (SPoke (p, t2switch)); m2 := Pl1 (ForceChooseS newmove))
+                          let newmove = status_move_handler t1 t2 (w,
+                            w.terrain.side1, w.terrain.side2) curr_move in
+                          if List.mem SelfSwitch curr_move.secondary &&
+                            List.length t1.alive > 0 then
+                            (m1 := Pl2 (SPoke (p, t2switch)); m2 :=
+                                Pl1 (ForceChooseS newmove))
                           else
-                            (m1 := Pl2 (SPoke (p, t2switch)); m2 := Pl1 (Status newmove)))
+                            (m1 := Pl2 (SPoke (p, t2switch)); m2 :=
+                                Pl1 (Status newmove)))
                      else
-                      (let newmove = move_handler t1 t2 (w, w.terrain.side1, w.terrain.side2) curr_move in
-                        if List.mem SelfSwitch curr_move.secondary && List.length t1.alive > 0 then
-                          (m1 := Pl2 (SPoke (p, t2switch)); m2 := Pl1 (ForceChoose newmove))
+                      (let newmove = move_handler t1 t2 (w, w.terrain.side1,
+                          w.terrain.side2) curr_move in
+                        if List.mem SelfSwitch curr_move.secondary &&
+                          List.length t1.alive > 0 then
+                          (m1 := Pl2 (SPoke (p, t2switch)); m2 :=
+                              Pl1 (ForceChoose newmove))
                         else
-                          (m1 := Pl2 (SPoke (p, t2switch)); m2 := Pl1 (AttackMove newmove))))))
-      | UseAttack a2' -> (let force2, force2s = getForcedMove (snd t2.current.curr_status) in
+                          (m1 := Pl2 (SPoke (p, t2switch)); m2 :=
+                              Pl1 (AttackMove newmove))))))
+      | UseAttack a2' -> (let force2, force2s = getForcedMove (snd
+                            t2.current.curr_status) in
                           let a2 = if force2 then force2s else a2' in
                           handle_two_moves t1 t2 w m1 m2 a1 a2)
       | NoMove -> (let curr_poke = t1.current in
                   let curr_move = findBattleMove curr_poke.pokeinfo a1 in
                   prevmove1 := a1;
                   if curr_move.dmg_class = Status then
-                    (let newmove = status_move_handler t1 t2 (w, w.terrain.side1, w.terrain.side2) curr_move in
-                      if List.mem SelfSwitch curr_move.secondary && List.length t1.alive > 0 then
+                   (let newmove = status_move_handler t1 t2 (w, w.terrain.side1,
+                    w.terrain.side2) curr_move in
+                      if List.mem SelfSwitch curr_move.secondary && List.length
+                        t1.alive > 0 then
                         (m1 := Pl1 (ForceChooseS newmove); m2 :=(Pl2 NoAction))
                       else
                         (m1 := Pl1 (Status newmove); m2 := Pl2 NoAction))
                   else
-                    (let newmove = move_handler t1 t2 (w, w.terrain.side1, w.terrain.side2) curr_move in
-                    if List.mem SelfSwitch curr_move.secondary && List.length t1.alive > 0 then
+                    (let newmove = move_handler t1 t2 (w, w.terrain.side1,
+                      w.terrain.side2) curr_move in
+                    if List.mem SelfSwitch curr_move.secondary && List.length
+                      t1.alive > 0 then
                       (m1 := Pl1 (ForceChoose newmove); m2 := Pl2 ForceNone)
                     else
                       (m1 := Pl1 (AttackMove newmove); m2 := Pl2 NoAction)))
       | _ -> failwith "Faulty Game Logic: Debug 449")
   | NoMove -> (match action2 with
               | FaintPoke p ->
-                  let t2switch = switchPokeHandler true p t2 w.terrain.side2 t1 w in
+                  let t2switch = switchPokeHandler true p t2 w.terrain.side2
+                    t1 w in
                   m1 := Pl2 (SPoke (p,t2switch));
                   m2 := Pl1 Next
               | Poke p' -> let p = if p' = "random" then getRandomPoke t2
                           else p' in
-                          let t2switch = switchPokeHandler false p t2 w.terrain.side2 t1 w in
+                          let t2switch = switchPokeHandler false p t2
+                            w.terrain.side2 t1 w in
                           if (t2.current.curr_hp = 0) then
                             (m1 := Pl2 SFaint; m2 := Pl1 FaintNext)
                           else
-                            (m1 := Pl2 (SPoke (p, t2switch)); m2 := Pl1 NoAction)
-              | UseAttack a2' -> let force2, force2s = getForcedMove (snd t2.current.curr_status) in
+                           (m1 := Pl2 (SPoke (p, t2switch)); m2 := Pl1 NoAction)
+              | UseAttack a2' -> let force2, force2s = getForcedMove (snd
+                  t2.current.curr_status) in
                               let a2 = if force2 then force2s else a2' in
                               let curr_poke = t2.current in
-                              let curr_move = findBattleMove curr_poke.pokeinfo a2 in
+                              let curr_move = findBattleMove curr_poke.pokeinfo
+                                a2 in
                               prevmove2 := a2;
                               if curr_move.dmg_class = Status then
-                              ( let newmove = status_move_handler t2 t1 (w, w.terrain.side2, w.terrain.side1) curr_move in
-                                if List.mem SelfSwitch curr_move.secondary && List.length t2.alive > 0 then
-                                  (m1 := Pl2 (ForceChooseS newmove); m2 := Pl1 NoAction)
+                              ( let newmove = status_move_handler t2 t1 (w,
+                                w.terrain.side2, w.terrain.side1) curr_move in
+                                if List.mem SelfSwitch curr_move.secondary &&
+                                  List.length t2.alive > 0 then
+                                  (m1 := Pl2 (ForceChooseS newmove); m2 :=
+                                    Pl1 NoAction)
                                 else
-                                  (m1 := Pl2 (Status newmove); m2 := Pl1 NoAction))
+                                  (m1 := Pl2 (Status newmove);
+                                    m2 := Pl1 NoAction))
                               else
-                                (let newmove = move_handler t2 t1 (w, w.terrain.side2, w.terrain.side1) curr_move in
-                                if List.mem SelfSwitch curr_move.secondary && List.length t2.alive > 0 then
-                                  (m1 := Pl2 (ForceChoose newmove); m2 := Pl1 ForceNone)
+                                (let newmove = move_handler t2 t1 (w,
+                                  w.terrain.side2, w.terrain.side1) curr_move in
+                                if List.mem SelfSwitch curr_move.secondary &&
+                                  List.length t2.alive > 0 then
+                                  (m1 := Pl2 (ForceChoose newmove); m2 :=
+                                    Pl1 ForceNone)
                                 else
-                                  (m1 := Pl2 (AttackMove newmove); m2 := Pl1 NoAction))
+                                  (m1 := Pl2 (AttackMove newmove); m2 :=
+                                    Pl1 NoAction))
               | NoMove -> m1 := Pl1 NoAction; m2 := Pl2 NoAction
               | _ -> failwith "Faulty Game Logic: Debug 177"
               )
   | FaintPoke p -> (match action2 with
                     | FaintPoke p' ->
-                        (let t1switch = switchPokeHandler true p t1 w.terrain.side1 t2 w in
-                        let t2switch = switchPokeHandler true p' t2 w.terrain.side2 t1 w in
+                        (let t1switch = switchPokeHandler true p t1
+                            w.terrain.side1 t2 w in
+                        let t2switch = switchPokeHandler true p' t2
+                            w.terrain.side2 t1 w in
                         if (t1.current.curr_hp = 0) then
                           if (t2.current.curr_hp = 0) then
                             (m1 := Pl1 SFaint; m2 := Pl2 Faint)
@@ -2395,9 +2587,11 @@ let handle_action state action1 action2 =
                           if (t2.current.curr_hp = 0) then
                             (m1 := Pl2 SFaint; m2 := Pl1 FaintNext)
                           else
-                            (m1 := Pl1 (SPoke (p, t1switch)); m2 := Pl2 (SPoke (p', t2switch))))
+                            (m1 := Pl1 (SPoke (p, t1switch)); m2 :=
+                                Pl2 (SPoke (p', t2switch))))
                     | _ ->
-                        (let t1switch = switchPokeHandler true p t1 w.terrain.side1 t2 w in
+                        (let t1switch = switchPokeHandler true p t1
+                            w.terrain.side1 t2 w in
                         if (t1.current.curr_hp = 0) then
                           (m1 := Pl1 SFaint; m2 := Pl2 FaintNext)
                         else
@@ -2417,20 +2611,24 @@ let rec main_loop_0p engine gui_ready ready ready_gui () =
     | _ -> failwith "Faulty Game Logic" in
   upon (Ivar.read !gui_ready) (* Replace NoMove with ai move later *)
     (fun (cmd1, cmd2) -> let c1 = match (unpack cmd1) with
-                          | AIMove -> UseAttack (Ai.get_move_better t2.current t1.current)
+                          | AIMove -> UseAttack (Ai.get_move_better t2.current
+                              t1.current)
                           | NoMove -> NoMove
                           | UseAttack s -> UseAttack s
                           | Preprocess -> Preprocess
                           | Poke s -> Poke s
-                          | FaintPoke _ -> FaintPoke (Ai.replace_dead_better t2.current t1.alive)
+                          | FaintPoke _ -> FaintPoke (Ai.replace_dead_better
+                              t2.current t1.alive)
                           | TurnEnd -> TurnEnd in
                          let c2 = match (unpack cmd2) with
-                          | AIMove -> UseAttack (Ai.get_move_better t1.current t2.current)
+                          | AIMove -> UseAttack (Ai.get_move_better t1.current
+                              t2.current)
                           | NoMove -> NoMove
                           | UseAttack s -> UseAttack s
                           | Preprocess -> Preprocess
                           | Poke s -> Poke s
-                          | FaintPoke _ -> FaintPoke (Ai.replace_dead_better t1.current t2.alive)
+                          | FaintPoke _ -> FaintPoke (Ai.replace_dead_better
+                              t1.current t2.alive)
                           | TurnEnd -> TurnEnd in
                          let () = handle_action engine c1 c2 in
                          gui_ready := Ivar.create ();
@@ -2446,12 +2644,14 @@ let rec main_loop_1p engine gui_ready ready ready_gui () =
   upon (Ivar.read !gui_ready) (* Replace NoMove with ai move later *)
     (fun (cmd1, cmd2) -> let c1 = unpack cmd1 in
                          let c2 = match (unpack cmd2) with
-                          | AIMove -> UseAttack (Ai.get_move_better t1.current t2.current)
+                          | AIMove -> UseAttack (Ai.get_move_better t1.current
+                              t2.current)
                           | NoMove -> NoMove
                           | UseAttack s -> UseAttack s
                           | Preprocess -> Preprocess
                           | Poke s -> Poke s
-                          | FaintPoke _ -> FaintPoke (Ai.replace_dead_better t1.current t2.alive)
+                          | FaintPoke _ -> FaintPoke (Ai.replace_dead_better
+                              t1.current t2.alive)
                           | TurnEnd -> TurnEnd in
                          let () = handle_action engine c1 c2 in
                          gui_ready := Ivar.create ();
