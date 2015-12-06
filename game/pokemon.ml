@@ -3,12 +3,14 @@ open Yojson.Basic.Util
 (*factory sets http://www.objgen.com/json/models/VT0 *)
 (*This module is responsible for getting random valid pokemon *)
 
-(* number of unique pokemon and mega evolutions *)
+(* Opens and loads a json file from data if it is found. *)
 let open_json s = try Yojson.Basic.from_file ("../data/" ^ s ^ ".json") with
                   _ -> Printf.printf "Json file for %s not found\n%!" s; exit 0
 
+(* Returns the nth element of a non-empty list. *)
 let nth i lst = List.nth lst i
 
+(* Initializes random seed. *)
 let () = Random.self_init ()
 
 (* All data *)
@@ -19,16 +21,20 @@ let num_pokemon_total = 721
 
 let unlocked_pokemon () = open_json "factorysets"
 
-let nature_list =  ["hardy"; "lonely";"adamant";"naughty";"brave";"bold";"docile";
-  "impish";"lax";"relaxed";"modest";"mild";"bashful";"rash";"quiet";"calm";"gentle";
-  "careful";"quirky";"sassy";"timid";"hasty";"jolly";"naive";"serious"]
+let nature_list =  ["hardy"; "lonely";"adamant";"naughty";"brave";"bold";
+  "docile";"impish";"lax";"relaxed";"modest";"mild";"bashful";"rash";"quiet";
+  "calm";"gentle";"careful";"quirky";"sassy";"timid";"hasty";"jolly";"naive";
+  "serious"]
 
 let item_list = ["leftovers";"choice band";"life orb";"choice specs"
   ;"choice scarf"; "MegaStone"; "MegaStoneX"; "MegaStoneY"; "nothing"]
 
+(* Returns list of string names of all pokemon that have been unlocked. *)
 let unlocked_poke_string_list () =
-  List.sort (compare) (List.map (to_string) (unlocked_pokemon () |> member "pokemon" |> to_list))
+  List.sort (compare) (List.map (to_string) (unlocked_pokemon ()
+    |> member "pokemon" |> to_list))
 
+(* Returns a nature from an input string. *)
 let getNatureFromString str =
   match str with
   | "hardy" -> Hardy
@@ -58,6 +64,7 @@ let getNatureFromString str =
   | "serious" -> Serious
   | _ -> failwith "Does not occur"
 
+(* Returns a string from a nature. *)
 let string_of_nature nature =
   match nature with
   | Hardy -> "hardy"
@@ -86,6 +93,7 @@ let string_of_nature nature =
   | Naive -> "naive"
   | Serious -> "serious"
 
+(* Returns a random nature. *)
 let getRandomNature () =
   match Random.int 25 with
   | 0 -> Hardy
@@ -115,19 +123,7 @@ let getRandomNature () =
   | 24 -> Serious
   | _ -> failwith "Does not occur"
 
-let string_of_item item =
-  match item with
-  | Leftovers -> "leftovers"
-  | ChoiceBand -> "choice band"
-  | LifeOrb -> "life orb"
-  | ChoiceSpecs -> "choice specs"
-  | ChoiceScarf -> "choice scarf"
-  | MegaStone -> "MegaStone"
-  | MegaStoneX -> "MegaStoneX"
-  | MegaStoneY -> "MegaStoneY"
-  | LightBall -> "light ball"
-  | Nothing -> "nothing"
-
+(* Returns an item from an input string. *)
 let getItemFromString str =
   match str with
   | "life orb" -> LifeOrb
@@ -142,6 +138,21 @@ let getItemFromString str =
   | "light ball" -> LightBall
   | _ -> failwith "Does not occur"
 
+(* Returns a string from an item. *)
+let string_of_item item =
+  match item with
+  | Leftovers -> "leftovers"
+  | ChoiceBand -> "choice band"
+  | LifeOrb -> "life orb"
+  | ChoiceSpecs -> "choice specs"
+  | ChoiceScarf -> "choice scarf"
+  | MegaStone -> "MegaStone"
+  | MegaStoneX -> "MegaStoneX"
+  | MegaStoneY -> "MegaStoneY"
+  | LightBall -> "light ball"
+  | Nothing -> "nothing"
+
+(* Returns a random item. *)
 let getRandomItem () =
   match Random.int 3 with
   | 0 -> Leftovers
@@ -149,6 +160,7 @@ let getRandomItem () =
   | 2 -> LifeOrb
   | _ -> failwith "Does not occur"
 
+(* Returns a string from an element (Pokemon type). *)
 let string_of_element elm =
   match elm with
   | Fire -> "Fire"
@@ -170,6 +182,7 @@ let string_of_element elm =
   | Fighting -> "Fighting"
   | Poison -> "Poison"
 
+(* Returns a string from a non-volatile status. *)
 let string_of_status elm =
   match elm with
   | Burn -> "Burn"
@@ -180,6 +193,7 @@ let string_of_status elm =
   | Sleep _ -> "Sleep"
   | NoNon -> "None"
 
+(* Returns a string from a volatile status. *)
 let string_of_vola_status elm =
   match elm with
   | Confusion _-> "Confusion"
@@ -193,11 +207,15 @@ let string_of_vola_status elm =
   | ForcedMove (n, s) -> "Forced to use: " ^ s
   | ForcedMoveNoSwitch (n, s) -> "Locked into: " ^  s
   | Taunt n -> "Taunted"
-  | PartialTrapping (s,n) -> "Trapped by "^  s ^ " for " ^ string_of_int n  ^ " turns."
+  | PartialTrapping (s,n) -> "Trapped by "^  s ^ " for " ^ string_of_int n
+                                ^ " turns."
 
+(* Returns a string of the Pokemon's status. *)
 let string_of_poke_status (non, vola) =
-  List.fold_left (fun acc s -> acc ^ ", " ^ string_of_vola_status s) (string_of_status non) vola
+  List.fold_left (fun acc s -> acc ^ ", " ^ string_of_vola_status s)
+    (string_of_status non) vola
 
+(* Returns the number of stages for the Pokemon's evasion. *)
 let getStageEvasion num =
   if abs(num) > 6 then failwith "Faulty Game Logic: Debug 43";
   if num <= 0 then
@@ -215,12 +233,14 @@ let getStageAD num =
   else
     float_of_int (num + 2) /. 2.
 
+(* Returns a string of the type of the Pokemon. *)
 let string_of_type elm =
   match elm with
   | [x] -> string_of_element x
   | [x1;x2] -> string_of_element x1 ^ "/" ^ string_of_element x2
   | _ -> failwith "Faulty Game Logic: Debug 100"
 
+(* Returns an element (Pokemon type) from an input string. *)
 let getElement str =
   match str with
   | "fire" -> Fire
@@ -243,6 +263,9 @@ let getElement str =
   | "poison" -> Poison
   | _ -> failwith "Not a valid type"
 
+(* Returns a float indicating the type effect of the element [elm1] over the
+ * element [elm2].
+ *)
 let getElementEffect elm1 elm2 =
   match elm1 with
   | Normal ->
@@ -359,11 +382,13 @@ let getElementEffect elm1 elm2 =
       | Fire | Poison | Steel -> 0.5
       | _ -> 1.
     )
+
 (* Gets a random element in a list *)
 let getRandomElement lst =
   let l = List.length lst in
   lst |> nth (Random.int l)
 
+(* Returns a target from an input string. *)
 let getTarget str =
   match str with
   | "specific-move" -> SpecificPoke
@@ -382,12 +407,14 @@ let getTarget str =
   | "all-pokemon" -> All
   | _ -> failwith "Not a valid target"
 
+(* Returns the string corresponding to the damage class. *)
 let string_of_class cls =
   match cls with
   | Physical -> "Physical"
   | Special -> "Special"
   | Status -> "Status"
 
+(* Returns a string describing the input weather. *)
 let string_of_weather w =
   match w with
   | HarshSun _-> "There is a very harsh sunlight."
@@ -399,6 +426,7 @@ let string_of_weather w =
   | AirCurrent _-> "An air current is present."
   | ClearSkies -> "There are no aberrant weather conditions."
 
+(* Returns a damage class from an input string. *)
 let getDmgClass str =
   match str with
   | "physical" -> Physical
@@ -406,13 +434,18 @@ let getDmgClass str =
   | "status" -> Status
   | _ -> failwith "Not a valid damage class"
 
+(* Returns a list of secondary effects from an input string name of a
+ * valid Pokemon move.
+ *)
 let getSecondaryEffect str = match str with
   | "karate-chop" | "razor-leaf" | "crabhammer" | "slash" | "aeroblast"
     | "cross-chop" | "air-cutter" | "stone-edge" | "attack-order" | "drill-run"
-    | "leaf-blade" | "night-slash" | "psycho-cut" | "shadow-claw" | "spacial-rend" -> [IncCrit 1]
+    | "leaf-blade" | "night-slash" | "psycho-cut" | "shadow-claw"
+    | "spacial-rend" -> [IncCrit 1]
   | "double-slap" | "comet-punch" | "fury-attack" | "pin-missile"
     | "spike-cannon" | "barrage" | "fury-swipes" | "bone-rush"
-    | "bullet-seed" | "tail-slap" | "icicle-spear" | "rock-blast" -> [RandMultHit]
+    | "bullet-seed" | "tail-slap" | "icicle-spear"
+    | "rock-blast" -> [RandMultHit]
   | "fire-punch" | "ember" | "flamethrower" | "fire-blast" | "flame-wheel"
     | "will-o-wisp" | "blue-flare" | "lava-plume" | "heat-wave"
     | "scald" | "searing-shot" | "sacred-fire" -> [BurnChance]
@@ -424,25 +457,30 @@ let getSecondaryEffect str = match str with
   | "guillotine" | "horn-drill" | "fissure" | "sheer-cold" -> [OHKO]
   | "razor-wind" -> [ChargeMove "It made a whirlwind!"]
   | "fly" -> [ChargeMove "It flew up into the air."]
-  | "skull-bash" -> [ChargeMove "It tucked its head in."; StageBoost [(Defense, 1)]]
+  | "skull-bash" -> [ChargeMove "It tucked its head in.";
+                      StageBoost [(Defense, 1)]]
   | "dig" -> [ChargeMove "It went slightly underground"]
   | "dive" -> [ChargeMove "It went underwater somehow"]
   | "bounce" -> [ChargeMove "It bounced up high"; ParaChance]
   | "freeze-shock" -> [ChargeMove "Charging"; ParaChance]
   | "swords-dance" -> [StageBoost [(Attack, 2)]]
   | "charm" | "feather-dance" -> [StageAttack [(Attack, 2)]]
-  | "meditate" | "sharpen" | "metal-claw" | "howl" | "meteor-mash" | "power-up-punch" -> [StageBoost [(Attack, 1)]]
+  | "meditate" | "sharpen" | "metal-claw" | "howl" | "meteor-mash"
+    | "power-up-punch" -> [StageBoost [(Attack, 1)]]
   | "whirlwind" | "roar" | "dragon-tail"| "circle-throw" -> [ForceSwitch]
-  | "double-kick" | "gear-grind" | "bonemerang" | "double-hit" | "dual-chop" -> [MultHit 2]
-  | "sand-attack" | "smokescreen" | "kinesis" | "flash"
-    | "mud-slap" | "octazooka" | "leaf-tornado" | "mud-bomb"
-    | "muddy-water" | "mirror-shot"-> [StageAttack [(Accuracy, 1)]]
-  | "take-down" | "double-edge" | "submission" | "brave-bird" | "wild-charge"
-      | "wood-hammer" | "flare-blitz" | "head-smash" | "head-charge" -> [RecoilMove]
-  | "tail-whip" | "leer" | "iron-tail" | "crunch"
-    | "rock-smash" | "razor-shell" | "crush-claw" -> [StageAttack [(Defense, 1)]]
+  | "double-kick" | "gear-grind" | "bonemerang" | "double-hit"
+    | "dual-chop" -> [MultHit 2]
+  | "sand-attack" | "smokescreen" | "kinesis" | "flash" | "mud-slap"
+    | "octazooka" | "leaf-tornado" | "mud-bomb" | "muddy-water"
+    | "mirror-shot"-> [StageAttack [(Accuracy, 1)]]
+  | "take-down" | "double-edge" | "submission" | "brave-bird"
+    | "wild-charge" | "wood-hammer" | "flare-blitz" | "head-smash"
+    | "head-charge" -> [RecoilMove]
+  | "tail-whip" | "leer" | "iron-tail" | "crunch" | "rock-smash"
+    | "razor-shell" | "crush-claw" -> [StageAttack [(Defense, 1)]]
   | "poison-sting" | "poison-powder" | "smog" | "sludge" | "poison-gas"
-    | "sludge-bomb" | "poison-jab" | "gunk-shot" | "sludge-wave" -> [PoisonChance]
+    | "sludge-bomb" | "poison-jab" | "gunk-shot"
+    | "sludge-wave" -> [PoisonChance]
   | "cross-poison" | "poison-tail" -> [PoisonChance; IncCrit 1]
   | "twineedle" -> [MultHit 2; PoisonChance]
   | "growl" | "aurora-beam" | "baby-doll-eyes" | "play-rough" | "play-nice"
@@ -458,12 +496,14 @@ let getSecondaryEffect str = match str with
     | "needle-arm" | "rock-slide" | "rolling-kick" | "steamroller"
     | "stomp" | "zen-headbutt" -> [FlinchMove]
   | "acid" | "psychic" | "shadow-ball" | "flash-cannon" | "bug-buzz"
-    | "energy-ball" | "focus-blast" | "earth-power" | "luster-purge" -> [StageAttack [(SpecialDefense, 1)]]
+    | "energy-ball" | "focus-blast" | "earth-power"
+    | "luster-purge" -> [StageAttack [(SpecialDefense, 1)]]
   | "mist-ball" | "moonblast" | "snarl" -> [StageAttack [(SpecialAttack, 1)]]
-  | "bubble-beam" | "bubble" | "icy-wind" | "mud-shot" | "electroweb" | "constrict"
-    | "rock-tomb" | "low-sweep" | "bulldoze"-> [StageAttack [(Speed, 1)]]
+  | "bubble-beam" | "bubble" | "icy-wind" | "mud-shot" | "electroweb"
+    | "constrict" | "rock-tomb" | "low-sweep"
+    | "bulldoze"-> [StageAttack [(Speed, 1)]]
   | "hyper-beam"| "blast-burn" | "frenzy-plant" | "hydro-cannon"
-      | "roar-of-time" | "giga-impact" | "rock-wrecker"  -> [RechargeMove]
+    | "roar-of-time" | "giga-impact" | "rock-wrecker"  -> [RechargeMove]
   | "swift" | "feint-attack" | "vital-throw" | "aerial-ace" | "magnet-bomb"
     | "shock-wave" | "magical-leaf" | "shadow-punch" -> [NeverMiss]
   | "recover" | "soft-boiled" | "milk-drink" | "roost" | "heal-order"
@@ -484,10 +524,12 @@ let getSecondaryEffect str = match str with
   | "screech" | "metal-sound" -> [StageAttack [(Defense, 2)]]
   | "double-team" -> [StageBoost [(Evasion, 1)]]
   | "minimize" -> [StageBoost [(Evasion, 2)]]
-  | "harden" | "withdraw" | "defense-curl" | "steel-wing" -> [StageBoost [(Defense, 1)]]
+  | "harden" | "withdraw" | "defense-curl"
+    | "steel-wing" -> [StageBoost [(Defense, 1)]]
   | "barrier" | "acid-armor" | "iron-defense" -> [StageBoost [(Defense, 2)]]
   | "calm-mind" -> [StageBoost [(SpecialDefense, 1); (SpecialAttack, 1)]]
-  | "overheat" | "draco-meteor" | "leaf-storm" | "psycho-boost" -> [StageBoost [(SpecialAttack, -2)]]
+  | "overheat" | "draco-meteor" | "leaf-storm"
+    | "psycho-boost" -> [StageBoost [(SpecialAttack, -2)]]
   | "work-up" -> [StageBoost [(Attack, 1); (SpecialAttack, 1)]]
   | "light-screen" -> [LightScreenMake]
   | "haze" -> [Haze]
@@ -498,7 +540,8 @@ let getSecondaryEffect str = match str with
   | "nasty-plot" -> [StageBoost [(SpecialAttack, 2)]]
   | "charge-beam" -> [StageBoost [(SpecialAttack, 1)]]
   | "dream-eater" -> [DrainMoveSleep]
-  | "sky-attack" -> [ChargeMove "The Pokemon is glowing."; IncCrit 1; FlinchMove]
+  | "sky-attack" -> [ChargeMove "The Pokemon is glowing.";
+                      IncCrit 1; FlinchMove]
   | "psywave" -> [VariableDamage]
   | "rest" -> [Rest]
   | "tri-attack" -> [ParaChance; BurnChance; FreezeChance]
@@ -506,7 +549,8 @@ let getSecondaryEffect str = match str with
   | "substitute" -> [SubstituteMake]
   | "triple-kick" -> [MultHit 3]
   | "flail" | "reversal" -> [Flail]
-  | "protect" | "detect"| "quick-guard" | "wide-guard" | "crafty-shield" | "mat-block" -> [Protect]
+  | "protect" | "detect"| "quick-guard" | "wide-guard" | "crafty-shield"
+    | "mat-block" -> [Protect]
   | "belly-drum" -> [BellyDrum]
   | "spikes" -> [Spikes]
   | "swagger" -> [StageAttack [(Attack, -2)]; ConfuseOpp]
@@ -544,15 +588,18 @@ let getSecondaryEffect str = match str with
   | "cotton-guard" -> [StageBoost [(Defense, 3)]]
   | "tickle" -> [StageAttack [(Attack,1);(Defense,1)]]
   | "captivate" | "eerie-impulse" -> [StageAttack [(SpecialAttack, 2)]]
-  | "fake-tears" | "acid-spray" | "seed-flare" -> [StageAttack [(SpecialDefense, 2)]]
+  | "fake-tears" | "acid-spray"
+    | "seed-flare" -> [StageAttack [(SpecialDefense, 2)]]
   | "knock-off" | "embargo" -> [KnockOff]
   | "frost-breath" | "storm-throw" -> [IncCrit 3]
   | "hone-claws" -> [StageBoost [(Attack,1);(Accuracy,1)]]
   | "ominous-wind" | "silver-wind" | "ancient-power" -> [ChanceStageBoost]
   | "volt-switch" | "u-turn" -> [SelfSwitch]
   | "foul-play" -> [FoulPlay]
-  | "quiver-dance" -> [StageBoost [(SpecialAttack, 1); (SpecialDefense,1); (Speed, 1)]]
-  | "shell-smash" -> [StageBoost [(SpecialAttack, 2); (Attack,2); (Speed, 2); (Defense, -1); (SpecialDefense, -1)]]
+  | "quiver-dance" -> [StageBoost [(SpecialAttack, 1);
+                        (SpecialDefense,1); (Speed, 1)]]
+  | "shell-smash" -> [StageBoost [(SpecialAttack, 2); (Attack,2); (Speed, 2);
+                        (Defense, -1); (SpecialDefense, -1)]]
   | "volt-tackle" -> [RecoilMove; ParaChance]
   | "coil" -> [StageBoost [(Attack, 1); (Defense, 1); (Accuracy, 1)]]
   | "taunt" -> [TauntMove]
@@ -577,7 +624,8 @@ let getSecondaryEffect str = match str with
   | "switcheroo" | "trick" -> [ItemSwitch]
   | "close-combat" -> [StageBoost [(Defense, -1); (SpecialDefense, -1)]]
   | "wish" -> [WishMake]
-  | "simple-beam" | "entrainment" | "worry-seed" | "skill-swap" -> [AbilityChange]
+  | "simple-beam" | "entrainment" | "worry-seed"
+    | "skill-swap" -> [AbilityChange]
   | "magnitude" | "present" -> [ChancePower]
   | "topsy-turvy" -> [ReverseStats]
   | "final-gambit" -> [FinalGambit]
@@ -590,17 +638,17 @@ let getSecondaryEffect str = match str with
   | "heart-swap" -> [HeartSwap]
   | "fake-out" -> [FakeOut; FlinchMove]
   | "facade" -> [Facade]
-  | "parting-shot" -> [StageAttack [(Attack, 1); (SpecialAttack, 1)]; SelfSwitch]
+  | "parting-shot" -> [StageAttack [(Attack, 1); (SpecialAttack, 1)];
+                        SelfSwitch]
   | "gastro-acid" -> [GastroAcid]
   | "smelling-salts" -> [SmellingSalts]
-  | "counter" | "mirror-coat" | "metal-burst" | "revenge" | "avalanche" | "payback" -> [Counter]
+  | "counter" | "mirror-coat" | "metal-burst" | "revenge" | "avalanche"
+    | "payback" -> [Counter]
   | "psycho-shift" -> [PsychoShift]
   | "endeavor" -> [Endeavor]
   | _ -> []
 
-(* Returns something of form  {name:string; priority: int; target: target; dmg_class: dmg_class;
-    power:int; effect_chance: int; accuracy: int; element: element;
-    description: string} *)
+(* Returns a move from an input string. *)
 let getMoveFromString str =
   Printf.printf "%s\n%!" str;
   let move = move_json |> member str in
@@ -626,12 +674,21 @@ let getMoveFromString str =
   {name = str; priority; target; dmg_class; power; effect_chance; accuracy;
   element; description; secondary}
 
+(* Returns a list of all the possible moves the Pokemon [poke] can have as
+ * one of its four moves.
+ *)
 let getAllMoves poke =
-  List.fast_sort compare (List.map (to_string) (poke_json |> member poke |> member "moves" |> to_list))
+  List.fast_sort compare (List.map (to_string) (poke_json |> member poke
+    |> member "moves" |> to_list))
 
+(* Returns a list of all the possible abilities the Pokemon [poke] can have. *)
 let getAllAbilities poke =
   List.map (to_string) (poke_json |> member poke |> member "ability" |> to_list)
 
+(* Returns a Mega Pokemon from an input Pokemon [pokeinfo] and a string [str].
+ *
+ *  - [str] is a string, one of "mega", "mega-x", "mega-y".
+ *)
 let convertToMega pokeinfo str =
   let newpokename = pokeinfo.name ^ str in
   let newpoke = poke_json |> member newpokename in
@@ -651,18 +708,25 @@ let convertToMega pokeinfo str =
             |> to_string in
   {name = newpokename; element = pokeinfo.element; move1 = pokeinfo.move1;
   move2 = pokeinfo.move2; move3 = pokeinfo.move3; move4 = pokeinfo.move4;
-  hp; attack; defense; special_defense; special_attack; speed; evs = pokeinfo.evs;
-  nature = pokeinfo.nature; item = pokeinfo.item; ability}
+  hp; attack; defense; special_defense; special_attack; speed;
+  evs = pokeinfo.evs; nature = pokeinfo.nature; item = pokeinfo.item; ability}
 
+(* Returns true if the Pokemon with the string name [pokename] has a MegaY
+ * evolution, false otherwise. *)
 let findMegaY pokename =
   (poke_json |> member (pokename ^ "-mega-y") <> `Null)
 
+(* Returns true if the Pokemon with the string name [pokename] has a MegaX
+ * evolution, false otherwise. *)
 let findMegaX pokename =
   (poke_json |> member (pokename ^ "-mega-x") <> `Null)
 
+(* Returns true if the Pokemon with the string name [pokename] has a Mega
+ * evolution, false otherwise. *)
 let findMega pokename =
   (poke_json |> member (pokename ^ "-mega") <> `Null)
 
+(* Returns a Pokemon from the input string name of a valid Pokemon. *)
 let generatePokemon str =
   let randomPoke = poke_json |> member str in
   let element_string = randomPoke |> member "type" |> to_list|> filter_string in
@@ -686,8 +750,8 @@ let generatePokemon str =
             |> int_of_string in
   let ability = getRandomElement (randomPoke |> member "ability" |> to_list)
             |> to_string in
-  let evs = {attack = 84; defense =  84; special_attack= 84; special_defense= 84;
-            hp=84; speed=84} in
+  let evs = {attack = 84; defense =  84; special_attack= 84;
+            special_defense= 84; hp=84; speed=84} in
   let nature = getRandomNature () in
   let item = getRandomItem () in
   while (move2s = move1s) do move2s := getRandomElement moves |> to_string done;
@@ -703,11 +767,13 @@ let generatePokemon str =
   attack; defense; special_defense; special_attack; speed; ability; evs;
   nature; item}
 
+(* Returns a random Pokemon. *)
 let getRandomPokemon () =
   let randomPokeName = poke_arr |>
     member (string_of_int (Random.int num_pokemon_total + 1)) |> to_string in
   generatePokemon randomPokeName
 
+(* Returns a preset Pokemon (an unlocked Pokemon that is in the saved state.) *)
 let getPresetPokemon ?pjson:(pjson=unlocked_pokemon ()) str =
   Printf.printf "%s\n%!" str;
   let poke = poke_json |> member str in
@@ -716,9 +782,12 @@ let getPresetPokemon ?pjson:(pjson=unlocked_pokemon ()) str =
     presetpoke |> member "evs" |> member str |> to_string |> int_of_string in
   let element_string = poke |> member "type" |> to_list|> filter_string in
   let element = List.map getElement element_string in
-  let moveslist = List.map (to_string) (presetpoke |> member "moves" |> to_list) in
-  let hp = poke |> member "stats" |> member "hp" |> to_string |> int_of_string in
-  let attack = poke |> member "stats" |> member "attack" |> to_string |> int_of_string in
+  let moveslist = List.map (to_string) (presetpoke |> member "moves"
+                    |> to_list) in
+  let hp = poke |> member "stats" |> member "hp" |> to_string
+            |> int_of_string in
+  let attack = poke |> member "stats" |> member "attack" |> to_string
+                |> int_of_string in
   let defense = poke |> member "stats" |> member "defense" |> to_string
             |> int_of_string in
   let special_defense = poke |> member "stats" |> member "special-defense"
@@ -732,7 +801,8 @@ let getPresetPokemon ?pjson:(pjson=unlocked_pokemon ()) str =
             special_attack = ev_helper "special-attack"; special_defense =
             ev_helper "special-defense"; speed = ev_helper "speed";
             hp = ev_helper "hp"} in
-  let nature = getNatureFromString (presetpoke |> member "nature" |> to_string) in
+  let nature = getNatureFromString (presetpoke |> member "nature"
+                |> to_string) in
   let item = getItemFromString (presetpoke |> member "item" |> to_string) in
   let move1 = getMoveFromString (List.hd moveslist) in
   let move2 = getMoveFromString (List.nth moveslist 1) in
@@ -742,31 +812,37 @@ let getPresetPokemon ?pjson:(pjson=unlocked_pokemon ()) str =
   attack; defense; special_defense; special_attack; speed; ability; evs;
   nature; item}
 
+(* Returns a random preset Pokemon. *)
 let getRandomPreset ?pjson:(pjson=unlocked_pokemon ()) () =
  let full_list = List.map (to_string) (pjson |> member "pokemon" |> to_list) in
  let rand = Random.int (List.length full_list) in
  getPresetPokemon ~pjson:pjson (List.nth full_list rand)
 
+(* Returns a Pokemon to be utilized for testing purposes. *)
 let getTestPoke () =
-  let evs = {attack = 0; defense =  255; special_attack= 255; special_defense= 255;
-            hp=255; speed=255} in
+  let evs = {attack = 0; defense =  255; special_attack= 255;
+            special_defense= 255; hp=255; speed=255} in
   let nature = Bold in
   let item = Nothing in
-  {name="gardevoir-mega"; element=[Grass]; move1= getMoveFromString "confuse-ray"; move2 =
-  getMoveFromString "metal-burst"; move3 = getMoveFromString "recover";
-  move4 = getMoveFromString "pound"; hp = 120; attack = 100; special_attack = 90; defense = 85;
-  speed = 120; special_defense = 200; ability="speed-boost"; evs; nature; item}
+  {name="gardevoir-mega"; element=[Grass];
+  move1=getMoveFromString "confuse-ray"; move2=getMoveFromString "metal-burst";
+  move3=getMoveFromString "recover"; move4=getMoveFromString "pound"; hp=120;
+  attack=100; special_attack=90; defense = 85; speed=120; special_defense=200;
+  ability="speed-boost"; evs; nature; item}
 
+(* Returns an opposing Pokemon to be utilized for testing purposes. *)
 let getTestOpp () =
   let evs = {attack = 255; defense =  0; special_attack= 0; special_defense= 0;
             hp=255; speed=255} in
   let nature = Bold in
   let item = Nothing in
-  {name="gallade-mega"; element=[Grass]; move1= getMoveFromString "confuse-ray"; move2 =
-  getMoveFromString "counter"; move3 = getMoveFromString "slack-off";
-  move4 = getMoveFromString "cosmic-power"; hp = 100; attack = 100; special_attack = 80; defense = 40;
-  speed = 100; special_defense = 50; ability=""; evs; nature; item}
+  {name="gallade-mega"; element=[Grass]; move1= getMoveFromString "confuse-ray";
+  move2 = getMoveFromString "counter"; move3 = getMoveFromString "slack-off";
+  move4 = getMoveFromString "cosmic-power"; hp = 100; attack = 100;
+  special_attack = 80; defense = 40; speed = 100; special_defense = 50;
+  ability=""; evs; nature; item}
 
+(* Returns a string to be displayed as the Tool Tip for a Pokemon in the GUI. *)
 let getPokeToolTip t =
   let battlePoke = t.current in
   "Name: " ^ battlePoke.pokeinfo.name ^
@@ -780,6 +856,7 @@ let getPokeToolTip t =
   "\nItem: " ^ string_of_item battlePoke.curr_item ^
   "\nStatus: " ^ string_of_poke_status battlePoke.curr_status
 
+(* Returns a string to be displayed as the Tool Tip for a move in the GUI. *)
 let getMoveToolTip move =
   "Class: " ^ string_of_class move.dmg_class ^
   (if move.dmg_class = Physical || move.dmg_class = Special then
