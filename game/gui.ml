@@ -516,6 +516,9 @@ let load_battle_screen engine img bg_img battle text buttonhide buttonshow
   move2#misc#set_has_tooltip true;
   move3#misc#set_has_tooltip true;
   move4#misc#set_has_tooltip true;
+  (* text buffer reset *)
+  text_buffer#set_text
+      "Battle Starting. Press Space For Going to Next Text Prompt.";
   (* get tooltip information *)
   move1#misc#set_tooltip_text
           (Pokemon.getMoveToolTip team1.current.pokeinfo.move1);
@@ -528,6 +531,8 @@ let load_battle_screen engine img bg_img battle text buttonhide buttonshow
   (* set Pokemon pictures *)
   poke1_img#set_file ("../data/back-sprites/" ^ poke1 ^ ".gif");
   poke2_img#set_file ("../data/sprites/" ^ poke2 ^ ".gif");
+  status_img1#set_file ("../data/fx/status/healthy.png");
+  status_img2#set_file ("../data/fx/status/healthy.png");
   (* set health bar information; give tooltips to health bars *)
   health_bar1#misc#set_has_tooltip true;
   health_bar1#set_fraction 1.;
@@ -642,6 +647,9 @@ let load_random  engine img bg_img load_screen battle text buttonhide buttonshow
               (battle_status, gui_ready, ready, ready_gui) Random1p main_menu battle_screen
               poke1_img poke2_img text_buffer health_holders menu_holder ()
   | Menu2P -> load_battle_load engine img bg_img load_screen battle text buttonhide buttonshow
+              (battle_status, gui_ready, ready, ready_gui) Random2p main_menu battle_screen
+              poke1_img poke2_img text_buffer health_holders menu_holder ()
+  | Menu0P -> load_battle_load engine img bg_img load_screen battle text buttonhide buttonshow
               (battle_status, gui_ready, ready, ready_gui) Random2p main_menu battle_screen
               poke1_img poke2_img text_buffer health_holders menu_holder ()
   | _ -> failwith "Faulty Game Logic: Debug 298"
@@ -1301,8 +1309,31 @@ let animate_attack (animbox : GPack.fixed) img startx starty nextx' nexty (movea
         done
       done; move_img#misc#hide ())
   | `FlinchMiss -> ()
-  | `ConfuseMiss -> ()
-  | `FrozenMiss -> ()
+  | `ConfuseMiss ->
+    ( move_img#misc#show ();
+      moveanim#move move_img#coerce (startx-10) (starty-40);
+      for i = 0 to 3 do
+        move_img#set_file "../data/fx/confused1.png";
+        for i = 0 to 20 do
+          busywait_small ()
+        done;
+        move_img#set_file "../data/fx/confused2.png";
+        for i = 0 to 20 do
+          busywait_small ()
+        done
+      done; move_img#misc#hide ())
+  | `FrozenMiss ->
+      ( move_img#misc#show ();
+      moveanim#move move_img#coerce (startx-40) (starty-60);
+      move_img#set_file "../data/fx/ice1.png";
+      for i = 0 to 40 do
+        busywait_small ()
+      done;
+      move_img#set_file "../data/fx/ice2.png";
+      for i = 0 to 40 do
+        busywait_small ()
+      done;
+      move_img#misc#hide ())
   | `DontMissStatus ->
       ( move_img#misc#show ();
       moveanim#move move_img#coerce startx starty;
@@ -1328,15 +1359,50 @@ let animate_attack (animbox : GPack.fixed) img startx starty nextx' nexty (movea
       done;
       move_img#misc#hide ())
   | `SubStatus -> ()
-  | `ShieldStatus -> ()
+  | `ShieldStatus ->
+    ( move_img#misc#show ();
+      moveanim#move move_img#coerce (startx-10) starty;
+      move_img#set_file "../data/fx/shield1.png";
+      for i = 0 to 25 do
+        busywait_small ()
+      done;
+      move_img#set_file "../data/fx/shield2.png";
+      for i = 0 to 25 do
+        busywait_small ()
+      done;
+      move_img#set_file "../data/fx/shield3.png";
+      for i = 0 to 25 do
+        busywait_small ()
+      done;
+      move_img#set_file "../data/fx/shield2.png";
+      for i = 0 to 25 do
+        busywait_small ()
+      done;
+      move_img#set_file "../data/fx/shield1.png";
+      for i = 0 to 25 do
+        busywait_small ()
+      done;
+      move_img#misc#hide ())
   | `SpikesStatus -> ()
   | `TSpikesStatus -> ()
   | `RockStatus -> ()
-  | `HealStatus -> ()
+  | `HealStatus ->
+    ( move_img#misc#show ();
+      moveanim#move move_img#coerce (startx-10) starty;
+      for i = 0 to 3 do
+        move_img#set_file "../data/fx/heart1.png";
+        for i = 0 to 20 do
+          busywait_small ()
+        done;
+        move_img#set_file "../data/fx/heart2.png";
+        for i = 0 to 20 do
+          busywait_small ()
+        done
+      done; move_img#misc#hide ())
   | `LeechStatus -> ()
   | `BurnDmg ->
     ( move_img#misc#show ();
-      moveanim#move move_img#coerce (startx-30) starty;
+      moveanim#move move_img#coerce (startx-20) starty;
       for i = 0 to 2 do
         move_img#set_file "../data/fx/burn1.png";
         for i = 0 to 20 do
@@ -1475,8 +1541,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
     move3#misc#set_tooltip_text (Pokemon.getMoveToolTip t1.current.pokeinfo.move3);
     move4#misc#set_tooltip_text (Pokemon.getMoveToolTip t1.current.pokeinfo.move4);
     health_bar1#misc#set_tooltip_text (Pokemon.getPokeToolTip t1);
-    health_bar2#misc#set_tooltip_text (Pokemon.getPokeToolTip t2);
-    updatehealth1 (); updatehealth2 () in
+    health_bar2#misc#set_tooltip_text (Pokemon.getPokeToolTip t2) in
   let update_current_command () =
     let charging1, s1 = findForcedMove (snd t1.current.curr_status) in
     let charging2, s2 = findForcedMove (snd t2.current.curr_status) in
@@ -1507,7 +1572,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
                   | (_, None) -> text_buffer#set_text (Pokemon.string_of_weather w.weather); List.iter (fun s -> s#misc#show ()) battle_buttons; current_screen := Battle (P2 ChooseMove); update_buttons engine move1 move2 move3 move4
                   | _ -> Ivar.fill !gui_ready !current_command; current_command := (None, None); game_step ()) in
   let simple_move () =
-    updatetools ();
+    updatetools (); updatehealth1 (); updatehealth2 ();
     skipturn () in
   let turn_end () =
     (Ivar.fill !gui_ready (Some TurnEnd, Some TurnEnd); game_step ()) in
@@ -1687,14 +1752,14 @@ let rec game_animation engine buttons (battle: GPack.table) text
                    let str_list = Str.split (Str.regexp "\\.") atk_string in
                    continue := false; List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
                    animate_attack pokeanim1 poke1_img poke1x poke1y poke2x poke2y moveanim move_img (getMoveString a);
-                   updatetools ();
+                   updatetools (); updatehealth2 ();
                    pre_process ()
   | Pl2 AttackMove a -> secondaryEffect := `P2;
                    let atk_string = getAttackString t2.current.pokeinfo.name a in
                    let str_list = Str.split (Str.regexp "\\.") atk_string in
                    continue := false; List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
                    animate_attack pokeanim2 poke2_img poke2x poke2y poke1x poke1y moveanim move_img (getMoveString a);
-                   updatetools ();
+                   updatetools (); updatehealth1 ();
                    pre_process ()
   | Pl1 Status s ->secondaryEffect := `P1;
                    let status_string = getStatusString t1.current.pokeinfo.name s in
