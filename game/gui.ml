@@ -503,14 +503,17 @@ let load_battle_screen engine img bg_img battle text buttonhide buttonshow
   let poke2 = (team2.current).pokeinfo.name in
   getRandomBg (); bg_img#set_file !bg_string;
   img#misc#hide (); battle#misc#show (); text#misc#show ();
-  (* hide and show necessary buttons *)
-  List.iter (fun s -> s#misc#hide ()) buttonhide;
-  List.iter (fun s -> s#misc#show ()) buttonshow;
   current_screen := Battle (P1 ChooseMove);
   move1#set_label (team1.current).pokeinfo.move1.name;
   move2#set_label (team1.current).pokeinfo.move2.name;
   move3#set_label (team1.current).pokeinfo.move3.name;
   move4#set_label (team1.current).pokeinfo.move4.name;
+  (* hide and show necessary buttons *)
+  List.iter (fun s -> s#misc#hide ()) buttonhide;
+  (if (get_game_status battle_status <> Random0p) then
+    (List.iter (fun s -> s#misc#show ()) buttonshow)
+  else
+    (move1#clicked ()));
   (* set tooltips *)
   move1#misc#set_has_tooltip true;
   move2#misc#set_has_tooltip true;
@@ -650,7 +653,7 @@ let load_random  engine img bg_img load_screen battle text buttonhide buttonshow
               (battle_status, gui_ready, ready, ready_gui) Random2p main_menu battle_screen
               poke1_img poke2_img text_buffer health_holders menu_holder ()
   | Menu0P -> load_battle_load engine img bg_img load_screen battle text buttonhide buttonshow
-              (battle_status, gui_ready, ready, ready_gui) Random2p main_menu battle_screen
+              (battle_status, gui_ready, ready, ready_gui) Random0p main_menu battle_screen
               poke1_img poke2_img text_buffer health_holders menu_holder ()
   | _ -> failwith "Faulty Game Logic: Debug 298"
 
@@ -1564,6 +1567,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
   let skipturn () =
     update_current_command ();
     match get_game_status battle_status with
+    | Random0p -> Ivar.fill !gui_ready !current_command; current_command := (None, None); game_step ()
     | Random1p | Preset1p _| TournBattle _ -> (match !current_command with
                   | (None, _) -> text_buffer#set_text (Pokemon.string_of_weather w.weather); List.iter (fun s -> s#misc#show ()) battle_buttons; current_screen := Battle (P1 ChooseMove); update_buttons engine move1 move2 move3 move4
                   | _ -> Ivar.fill !gui_ready !current_command; current_command := (None, None); game_step ())
@@ -1620,9 +1624,12 @@ let rec game_animation engine buttons (battle: GPack.table) text
                   (match !m2 with
                   | Pl2 Faint -> current_screen := Battle (P1 BothFaint)
                   | _ -> current_screen := Battle (P1 Faint));
-                  busywait (); updatetools ();
+                  (match get_game_status battle_status with
+                  | Random0p ->busywait (); current_command := (Some (FaintPoke ""), Some (NoMove));
+                               simple_move()
+                  | _ -> busywait (); updatetools ();
                   switch_poke engine [poke1;poke2;poke3;poke4;poke5] [move1;move2;
-                  move3;move4;switch] back_button ())
+                  move3;move4;switch] back_button ()))
   | Pl1 ForceChoose a ->
                   let atk_string = getAttackString t1.current.pokeinfo.name a in
                    let str_list = Str.split (Str.regexp "\\.") atk_string in
@@ -1633,9 +1640,13 @@ let rec game_animation engine buttons (battle: GPack.table) text
                    (match !m2 with
                    | Pl2 ForceMove a -> current_command := (fst !current_command, Some (UseAttack a))
                    | Pl2 ForceNone -> current_command := (fst !current_command, Some NoMove)
-                   | _ -> failwith "Faulty Game Logic: Debug 1353" ); busywait (); updatetools (); current_screen := Battle (P1 SwitchPokeF);
+                   | _ -> failwith "Faulty Game Logic: Debug 1353" );
+                   (match get_game_status battle_status with
+                    | Random0p -> busywait (); current_command := (fst !current_command), Some (Poke "random");
+                              simple_move()
+                    | _ -> busywait (); updatetools (); current_screen := Battle (P1 SwitchPokeF);
                    switch_poke engine [poke1;poke2;poke3;poke4;poke5] [move1;move2;
-                   move3;move4;switch] back_button ()
+                   move3;move4;switch] back_button ())
   | Pl1 ForceChooseS a ->
                   let atk_string = getStatusString t1.current.pokeinfo.name a in
                    let str_list = Str.split (Str.regexp "\\.") atk_string in
@@ -1646,9 +1657,14 @@ let rec game_animation engine buttons (battle: GPack.table) text
                    (match !m2 with
                    | Pl2 ForceMove a -> current_command := (fst !current_command, Some (UseAttack a))
                    | Pl2 ForceNone -> current_command := (fst !current_command, Some NoMove)
-                   | _ -> failwith "Faulty Game Logic: Debug 1353" ); busywait (); updatetools (); current_screen := Battle (P1 SwitchPokeF);
+                   | _ -> failwith "Faulty Game Logic: Debug 1353" );
+                   (match get_game_status battle_status with
+                    | Random0p -> busywait (); current_command := (fst !current_command), Some (Poke "random");
+                              simple_move()
+                    | _ ->  busywait (); updatetools (); current_screen := Battle (P1 SwitchPokeF);
                    switch_poke engine [poke1;poke2;poke3;poke4;poke5] [move1;move2;
                    move3;move4;switch] back_button ()
+                    )
   | Pl2 ForceChoose a ->
                   let atk_string = getAttackString t2.current.pokeinfo.name a in
                    let str_list = Str.split (Str.regexp "\\.") atk_string in
@@ -1661,7 +1677,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
                    | Pl1 ForceNone -> current_command := (Some NoMove, snd !current_command)
                    | _ -> failwith "Faulty Game Logic: Debug 1353" );
                    (match get_game_status battle_status with
-                    | Random1p | Preset1p _ | TournBattle _ -> busywait (); current_command := (fst !current_command), Some (Poke "random");
+                    | Random1p | Preset1p _ | TournBattle _  | Random0p-> busywait (); current_command := (fst !current_command), Some (Poke "random");
                               simple_move()
                     | Random2p | Preset2p _-> current_screen := Battle (P2 SwitchPokeF); busywait (); updatetools ();
                               current_command := (fst !current_command, snd !current_command);
@@ -1679,7 +1695,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
                    | Pl1 ForceNone -> current_command := (Some NoMove, snd !current_command)
                    | _ -> failwith "Faulty Game Logic: Debug 1353" );
                    (match get_game_status battle_status with
-                    | Random1p | Preset1p _ | TournBattle _ -> busywait (); current_command := (fst !current_command), Some (Poke "random");
+                    | Random1p | Preset1p _ | TournBattle _ | Random0p -> busywait (); current_command := (fst !current_command), Some (Poke "random");
                               simple_move()
                     | Random2p | Preset2p _-> current_screen := Battle (P2 SwitchPokeF); busywait (); updatetools ();
                               current_command := (fst !current_command, snd !current_command);
@@ -1691,9 +1707,12 @@ let rec game_animation engine buttons (battle: GPack.table) text
                   (match !m2 with
                   | Pl2 Faint -> current_screen := Battle (P1 BothFaint)
                   | _ -> current_screen := Battle (P1 Faint); current_command := (fst !current_command, Some NoMove));
-                  busywait (); updatetools ();
+                  (match get_game_status battle_status with
+                  | Random0p -> busywait (); current_command := (Some (FaintPoke ""), (if fst !current_command = None then Some (NoMove) else fst !current_command));
+                               simple_move()
+                  | _ -> busywait (); updatetools ();
                   switch_poke engine [poke1;poke2;poke3;poke4;poke5] [move1;move2;
-                  move3;move4;switch] back_button ())
+                  move3;move4;switch] back_button ()))
   | Pl2 Faint -> if List.length t2.dead = 5 then (text_buffer#set_text "Player One wins!";
                   (match get_game_status battle_status with
                       | TournBattle _ -> (try (let newpoke = unlockPokemon () in let success_win = GWindow.message_dialog ~message:("Unlocked " ^ newpoke)
@@ -1709,7 +1728,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
                       | _ -> ()); current_screen := Battle (P1 ChooseMove); back_button#misc#show ()) else
                   (text_buffer#set_text "Player Two Pokemon has fainted. Choosing a new Pokemon.";
                  (match get_game_status battle_status with
-                 | Random1p | Preset1p _ | TournBattle _ -> busywait (); current_command := ((if fst !current_command = None then Some (NoMove) else fst !current_command), Some (FaintPoke ""));
+                 | Random1p | Preset1p _ | TournBattle _ | Random0p -> busywait (); current_command := ((if fst !current_command = None then Some (NoMove) else fst !current_command), Some (FaintPoke ""));
                                simple_move()
                  | Random2p | Preset2p _ -> current_screen := Battle (P2 Faint); busywait (); updatetools ();
                               current_command := (Some NoMove, snd !current_command);
@@ -1731,7 +1750,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
                  (poke2_img#set_file ("../data/sprites/" ^ t2.current.pokeinfo.name ^ ".gif");
                  text_buffer#set_text (t2.current.pokeinfo.name ^ " has fainted. Choosing a new Pokemon.");
                  (match get_game_status battle_status with
-                 | Random1p | Preset1p _ | TournBattle _ -> busywait (); current_command := (Some (NoMove), Some (FaintPoke ""));
+                 | Random1p | Preset1p _ | TournBattle _ | Random0p-> busywait (); current_command := (Some (NoMove), Some (FaintPoke ""));
                                simple_move()
                  | Random2p | Preset2p _ -> current_screen := Battle (P2 Faint); busywait (); updatetools ();
                                 current_command := (Some (NoMove), snd !current_command);
@@ -1796,26 +1815,34 @@ let rec game_animation engine buttons (battle: GPack.table) text
                     List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
                     animate_attack pokeanim2 poke2_img poke2x poke2y poke1x poke1y moveanim move_img (getMoveStringEnd x);
                     updatehealth2 (); turn_end ()
-   | Pl1 ForceChoose a ->
+  | Pl1 ForceChoose a ->
                   let atk_string = getAttackString t1.current.pokeinfo.name a in
                    let str_list = Str.split (Str.regexp "\\.") atk_string in
                    continue := false; List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
                    animate_attack pokeanim1 poke1_img poke1x poke1y poke2x poke2y moveanim move_img (getMoveString a);
                    updatehealth2 ();
                    text_buffer#set_text "Player One Pokemon has switched out. Choosing a new Pokemon.";
+                   (match get_game_status battle_status with
+                    | Random0p ->  busywait (); current_command := (Some (Poke "random"), fst !current_command);
+                              simple_move()
+                    | _ ->
                    current_command := (fst !current_command, Some NoMove); busywait (); updatetools (); current_screen := Battle (P1 SwitchPokeF);
                    switch_poke engine [poke1;poke2;poke3;poke4;poke5] [move1;move2;
-                   move3;move4;switch] back_button ()
+                   move3;move4;switch] back_button ())
   | Pl1 ForceChooseS a ->
                   let atk_string = getStatusString t1.current.pokeinfo.name a in
                    let str_list = Str.split (Str.regexp "\\.") atk_string in
                    List.iter (fun s -> text_buffer#set_text s; busywait ()) str_list;
                    continue := false; animate_attack pokeanim1 poke1_img poke1x poke1y poke2x poke2y moveanim move_img (getMoveStringStatus a);
                    updatehealth2 ();
+                   (match get_game_status battle_status with
+                    | Random0p ->  busywait (); current_command := (Some (Poke "random"), fst !current_command);
+                              simple_move()
+                    | _ ->
                    text_buffer#set_text "Player One Pokemon has switched out. Choosing a new Pokemon.";
                    current_command := (fst !current_command, Some NoMove); busywait (); updatetools (); current_screen := Battle (P1 SwitchPokeF);
                    switch_poke engine [poke1;poke2;poke3;poke4;poke5] [move1;move2;
-                   move3;move4;switch] back_button ()
+                   move3;move4;switch] back_button ())
   | Pl2 ForceChoose a ->
                   let atk_string = getAttackString t2.current.pokeinfo.name a in
                    let str_list = Str.split (Str.regexp "\\.") atk_string in
@@ -1825,7 +1852,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
                    text_buffer#set_text "Player Two Pokemon has switched out. Choosing a new Pokemon.";
                    current_command := (Some NoMove, snd !current_command);
                    (match get_game_status battle_status with
-                    | Random1p | Preset1p _ | TournBattle _ -> busywait (); current_command := (fst !current_command), Some (Poke "random");
+                    | Random1p | Preset1p _ | TournBattle _ | Random0p -> busywait (); current_command := (fst !current_command), Some (Poke "random");
                               simple_move()
                     | Random2p | Preset2p _ -> current_screen := Battle (P2 SwitchPokeF); busywait (); updatetools ();
                               switch_poke engine [poke1;poke2;poke3;poke4;poke5] [move1;move2;
@@ -1839,7 +1866,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
                    text_buffer#set_text "Player Two Pokemon has switched out. Choosing a new Pokemon.";
                    current_command := (Some NoMove, snd !current_command);
                    (match get_game_status battle_status with
-                    | Random1p | Preset1p _ | TournBattle _ -> busywait (); current_command := (fst !current_command), Some (Poke "random");
+                    | Random1p | Preset1p _ | TournBattle _ | Random0p -> busywait (); current_command := (fst !current_command), Some (Poke "random");
                               simple_move()
                     | Random2p | Preset2p _ -> current_screen := Battle (P2 SwitchPokeF); busywait (); updatetools ();
                               switch_poke engine [poke1;poke2;poke3;poke4;poke5] [move1;move2;
@@ -1855,7 +1882,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
  match !current_command with
  | (None, None) | (None, Some _) -> failwith "Faulty Game Logic: Debug 03"
  | (Some _, None) -> (match get_game_status battle_status with
-                      | Random1p | Preset1p _ | TournBattle _-> List.iter (fun s -> s#misc#hide ()) battle_buttons; current_screen := Battle Processing; text_buffer#set_text "Both moves collected. Processing...";
+                      | Random1p | Preset1p _ | TournBattle _ | Random0p -> List.iter (fun s -> s#misc#hide ()) battle_buttons; current_screen := Battle Processing; text_buffer#set_text "Both moves collected. Processing...";
                                           Ivar.fill !gui_ready !current_command; current_command := (None, None);
                                           upon (Ivar.read !ready_gui) (fun _ -> ready_gui := Ivar.create (); game_animation engine battle_buttons battle text
                                                                         (battle_status, gui_ready, ready, ready_gui) bg_img poke1_img poke2_img move_img text_buffer health_holders pokeanim1 pokeanim2 moveanim back_button ())
@@ -1890,7 +1917,7 @@ let poke_move_cmd button engine buttons battle text
  match !current_screen with
   | Battle (P1 BothFaint) ->
         (match get_game_status battle_status with
-        | Random1p | Preset1p _ | TournBattle _ -> current_command := (Some (FaintPoke (button#label)), Some (FaintPoke "")); next ()
+        | Random1p | Preset1p _ | TournBattle _ | Random0p -> current_command := (Some (FaintPoke (button#label)), Some (FaintPoke "")); next ()
         (* In two player, you would call switch_poke command again *)
         | Random2p | Preset2p _ -> text_buffer#set_text "Player Twos' Pokemon has fainted. Choosing...";
                       current_command := (Some (FaintPoke (button#label)), snd !current_command); current_screen := Battle (P2 Faint); switch_poke engine [poke1;poke2;poke3;poke4;poke5] [move1;move2;
@@ -1938,7 +1965,7 @@ let main_gui engine battle_engine () =
   ignore(two_player#connect#clicked ~callback:(load_menu engine [random;preset;
   back_button] [one_player; two_player; no_player] main_menu_bg Menu2P));
   (* No player button *)
-  ignore(no_player#connect#clicked ~callback:(load_menu engine [random;preset;
+  ignore(no_player#connect#clicked ~callback:(load_menu engine [random;
   back_button] [one_player; two_player; no_player] main_menu_bg Menu0P));
  (* Back button *)
    ignore(back_button#connect#clicked

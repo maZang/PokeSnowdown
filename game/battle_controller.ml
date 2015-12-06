@@ -325,6 +325,7 @@ let getRandomPoke t =
 
 (* Finds the move of the pokemon based upon a string that is the move's name*)
 let findBattleMove poke move =
+  Printf.printf "%s %s\n%!" poke.name move;
   if (poke.move1.name = move) then
     poke.move1
   else if (poke.move2.name = move) then
@@ -2296,6 +2297,34 @@ let handle_action state action1 action2 =
                   | _ -> failwith "Faulty Game Logic: Debug 276")
   | AIMove -> failwith "unimplemented"
 
+(* Main loop for 0 player -- gets input from AI *)
+let rec main_loop_0p engine gui_ready ready ready_gui () =
+  let t1, t2 = match get_game_status engine with
+    | Battle InGame (t1, t2, _, _, _) -> t1, t2
+    | _ -> failwith "Faulty Game Logic" in
+  upon (Ivar.read !gui_ready) (* Replace NoMove with ai move later *)
+    (fun (cmd1, cmd2) -> let c1 = match (unpack cmd1) with
+                          | AIMove -> UseAttack (Ai.get_move_better t2.current t1.current)
+                          | NoMove -> NoMove
+                          | UseAttack s -> UseAttack s
+                          | Preprocess -> Preprocess
+                          | Poke s -> Poke s
+                          | FaintPoke _ -> FaintPoke (Ai.replace_dead_better t2.current t1.alive)
+                          | TurnEnd -> TurnEnd in
+                         let c2 = match (unpack cmd2) with
+                          | AIMove -> UseAttack (Ai.get_move_better t1.current t2.current)
+                          | NoMove -> NoMove
+                          | UseAttack s -> UseAttack s
+                          | Preprocess -> Preprocess
+                          | Poke s -> Poke s
+                          | FaintPoke _ -> FaintPoke (Ai.replace_dead_better t1.current t2.alive)
+                          | TurnEnd -> TurnEnd in
+                         let () = handle_action engine c1 c2 in
+                         gui_ready := Ivar.create ();
+                         Ivar.fill !ready_gui true;
+                         (main_loop_0p engine gui_ready ready ready_gui ()));
+   Printf.printf "Debug %d \n%!" (Scheduler.cycle_count ())
+
 (* Main loop for 1 player -- gets input from AI *)
 let rec main_loop_1p engine gui_ready ready ready_gui () =
   let t1, t2 = match get_game_status engine with
@@ -2326,6 +2355,16 @@ let rec main_loop_2p engine gui_ready ready ready_gui () =
                           Ivar.fill !ready_gui true;
                           (main_loop_2p engine gui_ready ready ready_gui ()));
     Printf.printf "Debug %d \n%!" (Scheduler.cycle_count ())
+
+(* Main controller for random zero player *)
+let rec main_controller_random0p engine gui_ready ready ready_gui=
+ Printf.printf "Initializing battle r1p\n%!";
+  let team1 = getRandomTeam `Random in
+  let team2 = getRandomTeam `Random in
+  let battle = initialize_battle team1 team2 in
+  let () = engine := Ivar.create (); Ivar.fill !engine battle;
+  Ivar.fill !ready_gui true in
+  main_loop_0p engine gui_ready ready ready_gui ()
 
 (* Main controller for random one player *)
 let rec main_controller_random1p engine gui_ready ready ready_gui=
@@ -2396,6 +2435,7 @@ let initialize_controller (engine, battle_engine) =
   let battle_status, gui_ready, ready, ready_gui = battle_engine in
   upon (Ivar.read !battle_status) (Printf.printf "Initializing battle\n%!";
     fun s -> match s with
+    | Random0p -> (main_controller_random0p engine gui_ready ready ready_gui)
     | Random1p -> (main_controller_random1p engine gui_ready ready ready_gui)
     | Random2p -> (main_controller_random2p engine gui_ready ready ready_gui)
     | TournBattle t -> (main_controller_tourn engine gui_ready ready ready_gui t)
