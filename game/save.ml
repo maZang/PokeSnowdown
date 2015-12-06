@@ -1,18 +1,16 @@
 open Pokemon
 open Info
 
-(* Save handles all the save data and the user/opponent files.
-*)
+(* Save handles all the save data and the user/opponent files. *)
 
 exception FaultyGameSave
 exception BadFieldOption
 exception BadEVInput
 exception OwnPokemonAlready
 
-(* Updates the pokemon fields for the save file and Pokemon editor
-*)
+(* Updates the pokemon fields for the save file and Pokemon editor. *)
 let updatePokemonFields pokename move1 move2 move3 move4 ability nature
-  item hpevs atkevs defevs spatkevs spdefevs speedevs key=
+  item hpevs atkevs defevs spatkevs spdefevs speedevs key =
   let move_lst = getAllMoves pokename in
   let abil_lst = getAllAbilities pokename in
   let nature_list = nature_list in
@@ -40,8 +38,7 @@ let updatePokemonFields pokename move1 move2 move3 move4 ability nature
         | _ -> raise FaultyGameSave)
   | _ -> raise BadFieldOption
 
-(* Creates the save file for pokedit
-*)
+(* Creates the save file for pokedit. *)
 let createSavePokeEdit pokename move1 move2 move3 move4 ability nature item
   hpevs atkevs defevs spatkevs spdefevs speedevs =
   let prevSave = unlocked_pokemon () in
@@ -60,8 +57,7 @@ let createSavePokeEdit pokename move1 move2 move3 move4 ability nature item
   | _ -> raise FaultyGameSave in
   Yojson.Basic.to_file "../data/factorysets.json" newSave
 
-(* Converts a pokemon (from record to a json) to a json format
-*)
+(* Converts a pokemon (from record to a JSON) to a JSON format. *)
 let convertPokeToJson poke =
   `Assoc [("name", `String poke.name);
           ("moves", `List [`String poke.move1.name; `String poke.move2.name;
@@ -79,8 +75,7 @@ let convertPokeToJson poke =
                           ("speed", `String (string_of_int
                                 poke.evs.speed))]))]
 
-(* Add a pokemon to your unlocked list
-*)
+(* Add a pokemon to your unlocked list. *)
 let rec addToUnlocked pokename lst =
   match lst with
   | (s, `List x)::t -> if s = "pokemon" then (s, `List
@@ -89,8 +84,7 @@ let rec addToUnlocked pokename lst =
   | _ -> raise FaultyGameSave
 
 (* Used for incrementing your saves (such as number of times beat Professor Oak,
-etc...)
-*)
+ *  etc...). *)
 let rec incPrevSave key lst =
   match lst with
   | (s, `Int n)::t -> if key = s then (s, `Int (n+1))::t
@@ -106,9 +100,8 @@ let rec incPlayOak () =
   | _ -> raise FaultyGameSave in
   Yojson.Basic.to_file "../data/factorysets.json" newSave
 
-(*adds a Pokemon to your save file and increments the amount of times you beat
-  someone.
-*)
+(* Adds a Pokemon to your save file and increments the amount of times you beat
+ *  someone. *)
 let addPoke beat str =
   if List.mem str (unlocked_poke_string_list ()) then
     raise OwnPokemonAlready
@@ -123,38 +116,38 @@ let addPoke beat str =
     | _ -> raise FaultyGameSave in
     Yojson.Basic.to_file "../data/factorysets.json" newSave)
 
-(* Gets the stat message to be printed out *)
+(* Gets the stat message to be printed out. *)
 let getFileMessage () =
   let open Yojson.Basic.Util in
   let save = unlocked_pokemon () in
   match save with
-  | `Assoc l -> "Unlocked Pokemon: " ^ (List.assoc "unlocked" l |> to_int
+  | `Assoc l -> "Unlocked Pokemon: " ^ (List.assoc "Unlocked" l |> to_int
                                             |> string_of_int) ^ "\n" ^
                 "You beat baldman " ^ (List.assoc "baldman" l |> to_int
-                                          |> string_of_int) ^ " times\n" ^
+                                          |> string_of_int) ^ " times!\n" ^
                 "You beat beauty " ^ (List.assoc "beauty" l |> to_int
-                                          |> string_of_int) ^ " times\n" ^
+                                          |> string_of_int) ^ " times!\n" ^
                 "You beat bugcatcher " ^ (List.assoc "bugcatcher" l
-                                |> to_int |> string_of_int) ^ " times\n" ^
+                                |> to_int |> string_of_int) ^ " times!\n" ^
                 "You beat campernerd " ^ (List.assoc "campernerd" l
-                                |> to_int |> string_of_int) ^ " times\n" ^
+                                |> to_int |> string_of_int) ^ " times!\n" ^
                 "You beat dragontamer " ^ (List.assoc "dragontamer" l
-                                |> to_int |> string_of_int) ^ " times\n" ^
+                                |> to_int |> string_of_int) ^ " times!\n" ^
                 "You beat falkner " ^ (List.assoc "falkner" l |> to_int
-                                |> string_of_int) ^ " times\n" ^
+                                |> string_of_int) ^ " times!\n" ^
                 "You beat fatman " ^ (List.assoc "fatman" l |> to_int
-                                |> string_of_int) ^ " times\n" ^
+                                |> string_of_int) ^ " times!\n" ^
                 "You beat psychic " ^ (List.assoc "psychic" l |> to_int
-                                |> string_of_int) ^ " times\n" ^
+                                |> string_of_int) ^ " times!\n" ^
                 "You beat youngster " ^ (List.assoc "youngster" l |> to_int
-                                |> string_of_int) ^ " times\n" ^
+                                |> string_of_int) ^ " times!\n" ^
                 (let times_beat_oak = List.assoc "professor oak" l
                                     |> to_int in if times_beat_oak > 0 then
                 "You beat Professor Oak " ^ string_of_int times_beat_oak
-                  ^ " times\n" else "")
+                  ^ " times\n" else "!")
   | _ -> raise FaultyGameSave
 
-(* Returns true if you beat the game *)
+(* Returns true if you beat the game. *)
 let beat_game () =
   let open Yojson.Basic.Util in
   match unlocked_pokemon () with
