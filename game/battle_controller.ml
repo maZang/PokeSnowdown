@@ -2554,7 +2554,10 @@ let initialize_controller (engine, battle_engine) =
     | Random0p -> (main_controller_random0p engine gui_ready ready ready_gui)
     | Random1p -> (main_controller_random1p engine gui_ready ready ready_gui)
     | Random2p -> (main_controller_random2p engine gui_ready ready ready_gui)
-    | TournBattle t -> (main_controller_tourn engine gui_ready ready ready_gui t)
-    | Preset1p t -> (main_controller_preset1p engine gui_ready ready ready_gui t)
-    | Preset2p (t, t') -> main_controller_preset2p engine gui_ready ready ready_gui t t');
+    | TournBattle t ->
+        (main_controller_tourn engine gui_ready ready ready_gui t)
+    | Preset1p t ->
+        (main_controller_preset1p engine gui_ready ready ready_gui t)
+    | Preset2p (t, t') ->
+        main_controller_preset2p engine gui_ready ready ready_gui t t');
   ()
