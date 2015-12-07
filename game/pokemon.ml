@@ -284,13 +284,14 @@ let getElementEffect elm1 elm2 =
   | Flying ->
     (match elm2 with
       | Fighting | Bug | Grass -> 2.
-      | Rock | Electric -> 0.5
+      | Rock | Electric | Steel -> 0.5
       | _ -> 1.
     )
   |  Poison ->
     (match elm2 with
       | Grass | Fairy -> 2.
       | Poison | Ground | Rock | Ghost -> 0.5
+      | Steel -> 0.
       | _ -> 1.
     )
   |  Ground ->

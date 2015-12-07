@@ -108,6 +108,9 @@ let convertToMega t =
 let initialize_battle team1 team2 =
   convertToMega team1;
   convertToMega team2;
+  prevpoke1 := {team1.current with curr_hp = team1.current.curr_hp};
+  prevpoke2 := {team2.current with curr_hp = team2.current.curr_hp};
+  command_queue := [];
    Battle (InGame
     (team1, team2, {weather = ClearSkies;
       terrain = {side1= ref []; side2= ref []}},
@@ -1897,7 +1900,7 @@ let handle_process_weather t1 w =
       (if n <= 0 then (w.weather <- ClearSkies; SandStormFade)
       else
         (w.weather <- (SandStorm (n-1));
-        (if (List.mem Rock t1.current.curr_type
+        (if not (List.mem Rock t1.current.curr_type
               || List.mem Ground t1.current.curr_type
               || List.mem Steel t1.current.curr_type
               || t1.current.curr_abil = "sand-rush"
@@ -1913,7 +1916,7 @@ let handle_process_weather t1 w =
       (w.weather <- ClearSkies; HailFade)
       else
         (w.weather <- (Hail (n-1));
-        if (List.mem Ice t1.current.curr_type
+        if not (List.mem Ice t1.current.curr_type
               || t1.current.curr_abil = "magic-guard ") then
           (t1.current.curr_hp <- max 0 (t1.current.curr_hp - t1.current.bhp/16);
           HailBuffet)
@@ -1986,9 +1989,9 @@ let handle_process_nonvola t1 t2  =
   | Leeched::t ->
         if t1.current.curr_abil <> "magic-guard" then
           (if t2.current.curr_hp > 0 then
-            (let damage = min t1.current.curr_hp t1.current.bhp / 16 in
+            (let damage = min t1.current.curr_hp (t1.current.bhp / 16) in
             t1.current.curr_hp <- t1.current.curr_hp - damage;
-            t2.current.curr_hp <- min t2.current.bhp t2.current.curr_hp + damage;
+            t2.current.curr_hp <- min t2.current.bhp (t2.current.curr_hp + damage);
             helper t (LeechDmg descript))
           else
             helper t descript)
@@ -2198,10 +2201,16 @@ let handle_calculation t1 t2 ter1 ter2 w x =
 let rec handle_single_action t1 t2 w m =
   let command = dequeue command_queue in
   match command with
-  | Player1 x  -> let new_move = handle_action t1 t2 w.terrain.side1
+  | Player1 x  -> (match x with
+                  | UseAttack a -> prevmove1 := a
+                  | _ -> prevmove1 := "");
+                  let new_move = handle_action t1 t2 w.terrain.side1
                     w.terrain.side2 w x in
                   m := Pl1 (new_move)
-  | Player2 x -> let new_move = handle_action t2 t1 w.terrain.side2
+  | Player2 x -> (match x with
+                  | UseAttack a -> prevmove2 := a
+                  | _ -> prevmove2 := "");
+                  let new_move = handle_action t2 t1 w.terrain.side2
                     w.terrain.side1 w x in
                   m := Pl2 (new_move)
   | Process1 ProcessNextTurn -> Printf.printf "NOTwtf\n%!";
@@ -2214,12 +2223,18 @@ let rec handle_single_action t1 t2 w m =
           | FaintpConvert -> m := Pl2 (Faintp)
           | LoseGameConvert -> m := (Pl2 LoseGame)
           | _ -> m := Pl2 (NoAction))
-  | Process1 x -> Printf.printf "WTF\n%!";
+  | Process1 x -> (match x with
+                  | ProcessNextTurn ->  prevpoke1 := {t1.current with curr_hp = t1.current.curr_hp}
+                  | _ -> ());
+                  Printf.printf "WTF\n%!";
                   let new_move = handle_calculation t1 t2 w.terrain.side1
                     w.terrain.side2 w x in
                   if new_move = Base then handle_single_action t1 t2 w m else
                   m := Pl1 (EndMove new_move)
-  | Process2 x -> Printf.printf "wtf\n%!";
+  | Process2 x -> (match x with
+                  | ProcessNextTurn ->  prevpoke2 := {t2.current with curr_hp = t2.current.curr_hp}
+                  | _ -> ());
+                  Printf.printf "wtf\n%!";
                   let new_move = handle_calculation t2 t1 w.terrain.side2
                     w.terrain.side1 w x in
                   if new_move = Base then handle_single_action t1 t2 w m else
@@ -2266,8 +2281,6 @@ let rec handle_single_action t1 t2 w m =
   puts the two commands in queue in the order of execution and also update
   the previous poke values. *)
 let handle_action t1 t2 w action1 action2 =
-  let () = prevpoke1 := {t1.current with curr_hp = t1.current.curr_hp};
-    prevpoke2 := {t2.current with curr_hp = t2.current.curr_hp} in
   (match action1 with
   | Poke p ->
     (match action2 with
