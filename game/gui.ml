@@ -1528,7 +1528,7 @@ let rec getSwitchString starter s =
 
 
 (* GUI for animation attacks *)
-let animate_attack (animbox : GPack.fixed) img startx starty nextx' nexty
+let rec animate_attack (animbox : GPack.fixed) img startx starty nextx' nexty
   (moveanim : GPack.fixed) move_img movestring =
   match movestring with
   | `SleepMiss ->
@@ -1734,7 +1734,8 @@ let animate_attack (animbox : GPack.fixed) img startx starty nextx' nexty
         busywait_small ()
       done;
       move_img#misc#hide ())
-    | Status -> failwith "Faulty Game Logic: Debug 512")
+    | Status -> animate_attack animbox img startx starty nextx' nexty
+        moveanim move_img `DontMissStatus)
 
 (* Update buttons for GUI*)
 let update_buttons engine move1 move2 move3 move4 =

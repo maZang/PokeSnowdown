@@ -2148,10 +2148,10 @@ let switchPokeHandler faint nextpoke t ter1 t2 w new_message =
   | UseAttack a ->  if t1.current.curr_hp > 0 && t2.current.curr_hp > 0 then
                       (let curr_move = findBattleMove t1.current.pokeinfo a in
                       let new_message =  (match curr_move.dmg_class with
-                      | Status -> status_move_handler t1 t2 (w, w.terrain.side1,
-                              w.terrain.side2) curr_move
-                      | _ -> move_handler t1 t2 (w, w.terrain.side1,
-                              w.terrain.side2) curr_move) in
+                      | Status -> status_move_handler t1 t2 (w, ter1,
+                              ter2) curr_move
+                      | _ -> move_handler t1 t2 (w, ter1,
+                              ter2) curr_move) in
                       if List.mem SelfSwitch curr_move.secondary &&
                           List.length t1.alive > 0 then
                           (wait_for_input command_queue;
