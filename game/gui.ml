@@ -1898,7 +1898,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
                   animate_attack pokeanim1 poke1_img poke1x poke1y poke2x poke2y
                   moveanim move_img (getMoveString a); updatetools ();
                   text_buffer#set_text "Player One Pokemon has switched out. Choosing a new Pokemon.";
-                  current_command := (None, Some NoMove);
+                  current_command := (None, Some NoPreprocess);
                   (match get_game_status battle_status with
                   | Random0p -> busywait (); current_command :=
                       (fst !current_command, Some (Poke "random")); simple_move ()
@@ -1907,7 +1907,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
                         switch] back_button ()))
                 | LoseGame -> (text_buffer#set_text "Player Two wins!"; current_screen := Battle (P1 ChooseMove); back_button#misc#show ())
                 | Faintp -> (text_buffer#set_text "Player One Pokemon has fainted. Choosing a new Pokemon."; current_screen := Battle (P1 Faint);
-                          current_command := (None, Some NoMove);
+                          current_command := (None, Some NoPreprocess);
                           (match get_game_status battle_status with
                           | Random0p -> busywait (); current_command := (Some (FaintPoke ""), Some NoMove); simple_move()
                           | _ -> busywait (); updatetools (); switch_poke engine
@@ -1934,11 +1934,11 @@ let rec game_animation engine buttons (battle: GPack.table) text
                                    poke1x poke1y moveanim move_img (getMoveString a);
                                    updatetools ();
                                    text_buffer#set_text "Player Two Pokemon has switched out. Choosing a new Pokemon.";
-                                   current_command := (Some NoMove, None);
+                                   current_command := (Some NoPreprocess, None;);
                                   (match get_game_status battle_status with
                                     | Random1p | Preset1p _ | TournBattle _
                                     | Random0p -> busywait (); current_command :=
-                                    (Some NoMove, Some (Poke "random"));
+                                    (Some NoPreprocess, Some (Poke "random"));
                                     simple_move ()
                                     | Random2p | Preset2p _ ->
                                       current_screen := Battle (P2 SwitchPokeF); busywait ();
@@ -1977,7 +1977,7 @@ let rec game_animation engine buttons (battle: GPack.table) text
                           (match get_game_status battle_status with
                             | Random1p | Preset1p _ | TournBattle _
                             | Random0p -> (busywait (); current_command :=
-                            (Some (NoMove), Some (FaintPoke ""));
+                            (Some (NoPreprocess), Some (FaintPoke ""));
                                simple_move())
                           | Random2p | Preset2p _ -> current_screen := Battle (P2 Faint);
                                   busywait (); updatetools ();

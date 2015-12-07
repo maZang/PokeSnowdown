@@ -24,8 +24,13 @@ let dequeue t =
 let empty_out t = t := []
 
 let wait_for_input t =
-  t := Buffer::(List.tl !t)
+  t := Buffer::(!t)
 
 let take_in_input t =
-  let last_element = dequeue t in
-  t := last_element::!t
+  let rec find_last_element acc lst =
+  match lst with
+  | [] -> failwith "Faulty Game Logic"
+  | h::[] -> acc, h
+  | h::t -> find_last_element (acc @ [h]) t in
+  let new_list, last_element = find_last_element [] !t in
+  t := last_element::new_list

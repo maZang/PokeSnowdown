@@ -2286,7 +2286,7 @@ let handle_action t1 t2 w action1 action2 =
                      else
                         (enqueue (Player1 (Poke p)) command_queue;
                         enqueue (Player2 (UseAttack a)) command_queue)
-    | NoMove -> (enqueue (Player1 (Poke p)) command_queue)
+    | NoMove | NoPreprocess -> (enqueue (Player1 (Poke p)) command_queue)
     | _ -> failwith "Faulty Game Logic: Debug 2482")
   | UseAttack a' ->
     let forcedmove1, forcedmove1name =
@@ -2338,7 +2338,16 @@ let handle_action t1 t2 w action1 action2 =
                           (enqueue (Player2 (FaintPoke p')) command_queue;
                           enqueue (Player1 (FaintPoke p)) command_queue))
                     | _ -> enqueue (Player1 (FaintPoke p)) command_queue)
-  | NoPreprocess -> ()
+  | NoPreprocess -> (match action2 with
+                  | FaintPoke p -> enqueue (Player2 (FaintPoke p)) command_queue
+                  | Poke p -> enqueue (Player2 (Poke p)) command_queue
+                  | UseAttack a' -> let forcedmove2, forcedmove2name =
+                          getForcedMove (snd t2.current.curr_status) in
+                          let a = if forcedmove2 then forcedmove2name else a' in
+                          enqueue (Player2 (UseAttack a)) command_queue
+                  | NoMove -> ()
+                  | NoPreprocess -> ()
+                  | _ -> failwith "Faulty Game Logic: Debug 2523")
   | AIMove -> failwith "Faulty Game Logic: Debug 2339"
   )
 
