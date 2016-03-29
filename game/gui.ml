@@ -563,7 +563,7 @@ let load_battle_screen engine img bg_img battle text buttonhide buttonshow
   | _ -> failwith "Faulty Game Logic: Debug 278" in
   (* get current team information *)
   let team1, team2, weather = match get_game_status engine with
-    | Battle InGame (t1, t2, w, _, _) -> (t1, t2, w)
+    | Battle InGame (t1, t2, w, _ ) -> (t1, t2, w)
     | _ -> failwith "Impossible" in
   let poke1 = (team1.current).pokeinfo.name in
   let poke2 = (team2.current).pokeinfo.name in
@@ -1207,7 +1207,7 @@ let switch_poke engine pokebuttons battlebuttons back_button () =
     | 4 -> big_help poke5
     | _ -> failwith "Invariant is not having more than five pokemon" in
   let team = (match get_game_status engine with
-  | Battle (InGame (t1, t2, _, _, _)) ->
+  | Battle (InGame (t1, t2, _, _)) ->
       (match !current_screen with
       | Battle (P1 BothFaint) -> back_button#misc#hide (); t1
       | Battle (P1 Faint) | Battle (P1 SwitchPokeF) -> back_button#misc#hide ();
@@ -1313,103 +1313,60 @@ let rec getMoveString a =
   | HitSelf s -> getMoveString s
   | HealOppA s -> getMoveString s
   | FailA s -> `DontMove
-
-(* get move string statuses *)
-let rec getMoveStringStatus a =
-  match a with
   | NormStatus s -> `DontMissStatus
-  | StatBoost (stat, i, s) -> `DontMissStatus
-  | StatAttack (stat, i, s) -> `DontMissStatus
-  | MissStatus s -> `DontMove
-  | FrozenSolidS -> `FrozenMiss
-  | PoisonStatus s-> `DontMissStatus
-  | BurnStatus s -> `DontMissStatus
-  | BadPoisonStatus s -> `DontMissStatus
-  | ParaStatus s -> `DontMissStatus
-  | ThawS s -> getMoveStringStatus s
-  | NoFreezeS s -> getMoveStringStatus s
-  | NoBurnS s -> getMoveStringStatus s
-  | NoParaS s -> getMoveStringStatus s
-  | ParaS -> `ParaMiss
-  | AsleepS -> `SleepMiss
-  | WakeS s -> getMoveStringStatus s
-  | MakeSleep s -> `DontMissStatus
-  | FlinchS -> `DontMove
-  | BreakConfuseS s-> getMoveStringStatus s
-  | ConfusedS -> `ConfuseMiss
-  | ConfuseMove s -> `DontMissStatus
-  | LeechS s -> `LeechStatus
+  | BadPoisonMove s -> getMoveString s
+  | MakeSleep s -> getMoveString s
+  | LeechA s -> `LeechStatus
   | HealHealth s -> `HealStatus
-  | LightScreenS s -> `ShieldStatus
-  | HazeS s -> getMoveStringStatus s
-  | ReflectS s -> getMoveStringStatus s
-  | RestS s -> `HealStatus
-  | SubBlock s -> getMoveStringStatus s
-  | SubFail s -> getMoveStringStatus s
+  | LightScreenA s -> `ShieldStatus
+  | HazeA s -> getMoveString s
+  | ReflectA s -> `ShieldStatus
+  | RestA s -> `HealStatus
+  | SubBlock s -> getMoveString s
+  | SubFail s -> getMoveString s
   | SubMake s -> `SubStatus
-  | ProtectedS s -> `DontMove
-  | ProtectS s-> `ShieldStatus
+  | ProtectA s-> `ShieldStatus
   | ProtectFail s-> `DontMove
-  | SpikesS s -> `SpikesStatus
-  | ToxicSpikesS s -> `TSpikesStatus
-  | HealBellS s -> `DontMissStatus
-  | RefreshS s -> `DontMissStatus
-  | Fail s -> `DontMove
-  | PsychUpS s -> `DontMissStatus
-  | SunnyDayS s | RainDanceS s | SandStormS s | HailS s -> `DontMove
-  | EncoreS s -> `DontMissStatus
+  | SpikesA s -> `SpikesStatus
+  | ToxicSpikesA s -> `TSpikesStatus
+  | HealBellA s -> getMoveString s
+  | RefreshA s -> `DontMissStatus
+  | PsychUpA s -> getMoveString s
+  | SunnyDayA s | RainDanceA s | SandStormA s | HailA s -> `DontMove
+  | EncoreA s -> getMoveString s
   | EncoreFail -> `DontMove
-  | CopyPrevMoveS s -> getMoveStringStatus s
   | CopyPrevMoveA s -> getMoveString s
   | CopyFail -> `DontMove
-  | TauntS _ -> `DontMissStatus
-  | UserFaintS s -> getMoveStringStatus s
+  | TauntA s -> getMoveString s
   | TauntFail -> `DontMove
   | Taunted _ -> `DontMove
-  | StealthRockS _ -> `RockStatus
-  | StickyWebS _-> `DontMissStatus
+  | StealthRockA _ -> `RockStatus
+  | StickyWebA s-> getMoveString s
   | SleepTalkA (_, a) -> getMoveString a
-  | SleepTalkS (_, s) -> getMoveStringStatus s
-  | SleepAttackS s -> getMoveStringStatus s
-  | SwitchOut s -> `DontMove
-  | RandMoveS s -> getMoveStringStatus s
   | RandMoveA s -> getMoveString s
-  | ItemSwapS s -> getMoveStringStatus s
-  | WishS s -> getMoveStringStatus s
-  | AbilityChangeS s -> getMoveStringStatus s
-  | KnockedOffS (_, s) -> getMoveStringStatus s
-  | HealOppS s -> getMoveStringStatus s
-  | GastroAcidS s -> getMoveStringStatus s
+  | ItemSwapA s -> getMoveString s
+  | WishA s -> getMoveString s
+  | AbilityChangeA s -> getMoveString s
+  | GastroAcidA s -> getMoveString s
 
 (* get moves strings *)
 let rec getMoveStringEnd a =
   match a with
   | BurnDmg -> `BurnDmg
   | PoisonDmg -> `PoisonDmg
-  | LeftOversHeal s -> getMoveStringEnd s
+  | LeftOversHeal  -> `HealStatus
   | LeechDmg s -> getMoveStringEnd s
-  | LeechHeal s -> getMoveStringEnd s
   | LightScreenFade s -> getMoveStringEnd s
   | ReflectFade s -> getMoveStringEnd s
-  | SunFade s -> getMoveStringEnd s
-  | RainFade s -> getMoveStringEnd s
-  | SandStormFade s -> getMoveStringEnd s
-  | SandBuffetB s -> getMoveStringEnd s
-  | SandBuffet1 s -> getMoveStringEnd s
-  | SandBuffet2 s -> getMoveStringEnd s
-  | HailFade s -> getMoveStringEnd s
-  | HailBuffetB s -> getMoveStringEnd s
-  | HailBuffet1 s -> getMoveStringEnd s
-  | HailBuffet2 s -> getMoveStringEnd s
   | TauntFade s -> getMoveStringEnd s
   | TrapDamage (_, s) -> getMoveStringEnd s
   | WishEnd s -> getMoveStringEnd s
-  | SpeedBoost s -> getMoveStringEnd s
   | _ -> `DontMove
 
 (* Gets attack strings *)
 let rec getAttackString starter a =
   match a with
+  | NormStatus s -> starter ^ " used " ^ s ^ "."
   | NormMove s -> starter ^ " used " ^ s ^"."
   | Crit s -> getAttackString starter s ^ "It was a critical hit."
   | SEff s -> getAttackString starter s ^ "It was super effective."
@@ -1478,13 +1435,44 @@ let rec getAttackString starter a =
       " has lost half of it's max hp."
   | FailA s -> starter ^ " used " ^ s ^ ", but it failed."
   | HealOppA s -> getAttackString starter s ^ starter ^ " healed the opponent."
-  | SwitchOutA s -> (match !secondaryEffect with
-                    | `P1 -> current_command :=
-                      (Some NoMove, Some (Poke "random"))
-                    | `P2 -> current_command :=
-                      (Some (Poke "random"), Some NoMove));
-                    endTurnEarly := true; getAttackString starter s ^
-                      "The opponent was forced out!"
+  | MakeSleep s -> getAttackString starter s ^ "The opponent has fallen asleep."
+  | LeechA s -> getAttackString starter s ^ "Seeds were spread around the opponent."
+  | BadPoisonMove s -> getAttackString starter s ^ "The opponent has been badly poisoned."
+  | HealHealth s -> getAttackString starter s ^  starter ^ " healed itself for some of its health."
+  | HazeA s -> getAttackString starter s ^ "Both Pokemon's stat changes were removed."
+  | ReflectA s -> getAttackString starter s ^ starter ^ " has put up a field, protecting it from physical attacks."
+  | LightScreenA s -> getAttackString starter s ^ starter ^ " has put up a field, protecting it from special attacks."
+  | RestA s -> getAttackString starter s ^ starter ^ " has fallen asleep and been completely restored."
+  | SubBlock s -> getAttackString starter s ^ " The move was blocked by the opponent's substitute."
+  | SubFail s -> getAttackString starter s ^ "The substitute failed."
+  | SubMake s -> getAttackString starter s ^ starter ^ " has created a substitute."
+  | ProtectA s -> getAttackString starter s ^ starter ^ " has protected itself."
+  | ProtectFail s -> getAttackString starter s ^ starter ^ " has failed to protect itself."
+  | SpikesA s -> getAttackString starter s ^ starter ^ " has depositied a layer of spikes."
+  | HealBellA s -> getAttackString starter s ^ starter ^ " has healed itself and its allies of status ailments."
+  | RefreshA s -> getAttackString starter s ^ starter ^ " has healed itself of any burns, poisons, and paralysis."
+  | PsychUpA s -> getAttackString starter s ^ starter ^ " has copied the opponent's status changes."
+  | SunnyDayA s -> getAttackString starter s ^ starter ^ " has called out the sun."
+  | RainDanceA s -> getAttackString starter s ^ starter ^ " has called out the rain."
+  | SandStormA s -> getAttackString starter s ^ starter ^ " has created a large sandstorm. Darude would be proud."
+  | HailA s -> getAttackString starter s ^ starter ^ " has made large pellets of hail fall down."
+  | EncoreA s -> getAttackString starter s ^ starter ^ " has trapped the opponent in an encore."
+  | EncoreFail -> starter ^ " used encore but it failed."
+  | CopyPrevMoveA s -> starter ^ " copied the opponent's move." ^ getAttackString starter s
+  | CopyFail -> starter ^ " tried to copy the previous move but failed."
+  | TauntA s -> getAttackString starter s ^ " The opponent has been taunted."
+  | TauntFail -> starter ^ " used taunt but it failed."
+  | Taunted s -> starter ^ " couldn't use" ^ s ^ " because it was taunted."
+  | ToxicSpikesA s-> getAttackString starter s ^ starter ^ " put toxic spikes on the opponent's side."
+  | StealthRockA s->  getAttackString starter s ^ "Rocks were put on the opponent's side."
+  | StickyWebA s-> getAttackString starter s ^ starter ^ " has placed a sticky web on the opponent's side."
+  | SleepTalkA (s1, s2) -> getAttackString starter s1 ^ getAttackString starter s2
+  | ItemSwapA s -> getAttackString starter s ^ starter ^ " has swapped items with its opponent."
+  | RandMoveA s -> starter ^ " used a random move." ^ getAttackString starter s
+  | WishA s -> getAttackString starter s ^ "A wish was made."
+  | AbilityChangeA s -> getAttackString starter s ^ starter ^ "  changed the opponent's ability."
+  | GastroAcidA s -> getAttackString starter s ^ starter ^ " suppressed the opponent's ability."
+  | SwitchOutA s -> getAttackString starter s ^ "The opponent was forced out!"
   | Recharging s -> (match !secondaryEffect with
                         | `P1 -> current_command :=
                           (Some (NoMove), snd !current_command)
@@ -1492,118 +1480,6 @@ let rec getAttackString starter a =
                           (fst !current_command, Some NoMove));
                           getAttackString starter s ^ starter ^
                             " will need a turn to recharge."
-
-(* starter is either 'Player One' or 'Player Two'*)
-let rec getStatusString starter s =
-  match s with
-  | NormStatus s -> starter ^ " used " ^ s ^ "."
-  | StatBoost (stat, i, s) -> getStatusString starter s ^ string_from_stat stat
-      ^ " was boosted " ^ string_of_int i ^ " stage."
-  | StatAttack (stat, i, s) -> getStatusString starter s ^ "Opponent's "
-      ^ string_from_stat stat ^" was lowered "^string_of_int (-1 * i)^ " stage."
-  | MissStatus s -> starter ^ " used " ^ s ^ ", but it missed."
-  | FrozenSolidS -> starter ^  " was frozen solid."
-  | PoisonStatus s-> getStatusString starter s ^
-      "The opponent has been poisoned."
-  | BurnStatus s -> getStatusString starter s ^ "The opponent has been burned."
-  | BadPoisonStatus s -> getStatusString starter s ^
-      "The opponent has been badly poisoned."
-  | ParaStatus s -> getStatusString starter s^"The opponent has been paralyzed."
-  | SleepAttackS s -> starter ^ " was asleep." ^ getStatusString starter s
-  | ThawS s -> " unfroze." ^ getStatusString starter s
-  | NoFreezeS s -> starter ^ " cannot freeze. " ^ getStatusString starter s
-  | NoBurnS s -> starter ^ " cannot burn. " ^ getStatusString starter s
-  | NoParaS s -> starter ^ " cannot be paralyzed." ^ getStatusString starter s
-  | ParaS -> starter ^ " was paralyzed."
-  | AsleepS -> starter ^ " is still asleep."
-  | WakeS s -> starter ^ " woke up." ^ getStatusString starter s
-  | MakeSleep s -> getStatusString starter s ^ "The opponent has fallen asleep."
-  | FlinchS -> starter ^ " flinched."
-  | BreakConfuseS s-> starter ^ " has broken out of its confusion." ^
-      getStatusString starter s
-  | ConfusedS -> starter ^ " hit itself in its confusion."
-  | ConfuseMove s -> getStatusString starter s ^ "The opponent is confused."
-  | LeechS s -> getStatusString starter s ^
-      "Seeds were spread around the opponent."
-  | HealHealth s -> getStatusString starter s ^ starter ^
-      " healed itself for some of its health."
-  | LightScreenS s -> getStatusString starter s ^ starter ^
-      " has put up a field, protecting it from special attacks."
-  | HazeS s -> getStatusString starter s ^
-      "Both Pokemon's stat changes were removed."
-  | ReflectS s -> getStatusString starter s ^ starter ^
-      " has put up a field, protecting it from physical attacks."
-  | RestS s -> getStatusString starter s ^ starter ^
-      " has fallen asleep and been completely restored."
-  | SubBlock s -> getStatusString starter s ^
-      "The move was blocked by the opponent's substitute."
-  | SubFail s -> getStatusString starter s ^
-      "The substitute failed."
-  | SubMake s -> getStatusString starter s ^ starter ^
-      " has created a substitute."
-  | ProtectedS s -> starter ^ " used " ^ s ^
-      ", but opponent protected itself."
-  | ProtectS s-> getStatusString starter s ^ starter ^
-      " has protected itself."
-  | ProtectFail s-> getStatusString starter s ^ starter ^
-      " has failed to protect itself."
-  | SpikesS s -> getStatusString starter s ^ starter ^
-      " has depositied a layer of spikes."
-  | HealBellS s -> getStatusString starter s ^ starter ^
-      " has healed itself and its allies of status ailments."
-  | RefreshS s -> getStatusString starter s ^ starter ^
-      " has healed itself of any burns, poisons, and paralysis."
-  | Fail s -> starter ^ " used " ^ s ^ ", but it failed."
-  | PsychUpS s -> getStatusString starter s ^ starter ^
-      " has copied the opponent's status changes."
-  | SunnyDayS s -> getStatusString starter s ^ starter ^
-      " has called out the sun."
-  | RainDanceS s -> getStatusString starter s ^ starter ^
-      " has called out the rain."
-  | SandStormS s -> getStatusString starter s ^ starter ^
-      " has created a large sandstorm. Darude would be proud."
-  | HailS s -> getStatusString starter s ^ starter ^
-      " has made large pellets of hail fall down."
-  | EncoreS s -> getStatusString starter s ^ starter ^
-      " has trapped the opponent in an encore."
-  | UserFaintS s -> getStatusString starter s ^ starter ^
-      " took damage from the move and is about to faint."
-  | EncoreFail -> starter ^ " used encore but it failed."
-  | CopyPrevMoveS s -> starter ^ " copied the opponent's move." ^
-      getStatusString starter s
-  | CopyPrevMoveA s -> starter ^ " copied the opponent's move." ^
-      getAttackString starter s
-  | CopyFail -> starter ^ " tried to copy the previous move but failed."
-  | TauntS s -> getStatusString starter s ^ "The opponent has been taunted."
-  | ToxicSpikesS s -> getStatusString starter s ^ starter ^
-      " has deposited a layer of toxic spikes."
-  | TauntFail -> starter ^ " used Taunt, but it failed."
-  | Taunted s -> starter ^ " couldn't use " ^ s ^ " because it was taunted."
-  | StealthRockS s -> getStatusString starter s ^
-      "Rocks were put on the opponent's side."
-  | StickyWebS s -> getStatusString starter s ^ starter ^
-      " has placed a sticky web on the opponent's side."
-  | SleepTalkA (s1, s2) -> getStatusString starter s1^getAttackString starter s2
-  | SleepTalkS (s1, s2) -> getStatusString starter s1^getStatusString starter s2
-  | ItemSwapS s -> getStatusString starter s ^ starter ^
-      " has swapped items with its opponent."
-  | RandMoveS s -> starter ^ " used a random move." ^ getStatusString starter s
-  | RandMoveA s -> starter ^ " used a random move." ^ getAttackString starter s
-  | WishS s -> getStatusString starter s ^ "A wish was made."
-  | HealOppS s -> getStatusString starter s ^ starter ^ " healed its opponent."
-  | AbilityChangeS s -> getStatusString starter s ^ starter ^
-      " changed the opponent's ability."
-  | KnockedOffS (item, s) -> getStatusString starter s ^ starter ^
-      " made the opponent's " ^ (Pokemon.string_of_item item) ^ " unusable."
-  | GastroAcidS s -> getStatusString starter s ^ starter ^
-      " suppressed the opponent's ability."
-  | SwitchOut s -> (match !secondaryEffect with
-                    | `P1 -> current_command :=
-                        (Some NoMove, Some (Poke "random"))
-                    | `P2 -> current_command :=
-                        (Some (Poke "random"), Some NoMove));
-                    endTurnEarly := true; getStatusString starter s ^
-                        "The opponent was forced out!"
 
 (* Gets end string for starter. *)
 let rec getEndString starter s =
@@ -1615,9 +1491,7 @@ let rec getEndString starter s =
   | BreakPoison -> starter ^ " cannot be posioned."
   | BurnDmg -> starter ^ " has taken burn damage."
   | PoisonDmg -> starter ^ " has taken poison damage."
-  | LeechDmg s -> starter ^ " has taken leech seed damage." ^
-      getEndString starter s
-  | LeechHeal s -> starter ^ " has healed from leech seeds." ^
+  | LeechDmg s -> starter ^ " has taken leech seed damage while its opponent got healed." ^
       getEndString starter s
   | TrapDamage (s, s') -> starter ^ " has taken damage from " ^ s ^ "." ^
       getEndString starter s'
@@ -1625,28 +1499,36 @@ let rec getEndString starter s =
       "'s Light Screen has faded."
   | TauntFade s -> getEndString starter s ^ starter ^ "'s Taunt has faded."
   | ReflectFade s -> getEndString starter s ^ starter ^ "'s Reflect has faded."
-  | SunFade s-> getEndString starter s ^ "The sunlight has faded."
-  | RainFade s -> getEndString starter s ^ "The rain has faded."
-  | SandStormFade s -> getEndString starter s ^ "The sandstorm has faded."
-  | SandBuffetB s -> getEndString starter s ^
-      "Both Pokemon got buffeted by the sandstorm."
-  | SandBuffet1 s -> getEndString starter s ^
-      "Player One got buffeted by the sandstorm."
-  | SandBuffet2 s -> getEndString starter s ^
-      "Player Two got buffeted by the sandstorm"
-  | HailFade s -> getEndString starter s ^ "The hail has faded."
-  | HailBuffetB s -> getEndString starter s ^"Both Pokemon get hit by the hail."
-  | HailBuffet1 s -> getEndString starter s ^ "Player One gets hit by the hail."
-  | HailBuffet2 s -> getEndString starter s ^ "Player Two gets hit by the hail."
-  | LeftOversHeal s -> getEndString starter s ^ starter ^
-      " has healed from the leftovers."
+  | SunFade -> "The sunlight has faded."
+  | RainFade ->  "The rain has faded."
+  | SandStormFade -> "The sandstorm has faded."
+  | SandBuffet -> starter ^" got buffeted by the sandstorm."
+  | HailFade  -> "The hail has faded."
+  | HailBuffet  -> starter ^" got hit by the hail."
+  | LeftOversHeal -> starter ^ " has healed from the leftovers."
   | WishEnd s-> getEndString starter s ^ starter ^
       " has been healed by the wish."
-  | SpeedBoost s -> getEndString starter s ^ starter ^
+  | SpeedBoost ->  starter ^
       "'s speed boost has raised its speed."
+  | FaintpConvert | NoActionConvert | LoseGameConvert -> failwith "Faulty Game Logic"
+
+let rec getSwitchString starter s =
+  match s with
+  | SwitchedInto s -> starter ^ " was sent out."
+  | Intimidate s -> getSwitchString starter s ^ starter ^ "'s intimidate caused the opponent's attack to lower."
+  | StickyWebSlow s -> getSwitchString starter s ^ starter ^ " has been slowed by the Sticky Web."
+  | SpikeDamage s -> getSwitchString starter s ^ starter ^ " has taken spikes damage."
+  | StealthRocksDamage s -> getSwitchString starter s ^ starter ^ " has taken damage from stealth rocks."
+  | ToxicSpikePoison s -> getSwitchString starter s ^ starter ^ " has been poisoned by the toxic spikes."
+  | MakeItRain s -> getSwitchString starter s ^ starter ^ " has made it rain."
+  | MakeBlizzard s -> getSwitchString starter s ^ starter ^ " has stirred up a blizzard."
+  | MakeSunny s -> getSwitchString starter s ^ starter ^ " has created a drought."
+  | MakeSandStorm s -> getSwitchString starter s ^ starter ^ " has stirred up a sandstorm."
+  | SFaint s -> getSwitchString starter s ^ starter ^ " has fainted!"
+
 
 (* GUI for animation attacks *)
-let animate_attack (animbox : GPack.fixed) img startx starty nextx' nexty
+let rec animate_attack (animbox : GPack.fixed) img startx starty nextx' nexty
   (moveanim : GPack.fixed) move_img movestring =
   match movestring with
   | `SleepMiss ->
@@ -1852,12 +1734,13 @@ let animate_attack (animbox : GPack.fixed) img startx starty nextx' nexty
         busywait_small ()
       done;
       move_img#misc#hide ())
-    | Status -> failwith "Faulty Game Logic: Debug 512")
+    | Status -> animate_attack animbox img startx starty nextx' nexty
+        moveanim move_img `DontMissStatus)
 
 (* Update buttons for GUI*)
 let update_buttons engine move1 move2 move3 move4 =
   let team = (match get_game_status engine with
-  | Battle (InGame (t1, t2, _, _, _)) ->
+  | Battle (InGame (t1, t2, _, _)) ->
       (match !current_screen with
       | Battle (P1 ChooseMove) -> t1
       | Battle (P2 ChooseMove) -> t2
@@ -1896,7 +1779,8 @@ let rec findForcedMove lst =
 let rec game_animation engine buttons (battle: GPack.table) text
   (battle_status, gui_ready, ready, ready_gui) bg_img poke1_img poke2_img
     move_img text_buffer (health_bar_holder1, health_bar_holder2, health_bar1,
-      health_bar2)  pokeanim1 pokeanim2 moveanim back_button () =
+      health_bar2)  pokeanim1 pokeanim2 moveanim back_button preprocess () =
+  Printf.printf "Entering Game Animation %B\n%!" preprocess;
   let move1, move2, move3, move4, poke1, poke2, poke3, poke4, poke5, switch =
     match buttons with
  | [move1; move2; move3; move4; poke1; poke2; poke3; poke4; poke5; switch] ->
@@ -1904,17 +1788,17 @@ let rec game_animation engine buttons (battle: GPack.table) text
  | _ -> failwith "Faulty Game Logic: Debug 982" in
   let battle_buttons = [move1; move2; move3; move4; switch; back_button] in
   List.iter (fun s -> s#misc#hide ()) battle_buttons;
-  let t1, t2, w, m1, m2 = match get_game_status engine with
-    | Battle InGame (t1, t2, w, m1, m2) -> t1, t2, w, m1, m2
+  let t1, t2, w, m = match get_game_status engine with
+    | Battle InGame (t1, t2, w, m) -> t1, t2, w, m
     | _ -> failwith "Fauly Game Logic: Debug 05" in
   let game_step () =
     bg_img#set_file (getWeatherString w.weather); continue := false;
-    upon (Ivar.read !ready_gui) (fun _ -> ready_gui := Ivar.create ();
+    upon (Ivar.read !ready_gui) (fun preprocess -> ready_gui := Ivar.create ();
     game_animation engine [move1; move2; move3; move4; poke1; poke2; poke3;
     poke4; poke5; switch] battle text (battle_status, gui_ready, ready,
     ready_gui) bg_img poke1_img poke2_img move_img text_buffer
     (health_bar_holder1, health_bar_holder2, health_bar1, health_bar2) pokeanim1
-    pokeanim2 moveanim back_button ()) in
+    pokeanim2 moveanim back_button preprocess ()) in
   let updatehealth1 () =
     health_bar1#set_fraction (float_of_int (t1.current).curr_hp /.
       float_of_int (t1.current).bhp);
@@ -1943,7 +1827,8 @@ let rec game_animation engine buttons (battle: GPack.table) text
     move4#misc#set_tooltip_text (Pokemon.getMoveToolTip
       t1.current.pokeinfo.move4);
     health_bar1#misc#set_tooltip_text (Pokemon.getPokeToolTip t1);
-    health_bar2#misc#set_tooltip_text (Pokemon.getPokeToolTip t2) in
+    health_bar2#misc#set_tooltip_text (Pokemon.getPokeToolTip t2);
+    updatehealth1 (); updatehealth2 () in
   let update_current_command () =
     let charging1, s1 = findForcedMove (snd t1.current.curr_status) in
     let charging2, s2 = findForcedMove (snd t2.current.curr_status) in
@@ -1965,219 +1850,103 @@ let rec game_animation engine buttons (battle: GPack.table) text
         (fun s -> s <> RechargingStatus) (snd t1.current.curr_status)));
     (t2.current.curr_status <- (fst t2.current.curr_status, List.filter
         (fun s -> s <> RechargingStatus) (snd t2.current.curr_status))) in
-  let skipturn () =
-    update_current_command ();
-    match get_game_status battle_status with
-    | Random0p -> Ivar.fill !gui_ready !current_command; current_command :=
-      (None, None); game_step ()
-    | Random1p | Preset1p _| TournBattle _ -> (match !current_command with
-                  | (None, _) -> text_buffer#set_text (Pokemon.string_of_weather
-                    w.weather); List.iter (fun s -> s#misc#show ())
-                    battle_buttons; current_screen := Battle (P1 ChooseMove);
-                      update_buttons engine move1 move2 move3 move4
-                  | _ -> Ivar.fill !gui_ready !current_command; current_command
-                    := (None, None); game_step ())
-    | Random2p  | Preset2p _-> (match !current_command with
-                  | (None, _) -> text_buffer#set_text (Pokemon.string_of_weather
-                    w.weather); List.iter (fun s -> s#misc#show ())
-                    battle_buttons; current_screen := Battle (P1 ChooseMove);
-                      update_buttons engine move1 move2 move3 move4
-                  | (_, None) -> text_buffer#set_text (Pokemon.string_of_weather
-                    w.weather); List.iter (fun s -> s#misc#show ())
-                    battle_buttons; current_screen := Battle (P2 ChooseMove);
-                      update_buttons engine move1 move2 move3 move4
-                  | _ -> Ivar.fill !gui_ready !current_command; current_command
-                    := (None, None); game_step ()) in
+  let nextmove () =
+    if preprocess then (
+      update_current_command ();
+      match get_game_status battle_status with
+      | Random0p -> Ivar.fill !gui_ready !current_command; current_command :=
+        (None, None); game_step ()
+      | Random1p | Preset1p _| TournBattle _ -> (match !current_command with
+                    | (None, _) -> text_buffer#set_text (Pokemon.string_of_weather
+                      w.weather); List.iter (fun s -> s#misc#show ())
+                      battle_buttons; current_screen := Battle (P1 ChooseMove);
+                        update_buttons engine move1 move2 move3 move4
+                    | _ -> Printf.printf "Filling\n%!"; Ivar.fill !gui_ready !current_command; current_command
+                      := (None, None); game_step ())
+      | Random2p  | Preset2p _-> (match !current_command with
+                    | (None, _) -> text_buffer#set_text (Pokemon.string_of_weather
+                      w.weather); List.iter (fun s -> s#misc#show ())
+                      battle_buttons; current_screen := Battle (P1 ChooseMove);
+                        update_buttons engine move1 move2 move3 move4
+                    | (_, None) -> text_buffer#set_text (Pokemon.string_of_weather
+                      w.weather); List.iter (fun s -> s#misc#show ())
+                      battle_buttons; current_screen := Battle (P2 ChooseMove);
+                        update_buttons engine move1 move2 move3 move4
+                    | _ -> Ivar.fill !gui_ready !current_command; current_command
+                      := (None, None); game_step ()))
+      else
+        (Ivar.fill !gui_ready (Some NoPreprocess, Some NoPreprocess);
+        game_step ()) in
   let simple_move () =
-    updatetools (); updatehealth1 (); updatehealth2 ();
-    skipturn () in
-  let turn_end () =
-    (Ivar.fill !gui_ready (Some TurnEnd, Some TurnEnd); game_step ()) in
-  let pre_process () =
-    if !endTurnEarly then
-      (endTurnEarly := false; turn_end ())
-    else
-      (Ivar.fill !gui_ready (Some Preprocess, Some Preprocess);
-      game_step ()) in
-  (match !m1 with
-  | Pl1 SPoke (p,mess) -> (let switch_string = ("Player One has switched to " ^
-                   p ^ mess) in updatetools ();
-                   let str_list = Str.split (Str.regexp "\\.") switch_string in
-                   continue := false; List.iter (fun s ->text_buffer#set_text s;
-                      busywait ()) str_list)
-  | Pl2 SPoke (p,mess) ->  (let switch_string = ("Player One has switched to " ^
-                   p ^ mess) in updatetools ();
-                   let str_list = Str.split (Str.regexp "\\.") switch_string in
-                   continue := false; List.iter (fun s ->text_buffer#set_text s;
-                      busywait ()) str_list)
-  | Pl1 AttackMove a ->secondaryEffect := `P1;
-                   let atk_string =getAttackString t1.current.pokeinfo.name a in
-                   let str_list = Str.split (Str.regexp "\\.") atk_string in
-                   continue := false; List.iter (fun s ->text_buffer#set_text s;
-                      busywait ()) str_list;
-                   animate_attack pokeanim1 poke1_img poke1x poke1y poke2x
-                    poke2y moveanim move_img (getMoveString a); updatehealth2 ()
-  | Pl2 AttackMove a -> secondaryEffect := `P2;
-                   let atk_string =getAttackString t2.current.pokeinfo.name a in
-                   let str_list = Str.split (Str.regexp "\\.") atk_string in
-                   continue := false; List.iter (fun s ->text_buffer#set_text s;
-                      busywait ()) str_list;
-                   animate_attack pokeanim2 poke2_img poke2x poke2y poke1x
-                    poke1y moveanim move_img (getMoveString a); updatehealth1 ()
-  | Pl1 Status s ->secondaryEffect := `P1;
-                   let status_string =getStatusString t1.current.pokeinfo.name s
-                   in let str_list = Str.split (Str.regexp "\\.") status_string
-                   in continue := false; List.iter (fun s ->
-                     text_buffer#set_text s; busywait ()) str_list;
-                   animate_attack pokeanim1 poke1_img poke1x poke1y poke2x
-                    poke2y moveanim move_img (getMoveStringStatus s)
-  | Pl2 Status s ->secondaryEffect := `P2;
-                   let status_string =getStatusString t2.current.pokeinfo.name s
-                   in let str_list = Str.split (Str.regexp "\\.") status_string
-                   in continue := false; List.iter (fun s ->
-                      text_buffer#set_text s; busywait ()) str_list;
-                   animate_attack pokeanim2 poke2_img poke2x poke2y poke1x
-                    poke1y moveanim move_img (getMoveStringStatus s)
-  | Pl1 NoAction -> text_buffer#set_text ("Both Pokemon Not Doing Anything");
-                    busywait ()
-  | Pl2 NoAction -> text_buffer#set_text ("Both Pokemon Not Doing Anything");
-                    busywait ()
-  | Pl1 Continue | Pl2 Continue | Pl1 Next | Pl2 Next -> ()
-  | Pl1 SFaint -> if List.length t1.dead = 5 then ((if !m2 = (Pl2 Faint) &&
-                 List.length t2.dead = 5 then (text_buffer#set_text "Tie game!")
-                  else (text_buffer#set_text "Player Two wins!"));
-                    current_screen := Battle (P1 ChooseMove);
-                      back_button#misc#show ()) else
-                  (poke1_img#set_file ("../data/back-sprites/" ^
-                      t1.current.pokeinfo.name ^ ".gif");
-                  text_buffer#set_text (t1.current.pokeinfo.name ^
-                      " has fainted. Choosing a new Pokemon.");
-                  (match !m2 with
-                  | Pl2 Faint -> current_screen := Battle (P1 BothFaint)
-                  | _ -> current_screen := Battle (P1 Faint));
-                  (match get_game_status battle_status with
-                  | Random0p ->busywait (); current_command :=
-                      (Some (FaintPoke ""), Some (NoMove)); simple_move()
-                  | _ -> busywait (); updatetools ();
-                  switch_poke engine [poke1;poke2;poke3;poke4;poke5][move1;move2;
-                    move3;move4;switch] back_button ()))
-  | Pl1 ForceChoose a ->
+    updatetools (); nextmove () in
+  let display_strings str =
+    let str_list = Str.split (Str.regexp "\\.") str in
+    continue := false; List.iter (fun s -> text_buffer#set_text s; busywait ())
+    str_list in
+  (match !m with
+    | Pl1 x -> (match x with
+                | SPoke descript -> (let switch_string = "Player One is switching Pokemon." ^
+                  getSwitchString t1.current.pokeinfo.name descript in
+                  display_strings switch_string; updatetools (); simple_move ())
+                | UsedMove a -> (secondaryEffect := `P1;
                   let atk_string = getAttackString t1.current.pokeinfo.name a in
-                   let str_list = Str.split (Str.regexp "\\.") atk_string in
-                   continue := false; List.iter (fun s ->text_buffer#set_text s;
-                      busywait ()) str_list;
-                   animate_attack pokeanim1 poke1_img poke1x poke1y poke2x
-                    poke2y moveanim move_img (getMoveString a);
-                   updatehealth2 ();
-                   text_buffer#set_text "Player One Pokemon has switched out. Choosing a new Pokemon.";
-                   (match !m2 with
-                   | Pl2 ForceMove a -> current_command :=(fst !current_command,
-                      Some (UseAttack a))
-                   | Pl2 ForceNone -> current_command := (fst !current_command,
-                      Some NoMove)
-                   | _ -> failwith "Faulty Game Logic: Debug 1353" );
-                   (match get_game_status battle_status with
-                    | Random0p -> busywait (); current_command :=
-                        (fst !current_command), Some (Poke "random");
-                              simple_move()
-                    | _ -> busywait (); updatetools (); current_screen :=
-                      Battle (P1 SwitchPokeF); switch_poke engine
-                      [poke1;poke2;poke3;poke4;poke5][move1;move2;move3;move4;
-                        switch] back_button ())
-  | Pl1 ForceChooseS a ->
-                  let atk_string = getStatusString t1.current.pokeinfo.name a in
-                   let str_list = Str.split (Str.regexp "\\.") atk_string in
-                   continue := false; List.iter (fun s ->text_buffer#set_text s;
-                      busywait ()) str_list;
-                   animate_attack pokeanim1 poke1_img poke1x poke1y poke2x
-                    poke2y moveanim move_img (getMoveStringStatus a);
-                   updatehealth2 ();
-                   text_buffer#set_text "Player One Pokemon has switched out. Choosing a new Pokemon.";
-                   (match !m2 with
-                   | Pl2 ForceMove a -> current_command :=
-                    (fst !current_command, Some (UseAttack a))
-                   | Pl2 ForceNone -> current_command :=
-                    (fst !current_command, Some NoMove)
-                   | _ -> failwith "Faulty Game Logic: Debug 1353" );
-                   (match get_game_status battle_status with
-                    | Random0p -> busywait (); current_command :=
-                      (fst !current_command), Some (Poke "random");
-                              simple_move()
-                    | _ ->  busywait (); updatetools ();
-                      current_screen := Battle (P1 SwitchPokeF); switch_poke
-                       engine [poke1;poke2;poke3;poke4;poke5][move1;move2;move3;
-                        move4;switch] back_button ()
-                    )
-  | Pl2 ForceChoose a ->
-                  let atk_string = getAttackString t2.current.pokeinfo.name a in
-                   let str_list = Str.split (Str.regexp "\\.") atk_string in
-                   continue := false; List.iter (fun s ->text_buffer#set_text s;
-                      busywait ()) str_list;
-                   animate_attack pokeanim2 poke2_img poke2x poke2y poke1x
-                      poke1y moveanim move_img (getMoveString a);
-                   updatehealth1 ();
-                   text_buffer#set_text "Player Two Pokemon has switched out. Choosing a new Pokemon.";
-                   (match !m2 with
-                   | Pl1 ForceMove a -> current_command := (Some (UseAttack a),
-                      snd !current_command)
-                   | Pl1 ForceNone -> current_command := (Some NoMove,
-                      snd !current_command)
-                   | _ -> failwith "Faulty Game Logic: Debug 1353" );
-                   (match get_game_status battle_status with
-                    | Random1p | Preset1p _ | TournBattle _
-                    | Random0p-> busywait (); current_command :=
-                        (fst !current_command), Some (Poke "random");
-                              simple_move()
-                    | Random2p | Preset2p _->
-                        current_screen := Battle (P2 SwitchPokeF); busywait ();
-                          updatetools ();
-                          current_command := (fst !current_command,
-                            snd !current_command); switch_poke engine
-                          [poke1;poke2;poke3;poke4;poke5][move1;move2;move3;
-                            move4;switch] back_button ())
-  | Pl2 ForceChooseS a ->
-                  let atk_string = getStatusString t2.current.pokeinfo.name a in
-                   let str_list = Str.split (Str.regexp "\\.") atk_string in
-                   continue := false; List.iter (fun s ->text_buffer#set_text s;
-                      busywait ()) str_list;
-                   animate_attack pokeanim2 poke2_img poke2x poke2y poke1x
-                      poke1y moveanim move_img (getMoveStringStatus a);
-                   updatehealth1 ();
-                   text_buffer#set_text "Player Two Pokemon has switched out. Choosing a new Pokemon.";
-                   (match !m2 with
-                   | Pl1 ForceMove a -> current_command := (Some (UseAttack a),
-                      snd !current_command)
-                   | Pl1 ForceNone -> current_command := (Some NoMove,
-                      snd !current_command)
-                   | _ -> failwith "Faulty Game Logic: Debug 1353" );
-                   (match get_game_status battle_status with
-                    | Random1p | Preset1p _ | TournBattle _
-                    | Random0p -> busywait (); current_command :=
-                      (fst !current_command), Some (Poke "random");
-                              simple_move()
-                    | Random2p | Preset2p _-> current_screen :=
-                      Battle (P2 SwitchPokeF); busywait (); updatetools ();
-                              current_command := (fst !current_command,
-                                snd !current_command);
-                              switch_poke engine [poke1;poke2;poke3;poke4;poke5]
-                              [move1;move2;move3;move4;switch] back_button ())
-  | Pl1 Faint ->  if List.length t1.dead = 5 then (text_buffer#set_text "Player Two wins!";
-                  current_screen := Battle (P1 ChooseMove);
-                    back_button#misc#show ()) else
-                  (text_buffer#set_text "Player One Pokemon has fainted. Choosing a new Pokemon.";
-                  (match !m2 with
-                  | Pl2 Faint -> current_screen := Battle (P1 BothFaint)
-                  | _ -> current_screen := Battle (P1 Faint); current_command
-                    := (fst !current_command, Some NoMove));
+                  display_strings atk_string;
+                  animate_attack pokeanim1 poke1_img poke1x poke1y poke2x poke2y
+                  moveanim move_img (getMoveString a); updatetools (); simple_move ())
+                | ForceChoose a ->(secondaryEffect := `P1;
+                  let atk_string = getAttackString t1.current.pokeinfo.name a in
+                  display_strings atk_string;
+                  animate_attack pokeanim1 poke1_img poke1x poke1y poke2x poke2y
+                  moveanim move_img (getMoveString a); updatetools ();
+                  text_buffer#set_text "Player One Pokemon has switched out. Choosing a new Pokemon.";
+                  current_command := (None, Some NoPreprocess);
                   (match get_game_status battle_status with
                   | Random0p -> busywait (); current_command :=
-                    (Some (FaintPoke ""),
-                      (if fst !current_command = None then Some (NoMove) else
-                        fst !current_command)); simple_move()
-                  | _ -> busywait (); updatetools (); switch_poke engine
-                      [poke1;poke2;poke3;poke4;poke5][move1;move2;move3;move4;
+                      (fst !current_command, Some (Poke "random")); simple_move ()
+                  | _ -> busywait (); updatetools (); current_screen := Battle (P1 SwitchPokeF);
+                        switch_poke engine [poke1;poke2;poke3;poke4;poke5][move1;move2;move3;move4;
                         switch] back_button ()))
-  | Pl2 Faint -> if List.length t2.dead = 5 then (text_buffer#set_text "Player One wins!";
+                | LoseGame -> (text_buffer#set_text "Player Two wins!"; current_screen := Battle (P1 ChooseMove); back_button#misc#show ())
+                | Faintp -> (text_buffer#set_text "Player One Pokemon has fainted. Choosing a new Pokemon."; current_screen := Battle (P1 Faint);
+                          current_command := (None, Some NoPreprocess);
+                          (match get_game_status battle_status with
+                          | Random0p -> busywait (); current_command := (Some (FaintPoke ""), Some NoMove); simple_move()
+                          | _ -> busywait (); updatetools (); switch_poke engine
+                            [poke1;poke2;poke3;poke4;poke5][move1;move2;move3;move4;
+                            switch] back_button ()))
+                | NoAction -> simple_move ()
+                | EndMove x ->  let txt = getEndString t1.current.pokeinfo.name x in
+                          display_strings txt;
+                          animate_attack pokeanim1 poke1_img poke1x poke1y poke2x
+                          poke2y moveanim move_img (getMoveStringEnd x);
+                          updatetools (); simple_move ())
+    | Pl2 y -> (match y with
+                | SPoke descript -> (let switch_string = "Player Two is switching Pokemon." ^
+                  getSwitchString t2.current.pokeinfo.name descript in
+                  display_strings switch_string; updatetools (); simple_move ())
+                | UsedMove a -> (secondaryEffect := `P2;
+                  let atk_string = getAttackString t2.current.pokeinfo.name a in
+                  display_strings atk_string;
+                  animate_attack pokeanim2 poke2_img poke2x poke2y poke1x
+                  poke1y moveanim move_img (getMoveString a); updatetools (); simple_move ())
+                | ForceChoose a -> (let atk_string = getAttackString t2.current.pokeinfo.name a in
+                                   display_strings atk_string;
+                                   animate_attack pokeanim2 poke2_img poke2x poke2y
+                                   poke1x poke1y moveanim move_img (getMoveString a);
+                                   updatetools ();
+                                   text_buffer#set_text "Player Two Pokemon has switched out. Choosing a new Pokemon.";
+                                   current_command := (Some NoPreprocess, None;);
+                                  (match get_game_status battle_status with
+                                    | Random1p | Preset1p _ | TournBattle _
+                                    | Random0p -> busywait (); current_command :=
+                                    (Some NoPreprocess, Some (Poke "random"));
+                                    simple_move ()
+                                    | Random2p | Preset2p _ ->
+                                      current_screen := Battle (P2 SwitchPokeF); busywait ();
+                                      updatetools (); switch_poke engine
+                                      [poke1;poke2;poke3;poke4;poke5][move1;move2;move3;
+                                      move4;switch] back_button ()))
+                | LoseGame -> (text_buffer#set_text "Player One wins!";
                   (match get_game_status battle_status with
                       | TournBattle _ -> (try (let newpoke = unlockPokemon () in
                         let success_win = GWindow.message_dialog
@@ -2204,208 +1973,24 @@ let rec game_animation engine buttons (battle: GPack.table) text
                                               error_win#destroy ()));
                                               error_win#show ()))
                       | _ -> ()); current_screen := Battle (P1 ChooseMove);
-                            back_button#misc#show ()) else
-                  (text_buffer#set_text "Player Two Pokemon has fainted. Choosing a new Pokemon.";
-                 (match get_game_status battle_status with
-                 | Random1p | Preset1p _ | TournBattle _
-                 | Random0p -> busywait (); current_command :=
-                  ((if fst !current_command = None then Some (NoMove) else
-                    fst !current_command), Some (FaintPoke ""));
-                               simple_move()
-                 | Random2p | Preset2p _ -> current_screen := Battle (P2 Faint);
-                    busywait (); updatetools ();
-                              current_command := (Some NoMove,
-                                snd !current_command);
+                              back_button#misc#show ())
+                | Faintp -> (text_buffer#set_text "Player Two Pokemon has fainted. Choosing a new Pokemon.";
+                          (match get_game_status battle_status with
+                            | Random1p | Preset1p _ | TournBattle _
+                            | Random0p -> (busywait (); current_command :=
+                            (Some (NoPreprocess), Some (FaintPoke ""));
+                               simple_move())
+                          | Random2p | Preset2p _ -> current_screen := Battle (P2 Faint);
+                                  busywait (); updatetools ();
+                                  current_command := (Some NoMove, None);
                               switch_poke engine [poke1;poke2;poke3;poke4;poke5]
                               [move1;move2;move3;move4;switch] back_button ()))
-  | Pl2 SFaint ->if List.length t2.dead = 5 then (text_buffer#set_text "Player One wins!";
-                  (match get_game_status battle_status with
-                      | TournBattle _ -> (try (let newpoke = unlockPokemon () in
-                        let success_win = GWindow.message_dialog
-                        ~message:("Unlocked " ^ newpoke)
-                        ~buttons:GWindow.Buttons.close
-                          ~message_type:`INFO () in
-                            ignore(success_win#connect#close
-                              ~callback:(success_win#destroy));
-                            ignore (success_win#connect#response
-                              ~callback:(fun s -> success_win#destroy ()));
-                                success_win#show ())
-                            with | err ->  (let message = match err with
-                                 | Save.FaultyGameSave -> "Corrupted Save File."
-                                 | Save.OwnPokemonAlready -> "You already own the unlocked Pokemon. Better luck next time."
-                                 | _ -> "Unknown Error" in
-                                    let error_win = GWindow.message_dialog
-                                    ~message:message
-                                    ~buttons:GWindow.Buttons.close
-                                    ~message_type:`ERROR () in
-                                      ignore(error_win#connect#close
-                                      ~callback:(error_win#destroy));
-                                        ignore (error_win#connect#response
-                                      ~callback:(fun s -> error_win#destroy()));
-                                          error_win#show ()))
-                      | _ -> ()); current_screen := Battle (P1 ChooseMove);
-                          back_button#misc#show ()) else
-                 (poke2_img#set_file ("../data/sprites/" ^
-                      t2.current.pokeinfo.name ^ ".gif");
-                 text_buffer#set_text (t2.current.pokeinfo.name ^
-                    " has fainted. Choosing a new Pokemon.");
-                 (match get_game_status battle_status with
-                 | Random1p | Preset1p _ | TournBattle _
-                 | Random0p-> busywait (); current_command := (Some (NoMove),
-                    Some (FaintPoke ""));
-                               simple_move()
-                 | Random2p | Preset2p _ -> current_screen := Battle (P2 Faint);
-                    busywait (); updatetools ();
-                                current_command := (Some (NoMove),
-                                snd !current_command); switch_poke engine
-                                [poke1;poke2;poke3;poke4;poke5] [move1;move2;
-                                  move3;move4;switch] back_button ()))
-  | Pl1 EndMove x -> let txt = getEndString t1.current.pokeinfo.name x in
-                    let str_list = Str.split (Str.regexp "\\.") txt in
-                    List.iter (fun s -> text_buffer#set_text s; busywait ())
-                      str_list;
-                    animate_attack pokeanim1 poke1_img poke1x poke1y poke2x
-                      poke2y moveanim move_img (getMoveStringEnd x);
-                        updatehealth1 ()
-  | _ -> failwith "unimplements");
-  if !endTurnEarly then
-    (endTurnEarly := false; turn_end ())
-  else
-  (match !m2 with
-  | Pl1 AttackMove a ->  secondaryEffect := `P1;
-                   let atk_string =getAttackString t1.current.pokeinfo.name a in
-                   let str_list = Str.split (Str.regexp "\\.") atk_string in
-                   continue := false; List.iter
-                    (fun s -> text_buffer#set_text s; busywait ()) str_list;
-                   animate_attack pokeanim1 poke1_img poke1x poke1y poke2x
-                    poke2y moveanim move_img (getMoveString a); updatetools ();
-                    updatehealth2 (); pre_process ()
-  | Pl2 AttackMove a -> secondaryEffect := `P2;
-                   let atk_string =getAttackString t2.current.pokeinfo.name a in
-                   let str_list = Str.split (Str.regexp "\\.") atk_string in
-                   continue := false; List.iter (fun s ->text_buffer#set_text s;
-                    busywait ()) str_list;
-                   animate_attack pokeanim2 poke2_img poke2x poke2y poke1x
-                    poke1y moveanim move_img (getMoveString a); updatetools ();
-                    updatehealth1 (); pre_process ()
-  | Pl1 Status s ->secondaryEffect := `P1;
-                   let status_string = getStatusString t1.current.pokeinfo.name
-                    s in
-                   let str_list = Str.split (Str.regexp "\\.") status_string in
-                   updatetools ();
-                   continue := false; List.iter (fun s ->text_buffer#set_text s;
-                      busywait ()) str_list;
-                   animate_attack pokeanim1 poke1_img poke1x poke1y poke2x
-                    poke2y moveanim move_img (getMoveStringStatus s);
-                   pre_process ()
-  | Pl2 Status s ->secondaryEffect := `P2;
-                   let status_string = getStatusString t2.current.pokeinfo.name
-                    s in
-                   let str_list = Str.split (Str.regexp "\\.") status_string in
-                   updatetools ();
-                   continue := false; List.iter (fun s ->text_buffer#set_text s;
-                      busywait ()) str_list;
-                   animate_attack pokeanim2 poke2_img poke2x poke2y poke1x
-                    poke1y moveanim move_img (getMoveStringStatus s);
-                   pre_process ()
-  | Pl1 Continue -> turn_end ()
-  | Pl2 Continue -> turn_end ()
-  | Pl1 Next | Pl2 Next -> simple_move ()
-  | Pl1 FaintNext | Pl2 FaintNext | Pl2 Faint | Pl1 ForceMove _
-    | Pl2 ForceMove _ | Pl1 ForceNone | Pl2 ForceNone -> ()
-  | Pl1 NoAction -> pre_process ()
-  | Pl2 NoAction -> pre_process ()
-  | Pl2 SPoke (p,mess) -> (let switch_string = ("Player One has switched to " ^
-                            p  ^ mess) in updatetools ();
-                           let str_list = Str.split (Str.regexp "\\.")
-                            switch_string in
-                           continue := false; List.iter (fun s ->
-                              text_buffer#set_text s; busywait ()) str_list;
-                                pre_process ())
-  | Pl2 EndMove x -> let txt = getEndString t2.current.pokeinfo.name x in
-                    let str_list = Str.split (Str.regexp "\\.") txt in
-                    List.iter (fun s -> text_buffer#set_text s; busywait ())
-                      str_list;
-                    animate_attack pokeanim2 poke2_img poke2x poke2y poke1x
-                      poke1y moveanim move_img (getMoveStringEnd x);
-                    updatehealth2 (); turn_end ()
-  | Pl1 ForceChoose a ->
-                  let atk_string = getAttackString t1.current.pokeinfo.name a in
-                   let str_list = Str.split (Str.regexp "\\.") atk_string in
-                   continue := false; List.iter (fun s ->text_buffer#set_text s;
-                      busywait ()) str_list;
-                   animate_attack pokeanim1 poke1_img poke1x poke1y poke2x
-                    poke2y moveanim move_img (getMoveString a);
-                   updatehealth2 ();
-                   text_buffer#set_text "Player One Pokemon has switched out. Choosing a new Pokemon.";
-                   (match get_game_status battle_status with
-                    | Random0p ->  busywait (); current_command :=
-                      (Some (Poke "random"), fst !current_command);
-                              simple_move()
-                    | _ ->
-                   current_command := (fst !current_command, Some NoMove);
-                    busywait (); updatetools (); current_screen :=
-                      Battle (P1 SwitchPokeF); switch_poke engine
-                        [poke1;poke2;poke3;poke4;poke5][move1;move2;move3;move4;
-                          switch] back_button ())
-  | Pl1 ForceChooseS a ->
-                  let atk_string = getStatusString t1.current.pokeinfo.name a in
-                   let str_list = Str.split (Str.regexp "\\.") atk_string in
-                   List.iter (fun s -> text_buffer#set_text s; busywait ())
-                    str_list;
-                   continue := false; animate_attack pokeanim1 poke1_img poke1x
-                    poke1y poke2x poke2y moveanim move_img
-                      (getMoveStringStatus a);
-                   updatehealth2 ();
-                   (match get_game_status battle_status with
-                    | Random0p ->  busywait (); current_command :=
-                      (Some (Poke "random"), fst !current_command);simple_move()
-                    | _ ->
-                   text_buffer#set_text "Player One Pokemon has switched out. Choosing a new Pokemon.";
-                   current_command := (fst !current_command, Some NoMove);
-                    busywait (); updatetools (); current_screen :=
-                      Battle (P1 SwitchPokeF); switch_poke engine [poke1;poke2;
-                        poke3;poke4;poke5][move1;move2;move3;move4;switch]
-                          back_button ())
-  | Pl2 ForceChoose a ->
-                  let atk_string = getAttackString t2.current.pokeinfo.name a in
-                   let str_list = Str.split (Str.regexp "\\.") atk_string in
-                   continue := false; List.iter (fun s ->text_buffer#set_text s;
-                      busywait ()) str_list;
-                   animate_attack pokeanim2 poke2_img poke2x poke2y poke1x
-                    poke1y moveanim move_img (getMoveString a);
-                   updatehealth1 ();
-                   text_buffer#set_text "Player Two Pokemon has switched out. Choosing a new Pokemon.";
-                   current_command := (Some NoMove, snd !current_command);
-                   (match get_game_status battle_status with
-                    | Random1p | Preset1p _ | TournBattle _ | Random0p ->
-                      busywait (); current_command := (fst !current_command),
-                        Some (Poke "random");
-                              simple_move()
-                    | Random2p | Preset2p _ -> current_screen :=
-                      Battle (P2 SwitchPokeF); busywait (); updatetools ();
-                              switch_poke engine [poke1;poke2;poke3;poke4;poke5]
-                              [move1;move2;move3;move4;switch] back_button ())
-  | Pl2 ForceChooseS a ->
-                  let atk_string = getStatusString t2.current.pokeinfo.name a in
-                   let str_list = Str.split (Str.regexp "\\.") atk_string in
-                   continue := false; List.iter (fun s ->text_buffer#set_text s;
-                      busywait ()) str_list;
-                   animate_attack pokeanim2 poke2_img poke2x poke2y poke1x
-                    poke1y moveanim move_img (getMoveStringStatus a);
-                   updatehealth1 ();
-                   text_buffer#set_text "Player Two Pokemon has switched out. Choosing a new Pokemon.";
-                   current_command := (Some NoMove, snd !current_command);
-                   (match get_game_status battle_status with
-                    | Random1p | Preset1p _ | TournBattle _
-                      | Random0p -> busywait (); current_command :=
-                        (fst !current_command), Some (Poke "random");
-                              simple_move()
-                    | Random2p | Preset2p _ -> current_screen :=
-                      Battle (P2 SwitchPokeF); busywait (); updatetools ();
-                              switch_poke engine [poke1;poke2;poke3;poke4;poke5]
-                              [move1;move2;move3;move4;switch] back_button ())
-  | _ -> failwith "unimplement")
+                | EndMove x -> let txt = getEndString t2.current.pokeinfo.name x in
+                          display_strings txt;
+                          animate_attack pokeanim2 poke2_img poke2x poke2y poke1x
+                          poke1y moveanim move_img (getMoveStringEnd x);
+                          updatetools (); simple_move ()
+                | NoAction -> simple_move ()))
 
  (* process commands *)
  let process_command engine buttons battle text
@@ -2427,13 +2012,13 @@ let rec game_animation engine buttons (battle: GPack.table) text
                           text_buffer#set_text "Both moves collected. Processing...";
                         Ivar.fill !gui_ready !current_command;
                           current_command := (None, None);
-                        upon (Ivar.read !ready_gui) (fun _ ->
+                        upon (Ivar.read !ready_gui) (fun preprocess ->
                           ready_gui := Ivar.create (); game_animation
                             engine battle_buttons battle text
                         (battle_status, gui_ready, ready, ready_gui)
                           bg_img poke1_img poke2_img move_img text_buffer
                             health_holders pokeanim1 pokeanim2 moveanim
-                              back_button ())
+                              back_button preprocess())
                       | Random2p | Preset2p _ -> List.iter (fun s ->
                           s#misc#hide ()) battle_buttons; current_screen :=
                         Battle (P2 ChooseMove); update_buttons engine move1
@@ -2447,11 +2032,11 @@ let rec game_animation engine buttons (battle: GPack.table) text
                           "Both moves collected. Processing...";
                         Ivar.fill !gui_ready !current_command; current_command
                           := (None, None); upon (Ivar.read !ready_gui)
-                          (fun _ -> ready_gui := Ivar.create ();
+                          (fun preprocess -> ready_gui := Ivar.create ();
                             game_animation engine battle_buttons battle text
                        (battle_status, gui_ready, ready, ready_gui) bg_img
                        poke1_img poke2_img move_img text_buffer health_holders
-                       pokeanim1 pokeanim2 moveanim back_button ())
+                       pokeanim1 pokeanim2 moveanim back_button preprocess ())
 
 (* Poke moves commmand logic *)
 let poke_move_cmd button engine buttons battle text

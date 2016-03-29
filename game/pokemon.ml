@@ -284,13 +284,14 @@ let getElementEffect elm1 elm2 =
   | Flying ->
     (match elm2 with
       | Fighting | Bug | Grass -> 2.
-      | Rock | Electric -> 0.5
+      | Rock | Electric | Steel -> 0.5
       | _ -> 1.
     )
   |  Poison ->
     (match elm2 with
       | Grass | Fairy -> 2.
       | Poison | Ground | Rock | Ghost -> 0.5
+      | Steel -> 0.
       | _ -> 1.
     )
   |  Ground ->
@@ -590,7 +591,7 @@ let getSecondaryEffect str = match str with
   | "captivate" | "eerie-impulse" -> [StageAttack [(SpecialAttack, 2)]]
   | "fake-tears" | "acid-spray"
     | "seed-flare" -> [StageAttack [(SpecialDefense, 2)]]
-  | "knock-off" | "embargo" -> [KnockOff]
+  | "knock-off" -> [KnockOff]
   | "frost-breath" | "storm-throw" -> [IncCrit 3]
   | "hone-claws" -> [StageBoost [(Attack,1);(Accuracy,1)]]
   | "ominous-wind" | "silver-wind" | "ancient-power" -> [ChanceStageBoost]

@@ -1,6 +1,6 @@
 (* Info contains all the data types needed for the handling of the game *)
 type battlemove = Poke of string | UseAttack of string | NoMove
-                  | FaintPoke of string | Preprocess | TurnEnd | AIMove
+                  | FaintPoke of string | NoPreprocess | AIMove
 
 type stat =
   Attack | Defense | SpecialAttack | SpecialDefense | Speed | Accuracy | Evasion
@@ -10,7 +10,7 @@ type item =
   | MegaStone | MegaStoneX | MegaStoneY | LightBall
 
 type guiattack =
-  NormMove of string | Crit of guiattack |SEff of guiattack | NoEff of guiattack
+  NormMove of string | NormStatus of string | Crit of guiattack |SEff of guiattack | NoEff of guiattack
   | HitMult of int * guiattack | BurnMove of guiattack | FreezeMove of guiattack
   | ParaMove of guiattack | MissMove of string | FrozenSolid | Thaw of guiattack
   | NoFreeze of guiattack | NoBurn of guiattack | NoPara of guiattack | Para
@@ -26,57 +26,45 @@ type guiattack =
   | SleepAttack of guiattack | SleepAttackFail of string
   | TrappingMove of guiattack | NoRecoil of guiattack | LifeOrbA of guiattack
   | RapidSpinA of guiattack | HitSelf of guiattack | FailA of string
-  | HealOppA of guiattack
-
-type guistatus = StatBoost of stat * int * guistatus | NormStatus of string
-                | ThawS of guistatus | FrozenSolidS | MissStatus of string
-                | NoFreezeS of guistatus | NoBurnS of guistatus
-                | NoParaS of guistatus | ParaS | SwitchOut of guistatus
-                | FlinchS | StatAttack of stat * int * guistatus | AsleepS
-                | WakeS of guistatus | MakeSleep of guistatus
-                | ConfusedS | BreakConfuseS of guistatus
-                | ConfuseMove of guistatus | LeechS of guistatus
-                | PoisonStatus of guistatus | ParaStatus of guistatus
-                | BadPoisonStatus of guistatus | HealHealth of guistatus
-                | LightScreenS of guistatus | HazeS of guistatus
-                | ReflectS of guistatus | RestS of guistatus
-                | SubBlock of guistatus | SubFail of guistatus
-                | SubMake of guistatus | ProtectedS of string
-                | ProtectS of guistatus | ProtectFail of guistatus
-                | Fail of string | SpikesS of guistatus
-                | BurnStatus of guistatus | HealBellS of guistatus
-                | RefreshS of guistatus | PsychUpS of guistatus
-                | SunnyDayS of guistatus | RainDanceS of guistatus
-                | SandStormS of guistatus | HailS of guistatus
-                | EncoreS of guistatus | EncoreFail
-                | CopyPrevMoveS of guistatus | CopyPrevMoveA of guiattack
-                | CopyFail | TauntS of guistatus | TauntFail | Taunted of string
-                | StealthRockS of guistatus | ToxicSpikesS of guistatus
-                | StickyWebS of guistatus | SleepTalkS of guistatus * guistatus
-                | SleepTalkA of guistatus * guiattack
-                | SleepAttackS of guistatus | UserFaintS of guistatus
-                | RandMoveS of guistatus | RandMoveA of guiattack
-                | ItemSwapS of guistatus | WishS of guistatus
-                | AbilityChangeS of guistatus | KnockedOffS of item * guistatus
-                | GastroAcidS of guistatus | HealOppS of guistatus
+  | HealOppA of guiattack | MakeSleep of guiattack | LeechA of guiattack
+  | BadPoisonMove of guiattack | HealHealth of guiattack | HazeA of guiattack
+  | LightScreenA of guiattack | ReflectA of guiattack | RestA of guiattack
+  | SubMake of guiattack | ProtectA of guiattack | ProtectFail of guiattack
+  | SpikesA of guiattack | ToxicSpikesA of guiattack | HealBellA of guiattack
+  | SunnyDayA of guiattack | RefreshA of guiattack | PsychUpA of guiattack
+  | RainDanceA of guiattack | SandStormA of guiattack | HailA of guiattack
+  | EncoreA of guiattack | EncoreFail | CopyPrevMoveA of guiattack
+  | TauntFail | TauntA of guiattack | SleepTalkA of guiattack * guiattack
+  | StealthRockA of guiattack
+  | StickyWebA of guiattack | RandMoveA of guiattack | WishA of guiattack
+  | AbilityChangeA of guiattack | GastroAcidA of guiattack
+  | SubBlock of guiattack | SubFail of guiattack | ItemSwapA of guiattack
+  | CopyFail | Taunted of string
 
 type endMove = BurnDmg | BreakBurn | BreakFreeze  | BreakPara  | BreakPoison
-              | PoisonDmg | LeechDmg of endMove | LeechHeal of endMove | Base
+              | PoisonDmg | LeechDmg of endMove | Base
               | LightScreenFade of endMove | ReflectFade of endMove
-              | SunFade of endMove | RainFade of endMove
-              | SandStormFade of endMove | SandBuffetB of endMove
-              | SandBuffet1 of endMove | SandBuffet2 of endMove
-              | HailFade of endMove | HailBuffetB of endMove
-              | HailBuffet1 of endMove | HailBuffet2 of endMove
+              | SunFade | RainFade
+              | SandStormFade | SandBuffet
+              | HailFade | HailBuffet
               | TauntFade of endMove | TrapDamage of string * endMove
-              | LeftOversHeal of endMove | WishEnd of endMove
-              | SpeedBoost of endMove
+              | LeftOversHeal | WishEnd of endMove
+              | SpeedBoost | FaintpConvert | NoActionConvert | LoseGameConvert
 
-type guimove = SPoke of string*string | AttackMove of guiattack | Faint
-              | NoAction | Continue | Next | Status of guistatus
-              | EndMove of endMove | FaintNext | SFaint
-              | ForceChoose of guiattack | ForceMove of string
-              | ForceNone | ForceChooseS of guistatus
+type switchdescript = SwitchedInto of string | Intimidate of switchdescript
+                      | StickyWebSlow of switchdescript
+                      | SpikeDamage of switchdescript
+                      | StealthRocksDamage of switchdescript
+                      | ToxicSpikePoison of switchdescript
+                      | MakeItRain of switchdescript
+                      | MakeBlizzard of switchdescript
+                      | MakeSunny of switchdescript
+                      | MakeSandStorm of switchdescript
+                      | SFaint of switchdescript
+
+type guimove = SPoke of switchdescript | UsedMove of guiattack | Faintp
+              | NoAction | EndMove of endMove | ForceChoose of guiattack
+              | LoseGame
 
 type playerMove = Pl1 of guimove | Pl2 of guimove
 
@@ -188,9 +176,13 @@ type screen = SwitchPoke | ChooseMove | Faint | BothFaint | SwitchPokeF
 
 type battle_state =
   InGame of trainer_team * trainer_team * weather_terrain * playerMove ref
-    * playerMove ref
   | Loading | P1 of screen| P2 of screen | Processing
 
 type game_state = MainMenu | Menu1P | Quit | Battle of battle_state | Menu2P
   | Menu0P | Preset1PChoose | Tourney | TourneyChoose | PokeEdit | PokeEditor
   | Preset2PChoose |  Preset2PChooseAgain of pokemon list
+
+type preprocess = PreprocessWeather | PreprocessStatus | PreprocessItem | PreprocessAbility | PreprocessNonVola | PreprocessTerrain | ProcessNextTurn
+
+type command = Player1 of battlemove | Player2 of battlemove | Buffer | Preprocess
+                | Process1 of preprocess | Process2 of preprocess
