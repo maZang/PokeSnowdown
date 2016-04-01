@@ -9,13 +9,13 @@ Hi! Welcome to Pokemon Snowdown: The new winter-themed Pokemon game. To compile 
 
 We hope you enjoy it. :)
 
-COMPILE COMMANDS (bottom one is for executable file):
+COMPILE COMMANDS run when you are in the game directory:
 
 ocamlfind ocamlc -g -thread -package lablgtk2 -package async -package yojson -package str -linkpkg info.mli pokemon.mli gui.mli game.mli pokemon.ml mutableQ.ml ai.ml save.ml tournament.ml gui.ml battle_controller.ml game.ml -o game
 
 
 
-//Outdated
+//Outdated Do not use either of these
 1. ocamlfind ocamlc -g -thread -package lablgtk2 -package async -package yojson -package str -linkpkg info.mli pokemon.mli gui.mli battle_controller.mli game.mli pokemon.ml ai.ml save.ml tournament.ml gui.ml battle_controller.ml game.ml -o game
 
 OR
