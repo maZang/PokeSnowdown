@@ -20,7 +20,7 @@ However, this version of Pokémon is different from the traditional ones in that
 
  - Single-player mode is the traditional fun. You can play a computer in a fight with 6 of the many Pokémon you have unlocked (initially, your selection is quite limited, but it will grow with time). If you feel up to the challenge, you can engage in Tournament mode, where you can fight several opponents in sequence, leading up to Professor Oak. This is a great way to unlock new Pokémon and arm yourself with stronger defences against future opponents. But be warned: Tournament mode is also quite challenging, and meant to pose a slight impediment for beginners as they try exploring their options with a limited subset of the Pokémon.
 
- - Double-player mode is much like what it sounds; you and your (only) friend can play each other! You can only use the Pokémon you've unlocked so far, though, so playing single-player for a while may be beneficial. 
+ - Double-player mode is much like what it sounds; you and your (only) friend can play each other! You can only use the Pokémon you've unlocked so far, though, so playing single-player for a while may be beneficial.
 
  - In no-player mode, you get to watch two overpowered AI battle it out (if you're bored and want to see what real fighting looks like while you're supposed to be studying for your CS final exams...).
 
@@ -45,6 +45,10 @@ The codebase is written mostly in `OCaml`, a functional programming language tha
 
 Contributors since the original submission of the project include:
   * None yet!
+
+
+Image Sources
+http://rogue-lei.deviantart.com/art/Trainer-Sprites-for-my-Fanfic-347869729
 
 ----
 
