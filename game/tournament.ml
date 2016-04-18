@@ -82,7 +82,7 @@ let bobQuotes =
 
 let getRandomEnemy () =
   match Random.int 11 with
-  (*match 9 with *)
+  (*match 10 with*)
   | 0 -> RoughNeck
   | 1 -> Beauty
   | 2 -> BugCatcher

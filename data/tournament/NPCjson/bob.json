@@ -1,22 +1,22 @@
 {
-  "absol": {
-    "name": "absol",
+  "gardevoir": {
+    "name": "gardevoir",
     "moves": [
-      "swords-dance",
-      "knock-off",
-      "pursuit",
-      "superpower"
+      "hyper-voice",
+      "psyshock",
+      "focus-blast",
+      "calm-mind"
     ],
-    "ability": "justified",
-    "nature": "jolly",
-    "item": "nothing",
+    "ability": "trace",
+    "nature": "timid",
+    "item": "MegaStone",
     "evs": {
-      "hp": "0",
-      "attack": "252",
-      "special-attack": "32",
-      "defense": "0",
+      "hp": "252",
+      "attack": "0",
+      "special-attack": "4",
+      "defense": "252",
       "special-defense": "0",
-      "speed": "224"
+      "speed": "0"
     }
   },
   "ampharos": {
@@ -299,6 +299,6 @@
       "speed": "252"
     }
   },
-  "pokemon": [ "absol", "ampharos", "arcanine", "beedrill", "chandelure", "chesnaught", "cobalion", "cresselia", "gengar", "nidoking", "nidoqueen", "sableye", "tyranitar", "venusaur", "weavile"],
+  "pokemon": [ "gardevoir", "ampharos", "arcanine", "beedrill", "chandelure", "chesnaught", "cobalion", "cresselia", "gengar", "nidoking", "nidoqueen", "sableye", "tyranitar", "venusaur", "weavile"],
   "unlockable": ["umbreon", "houndoom", "tyranitar", "mightyena", "shiftry", "sableye", "sharpedo", "cacturne", "crawdaunt", "absol", "honchkrow", "skuntank", "spiritomb", "drapion", "weavile", "liepard", "krookodile", "scrafty", "zoroark", "bisharp", "mandibuzz", "hydreigon", "greninja", "pangoro", "malamar", "venusaur", "beedrill", "arbok", "nidoqueen", "nidoking", "vileplume", "venomoth", "victreebel", "tentacruel", "muk", "gengar", "weezing", "ariados", "crobat", "qwilfish", "dustox", "swalot", "seviper", "roserade", "skuntank", "drapion", "toxicroak", "scolipede", "garbodor", "amoonguss", "dragalge"]
 }
