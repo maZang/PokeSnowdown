@@ -34,7 +34,7 @@ Now the trainer image is good to go! The final step is to save this image as a G
 
 Go to File -> Save As -> bob and select format GIF. 
 
-![paint5](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint5.png)
+![paint5](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/corrected_bobgif.png)
 
 Note: Save the image as lowercase
 
