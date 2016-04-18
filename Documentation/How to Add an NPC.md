@@ -177,7 +177,50 @@ For this part you have a lot of freedom as to what you want the trainer's team t
   "pokemon": ["persian"],
   
   "unlockable": ["umbreon", "houndoom", "tyranitar", "mightyena", "shiftry", "sableye", "sharpedo", "cacturne", "crawdaunt", "absol", "honchkrow", "skuntank", "spiritomb", "drapion", "weavile", "liepard", "krookodile", "scrafty", "zoroark", "bisharp", "mandibuzz", "hydreigon", "greninja", "pangoro", "malamar", "venusaur", "beedrill", "arbok", "nidoqueen", "nidoking", "vileplume", "venomoth", "victreebel", "tentacruel", "muk", "gengar", "weezing", "ariados", "crobat", "qwilfish", "dustox", "swalot", "seviper", "roserade", "skuntank", "drapion", "toxicroak", "scolipede", "garbodor", "amoonguss", "dragalge"]
+  
 }
 
 You can put a single Pokémon into the JSON file and the trainer will use 6 of them!
+
+![sample_json](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/sample_json.png)
+
+A good resource to find competitive teams is - http://www.smogon.com/about.
+
+More specifically - http://www.smogon.com/dex/xy/pokemon/
+
+For this example I will show you how to find and add a single Pokémon from Smogon (you can add whole teams as well).
+
+Following 
+
+http://www.smogon.com/dex/xy/pokemon/
+
+click on any Pokémon that interests you. For this example I will be using Zebstrika.
+
+Note - DO NOT put Zebstrika  on the opponents team. This process for this section is correct, but it did not work for some reason. Also 
+check the info.mli file for a list of current items. 
+
+As of writing this guide (4/18/16), the current items are 
+
+  Nothing | Leftovers | ChoiceBand | LifeOrb | ChoiceSpecs | ChoiceScarf
+  
+  | MegaStone | MegaStoneX | MegaStoneY | LightBall
+  
+Finding the current moves available will take a bit more work, but you can control f on the pokemon.json file.
+
+![paint20](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint20.png)
+![paint21](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint21.png)
+
+
+Next scroll down through the strategies section and find a build you would like to use.
+
+For this example, I will be using the All-Out Attack moveset/build because it is the only one available but there could be multiple 
+
+builds like Latias has (shown below).
+
+![paint22](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint22.png)
+![paint23](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint23.png)
+
+But back to Zebstrika, whose All-Out Attacker build looks like 
+
+![paint24](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint24.png)
 
