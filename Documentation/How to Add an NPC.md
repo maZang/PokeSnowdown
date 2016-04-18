@@ -79,9 +79,8 @@ Place Bob.png into PokeSnowdown -> data->tournament->NPC
 
 Now we can edit the tournament.mli file. It is important to pay attention to capitalization of the variables we are using so you do not get a compiler error.
 
-Edit this line
+Edit this line and add | Bob 
 type enemy = RoughNeck | Beauty | BugCatcher | CampNerd | DragonTamer | Falkner | FatMan | Psychic | Youngster | ProfOak | Chancellor
-add | Bob 
 
 so it becomes
 
