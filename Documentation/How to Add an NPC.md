@@ -93,9 +93,13 @@ Next we will add bobQuotes which will be the things the NPC says before battling
 in this case we add this code -
 
 let bobQuotes =
+
   ["Tread carefully.";
+  
     "Enforced equilibrium.";
+    
     "You're already dead, you just haven't caught up yet."
+    
   ] 
 
 ![paint12](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint12.png)
