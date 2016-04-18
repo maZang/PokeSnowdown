@@ -214,7 +214,6 @@ Finding the current moves available will take a bit more work, but you can contr
 Next scroll down through the strategies section and find a build you would like to use.
 
 For this example, I will be using the All-Out Attack moveset/build because it is the only one available but there could be multiple 
-
 builds like Latias has (shown below).
 
 ![paint22](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint22.png)
@@ -223,4 +222,10 @@ builds like Latias has (shown below).
 But back to Zebstrika, whose All-Out Attacker build looks like 
 
 ![paint24](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint24.png)
+
+You will want to fill in the fields of the JSON file with the details from this Smogon guide. We will be replacing Absol with Zebstrika. For Hidden Power Ice we will just use hidden-power.
+
+![absol_before](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/absol_before.png)
+![zebstrika_after](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/zebstrika%20after.png)
+
 
