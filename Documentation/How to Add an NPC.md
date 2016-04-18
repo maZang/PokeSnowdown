@@ -5,7 +5,7 @@ Before anything, make sure you are running a virtual machine that can run the ga
 https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How%20to%20Install%20Pok%C3%A9mon%20Snowdown.md
 
 
-This guide is assuming you have cloned the repository from https://github.com/Phansa/PokeSnowdown (preferred for now) or https://github.com/maZang/PokeSnowdown and have basic knowledge about how linux works. Do a git pull command before anything just to make sure you repository is up to date. This example is me running a git pull after making this guide, so my local repository did not have all the images I uploaded
+This guide is assuming you have cloned the repository from https://github.com/Phansa/PokeSnowdown (preferred for now) or https://github.com/maZang/PokeSnowdown and have basic knowledge about how linux works. Do a git pull command before anything just to make sure you repository is up to date. This example is me running a git pull after making this guide, so my local repository did not have all the images I uploaded.
 
 ![gitpull](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/gitpull.png)
 ![gitpull2](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/gitpull2.png)
