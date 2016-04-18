@@ -17,3 +17,4 @@ I will be using this sprite sheet I found online for this example. I will be add
 The first thing you will have to do is crop the big trainer image and little trainer sprite.  Starting with the big trainer image -
 
 ![paint1](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint1.png)
+![paint2](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint2.png)
