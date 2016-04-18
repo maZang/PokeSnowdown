@@ -1,6 +1,6 @@
-->How to Add an NPC to Pokémon Snowdown<-
+<center>How to Add an NPC to Pokémon Snowdown</center>
 
-->by Adeet Phanse<-
+<center>by Adeet Phanse</center>
 
 Before anything, make sure you are running a virtual machine that can run the game. You can instructions on how to do so in the "How to Install Pokémon Snowdown" guide. 
 This guide is assuming you have cloned the repository from https://github.com/Phansa/PokeSnowdown or https://github.com/maZang/PokeSnowdown and have basic knowledge about how linux works. 
