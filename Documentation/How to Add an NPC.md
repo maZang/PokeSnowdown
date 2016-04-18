@@ -18,3 +18,14 @@ The first thing you will have to do is crop the big trainer image and little tra
 
 ![paint1](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint1.png)
 ![paint2](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint2.png)
+
+You will then have to edit the cropped image and make the background transparent. This video tutorial will show you how to do this in Paint.net. Save the images you make in PNG format so they do not regain their white background.
+
+https://www.youtube.com/watch?v=cdFpS-AvNCE
+
+I have clicked the magic wand button and also clicked the white background of this image. The next step will be to press delete while the background is selected.
+![paint3](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint3.png)
+
+The results of doing this is
+
+![paint4](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint4.png)
