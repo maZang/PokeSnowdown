@@ -228,4 +228,44 @@ You will want to fill in the fields of the JSON file with the details from this 
 ![absol_before](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/absol_before.png)
 ![zebstrika_after](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/zebstrika%20after.png)
 
+Make sure the "pokemon": line stays updated with the changes you make . If you are replacing a Pokémon, delete the old Pokémon from this list and add the new one you made.
+"pokemon": [ "absol", "ampharos", "arcanine", "beedrill", "chandelure", "chesnaught", "cobalion", "cresselia", "gengar", "nidoking", "nidoqueen", "sableye", "tyranitar", "venusaur", "weavile"],
+becomes
+"pokemon": [ " zebstrika", "ampharos", "arcanine", "beedrill", "chandelure", "chesnaught", "cobalion", "cresselia", "gengar", "nidoking", "nidoqueen", "sableye", "tyranitar", "venusaur", "weavile"],
+
+![pokemon_before](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/pokemon-before.png)
+![pokemon_after](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/pokemon-after.png)
+
+otherwise you can just append the Pokémon you are adding to the end of the list.  For example
+"pokemon": [ "absol", "ampharos", "arcanine", "beedrill", "chandelure", "chesnaught", "cobalion", "cresselia", "gengar", "nidoking", "nidoqueen", "sableye", "tyranitar", "venusaur", "weavile", "zebstrika"],
+
+You can repeat this process for each Pokémon you would like to add! 
+
+Note the ability lightningrod is spelled lightning-rod.
+Also if you get this error, 
+gardevoir
+(((pid 2161) (thread_id 0))
+ ((human_readable 2016-04-18T12:07:23-0400)
+  (int63_ns_since_epoch 1460995643778754000))
+ "unhandled exception in Async scheduler"
+ ("unhandled exception"
+  ((src/monitor.ml.Error_
+    ((exn (Failure "Does not occur"))
+     (backtrace
+      ("Raised at file \"pervasives.ml\", line 30, characters 22-33"
+       "Called from file \"pokemon.ml\", line 807, characters 13-73"
+       "Called from file \"list.ml\", line 55, characters 20-23"
+       "Called from file \"battle_controller.ml\", line 130, characters 2-38"
+       "Called from file \"battle_controller.ml\", line 2525, characters 14-39"
+       "Called from file \"src/job_queue.ml\", line 164, characters 6-47" ""))
+     (monitor
+      (((name main) (here ()) (id 1) (has_seen_error true)
+        (is_detached false) (kill_index 0))))))
+   ((pid 2161) (thread_id 0)))))
+
+You are trying to use an ability, move or item that does not exist in the game files.
+These steps, while correct, did not work for Zebstrika in the end. 
+*****I will redo these steps above for a Pokémon that should work, you can skip this part if you want.
+Now we will be using Gardevoir.
+
 
