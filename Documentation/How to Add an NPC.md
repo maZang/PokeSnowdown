@@ -29,3 +29,18 @@ I have clicked the magic wand button and also clicked the white background of th
 The results of doing this is
 
 ![paint4](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint4.png)
+
+Now the trainer image is good to go! The final step is to save this image as a GIF format image.
+
+Go to File -> Save As -> bob and select format GIF. 
+
+![paint5](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint5.png)
+
+Note: Save the image as lowercase
+
+Just press ok on the next screen
+
+![paint6](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint6.png)
+
+
+
