@@ -129,34 +129,54 @@ The final step will be to make a bob.json file containing the Pokémon that coul
 An easy way to start this process is to just copy the contents of an existing JSON file and just save it as ___.json. In this case it would be bob.json
 
 ![paint17](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint17.png)
-
 ![paint18](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint18.png)
 
 For this part you have a lot of freedom as to what you want the trainer's team to be. You don't have to worry about the unlockable fields because we are making it so that all Pokémon will be unlockable. The unlockable field represents the Pokémon a player can unlock after beating the NPC in battle. You can add any Pokémon you want to this field! Just follow the format presented in this JSON file (honorable.json)
 
 {
+
   "persian": {
+  
     "name": "persian",
+    
     "moves": [
+    
       "pay-day",
+      
       "swift",
+      
       "night-slash",
+      
       "fake-out"
+      
     ],
+    
     "ability": "limber",
+    
     "nature": "jolly",
+    
     "item": "life orb",
+    
     "evs": {
+    
       "hp": "0",
+      
       "attack": "252",
+      
       "special-attack": "0",
+      
       "defense": "4",
+      
       "special-defense": "0",
+      
       "speed": "252"
+      
     }
+    
   },
 
   "pokemon": ["persian"],
+  
   "unlockable": ["umbreon", "houndoom", "tyranitar", "mightyena", "shiftry", "sableye", "sharpedo", "cacturne", "crawdaunt", "absol", "honchkrow", "skuntank", "spiritomb", "drapion", "weavile", "liepard", "krookodile", "scrafty", "zoroark", "bisharp", "mandibuzz", "hydreigon", "greninja", "pangoro", "malamar", "venusaur", "beedrill", "arbok", "nidoqueen", "nidoking", "vileplume", "venomoth", "victreebel", "tentacruel", "muk", "gengar", "weezing", "ariados", "crobat", "qwilfish", "dustox", "swalot", "seviper", "roserade", "skuntank", "drapion", "toxicroak", "scolipede", "garbodor", "amoonguss", "dragalge"]
 }
 
