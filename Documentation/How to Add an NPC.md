@@ -13,6 +13,36 @@ This guide is assuming you have cloned the repository from https://github.com/Ph
 Adding an NPC to the Pokémon Snowdown game is a great way to contribute to this project!  Just follow these steps and you be will on your way to making your own NPC in this game and hopefully getting it accepted into the main project!
 For this example we will be adding Bob.npc.  If you look in the tournament.mli file you will find him there.  You will need an image edition program, for this example I will be using Paint.Net which you can find here.
 http://www.getpaint.net/download.html
+
+Installing Paint Guide -
+
+Click on the link above.
+
+![new_paint](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/new_paint.png)
+
+Click Download Now which will provide you with a zip file
+
+![new_paint2](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/new_paint2.png)
+
+
+Extract the zip file
+
+![new_paint3](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/new_paint3.png)
+![new_paint4](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/new_paint4.png)
+
+Enter the folder you have just made and run the installer
+
+![new_paint5](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/new_paint5.png)
+
+Hit yes when the administrator prompt show ups and just use express settings
+
+![new_paint6](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/new_paint6.png)
+
+Hit next on this screen
+
+![new_paint7](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/new_paint6.png)
+
+
 You will also need a sprite and trainer "portrait".  You can find sprite sheets for trainers online.
 
 ![sprite sheet](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/new_trainers.png)
