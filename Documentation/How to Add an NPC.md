@@ -11,5 +11,7 @@ You will also need a sprite and trainer "portrait".  You can find sprite sheets 
 ![sprite sheet](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/new_trainers.png)
 
 I will be using this sprite sheet I found online for this example. I will be adding the top left sprite into the game.
+
 ***Please remember to cite the source you are using in the README.MD file under image sources!!!
+
 The first thing you will have to do is crop the big trainer image and little trainer sprite.  Starting with the big trainer image -
