@@ -16,11 +16,11 @@ http://www.getpaint.net/download.html
 
 Installing Paint Guide -
 
-Click on the link above.
+Click on this link above - http://www.getpaint.net/download.html
 
 ![new_paint](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/new_paint.png)
 
-Click Download Now which will provide you with a zip file
+Click the link under Free Download Now which will provide you with a zip file
 
 ![new_paint2](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/new_paint2.png)
 
@@ -40,7 +40,11 @@ Hit yes when the administrator prompt show ups and just use express settings
 
 Hit next on this screen
 
-![new_paint7](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/new_paint6.png)
+![new_paint7](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/new_paint7.png)
+
+It has been installed at this point!
+
+![new_paint8](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/new_paint8.png)
 
 
 You will also need a sprite and trainer "portrait".  You can find sprite sheets for trainers online.
