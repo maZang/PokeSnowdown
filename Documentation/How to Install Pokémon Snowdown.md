@@ -18,7 +18,7 @@ Run the installer and go through the set up like this.
 ![paint7](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Install-Game-Images/paint7.png)
 ![paint8](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Install-Game-Images/paint8.png)
 
-Once virutalbox is installed the next step is to download the OVA file (the file that will help set up your virtual machine).
+Once virutalbox is installed the next step is to download the OVA file (the file that will help set up your virtual machine). This download may take a while.
 
 ![paint9](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Install-Game-Images/paint9.png)
 ![paint10](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Install-Game-Images/paint10.png)
