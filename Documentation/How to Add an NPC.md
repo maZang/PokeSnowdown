@@ -1,4 +1,4 @@
-<center> <h1>How to add an NPC to Pokemon Snowdown </h1> </center>
+<center> <h1>How to Add an NPC to Pokemon Snowdown </h1> </center>
 <center> <h1>By Adeet Phanse</h1> </center>
 
 Before anything, make sure you are running a virtual machine that can run the game. You can instructions on how to do so in the "How to Install Pokémon Snowdown" guide. 
@@ -77,8 +77,88 @@ Place Bob.png into PokeSnowdown -> data->tournament->NPC
 ![paint11](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint11.png)
 
 
+Now we can edit the tournament.mli file. It is important to pay attention to capitalization of the variables we are using so you do not get a compiler error.
 
+Edit this line
+type enemy = RoughNeck | Beauty | BugCatcher | CampNerd | DragonTamer | Falkner | FatMan | Psychic | Youngster | ProfOak | Chancellor
+add | Bob 
 
+so it becomes
 
+type enemy = RoughNeck | Beauty | BugCatcher | CampNerd | DragonTamer | Falkner | FatMan | Psychic | Youngster | ProfOak | Chancellor | Bob
 
+![paint39](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint39.png)
+
+Next we will add bobQuotes which will be the things the NPC says before battling you.
+
+in this case we add this code -
+
+let bobQuotes =
+  ["Tread carefully.";
+    "Enforced equilibrium.";
+    "You're already dead, you just haven't caught up yet."
+  ] 
+
+![paint12](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint12.png)
+
+Next we will have to increment the Random.int integer and add bob to the list under getRandomEnemy
+
+  match Random.int 11 with
+  
+  | 10 -> Bob
+
+![paint14](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint14.png)
+
+ 
+After this we have to edit the getStringFromEnemy line adding the variable we just made (Bob) and the file names we have decided to use (in this case we called the Bob png and Bob gif bob.png and bob.gif for ease of use but you can call those files anything you want." 
+
+  | Bob -> "bob"
+
+![paint15](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint15.png)
+
+We will then have to add the ability for Bob to get his quotes. 
+
+| Bob -> bobQuotes
+
+Use the original Bob variable we declared at the start, the string from the last part is only used for the png and gif files. Once again it simpler to just call them the same thing as the NPC.
+
+![paint16](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint16.png)
+
+The final step will be to make a bob.json file containing the Pokémon that could be on his team and the Pokémon you unlock for beating him.
+
+An easy way to start this process is to just copy the contents of an existing JSON file and just save it as ___.json. In this case it would be bob.json
+
+![paint17](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint17.png)
+
+![paint18](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint18.png)
+
+For this part you have a lot of freedom as to what you want the trainer's team to be. You don't have to worry about the unlockable fields because we are making it so that all Pokémon will be unlockable. The unlockable field represents the Pokémon a player can unlock after beating the NPC in battle. You can add any Pokémon you want to this field! Just follow the format presented in this JSON file (honorable.json)
+
+{
+  "persian": {
+    "name": "persian",
+    "moves": [
+      "pay-day",
+      "swift",
+      "night-slash",
+      "fake-out"
+    ],
+    "ability": "limber",
+    "nature": "jolly",
+    "item": "life orb",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+
+  "pokemon": ["persian"],
+  "unlockable": ["umbreon", "houndoom", "tyranitar", "mightyena", "shiftry", "sableye", "sharpedo", "cacturne", "crawdaunt", "absol", "honchkrow", "skuntank", "spiritomb", "drapion", "weavile", "liepard", "krookodile", "scrafty", "zoroark", "bisharp", "mandibuzz", "hydreigon", "greninja", "pangoro", "malamar", "venusaur", "beedrill", "arbok", "nidoqueen", "nidoking", "vileplume", "venomoth", "victreebel", "tentacruel", "muk", "gengar", "weezing", "ariados", "crobat", "qwilfish", "dustox", "swalot", "seviper", "roserade", "skuntank", "drapion", "toxicroak", "scolipede", "garbodor", "amoonguss", "dragalge"]
+}
+
+You can put a single Pokémon into the JSON file and the trainer will use 6 of them!
 
