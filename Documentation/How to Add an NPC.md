@@ -98,7 +98,8 @@ in this case we add this code -
 
 let bobQuotes =
 
-  ["Tread carefully.";
+  [
+    "Tread carefully.";
   
     "Enforced equilibrium.";
     
