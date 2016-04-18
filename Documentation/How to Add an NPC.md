@@ -18,7 +18,7 @@ This will be the final result of these next two steps
 
 ![bobpng](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/Bob.png)
 
-***Please remember to cite the source you are using in the README.MD file under image sources!!!
+\*\*\*Please remember to cite the source you are using in the README.MD file under image sources!!!
 
 The first thing you will have to do is crop the big trainer image and little trainer sprite.  Starting with the big trainer image -
 
@@ -286,7 +286,7 @@ gardevoir
 You are trying to use an ability, move or item that does not exist in the game files.
 These steps, while correct, did not work for Zebstrika in the end.
 
-*****I will redo these steps above for a Pokémon that should work, you can skip this part if you want.
+\*\*\*\*\*I will redo these steps above for a Pokémon that should work, you can skip this part if you want.
 Now we will be using Gardevoir.
 
 ![paint28](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint28.png)
@@ -320,11 +320,11 @@ to be
 
 let getRandomEnemy () =
 
-  ('*'match Random.int 11 with'*')
+  (\*match Random.int 11 with\*)
   
   match 10 with (where 10 is the bob npc in this case)
   
-*the (* .... *) notation comments out a line in OCaml.
+\*the (\* .... \*) notation comments out a line in OCaml.
 
 Now when tournament mode runs you will only encounter bob!
 
