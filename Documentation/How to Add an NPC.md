@@ -289,4 +289,43 @@ These steps, while correct, did not work for Zebstrika in the end.
 *****I will redo these steps above for a Pokémon that should work, you can skip this part if you want.
 Now we will be using Gardevoir.
 
+![paint28](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint28.png)
 
+replacing Zebstrika
+
+![paint30](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint30.png)
+
+Note that instead of writing gardevoirite (or any mega stone) as an item you will need to use MegaStone/MegaStoneX/MegaStoneY.
+
+![gardevoir_fixed](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/gardevor_fixed.png)
+![gardevoir_before](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/pokemon-gardevoir.png)
+![gardevoir_after](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/pokemon-gardevoir-replace.png)
+
+The Pokémon listed on the "pokemon": line are all the possible Pokémon this npc can use. There needs to be at least one Pokémon in the JSON file, but you can have however many you want.  All moves/strings should be lowercase as you can see from this example.  Some moves/abilities may not exist in the game at the time, so if you get a compiler error that may be the reason why. Make sure that you put a '-' in between moves/abilities that contain two words, for example razor leaf is razor-leaf.
+
+Once the JSON file is done, you will have to edit the factoryset.json file and put the line.
+"bob":0 at the end of this list. 
+
+![paint19](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint19.png)
+
+At this point if you would like to test the NPC out before trying to push it to the main repository, which I highgly recommend you do, you should follow these steps.
+
+Edit this line in tournament.ml
+
+let getRandomEnemy () =
+
+  match Random.int 11 with
+  
+to be
+
+let getRandomEnemy () =
+
+  (*match Random.int 11 with*)
+  
+  match 10 with (where 10 is the bob npc in this case)
+  
+*the (* .... *) notation comments out a line in OCaml.
+
+Now when tournament mode runs you will only encounter bob!
+
+![paint25](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint25.png)
