@@ -329,3 +329,66 @@ let getRandomEnemy () =
 Now when tournament mode runs you will only encounter bob!
 
 ![paint25](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint25.png)
+
+Recompile the game ( go to the game folder and run the command 
+ocamlfind ocamlc -g -thread -package lablgtk2 -package async -package yojson -package str -linkpkg info.mli pokemon.mli gui.mli game.mli pokemon.ml mutableQ.ml ai.ml save.ml tournament.ml gui.ml battle_controller.ml game.ml -o game)
+and run it again!
+
+![paint26](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint26.png)
+
+run it using the command ./game
+
+Click 1 player -> tournament then use the W A S D to move around and press H to talk to the npc you want to test.
+
+![paint31](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint31.png)
+![paint32](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint32.png)
+![paint33](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint33.png)
+![paint35](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint35.png)
+![paint34](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint34.png)
+
+If you make it to the battle screen then your NPC is fully working!
+
+\*\*\*\*Make sure you edit the match random line check back to normal before you add or commit your tournament.mli file to the repository.
+
+![paint36](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint34.png)
+
+Also in factorysets.json make sure all of these values are set to 0.
+
+"baldman":0,"beauty":0,"bugcatcher":0,"campernerd":0,"dragontamer":0,"falkner":0,"fatman":0,"psychic":0,"youngster":0,"professor oak":0,"play oak":0,"honorable":0,"bob":0}
+
+If you beat a trainer in tournament mode during your testing, these values can go up which is not what you want for the main program.
+
+Once you have done all that it's time to add, commit, and push your changes!
+You will need to git add the following files :
+
+bob.json located at PokeSnowdown->data->tournament->NPCjson
+
+![gitaddbobjson](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/gitaddbobjson.png)
+
+bob.png located at PokeSnowdown -> data -> tournament -> NPC
+
+![gitaddbobpng](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/gitaddbobjson.png)
+
+bob.gif located PokeSnowdown -> data->backgrounds->player_versus
+
+![gitaddbobgif](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/gitaddbobgif.png)
+
+factoryset.json located at PokeSnowdown->data
+
+![gitaddfactoryset](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/gitaddfactoryset.png)
+
+tournament.ml  located at PokeSnowdown -> game
+
+![gitaddtournamentml](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/gitaddtournamnetml.png)
+
+Now you can git commit -m "Type your message here".
+
+For this example I will just make the message "Adding bob npc to the game".
+
+![paint37](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint37.png)
+
+Finally do a git push -u origin master and you are done!
+
+![paint38](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint38.png)
+
+Congratulations, you have contributed back to the main repository! Your name will be added to the list of contributors if your changes get accepted!
