@@ -1,5 +1,4 @@
 <center> <h1>How to add an NPC to Pokemon Snowdown </h1> </center>
-
 <center> <h1>By Adeet Phanse</h1> </center>
 
 Before anything, make sure you are running a virtual machine that can run the game. You can instructions on how to do so in the "How to Install Pokémon Snowdown" guide. 
