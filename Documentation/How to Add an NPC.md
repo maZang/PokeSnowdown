@@ -5,7 +5,10 @@ Before anything, make sure you are running a virtual machine that can run the ga
 https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How%20to%20Install%20Pok%C3%A9mon%20Snowdown.md
 
 
-This guide is assuming you have cloned the repository from https://github.com/Phansa/PokeSnowdown (preferred for now) or https://github.com/maZang/PokeSnowdown and have basic knowledge about how linux works. 
+This guide is assuming you have cloned the repository from https://github.com/Phansa/PokeSnowdown (preferred for now) or https://github.com/maZang/PokeSnowdown and have basic knowledge about how linux works. Do a git pull command before anything just to make sure you repository is up to date. This example is me running a git pull after making this guide, so my local repository did not have all the images I uploaded
+
+![gitpull](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/gitpull.png)
+![gitpull2](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/gitpull2.png)
 
 Adding an NPC to the Pokémon Snowdown game is a great way to contribute to this project!  Just follow these steps and you be will on your way to making your own NPC in this game and hopefully getting it accepted into the main project!
 For this example we will be adding Bob.npc.  If you look in the tournament.mli file you will find him there.  You will need an image edition program, for this example I will be using Paint.Net which you can find here.
