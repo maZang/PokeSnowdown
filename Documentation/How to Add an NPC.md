@@ -320,7 +320,7 @@ to be
 
 let getRandomEnemy () =
 
-  (*match Random.int 11 with*)
+  ('*'match Random.int 11 with'*')
   
   match 10 with (where 10 is the bob npc in this case)
   
