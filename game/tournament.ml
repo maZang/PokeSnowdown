@@ -99,10 +99,10 @@ let michelleQuotes =
   ]
 
 let redroverQuotes =
-  ["W-where you expecting someone else";
-  "I-its just me RedRover";
-  "I-its not like I want to battle you or anything";
-  "B-baka";
+  ["W-were you expecting someone else.";
+  "I-its just me RedRover.";
+  "I-its not like I want to battle you or anything.";
+  "B-baka.";
   ]
 
 let getRandomEnemy () =
