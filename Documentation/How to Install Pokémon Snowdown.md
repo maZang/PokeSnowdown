@@ -22,3 +22,20 @@ Once virutalbox is installed the next step is to download the OVA file (the file
 
 ![paint9](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Install-Game-Images/paint9.png)
 ![paint10](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Install-Game-Images/paint10.png)
+
+Now we will move on to installing the Virtual Machine. Run Virtual Box
+
+![paint12](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Install-Game-Images/paint12.png)
+
+Rune virtual box and click file -> import appliance
+
+![paint13](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Install-Game-Images/paint13.png)
+![paint14](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Install-Game-Images/paint14.png)
+
+Find the OVF file you just downloaded and select it.
+
+![paint15](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Install-Game-Images/paint15.png)
+![paint16](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Install-Game-Images/paint16.png)
+![paint17](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Install-Game-Images/paint17.png)
+
+!
