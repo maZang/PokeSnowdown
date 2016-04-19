@@ -96,7 +96,20 @@ This will be the final result of these next two steps
 
 Put the link to the specific image you are using as well as a link to the artists deviant art page. Also contact the artists through deviant art / email them if they put one to let them know you are using their images. Ask for permission first and if they say no, please change the images.
 
-For example -
+Here is a template deviant art note you can use. Note sign up for a deviant art account before doing this step of course.
+
+Subject - Using your image for an open source game Pokemon Snowdown
+
+Body text - 
+
+Hi I am working on an open source game located here - https://github.com/Phansa/PokeSnowdown and we are using your image
+(\*insert image url here \*). We will give you credit in the README.md https://github.com/Phansa/PokeSnowdown/blob/master/README.md. If you would like us to not use your image, let me know!
+
+Click send note afterwards.
+
+![paint49](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint49.png)
+
+How to credit the artist -
 
 I add the link to the specific image I am using to the README.md as well as a link to the deviant art page of disneyfreak007
 
