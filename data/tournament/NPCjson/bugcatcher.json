@@ -300,5 +300,5 @@
     }
   },
 	"pokemon": [ "breloom", "celebi", "ferrothorn", "mandibuzz", "milotic", "pinsir", "reuniclus", "roserade", "scizor", "scolipede", "serperior", "sharpedo", "shaymin", "slurpuff", "volcarona" ],
-  "unlockable": ["butterfree", "beedrill", "parasect", "venomoth", "pinsir", "ledian", "ariados", "forretress", "scizor", "shuckle", "heracross", "beautifly", "dustox", "masquerain", "ninjask", "shedinja", "volbeat", "illumise", "armaldo", "kricketune", "wormadam", "mothim", "vespiquen", "yanmega", "leavanny", "scolipede", "crustle", "escavalier", "galvantula", "accelgor", "durant", "volcarona", "vivillon", "venusaur", "vileplume", "parasect", "victreebel", "exeggutor", "meganium", "bellossom", "jumpluff", "sunflora", "sceptile", "ludicolo", "shiftry", "breloom", "cacturne", "cradily", "tropius", "torterra", "roserade", "wormadam", "cherrim", "carnivine", "abomasnow", "tangrowth", "leafeon", "serperior", "simisage", "leavanny", "whimsicott", "lilligant", "maractus", "sawsbuck", "amoonguss", "ferrothorn", "chesnaught", "gogoat", "trevenant", "gourgeist"]
+  "unlockable": ["venomoth", "diglett", "dugtrio", "meowth", "persian", "psyduck", "golduck", "mankey", "primeape", "growlithe", "arcanine", "poliwag", "poliwhirl", "poliwrath", "abra", "kadabra", "alakazam", "machop", "machoke", "machamp", "bellsprout", "weepinbell", "victreebel", "tentacool"]
 }
