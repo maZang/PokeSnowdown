@@ -98,6 +98,8 @@ Put the link to the specific image you are using as well as a link to the artist
 
 Here is a template deviant art note you can use. Note sign up for a deviant art account before doing this step of course.
 
+Deviant Art Email Template -
+
 Subject - Using your image for an open source game Pokemon Snowdown
 
 Body text - 
