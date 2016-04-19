@@ -49,6 +49,7 @@ Contributors since the original submission of the project include:
 
 Image Sources
 http://rogue-lei.deviantart.com/art/Trainer-Sprites-for-my-Fanfic-347869729
+http://treeck0ia.deviantart.com/art/TrEEck0ia-s-Pokemon-Sprites-294127299
 
 ----
 

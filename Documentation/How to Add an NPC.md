@@ -253,6 +253,31 @@ As of writing this guide (4/18/16), the current items are
   
   | MegaStone | MegaStoneX | MegaStoneY | LightBall
   
+You cannot directly put these items as strings into the game, you must refer for the strings below for what to set the "item": field to
+
+  
+Item Reference Guide :
+
+Nothing - "nothing"
+
+Leftovers - "leftovers"
+
+ChoiceBand - "choice band"
+
+LifeOrb - "life orb"
+
+ChoiceSpecs - "choice specs"
+
+ChoiceScarf - "choice scarf"
+
+MeagStone - "MegaStone"
+
+MegaStoneX - "MegaStoneX"
+
+MegaStoneY - "MegaStoneY"
+  
+LightBall - "light ball"
+  
 Finding the current moves available will take a bit more work, but you can control f on the pokemon.json file.
 
 ![paint20](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint20.png)
