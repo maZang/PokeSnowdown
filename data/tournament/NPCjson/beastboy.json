@@ -1,0 +1,64 @@
+{
+  "wobbuffet": {
+    "name": "wobbuffet",
+    "moves": [
+      "counter",
+      "mirror-coat",
+      "safeguard",
+      "destiny-bond"
+    ],
+    "ability": "shadow-tag",
+    "nature": "lax",
+    "item": "life orb",
+    "evs": {
+      "hp": "252",
+      "attack": "0",
+      "special-attack": "0",
+      "defense": "252",
+      "special-defense": "4",
+      "speed": "0"
+    }
+  },
+  "psyduck": {
+    "name": "psyduck",
+    "moves": [
+      "water-pulse",
+      "psychic",
+      "hydro-pump",
+      "ice-beam"
+    ],
+    "ability": "cloud-nine",
+    "nature": "modest",
+    "item": "leftovers",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "blaziken": {
+    "name": "blaziken",
+    "moves": [
+      "flare-blitz",
+      "sky-uppercut",
+      "bulk-up",
+      "brave-bird"
+    ],
+    "ability": "blaze",
+    "nature": "adamant",
+    "item": "MegaStone",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "pokemon": ["wobbuffet", "psyduck", "blaziken"],
+  "unlockable": ["ursaring", "slugma", "magcargo", "piloswine", "corsola", "remoraid", "octillery", "delibird", "mantine", "skarmory", "houndour", "houndoom", "kingdra", "phanpy", "donphan", "porygon2", "stantler", "smeargle", "tyrogue", "hitmontop", "smoochum", "elekid", "magby"]
+}

@@ -41,6 +41,8 @@ let player_img = GMisc.image
   ~file:"../data/backgrounds/player_versus/player1.gif" ()
 let versus_img = GMisc.image
   ~file:"../data/backgrounds/player_versus/player2.gif" ()
+(*type state = {connected : bool ref  };;
+let currentstate = {connected = ref false};; *)
 
 (* used for user input *)
 let continue = ref false
@@ -522,6 +524,8 @@ let make_menu ?packing () =
     ~file:"../data/backgrounds/versus_screen.png" () in
   let playeranim = GPack.fixed ~width:screen_width ~height:screen_height () in
   let versusanim = GPack.fixed ~width:screen_width ~height:screen_height () in
+  (*Printf.printf "hello %B" !(currentstate.connected); *)
+  (*if !(currentstate.connected) then versusanim#put versus_img#coerce (300) (0) else versusanim#put versus_img#coerce (300) (100); *)
   versusanim#put versus_img#coerce (300) (100);
   playeranim#put player_img#coerce (300) (320);
   load_screen#attach ~left:0 ~top:0 ~right:4 ~bottom:4
@@ -632,14 +636,18 @@ let load_battle_load engine img bg_img load_screen battle text buttonhide
      (match mode with
     | TournBattle _ -> versus_img#set_file ("../data/backgrounds/player_versus/"
         ^ (getStringOfEnemy ()) ^ ".gif")
+        (*print_string (getStringOfEnemy());
+        if (getStringOfEnemy())  == "beastboy" then (currentstate.connected) := true ; *)
     | _ -> versus_img#set_file "../data/backgrounds/player_versus/player2.gif");
      menu_holder#add load_screen#coerce;
+
     current_screen :=
     (Battle Loading); Ivar.fill !engine (Battle Loading);
     Printf.printf "Initializing gui\n%!";
     Ivar.fill !battle_status mode);
     upon (Ivar.read !ready_gui) (fun x ->
     ready_gui := Ivar.create ();
+    (*print_string (getStringOfEnemy());*)
     upon (Ivar.read !engine) (fun s -> match s with
       | Battle InGame _ ->
           (Printf.printf "LoadScreenbug\n%!";
