@@ -79,6 +79,8 @@ Arist - http://lizuka.deviantart.com/
 
 http://www.deviantart.com/art/Batman-Sprites-92996795
 
+http://tf2.gamebanana.com/sprays/62919
+
 ----
 
 #### Copyright Notice
