@@ -85,17 +85,17 @@ let suzieQuotes =
     "We are all puppets, Laurie. I'm just the puppet who can see the strings."
   ]
 
+let freddrickQuotes =
+  ["I'm coming.";
+    "You can't hide.";
+    "The only thing to fear, is fear himself!"
+  ]
+
 let michelleQuotes =
   ["They claim their labors are to build a heaven, yet their heaven is populated by horror.";
    "Perhaps the world is not made. Perhaps nothing is made.";
    "A clock without a craftsman. It's too late";
    "Always has been, always will be. Too late.";
-  ]
-
-  let freddrickQuotes =
-  ["I'm coming.";
-    "You can't hide.";
-    "The only thing to fear, is fear himself!"
   ]
 
 let getRandomEnemy () =
