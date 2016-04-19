@@ -47,6 +47,7 @@ Once its done you can press start to run it.
 
 ![paint20](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Install-Game-Images/paint20.png)
 
-If the virutal machine asks you for a password, just press enter.
+If the virutal machine asks you for a password, shut down the machine(press x and click power off the machine) then start it again.
 
 ![paint21](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Install-Game-Images/paint21.png)
+![paint22](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Install-Game-Images/paint22.png)
