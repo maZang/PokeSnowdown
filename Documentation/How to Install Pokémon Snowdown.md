@@ -56,3 +56,19 @@ If everything worked up to this point you should get to a screen looking like th
 
 ![paint23](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Install-Game-Images/paint23.png)
 
+Now you will want to type in the terminal. Type -
+mkdir game 
+cd game
+git clone https://github.com/Phansa/PokeSnowdown.git
+cd PokeSnowdown
+cd game
+ocamlfind ocamlc -g -thread -package lablgtk2 -package async -package yojson -package str -linkpkg info.mli pokemon.mli gui.mli game.mli pokemon.ml mutableQ.ml ai.ml save.ml tournament.ml gui.ml battle_controller.ml game.ml -o game
+./game 
+and you're done!.
+
+To acces the game later one just do
+cd game
+cd PokeSnowdown
+cd game
+./game
+
