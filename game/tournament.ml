@@ -1,6 +1,6 @@
 open Info
 
-type enemy = RoughNeck | Beauty | BugCatcher | CampNerd | DragonTamer | Falkner | FatMan | Psychic | Youngster | ProfOak | Chancellor | Bob | Suzie | Freddrick | Michelle | RedRover | DarkNight
+type enemy = RoughNeck | Beauty | BugCatcher | CampNerd | DragonTamer | Falkner | FatMan | Psychic | Youngster | ProfOak | Chancellor | Bob | Suzie | Freddrick | Michelle | RedRover | DarkNight | SpongeBoy
 
 let enemy1 = ref Beauty
 let enemy2 = ref Falkner
@@ -112,9 +112,13 @@ let batmanQuotes =
   "...Alone...?";
   ]
 
+let spongeQuotes =
+  ["Swigity Swogity";
+  ]
+
 let getRandomEnemy () =
-  match Random.int 16 with
-  (*match 15 with*)
+  match Random.int 17 with
+  (*match 16 with*)
   | 0 -> RoughNeck
   | 1 -> Beauty
   | 2 -> BugCatcher
@@ -131,6 +135,7 @@ let getRandomEnemy () =
   | 13 -> Michelle
   | 14 -> RedRover
   | 15 -> DarkNight
+  | 16 -> SpongeBoy
   | _ -> failwith "Does Not Happen"
 
 let getStringFromEnemy enm =
@@ -152,6 +157,7 @@ let getStringFromEnemy enm =
   | Michelle -> "michelle"
   | RedRover -> "moochelle"
   | DarkNight -> "batman"
+  | SpongeBoy -> "spongebob"
 
 let getStringOfEnemy () =
   getStringFromEnemy !selectedEnemy
@@ -185,6 +191,7 @@ let getQuotes enm =
   | Michelle -> michelleQuotes
   | RedRover -> redroverQuotes
   | DarkNight -> batmanQuotes
+  | SpongeBoy -> spongeQuotes
 
 let getProfOakQuotes () = selectedEnemy := ProfOak; profOakBattleQuotes
 

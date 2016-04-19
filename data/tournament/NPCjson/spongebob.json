@@ -1,0 +1,25 @@
+{
+  "persian": {
+    "name": "persian",
+    "moves": [
+      "pay-day",
+      "swift",
+      "night-slash",
+      "fake-out"
+    ],
+    "ability": "limber",
+    "nature": "jolly",
+    "item": "life orb",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+
+  "pokemon": ["persian"],
+  "unlockable": ["ursaring", "slugma", "magcargo", "piloswine", "corsola", "remoraid", "octillery", "delibird", "mantine", "skarmory", "houndour", "houndoom", "kingdra", "phanpy", "donphan", "porygon2", "stantler", "smeargle", "tyrogue", "hitmontop", "smoochum", "elekid", "magby"]
+}
