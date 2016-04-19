@@ -59,7 +59,7 @@ Artist - http://treeck0ia.deviantart.com/
 
 http://treeck0ia.deviantart.com/art/TrEEck0ia-s-Pokemon-Sprites-294127299
 
-Artist -
+Artist - http://marcani.deviantart.com/
 
 http://orig09.deviantart.net/0692/f/2008/008/1/7/naruto_sprites_by_marcani.png
 
