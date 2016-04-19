@@ -127,6 +127,8 @@ Just press ok on the next screen
 
 Congratulations, you have successfully made the trainer battle sprite! 
 
+![bobgif](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/bob.gif)
+
 For the little sprite do the same exact steps up to saving it as a GIF. So crop the image from the main sprite sheet and use the magic wand to remove the white background. I will skip ahead to the that part.
 
 ![paint6](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint6.png)
@@ -144,6 +146,11 @@ Note: Save the image as lowercase.
 Just hit OK on the next screen 
 
 ![paint9](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint9.png)
+
+Congratulations, you have successfully made the in game sprite!
+
+![bobpng](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/Bob.png)
+
 
 In this example I am working with Paint.net in windows and I email these two images, bob.png and bob.gif, to myself then open them on my virtual machine and redownload them.
 
