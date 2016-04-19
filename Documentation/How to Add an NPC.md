@@ -82,6 +82,8 @@ Navigate to https://github.com/Phansa/PokeSnowdown/tree/master/data/tournament/N
 
 ![paint42](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint42.png)
 
+The final result of these steps
+
 ![paint45](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint45.png)
 
 This will be the final result of these next two steps
