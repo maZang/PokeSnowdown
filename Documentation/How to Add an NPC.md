@@ -68,7 +68,7 @@ git commit -m "adding naruto_sprite.jpg"
 git push -u origin master
 
 ![paint43](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint43.png)
-![paint44](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint43.png)
+![paint44](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint44.png)
 
 Your changes will have to be pulled by the main repository but having all the sprite sheets helps out a lot.
 
@@ -77,7 +77,9 @@ Adding the sprite sheet through github.com -
 Navigate to https://github.com/Phansa/PokeSnowdown/tree/master/data/tournament/NPC/Sprite-Sheet and click upload files, find the sprite sheet and click commit changes. 
 
 ![paint40](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint40.png)
+
 ![paint41](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint41.png)
+
 ![paint42](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint42.png)
 
 This will be the final result of these next two steps
