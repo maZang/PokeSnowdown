@@ -1,6 +1,6 @@
 open Info
 
-type enemy = RoughNeck | Beauty | BugCatcher | CampNerd | DragonTamer | Falkner | FatMan | Psychic | Youngster | ProfOak | Chancellor | Bob | Suzie | Freddrick | Michelle
+type enemy = RoughNeck | Beauty | BugCatcher | CampNerd | DragonTamer | Falkner | FatMan | Psychic | Youngster | ProfOak | Chancellor | Bob | Suzie | Freddrick | Michelle | RedRover
 
 let enemy1 = ref Beauty
 let enemy2 = ref Falkner
@@ -98,9 +98,16 @@ let michelleQuotes =
    "Always has been, always will be. Too late.";
   ]
 
+let redroverQuotes =
+  ["W-where you expecting someone else";
+  "I-its just me RedRover";
+  "I-its not like I want to battle you or anything";
+  "B-baka";
+  ]
+
 let getRandomEnemy () =
-  match Random.int 14 with
-  (*match 13 with*)
+  match Random.int 15 with
+  (*match 14 with*)
   | 0 -> RoughNeck
   | 1 -> Beauty
   | 2 -> BugCatcher
@@ -115,6 +122,7 @@ let getRandomEnemy () =
   | 11 -> Suzie
   | 12 -> Freddrick
   | 13 -> Michelle
+  | 14 -> RedRover
   | _ -> failwith "Does Not Happen"
 
 let getStringFromEnemy enm =
@@ -134,6 +142,7 @@ let getStringFromEnemy enm =
   | Suzie -> "suzie"
   | Freddrick -> "freddrick"
   | Michelle -> "michelle"
+  | RedRover -> "moochelle"
 
 let getStringOfEnemy () =
   getStringFromEnemy !selectedEnemy
@@ -165,6 +174,7 @@ let getQuotes enm =
   | Suzie -> suzieQuotes
   | Freddrick -> freddrickQuotes
   | Michelle -> michelleQuotes
+  | RedRover -> redroverQuotes
 
 
 let getProfOakQuotes () = selectedEnemy := ProfOak; profOakBattleQuotes
