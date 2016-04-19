@@ -105,7 +105,7 @@ Subject - Using your image for an open source game Pokemon Snowdown
 Body text - 
 
 Hi I am working on an open source game located here - https://github.com/Phansa/PokeSnowdown and we are using your image
-(\*insert image url here \*). We will give you credit in the README.md https://github.com/Phansa/PokeSnowdown/blob/master/README.md. If you would like us to not use your image, let me know!
+(\*insert image url here \*). We have given you credit in the README.md https://github.com/Phansa/PokeSnowdown/blob/master/README.md. If you would like us to not use your image, let me know!
 
 Click send note afterwards.
 
