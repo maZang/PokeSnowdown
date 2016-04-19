@@ -73,9 +73,13 @@ http://gokou-sama.deviantart.com/art/Ultimate-Showdown-Sprites-12-119069989
 
 http://gokou-sama.deviantart.com/art/Ultimate-Showdown-Sprites-17-133636939
 
+http://gokou-sama.deviantart.com/art/Ultimate-Showdown-Sprites-34-200459922
+
 Arist - http://lizuka.deviantart.com/
 
 http://www.deviantart.com/art/Batman-Sprites-92996795
+
+http://tf2.gamebanana.com/sprays/62919
 
 ----
 
