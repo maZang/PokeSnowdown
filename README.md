@@ -69,6 +69,8 @@ http://orig10.deviantart.net/35f2/f/2006/352/9/a/naruto_sprites_by_disneyfreak00
 
 Artist - http://gokou-sama.deviantart.com/
 
+http://gokou-sama.deviantart.com/art/Ultimate-Showdown-Sprites-12-119069989
+
 http://gokou-sama.deviantart.com/art/Ultimate-Showdown-Sprites-17-133636939
 
 ----
