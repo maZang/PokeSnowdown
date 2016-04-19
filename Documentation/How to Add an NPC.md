@@ -256,7 +256,7 @@ As of writing this guide (4/18/16), the current items are
 You cannot directly put these items as strings into the game, you must refer for the strings below for what to set the "item": field to
 
   
-Valid item strings :
+Item Reference Guide :
 
 Nothing - "nothing"
 
