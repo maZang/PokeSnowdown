@@ -94,6 +94,17 @@ This will be the final result of these next two steps
 
 \*\*\*Please remember to cite the source you are using in the README.MD file under image sources!!!
 
+Put the link to the specific image you are using as well as a link to the artists deviant art page. For example -
+
+I add the link to the specific image I am using to the README.md as well as a link to the deviant art page of disneyfreak007
+
+![paint46](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint46.png)
+![paint47](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint47.png)
+
+The in the README.md I will put
+
+![paint48](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint48.png)
+
 The first thing you will have to do is crop the big trainer image and little trainer sprite.  Starting with the big trainer image -
 
 ![paint1](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint1.png)
