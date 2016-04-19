@@ -1,6 +1,6 @@
 open Info
 
-type enemy = RoughNeck | Beauty | BugCatcher | CampNerd | DragonTamer | Falkner | FatMan | Psychic | Youngster | ProfOak | Chancellor | Bob
+type enemy = RoughNeck | Beauty | BugCatcher | CampNerd | DragonTamer | Falkner | FatMan | Psychic | Youngster | ProfOak | Chancellor | Bob | Suzie
 
 let enemy1 = ref Beauty
 let enemy2 = ref Falkner
@@ -80,9 +80,14 @@ let bobQuotes =
     "You're already dead, you just haven't caught up yet."
   ]
 
+let suzieQuotes =
+  ["The most powerful thing in the universe... still just a puppet.";
+    "We are all puppets, Laurie. I'm just the puppet who can see the strings."
+  ]
+
 let getRandomEnemy () =
-  match Random.int 11 with
-  (*match 10 with*)
+  match Random.int 12 with
+  (*match 11 with*)
   | 0 -> RoughNeck
   | 1 -> Beauty
   | 2 -> BugCatcher
@@ -94,6 +99,7 @@ let getRandomEnemy () =
   | 8 -> Youngster
   | 9 -> Chancellor
   | 10 -> Bob
+  | 11 -> Suzie
   | _ -> failwith "Does Not Happen"
 
 let getStringFromEnemy enm =
@@ -110,6 +116,7 @@ let getStringFromEnemy enm =
   | ProfOak -> "professoroak"
   | Chancellor -> "honorable"
   | Bob -> "bob"
+  | Suzie -> "suzie"
 
 let getStringOfEnemy () =
   getStringFromEnemy !selectedEnemy
@@ -138,6 +145,7 @@ let getQuotes enm =
   | ProfOak -> profOakBattleQuotes
   | Chancellor -> chancellorQuotes
   | Bob -> bobQuotes
+  | Suzie -> suzieQuotes
 
 let getProfOakQuotes () = selectedEnemy := ProfOak; profOakBattleQuotes
 
