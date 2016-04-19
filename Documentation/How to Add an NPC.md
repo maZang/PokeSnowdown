@@ -110,6 +110,8 @@ The results of doing this is
 
 ![paint4](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint4.png)
 
+This trainer image can be any height/width really it depends on the source file you find them from. Test it in the game and if it doesn't look good do a resize operation in paint.net/your image editing software.
+
 Now the trainer image is good to go! The final step is to save this image as a GIF format image.
 
 Go to File -> Save As -> bob and select format GIF. 
@@ -117,6 +119,7 @@ Go to File -> Save As -> bob and select format GIF.
 ![corrected_bob](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/corrected_bobgif.png)
 
 Note: Save the image as lowercase
+
 
 Just press ok on the next screen
 
