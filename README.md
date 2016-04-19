@@ -44,10 +44,12 @@ We welcome any changes to the repository! Feel free to fork a branch and submit 
 The codebase is written mostly in `OCaml`, a functional programming language that supports imperative features. Some `Python` scripts that generate `JSON` files are also mixed in; the `JSON` files serve as the data hub that feeds into the gameplay and is modified as needed based on user input (i.e. statistics, unlocked Pokémon, etc.).
 
 Contributors since the original submission of the project include:
-  * None yet!
-
-
+  * [Adeet Phanse](https://github.com/phansa)
+  * [Alvin Leung](https://github.com/aleung013)
+  * [Jacob Arriola](https://github.com/Arrioj)
+  * [Matt Bu](https://github.com/mbu13)
 Image Sources
+
 http://rogue-lei.deviantart.com/art/Trainer-Sprites-for-my-Fanfic-347869729
 http://treeck0ia.deviantart.com/art/TrEEck0ia-s-Pokemon-Sprites-294127299
 
