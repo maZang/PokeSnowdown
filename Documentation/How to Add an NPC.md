@@ -94,7 +94,9 @@ This will be the final result of these next two steps
 
 \*\*\*Please remember to cite the source you are using in the README.MD file under image sources!!!
 
-Put the link to the specific image you are using as well as a link to the artists deviant art page. For example -
+Put the link to the specific image you are using as well as a link to the artists deviant art page. Also contact the artists through deviant art / email them if they put one to let them know you are using their images. Ask for permission first and if they say no, please change the images.
+
+For example -
 
 I add the link to the specific image I am using to the README.md as well as a link to the deviant art page of disneyfreak007
 
