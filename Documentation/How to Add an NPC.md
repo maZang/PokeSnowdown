@@ -53,6 +53,33 @@ You will also need a sprite and trainer "portrait".  You can find sprite sheets 
 
 I will be using this sprite sheet I found online for this example. I will be adding the top left sprite into the game.
 
+Add your sprite sheet to the sprite sheet folder located at PokeSnowdown -> game data -> tournament -> NPC -> Sprite-Sheet if it does not exist there already.
+
+You can do this directly in your local repository, and git add the file or do it through github.com if you are a contributor to the project. If you are not, you will have to directly add the images to your local repository.
+
+Adding the sprite sheet to your local repository -
+
+Save it into the sprite sheet folder then run
+
+git add naruto_sprite.jpg
+
+git commit -m "adding naruto_sprite.jpg"
+
+git push -u origin master
+
+![paint43](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint43.png)
+![paint44](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint43.png)
+
+Your changes will have to be pulled by the main repository but having all the sprite sheets helps out a lot.
+
+Adding the sprite sheet through github.com -
+
+Navigate to https://github.com/Phansa/PokeSnowdown/tree/master/data/tournament/NPC/Sprite-Sheet and click upload files, find the sprite sheet and click commit changes. 
+
+![paint40](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint40.png)
+![paint41](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint41.png)
+![paint42](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint42.png)
+
 This will be the final result of these next two steps
 
 ![bobgif](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/bob.gif)
