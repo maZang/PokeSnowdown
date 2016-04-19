@@ -53,7 +53,11 @@ Image Sources
 
 http://rogue-lei.deviantart.com/art/Trainer-Sprites-for-my-Fanfic-347869729
 
-http://treeck0ia.deviantart.com/art/TrEEck0ia-s-Pokemon-Sprites-294127299
+http://treeck0ia.deviantart.com/art/TrEEck0ia-s-Pokemon-Sprites-2941272993
+
+http://orig09.deviantart.net/0692/f/2008/008/1/7/naruto_sprites_by_marcani.png
+
+
 
 ----
 
