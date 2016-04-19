@@ -94,6 +94,34 @@ This will be the final result of these next two steps
 
 \*\*\*Please remember to cite the source you are using in the README.MD file under image sources!!!
 
+Put the link to the specific image you are using as well as a link to the artists deviant art page. Also contact the artists through deviant art / email them if they put one to let them know you are using their images. Ask for permission first and if they say no, please change the images.
+
+Here is a template deviant art note you can use. Note sign up for a deviant art account before doing this step of course.
+
+Deviant Art Email Template -
+
+Subject - Using your image for an open source game Pokemon Snowdown
+
+Body text - 
+
+Hi I am working on an open source game located here - https://github.com/Phansa/PokeSnowdown and we are using your image
+(\*insert image url here \*). We have given you credit in the README.md https://github.com/Phansa/PokeSnowdown/blob/master/README.md. If you would like us to not use your image, let me know!
+
+Click send note afterwards.
+
+![paint49](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint49.png)
+
+How to credit the artist -
+
+I add the link to the specific image I am using to the README.md as well as a link to the deviant art page of disneyfreak007
+
+![paint46](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint46.png)
+![paint47](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint47.png)
+
+The in the README.md I will put
+
+![paint48](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint48.png)
+
 The first thing you will have to do is crop the big trainer image and little trainer sprite.  Starting with the big trainer image -
 
 ![paint1](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint1.png)

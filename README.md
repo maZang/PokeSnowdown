@@ -51,13 +51,31 @@ Contributors since the original submission of the project include:
 
 Image Sources
 
+Artist - http://rogue-lei.deviantart.com/
+
 http://rogue-lei.deviantart.com/art/Trainer-Sprites-for-my-Fanfic-347869729
+
+Artist - http://treeck0ia.deviantart.com/
 
 http://treeck0ia.deviantart.com/art/TrEEck0ia-s-Pokemon-Sprites-294127299
 
+Artist - http://marcani.deviantart.com/
+
 http://orig09.deviantart.net/0692/f/2008/008/1/7/naruto_sprites_by_marcani.png
 
+Artist - http://disneyfreak007.deviantart.com/
 
+http://orig10.deviantart.net/35f2/f/2006/352/9/a/naruto_sprites_by_disneyfreak007.jpg 
+
+Artist - http://gokou-sama.deviantart.com/
+
+http://gokou-sama.deviantart.com/art/Ultimate-Showdown-Sprites-12-119069989
+
+http://gokou-sama.deviantart.com/art/Ultimate-Showdown-Sprites-17-133636939
+
+Arist - http://lizuka.deviantart.com/
+
+http://www.deviantart.com/art/Batman-Sprites-92996795
 
 ----
 
