@@ -99,8 +99,8 @@ let michelleQuotes =
   ]
 
 let getRandomEnemy () =
-  (*match Random.int 14 with*)
-  match 13 with
+  match Random.int 14 with
+  (*match 13 with*)
   | 0 -> RoughNeck
   | 1 -> Beauty
   | 2 -> BugCatcher
