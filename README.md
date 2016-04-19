@@ -51,9 +51,15 @@ Contributors since the original submission of the project include:
 
 Image Sources
 
+Artist - http://rogue-lei.deviantart.com/
+
 http://rogue-lei.deviantart.com/art/Trainer-Sprites-for-my-Fanfic-347869729
 
+Artist - http://treeck0ia.deviantart.com/
+
 http://treeck0ia.deviantart.com/art/TrEEck0ia-s-Pokemon-Sprites-294127299
+
+Artist -
 
 http://orig09.deviantart.net/0692/f/2008/008/1/7/naruto_sprites_by_marcani.png
 
