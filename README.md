@@ -79,7 +79,13 @@ Arist - http://lizuka.deviantart.com/
 
 http://www.deviantart.com/art/Batman-Sprites-92996795
 
+Artist - http://gamebanana.com/members/1194681
+
 http://tf2.gamebanana.com/sprays/62919
+
+Artist - Fron84
+
+http://mugenmultiverse.fanbb.net/t6411-edits-beast-boy-and-hawkeye
 
 ----
 
