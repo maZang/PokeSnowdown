@@ -45,4 +45,8 @@ Click next then click import and wait for it to finish
 
 Once its done you can press start to run it.
 
-![pain20](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Install-Game-Images/paint20.png)
+![paint20](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Install-Game-Images/paint20.png)
+
+If the virutal machine asks you for a password, just press enter.
+
+![paint21](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Install-Game-Images/paint21.png)
