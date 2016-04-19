@@ -60,21 +60,29 @@ Now you will want to type in the terminal. Type -
 
 mkdir game 
 
+![paint25](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Install-Game-Images/paint25.png)
+
 cd game
 
 git clone https://github.com/Phansa/PokeSnowdown.git
+
+![paint26](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Install-Game-Images/paint26.png)
 
 cd PokeSnowdown
 
 cd game
 
+![paint28](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Install-Game-Images/paint28.png)
+
 ocamlfind ocamlc -g -thread -package lablgtk2 -package async -package yojson -package str -linkpkg info.mli pokemon.mli gui.mli game.mli pokemon.ml mutableQ.ml ai.ml save.ml tournament.ml gui.ml battle_controller.ml game.ml -o game
 
 ./game 
 
+![paint29](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Install-Game-Images/paint29.png)
+
 and you're done!.
 
-To acces the game later one just do
+To acces the game later on just do
 
 cd game
 
@@ -83,4 +91,7 @@ cd PokeSnowdown
 cd game
 
 ./game
+
+![paint30](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Install-Game-Images/paint30.png)
+
 
