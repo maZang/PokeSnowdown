@@ -109,7 +109,7 @@ Just hit OK on the next screen
 
 ![paint9](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint9.png)
 
-In this example I am working with Paint.net in windows and I email these two images, bob.png and bob.gif, to myself then open the images in my virtual machine and redownload them on my virtual machine.
+In this example I am working with Paint.net in windows and I email these two images, bob.png and bob.gif, to myself then open them on my virtual machine and redownload them.
 
 Now we will have to add these two files to the game folders. Place bob.gif into PokeSnowdown -> data->backgrounds->player_versus
 
