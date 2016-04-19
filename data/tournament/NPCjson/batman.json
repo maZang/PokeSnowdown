@@ -1,14 +1,14 @@
 {
-  "garchomp": {
-    "name": "garchomp",
+  "crobat": {
+    "name": "crobat",
     "moves": [
-      "earthquake",
-      "dragon-rush",
-      "fire-fang",
-      "shadow-claw"
+      "cross-poison",
+      "aerial-ace",
+      "steel-wing",
+      "x-scissor"
     ],
-    "ability": "sand-veil",
-    "nature": "quirky",
+    "ability": "inner-focus",
+    "nature": "adamant",
     "item": "life orb",
     "evs": {
       "hp": "0",
@@ -19,44 +19,44 @@
       "speed": "252"
     }
   },
-  "charizard": {
-    "name": "charizard",
+  "bisharp": {
+    "name": "bisharp",
     "moves": [
-      "flamethrower",
-      "blast-burn",
-      "dragon-pulse",
-      "air-slash"
+      "metal-claw",
+      "brick-break",
+      "rock-tomb",
+      "giga-impact"
     ],
-    "ability": "blaze",
-    "nature": "hasty",
+    "ability": "defiant",
+    "nature": "adamant",
+    "item": "leftovers",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "umbreon": {
+    "name": "umbreon",
+    "moves": [
+      "psychic",
+      "dark-pulse",
+      "hyper-beam",
+      "hidden-power"
+    ],
+    "ability": "synchronize",
+    "nature": "rash",
     "item": "leftovers",
     "evs": {
       "hp": "252",
-      "attack": "4",
-      "special-attack": "252",
-      "defense": "4",
-      "special-defense": "0",
-      "speed": "0"
-    }
-  },
-  "rayquaza": {
-    "name": "rayquaza",
-    "moves": [
-      "hyper-beam",
-      "thunderbolt",
-      "outrage",
-      "aerial-ace"
-    ],
-    "ability": "air-lock",
-    "nature": "sassy",
-    "item": "choice specs",
-    "evs": {
-      "hp": "0",
       "attack": "0",
       "special-attack": "252",
       "defense": "4",
       "special-defense": "0",
-      "speed": "252"
+      "speed": "0"
     }
   },
   "vaporeon": {
@@ -89,7 +89,7 @@
     ],
     "ability": "pressure",
     "nature": "rash",
-    "item": "MegaStoneX",
+    "item": "choice scarf",
     "evs": {
       "hp": "252",
       "attack": "0",
@@ -119,26 +119,26 @@
       "speed": "0"
     }
   },
-  "pikachu": {
-    "name": "pikachu",
+  "lugia": {
+    "name": "lugia",
     "moves": [
-      "thunder",
-      "thunderbolt",
-      "rain-dance",
-      "brick-break"
+      "hydro-pump",
+      "blizzard",
+      "toxic",
+      "thunder"
     ],
-    "ability": "static",
+    "ability": "pressure",
     "nature": "modest",
-    "item": "light ball",
+    "item": "leftovers",
     "evs": {
-      "hp": "4",
+      "hp": "252",
       "attack": "0",
       "special-attack": "252",
       "defense": "0",
       "special-defense": "0",
-      "speed": "252"
+      "speed": "4"
     }
   },
-  "pokemon": ["garchomp", "charizard", "rayquaza", "vaporeon", "mewtwo", "samurott", "pikachu"],
+  "pokemon": ["crobat", "bisharp", "umbreon", "vaporeon", "mewtwo", "samurott", "lugia"],
   "unlockable": ["ursaring", "slugma", "magcargo", "piloswine", "corsola", "remoraid", "octillery", "delibird", "mantine", "skarmory", "houndour", "houndoom", "kingdra", "phanpy", "donphan", "porygon2", "stantler", "smeargle", "tyrogue", "hitmontop", "smoochum", "elekid", "magby"]
 }
