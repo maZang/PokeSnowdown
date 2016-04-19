@@ -38,4 +38,7 @@ Find the OVF file you just downloaded and select it.
 ![paint16](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Install-Game-Images/paint16.png)
 ![paint17](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Install-Game-Images/paint17.png)
 
-!
+Click next then click import and wait for it to finish
+
+![paint18](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Install-Game-Images/paint18.png)
+![paint19](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Install-Game-Images/paint19.png)
