@@ -95,3 +95,6 @@ cd game
 ![paint30](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Install-Game-Images/paint30.png)
 
 
+You can do a git pull to update the game, but be warned it may overwrite some of your data. However, you will be playing the latest version of the game. 
+
+![paint31](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Install-Game-Images/paint31.png)
