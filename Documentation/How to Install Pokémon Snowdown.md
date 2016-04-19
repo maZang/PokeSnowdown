@@ -51,3 +51,8 @@ If the virutal machine asks you for a password, shut down the machine(press x an
 
 ![paint21](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Install-Game-Images/paint21.png)
 ![paint22](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Install-Game-Images/paint22.png)
+
+If everything worked up to this point you should get to a screen looking like this. A basic knowledge of linux commands would be very helpful at this point, but this tutorial will walk you through what to do. 
+
+![paint23](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Install-Game-Images/paint23.png)
+
