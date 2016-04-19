@@ -42,3 +42,7 @@ Click next then click import and wait for it to finish
 
 ![paint18](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Install-Game-Images/paint18.png)
 ![paint19](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Install-Game-Images/paint19.png)
+
+Once its done you can press start to run it.
+
+![pain20](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Install-Game-Images/paint20.png)
