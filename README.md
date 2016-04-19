@@ -48,9 +48,11 @@ Contributors since the original submission of the project include:
   * [Alvin Leung](https://github.com/aleung013)
   * [Jacob Arriola](https://github.com/Arrioj)
   * [Matt Bu](https://github.com/mbu13)
+
 Image Sources
 
 http://rogue-lei.deviantart.com/art/Trainer-Sprites-for-my-Fanfic-347869729
+
 http://treeck0ia.deviantart.com/art/TrEEck0ia-s-Pokemon-Sprites-294127299
 
 ----
