@@ -313,10 +313,9 @@ Following
 
 http://www.smogon.com/dex/xy/pokemon/
 
-click on any Pokémon that interests you. For this example I will be using Zebstrika.
+Click on any Pokémon that interests you. For this example I will be using Zebstrika.
 
-Note - DO NOT put Zebstrika  on the opponents team. This process for this section is correct, but it did not work for some reason. Also 
-check the info.mli file for a list of current items. 
+Check the info.mli file for a list of current items. 
 
 As of writing this guide (4/18/16), the current items are 
 
@@ -371,6 +370,10 @@ You will want to fill in the fields of the JSON file with the details from this 
 
 ![absol_before](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/absol_before.png)
 ![zebstrika_after](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/zebstrika%20after.png)
+
+I ran into an error with this JSON file because I spelled the item life orb as life-orb. This is the correct Zebstrike JSON file
+
+![zebstrika_fixed](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/zebstrika_fixed.png)
 
 Make sure the "pokemon": line stays updated with the changes you make . If you are replacing a Pokémon, delete the old Pokémon from this list and add the new one you made.
 "pokemon": [ "absol", "ampharos", "arcanine", "beedrill", "chandelure", "chesnaught", "cobalion", "cresselia", "gengar", "nidoking", "nidoqueen", "sableye", "tyranitar", "venusaur", "weavile"],
@@ -428,9 +431,8 @@ gardevoir
    ((pid 2161) (thread_id 0)))))
 
 You are trying to use an ability, move or item that does not exist in the game files.
-These steps, while correct, did not work for Zebstrika in the end.
 
-\*\*\*\*\*I will redo these steps above for a Pokémon that should work, you can skip this part if you want.
+\*\*\*\*\*I will redo these steps above for another Pokémon, you can skip this part if you want.
 Now we will be using Gardevoir.
 
 ![paint28](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint28.png)
