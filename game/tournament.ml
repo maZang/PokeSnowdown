@@ -1,6 +1,6 @@
 open Info
 
-type enemy = RoughNeck | Beauty | BugCatcher | CampNerd | DragonTamer | Falkner | FatMan | Psychic | Youngster | ProfOak | Chancellor | Bob | Suzie | Freddrick | Michelle | RedRover | DarkNight | SpongeBoy | BeastBoy | SquidBoy
+type enemy = RoughNeck | Beauty | BugCatcher | CampNerd | DragonTamer | Falkner | FatMan | Psychic | Youngster | ProfOak | Chancellor | Bob | Suzie | Freddrick | Michelle | RedRover | DarkNight | SpongeBoy | BeastBoy | SquidBoy | Jsean
 
 let enemy1 = ref Beauty
 let enemy2 = ref Falkner
@@ -132,6 +132,11 @@ let squidQuotes =
     "*inaudible weaboo noises*";
     "This is the wrong neighborhood.";
   ]
+let jseanQuotes =
+  ["...";
+    "...";
+    "...";
+  ]
 
 let getRandomEnemy () =
   match Random.int 19 with
@@ -155,6 +160,7 @@ let getRandomEnemy () =
   | 16 -> SpongeBoy
   | 17 -> BeastBoy
   | 18 -> SquidBoy
+  | 19 -> Jsean
   | _ -> failwith "Does Not Happen"
 
 let getStringFromEnemy enm =
@@ -179,6 +185,7 @@ let getStringFromEnemy enm =
   | SpongeBoy -> "spongebob"
   | BeastBoy -> "beastboy"
   | SquidBoy -> "squidward"
+  | Jsean -> "j-sean"
 
 let getStringOfEnemy () =
   getStringFromEnemy !selectedEnemy
@@ -215,6 +222,7 @@ let getQuotes enm =
   | SpongeBoy -> spongeQuotes
   | BeastBoy -> beastQuotes
   | SquidBoy -> squidQuotes
+  | Jsean -> jseanQuotes
 
 let getProfOakQuotes () = selectedEnemy := ProfOak; profOakBattleQuotes
 
