@@ -140,5 +140,5 @@
     }
   },
   "pokemon": ["crobat", "bisharp", "umbreon", "vaporeon", "mewtwo", "samurott", "lugia"],
-  "unlockable": ["ursaring", "slugma", "magcargo", "piloswine", "corsola", "remoraid", "octillery", "delibird", "mantine", "skarmory", "houndour", "houndoom", "kingdra", "phanpy", "donphan", "porygon2", "stantler", "smeargle", "tyrogue", "hitmontop", "smoochum", "elekid", "magby"]
+  "unlockable": ["snorunt", "glalie", "spheal", "sealeo", "walrein", "clamperl", "huntail", "gorebyss", "relicanth", "luvdisc", "bagon", "shelgon", "salamence", "beldum", "metang", "metagross", "regirock", "regice", "registeel", "latias", "latios", "kyogre", "groudon", "rayquaza"]
 }
