@@ -57,9 +57,9 @@ I will be using this sprite sheet I found online for this example. I will be add
 
 \*\*\*Please remember to cite the source you are using in the README.MD file under image sources!!!
 
-Put the link to the specific image you are using as well as a link to the artists deviant art page. Also contact the artists through deviant art / email them if they put one to let them know you are using their images. Ask for permission first and if they say no, please change the images.
+Put the link to the specific image you are using as well as a link to the artist's deviant art page. Also contact the artists through deviant art / email to let them know you are using their images. Ask for permission first and if they say no, please change the images.
 
-Here is a template deviant art note you can use. Note sign up for a deviant art account before doing this step of course.
+Here is a template deviant art note you can use. You will sign up for a deviant art account before doing this step.
 
 Deviant Art Email Template -
 
