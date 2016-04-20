@@ -139,6 +139,26 @@
       "speed": "252"
     }
   },
-  "pokemon": ["garchomp", "charizard", "rayquaza", "vaporeon", "mewtwo", "samurott", "pikachu"],
+  "zebstrika": {
+    "name": "zebstrika",
+    "moves": [
+      "volt-switch",
+      "thunderbolt",
+      "overheat",
+      "hidden-power"
+    ],
+    "ability": "sap-sipper",
+    "nature": "timid",
+    "item": "life orb",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "4",
+      "speed": "252"
+    }
+  },
+  "pokemon": ["garchomp", "charizard", "rayquaza", "vaporeon", "mewtwo", "samurott", "pikachu", "zebstrika"],
   "unlockable": ["volbeat", "illumise", "roselia", "gulpin", "swalot", "carvanha", "sharpedo", "wailmer", "numel", "camerupt", "torkoal", "spoink", "grumpig", "spinda", "trapinch", "vibrave", "flygon", "cacnea", "cacturne", "swablu", "altaria", "zangoose", "seviper"]
 }
