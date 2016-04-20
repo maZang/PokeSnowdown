@@ -135,7 +135,7 @@ let squidQuotes =
 
 let getRandomEnemy () =
   match Random.int 19 with
-  (*match 18 with*)
+  (*match 9 with*)
   | 0 -> RoughNeck
   | 1 -> Beauty
   | 2 -> BugCatcher
