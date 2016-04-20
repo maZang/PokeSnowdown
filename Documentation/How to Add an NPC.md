@@ -65,7 +65,7 @@ git add naruto_sprite.jpg
 
 git commit -m "adding naruto_sprite.jpg"
 
-git push -u origin master
+git push (I use git push -u origin master)
 
 ![paint43](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint43.png)
 ![paint44](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint44.png)
@@ -85,6 +85,32 @@ Navigate to https://github.com/Phansa/PokeSnowdown/tree/master/data/tournament/N
 The final result of these steps
 
 ![paint45](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint45.png)
+
+Repeat these steps if you are using a trainer portrait that is not on the sprite sheet.
+
+Adding Carlton Spongebob through github.com -
+
+![paint50](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint50.png)
+![paint51](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint51.png)
+
+The final result of adding Spongebob
+
+![paint55](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint55.png)
+
+Adding Dab Squidward through command line from the folder located at PokeSnowdown -> data -> tournament -> NPC -> Trainer-Portraits
+
+git add squidward.jpg
+
+git commit -m "add squidware (\*should have been squidward\*) source"
+
+git push
+
+![paint52](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint52.png)
+![paint53](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint53.png)
+
+The final result of adding Squidward
+
+![paint54](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint54.png
 
 This will be the final result of these next two steps
 
