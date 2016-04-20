@@ -41,5 +41,5 @@
   },
   
   "pokemon": [ "scyther", "kabutops"],
-  "unlockable": ["lumineon", "mantyke", "snover", "abomasnow", "weaville", "magnezone", "lickilicky", "rhyperior", "tangrowth", "electivire", "magmortar", "togekiss", "yanmega", "leafeon", "glaceon", "gliscor", "mamswine", "porygon-z", "gallade", "probopass", "dusknoir", "froslass", "rotom", "uxie"]
+  "unlockable": ["lumineon", "mantyke", "snover", "abomasnow", "weaville", "magnezone", "lickilicky", "rhyperior", "tangrowth", "electivire", "magmortar", "togekiss", "yanmega", "leafeon", "glaceon", "gliscor", "mamoswine", "porygon-z", "gallade", "probopass", "dusknoir", "froslass", "rotom", "uxie"]
 }
