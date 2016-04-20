@@ -530,7 +530,14 @@ If you make it to the battle screen then your NPC is fully working!
 
 \*\*\*\*Make sure you edit the match random line check back to normal before you add or commit your tournament.mli file to the repository.
 
-![paint36](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint34.png)
+let getRandomEnemy () =
+
+  match Random.int 11 with
+  
+ (\* match 10 with \*)
+
+
+![paint36](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint36.png)
 
 Also in factorysets.json make sure all of these values are set to 0.
 
