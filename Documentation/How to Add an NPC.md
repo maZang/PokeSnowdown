@@ -8,6 +8,7 @@ https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How%20to%20Inst
 This guide is assuming you have cloned the repository from https://github.com/Phansa/PokeSnowdown (preferred for now) or https://github.com/maZang/PokeSnowdown and have basic knowledge about how linux works. Do a git pull command before anything just to make sure you repository is up to date. This example is me running a git pull after making this guide, so my local repository did not have all the images I uploaded.
 
 ![gitpull](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/gitpull.png)
+
 ![gitpull2](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/gitpull2.png)
 
 Adding an NPC to the Pokémon Snowdown game is a great way to contribute to this project!  Just follow these steps and you be will on your way to making your own NPC in this game and hopefully getting it accepted into the main project!
@@ -28,6 +29,7 @@ Click the link under Free Download Now which will provide you with a zip file
 Extract the zip file
 
 ![new_paint3](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/new_paint3.png)
+
 ![new_paint4](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/new_paint4.png)
 
 Enter the folder you have just made and run the installer
@@ -53,50 +55,11 @@ You will also need a sprite and trainer "portrait".  You can find sprite sheets 
 
 I will be using this sprite sheet I found online for this example. I will be adding the top left sprite into the game.
 
-Add your sprite sheet to the sprite sheet folder located at PokeSnowdown -> game data -> tournament -> NPC -> Sprite-Sheet if it does not exist there already.
-
-You can do this directly in your local repository, and git add the file or do it through github.com if you are a contributor to the project. If you are not, you will have to directly add the images to your local repository.
-
-Adding the sprite sheet to your local repository -
-
-Save it into the sprite sheet folder then run
-
-git add naruto_sprite.jpg
-
-git commit -m "adding naruto_sprite.jpg"
-
-git push -u origin master
-
-![paint43](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint43.png)
-![paint44](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint44.png)
-
-Your changes will have to be pulled by the main repository but having all the sprite sheets helps out a lot.
-
-Adding the sprite sheet through github.com -
-
-Navigate to https://github.com/Phansa/PokeSnowdown/tree/master/data/tournament/NPC/Sprite-Sheet and click upload files, find the sprite sheet and click commit changes. 
-
-![paint40](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint40.png)
-
-![paint41](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint41.png)
-
-![paint42](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint42.png)
-
-The final result of these steps
-
-![paint45](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint45.png)
-
-This will be the final result of these next two steps
-
-![bobgif](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/bob.gif)
-
-![bobpng](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/Bob.png)
-
 \*\*\*Please remember to cite the source you are using in the README.MD file under image sources!!!
 
-Put the link to the specific image you are using as well as a link to the artists deviant art page. Also contact the artists through deviant art / email them if they put one to let them know you are using their images. Ask for permission first and if they say no, please change the images.
+Put the link to the specific image you are using as well as a link to the artist's deviant art page. Also contact the artists through deviant art / email to let them know you are using their images. Ask for permission first and if they say no, please change the images.
 
-Here is a template deviant art note you can use. Note sign up for a deviant art account before doing this step of course.
+Here is a template deviant art note you can use. You will sign up for a deviant art account before doing this step.
 
 Deviant Art Email Template -
 
@@ -121,6 +84,72 @@ I add the link to the specific image I am using to the README.md as well as a li
 The in the README.md I will put
 
 ![paint48](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint48.png)
+
+Add your sprite sheet to the sprite sheet folder located at PokeSnowdown -> game data -> tournament -> NPC -> Sprite-Sheet if it does not exist there already.
+
+You can do this directly in your local repository, and git add the file or do it through github.com if you are a contributor to the project. If you are not, you will have to directly add the images to your local repository.
+
+Adding the sprite sheet to your local repository -
+
+Save it into the sprite sheet folder then run
+
+git add naruto_sprite.jpg
+
+git commit -m "adding naruto_sprite.jpg"
+
+git push (I use git push -u origin master)
+
+![paint43](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint43.png)
+
+![paint44](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint44.png)
+
+Your changes will have to be pulled by the main repository but having all the sprite sheets helps out a lot.
+
+Adding the sprite sheet through github.com -
+
+Navigate to https://github.com/Phansa/PokeSnowdown/tree/master/data/tournament/NPC/Sprite-Sheet and click upload files, find the sprite sheet and click commit changes. 
+
+![paint40](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint40.png)
+
+![paint41](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint41.png)
+
+![paint42](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint42.png)
+
+The final result of these steps
+
+![paint45](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint45.png)
+
+Repeat these steps if you are using a trainer portrait that is not on the sprite sheet.
+
+Adding Carlton Spongebob through github.com -
+
+![paint50](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint50.png)
+![paint51](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint51.png)
+
+The final result of adding Spongebob
+
+![paint55](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint55.png)
+
+Adding Dab Squidward through command line from the folder located at PokeSnowdown -> data -> tournament -> NPC -> Trainer-Portraits
+
+git add squidward.jpg
+
+git commit -m "add squidware (\*should have been squidward\*) source"
+
+git push
+
+![paint52](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint52.png)
+![paint53](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint53.png)
+
+The final result of adding Squidward
+
+![paint54](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint54.png)
+
+This will be the final result of these next two steps
+
+![bobgif](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/bob.gif)
+
+![bobpng](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/Bob.png)
 
 The first thing you will have to do is crop the big trainer image and little trainer sprite.  Starting with the big trainer image -
 
