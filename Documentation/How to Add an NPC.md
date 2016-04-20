@@ -532,9 +532,9 @@ If you make it to the battle screen then your NPC is fully working!
 
 let getRandomEnemy () =
 
-  + match Random.int 11 with
+match Random.int 11 with
   
-  + (\* match 10 with \*)
+(\* match 10 with \*)
 
 
 ![paint36](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint36.png)
