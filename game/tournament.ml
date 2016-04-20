@@ -1,6 +1,6 @@
 open Info
 
-type enemy = RoughNeck | Beauty | BugCatcher | CampNerd | DragonTamer | Falkner | FatMan | Psychic | Youngster | ProfOak | Chancellor | Bob | Suzie | Freddrick | Michelle | RedRover | DarkNight | SpongeBoy | BeastBoy
+type enemy = RoughNeck | Beauty | BugCatcher | CampNerd | DragonTamer | Falkner | FatMan | Psychic | Youngster | ProfOak | Chancellor | Bob | Suzie | Freddrick | Michelle | RedRover | DarkNight | SpongeBoy | BeastBoy | SquidBoy
 
 let enemy1 = ref Beauty
 let enemy2 = ref Falkner
@@ -124,9 +124,18 @@ let beastQuotes =
   "Good joke. Everybody laugh. Roll on snare drum. Curtains.";
   ]
 
+let squidQuotes =
+  ["I wish for only the worst!";
+    "It hot outside, and I'm not talking about me.";
+    "Girls are mean!!";
+    "Why don't you join my oni-chan army, oni-chan?";
+    "*inaudible weaboo noises*";
+    "This is the wrong neighborhood.";
+  ]
+
 let getRandomEnemy () =
-  (*match Random.int 18 with*)
-  match 17 with
+  (*match Random.int 19 with*)
+  match 18 with
   | 0 -> RoughNeck
   | 1 -> Beauty
   | 2 -> BugCatcher
@@ -145,6 +154,7 @@ let getRandomEnemy () =
   | 15 -> DarkNight
   | 16 -> SpongeBoy
   | 17 -> BeastBoy
+  | 18 -> SquidBoy
   | _ -> failwith "Does Not Happen"
 
 let getStringFromEnemy enm =
@@ -168,6 +178,7 @@ let getStringFromEnemy enm =
   | DarkNight -> "batman"
   | SpongeBoy -> "spongebob"
   | BeastBoy -> "beastboy"
+  | SquidBoy -> "squidward"
 
 let getStringOfEnemy () =
   getStringFromEnemy !selectedEnemy
@@ -203,6 +214,7 @@ let getQuotes enm =
   | DarkNight -> batmanQuotes
   | SpongeBoy -> spongeQuotes
   | BeastBoy -> beastQuotes
+  | SquidBoy -> squidQuotes
 
 let getProfOakQuotes () = selectedEnemy := ProfOak; profOakBattleQuotes
 
