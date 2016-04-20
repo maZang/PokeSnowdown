@@ -19,7 +19,26 @@
       "speed": "252"
     }
   },
-
-  "pokemon": ["persian"],
+  "zebstrika": {
+    "name": "zebstrika",
+    "moves": [
+      "volt-switch",
+      "thunderbolt",
+      "overheat",
+      "hidden-power"
+    ],
+    "ability": "sap-sipper",
+    "nature": "timid",
+    "item": "life orb",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "4",
+      "speed": "252"
+    }
+  },
+  "pokemon": ["persian", "zebstrika"],
   "unlockable": ["ursaring", "slugma", "magcargo", "piloswine", "corsola", "remoraid", "octillery", "delibird", "mantine", "skarmory", "houndour", "houndoom", "kingdra", "phanpy", "donphan", "porygon2", "stantler", "smeargle", "tyrogue", "hitmontop", "smoochum", "elekid", "magby"]
 }
