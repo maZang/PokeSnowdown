@@ -8,6 +8,7 @@ https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How%20to%20Inst
 This guide is assuming you have cloned the repository from https://github.com/Phansa/PokeSnowdown (preferred for now) or https://github.com/maZang/PokeSnowdown and have basic knowledge about how linux works. Do a git pull command before anything just to make sure you repository is up to date. This example is me running a git pull after making this guide, so my local repository did not have all the images I uploaded.
 
 ![gitpull](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/gitpull.png)
+
 ![gitpull2](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/gitpull2.png)
 
 Adding an NPC to the Pokémon Snowdown game is a great way to contribute to this project!  Just follow these steps and you be will on your way to making your own NPC in this game and hopefully getting it accepted into the main project!
@@ -28,6 +29,7 @@ Click the link under Free Download Now which will provide you with a zip file
 Extract the zip file
 
 ![new_paint3](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/new_paint3.png)
+
 ![new_paint4](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/new_paint4.png)
 
 Enter the folder you have just made and run the installer
@@ -68,6 +70,7 @@ git commit -m "adding naruto_sprite.jpg"
 git push (I use git push -u origin master)
 
 ![paint43](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint43.png)
+
 ![paint44](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint44.png)
 
 Your changes will have to be pulled by the main repository but having all the sprite sheets helps out a lot.
@@ -110,7 +113,7 @@ git push
 
 The final result of adding Squidward
 
-![paint54](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint54.png
+![paint54](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint54.png)
 
 This will be the final result of these next two steps
 
