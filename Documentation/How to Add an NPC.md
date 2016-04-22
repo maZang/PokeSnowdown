@@ -69,7 +69,7 @@ https://github.com/Phansa/PokeSnowdown/tree/master/data/tournament/NPC/Trainer-P
 
 These are the Sprites/Trainer Gifs current being used
 
-![paint56](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint56.png)
+![Current_NPC_Sprites](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/Current_NPC_Sprites.png)
 
 ![paint57](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint57.png)
 
