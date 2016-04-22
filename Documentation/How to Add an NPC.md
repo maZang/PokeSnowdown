@@ -71,7 +71,7 @@ These are the Sprites/Trainer Gifs current being used
 
 ![Current_NPC_Sprites](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/Current_NPC_Sprites.png)
 
-![paint57](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint57.png)
+![Current_NPC_Portraits](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/Current_NPC_Portraits.png)
 
 \*\*\*Please remember to cite the source you are using in the README.MD file under image sources!!!
 
