@@ -1,6 +1,6 @@
 open Info
 
-type enemy = RoughNeck | Beauty | BugCatcher | CampNerd | DragonTamer | Falkner | FatMan | Psychic | Youngster | ProfOak | Chancellor | Bob | Suzie | Freddrick | Michelle | RedRover | DarkNight | SpongeBoy | BeastBoy | SquidBoy | Jsean | Pope | Carrot | Freezer | Useless
+type enemy = RoughNeck | Beauty | BugCatcher | CampNerd | DragonTamer | Falkner | FatMan | Psychic | Youngster | ProfOak | Chancellor | Bob | Suzie | Freddrick | Michelle | RedRover | DarkNight | SpongeBoy | BeastBoy | SquidBoy | Jsean | Pope | Carrot | Freezer | Useless | Kyle
 
 let enemy1 = ref Beauty
 let enemy2 = ref Falkner
@@ -159,9 +159,14 @@ let yamchaQuotes =
   ["Let me have a crack at 'em!";
    "I've really gotten stronger, I swear!";
   ]
+  
+  let kyleQuotes = 
+    ["Let the music flow through you...";
+    "To play music is my real quest, to master it is my cause!"
+    ]
 
 let getRandomEnemy () =
-  match Random.int 24 with
+  match Random.int 25 with
   (*match 23 with*)
   | 0 -> RoughNeck
   | 1 -> Beauty
@@ -187,6 +192,7 @@ let getRandomEnemy () =
   | 21 -> Carrot
   | 22 -> Freezer
   | 23 -> Useless
+  | 24 -> Kyle
   | _ -> failwith "Does Not Happen"
 
 let getStringFromEnemy enm =
@@ -216,6 +222,7 @@ let getStringFromEnemy enm =
   | Carrot -> "goku"
   | Freezer -> "freiza"
   | Useless -> "yamcha"
+  | Kyle -> "kyle"
 
 let getStringOfEnemy () =
   getStringFromEnemy !selectedEnemy
@@ -257,6 +264,7 @@ let getQuotes enm =
   | Carrot -> gokuQuotes
   | Freezer -> freizaQuotes
   | Useless -> yamchaQuotes
+  | Kyle -> kyleQuotes
 
 let getProfOakQuotes () = selectedEnemy := ProfOak; profOakBattleQuotes
 
