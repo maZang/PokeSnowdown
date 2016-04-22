@@ -55,6 +55,14 @@ You will also need a sprite and trainer "portrait".  You can find sprite sheets 
 
 I will be using this sprite sheet I found online for this example. I will be adding the top left sprite into the game.
 
+You can find a list of sprite sheets currently being used/currently having their artists credited here.
+
+https://github.com/Phansa/PokeSnowdown/tree/master/data/tournament/NPC/Sprite-Sheet
+
+And a list of trainer gif images here
+
+https://github.com/Phansa/PokeSnowdown/tree/master/data/tournament/NPC/Trainer-Portraits
+
 \*\*\*Please remember to cite the source you are using in the README.MD file under image sources!!!
 
 Put the link to the specific image you are using as well as a link to the artist's deviant art page. Also contact the artists through deviant art / email to let them know you are using their images. Ask for permission first and if they say no, please change the images.
