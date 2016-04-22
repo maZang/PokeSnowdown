@@ -1,6 +1,6 @@
 open Info
 
-type enemy = RoughNeck | Beauty | BugCatcher | CampNerd | DragonTamer | Falkner | FatMan | Psychic | Youngster | ProfOak | Chancellor | Bob | Suzie | Freddrick | Michelle | RedRover | DarkNight | SpongeBoy | BeastBoy | SquidBoy | Jsean
+type enemy = RoughNeck | Beauty | BugCatcher | CampNerd | DragonTamer | Falkner | FatMan | Psychic | Youngster | ProfOak | Chancellor | Bob | Suzie | Freddrick | Michelle | RedRover | DarkNight | SpongeBoy | BeastBoy | SquidBoy | Jsean | Pope
 
 let enemy1 = ref Beauty
 let enemy2 = ref Falkner
@@ -138,9 +138,16 @@ let jseanQuotes =
     "...";
   ]
 
+  let popeQuotes =
+  ["Glasses.";
+    "Jacket.";
+    "Shirt.";
+    "Call me glasses, jacket, shirt man.";
+  ]
+
 let getRandomEnemy () =
-  match Random.int 20 with
-  (*match 19 with*)
+  match Random.int 21 with
+  (*match 20 with*)
   | 0 -> RoughNeck
   | 1 -> Beauty
   | 2 -> BugCatcher
@@ -161,6 +168,7 @@ let getRandomEnemy () =
   | 17 -> BeastBoy
   | 18 -> SquidBoy
   | 19 -> Jsean
+  | 20 -> Pope
   | _ -> failwith "Does Not Happen"
 
 let getStringFromEnemy enm =
@@ -186,6 +194,7 @@ let getStringFromEnemy enm =
   | BeastBoy -> "beastboy"
   | SquidBoy -> "squidward"
   | Jsean -> "j-sean"
+  | Pope -> "pope"
 
 let getStringOfEnemy () =
   getStringFromEnemy !selectedEnemy
@@ -223,6 +232,7 @@ let getQuotes enm =
   | BeastBoy -> beastQuotes
   | SquidBoy -> squidQuotes
   | Jsean -> jseanQuotes
+  | Pope -> popeQuotes
 
 let getProfOakQuotes () = selectedEnemy := ProfOak; profOakBattleQuotes
 
