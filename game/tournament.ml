@@ -142,7 +142,7 @@ let jseanQuotes =
   ["Glasses.";
     "Jacket.";
     "Shirt.";
-    "Call me glasses, jacket, shirt man.";
+    "Call me Glasses, Jacket, Shirt man.";
   ]
 
 let getRandomEnemy () =
