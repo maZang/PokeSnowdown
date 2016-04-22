@@ -291,6 +291,8 @@ Use the original Bob variable we declared at the start, the string from the last
 
 The final step will be to make a bob.json file containing the Pokémon that could be on his team and the Pokémon you unlock for beating him.
 
+The JSON Files are located at PokeSnowdown\data\Tournament\NPCjson
+
 An easy way to start this process is to just copy the contents of an existing JSON file and just save it as ___.json. In this case it would be bob.json
 
 ![paint17](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint17.png)
