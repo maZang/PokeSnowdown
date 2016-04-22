@@ -193,7 +193,7 @@ Go to File -> Save As -> bob and select format GIF.
 
 ![corrected_bob](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/corrected_bobgif.png)
 
-Note: Save the image as lowercase
+Note: Save the image name as lowercase
 
 
 Just press ok on the next screen
@@ -216,7 +216,7 @@ Afterwards go to file -> save as -> bob.png
 
 ![corrected_bob_png](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/corrected_bobpng.png)
 
-Note: Save the image as lowercase.
+Note: Save the image name as lowercase.
 
 Just hit OK on the next screen 
 
