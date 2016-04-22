@@ -4,6 +4,8 @@
 Before anything, make sure you are running a virtual machine that can run the game. You can find instructions on how to do so in the "How to Install Pokémon Snowdown" guide located here
 https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How%20to%20Install%20Pok%C3%A9mon%20Snowdown.md
 
+NOTE: If at any point you get a Fatal:exception Out of Memory error just restart the virtual machine
+
 
 This guide is assuming you have cloned the repository from https://github.com/Phansa/PokeSnowdown (preferred for now) or https://github.com/maZang/PokeSnowdown and have basic knowledge about how linux works. Do a git pull command before anything just to make sure you repository is up to date. This example is me running a git pull after making this guide, so my local repository did not have all the images I uploaded.
 
@@ -69,9 +71,9 @@ https://github.com/Phansa/PokeSnowdown/tree/master/data/tournament/NPC/Trainer-P
 
 These are the Sprites/Trainer Gifs current being used
 
-![paint56](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint56.png)
+![Current_NPC_Sprites](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/Current_NPC_Sprites.png)
 
-![paint57](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint57.png)
+![Current_NPC_Portraits](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/Current_NPC_Portraits.png)
 
 \*\*\*Please remember to cite the source you are using in the README.MD file under image sources!!!
 
@@ -193,7 +195,7 @@ Go to File -> Save As -> bob and select format GIF.
 
 ![corrected_bob](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/corrected_bobgif.png)
 
-Note: Save the image as lowercase
+Note: Save the image name as lowercase
 
 
 Just press ok on the next screen
@@ -216,7 +218,7 @@ Afterwards go to file -> save as -> bob.png
 
 ![corrected_bob_png](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/corrected_bobpng.png)
 
-Note: Save the image as lowercase.
+Note: Save the image name as lowercase.
 
 Just hit OK on the next screen 
 
@@ -290,6 +292,8 @@ Use the original Bob variable we declared at the start, the string from the last
 ![paint16](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/paint16.png)
 
 The final step will be to make a bob.json file containing the Pokémon that could be on his team and the Pokémon you unlock for beating him.
+
+The JSON Files are located at PokeSnowdown\data\Tournament\NPCjson
 
 An easy way to start this process is to just copy the contents of an existing JSON file and just save it as ___.json. In this case it would be bob.json
 

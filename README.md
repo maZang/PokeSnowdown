@@ -93,6 +93,10 @@ http://ih1.redbubble.net/image.193615005.6278/flat,800x800,075,f.u2.jpg
 
 http://www.redbubble.com/people/emilyosman/works/20946278-squidward-dab?p=sticker
 
+Artist - BLZofOZZ
+
+http://blzofozz.deviantart.com/art/Microsoft-Paint-DBZ-354200771
+
 ----
 
 #### Copyright Notice
