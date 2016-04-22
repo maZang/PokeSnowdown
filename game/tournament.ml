@@ -1,6 +1,6 @@
 open Info
 
-type enemy = RoughNeck | Beauty | BugCatcher | CampNerd | DragonTamer | Falkner | FatMan | Psychic | Youngster | ProfOak | Chancellor | Bob | Suzie | Freddrick | Michelle | RedRover | DarkNight | SpongeBoy | BeastBoy | SquidBoy | Jsean | Pope
+type enemy = RoughNeck | Beauty | BugCatcher | CampNerd | DragonTamer | Falkner | FatMan | Psychic | Youngster | ProfOak | Chancellor | Bob | Suzie | Freddrick | Michelle | RedRover | DarkNight | SpongeBoy | BeastBoy | SquidBoy | Jsean | Pope | Dan
 
 let enemy1 = ref Beauty
 let enemy2 = ref Falkner
@@ -143,6 +143,11 @@ let jseanQuotes =
     "Jacket.";
     "Shirt.";
     "Call me Glasses, Jacket, Shirt man.";
+  ]
+
+let danQuotes =
+  ["Dr. Dan here.";
+   "Prepare to be electrocuted!";
   ]
 
 let getRandomEnemy () =
