@@ -4,6 +4,8 @@
 Before anything, make sure you are running a virtual machine that can run the game. You can find instructions on how to do so in the "How to Install Pokémon Snowdown" guide located here
 https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How%20to%20Install%20Pok%C3%A9mon%20Snowdown.md
 
+NOTE: If at any point you get a Fatal:exception Out of Memory error just restart the virtual machine
+
 
 This guide is assuming you have cloned the repository from https://github.com/Phansa/PokeSnowdown (preferred for now) or https://github.com/maZang/PokeSnowdown and have basic knowledge about how linux works. Do a git pull command before anything just to make sure you repository is up to date. This example is me running a git pull after making this guide, so my local repository did not have all the images I uploaded.
 
