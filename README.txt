@@ -20,6 +20,7 @@ ocamlfind ocamlc -g -thread -package lablgtk2 -package async -package yojson -pa
 
 OR
 
+//Do not use this compile command
 2. ocamlfind ocamlc -g -thread -package lablgtk2 -package async -package yojson -package str -linkpkg info.mli pokemon.mli gui.mli battle_controller.mli game.mli pokemon.ml ai.ml gui.ml battle_controller.ml game.ml -custom -o game.exe
 
 
