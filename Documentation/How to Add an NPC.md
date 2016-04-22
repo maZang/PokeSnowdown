@@ -15,7 +15,11 @@ Adding an NPC to the Pokémon Snowdown game is a great way to contribute to this
 For this example we will be adding Bob.npc.  If you look in the tournament.mli file you will find him there.  You will need an image edition program, for this example I will be using Paint.Net which you can find here.
 http://www.getpaint.net/download.html
 
-Installing Paint Guide -
+If you are on a mac you can use the program GIMP to do a similar image editing process.
+
+http://www.gimp.org/downloads/
+
+Installing PAINT.NET Guide -
 
 Click on this link above - http://www.getpaint.net/download.html
 
