@@ -1,6 +1,6 @@
 open Info
 
-type enemy = RoughNeck | Beauty | BugCatcher | CampNerd | DragonTamer | Falkner | FatMan | Psychic | Youngster | ProfOak | Chancellor | Bob | Suzie | Freddrick | Michelle | RedRover | DarkNight | SpongeBoy | BeastBoy | SquidBoy | Jsean | Pope
+type enemy = RoughNeck | Beauty | BugCatcher | CampNerd | DragonTamer | Falkner | FatMan | Psychic | Youngster | ProfOak | Chancellor | Bob | Suzie | Freddrick | Michelle | RedRover | DarkNight | SpongeBoy | BeastBoy | SquidBoy | Jsean | Pope | Carrot | Freezer | Useless
 
 let enemy1 = ref Beauty
 let enemy2 = ref Falkner
@@ -138,16 +138,31 @@ let jseanQuotes =
     "...";
   ]
 
-  let popeQuotes =
+let popeQuotes =
   ["Glasses.";
     "Jacket.";
     "Shirt.";
     "Call me Glasses, Jacket, Shirt man.";
   ]
+let gokuQuotes =
+  ["I am the hope of the universe";
+   "I am the protector of the innocent";
+   "I am the light in the darkness";
+   "I am truth. Ally to good! Nightmare to you!";
+  ]
+let freizaQuotes =
+  ["I never imagined that there would be a fool who’d dare to challenge Freezer! I applaud your overconfidence, sir!";
+   "I desire but one tiny little wish, for the one thing I don't already have: the power of Eternal Life.";
+   "How? How did you get this incredible power?";
+  ]
+let yamchaQuotes =
+  ["Let me have a crack at 'em!";
+   "I've really gotten stronger, I swear!";
+  ]
 
 let getRandomEnemy () =
-  match Random.int 21 with
-  (*match 20 with*)
+  match Random.int 24 with
+  (*match 23 with*)
   | 0 -> RoughNeck
   | 1 -> Beauty
   | 2 -> BugCatcher
@@ -169,6 +184,9 @@ let getRandomEnemy () =
   | 18 -> SquidBoy
   | 19 -> Jsean
   | 20 -> Pope
+  | 21 -> Carrot
+  | 22 -> Freezer
+  | 23 -> Useless
   | _ -> failwith "Does Not Happen"
 
 let getStringFromEnemy enm =
@@ -195,6 +213,9 @@ let getStringFromEnemy enm =
   | SquidBoy -> "squidward"
   | Jsean -> "j-sean"
   | Pope -> "pope"
+  | Carrot -> "goku"
+  | Freezer -> "freiza"
+  | Useless -> "yamcha"
 
 let getStringOfEnemy () =
   getStringFromEnemy !selectedEnemy
@@ -233,6 +254,9 @@ let getQuotes enm =
   | SquidBoy -> squidQuotes
   | Jsean -> jseanQuotes
   | Pope -> popeQuotes
+  | Carrot -> gokuQuotes
+  | Freezer -> freizaQuotes
+  | Useless -> yamchaQuotes
 
 let getProfOakQuotes () = selectedEnemy := ProfOak; profOakBattleQuotes
 
