@@ -151,16 +151,18 @@ let gokuQuotes =
    "I am truth. Ally to good! Nightmare to you!";
   ]
 let freizaQuotes =
-  ["I never imagined that there would be a fool who’d dare to challenge Freezer! I applaud your overconfidence, sir!";
-   "I desire but one tiny little wish, for the one thing I don't already have: the power of Eternal Life.";
+  ["I never imagined that there would be a fool who’d dare to challenge Freezer!";
+   "I applaud your overconfidence, sir!";
+   "I desire but one tiny little wish, for the one thing I don't already have:";
+   "The power of Eternal Life.";
    "How? How did you get this incredible power?";
   ]
 let yamchaQuotes =
   ["Let me have a crack at 'em!";
    "I've really gotten stronger, I swear!";
   ]
-  
-  let kyleQuotes = 
+
+  let kyleQuotes =
     ["Let the music flow through you...";
     "To play music is my real quest, to master it is my cause!"
     ]
