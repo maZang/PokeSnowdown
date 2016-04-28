@@ -300,5 +300,5 @@
     }
   },
 	"pokemon": [ "chansey", "diggersby", "drapion", "druddigon", "dugtrio", "durant", "eelektross", "emboar", "escavalier", "exploud", "excadrill", "hippowdon", "lopunny", "staraptor", "zygarde" ],
-  "unlockable": ["yanma", "wooper", "quagsire", "espeon", "umbreon", "murkrow", "slowking", "misdreavus", "unown", "wobbuffet", "girafarig", "pineco", "forretress", "dunsparce", "gligar", "steelix", "snubbull", "granbull", "qwilfish", "scizor", "shuckle", "heracross", "sneasel", "teddiursa"]
+  	"unlockable": ["bisharp", "bouffalant", "rufflet", "braviary", "vullaby", "mandibuzz", "heatmor", "durant", "deino", "zweilous", "hydreigon", "larvesta", "volcarona", "cobalion", "terrakion", "virizion", "tornadus-incarnate", "thundurus-incarnate", "reshiram", "zekrom", "landorus-incarnate", "kyurem", "keldeo-ordinary", "meloetta-aria"]
 }

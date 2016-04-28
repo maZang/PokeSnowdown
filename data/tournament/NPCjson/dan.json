@@ -300,5 +300,5 @@
     }
   },
   "pokemon": [ "gardevoir", "ampharos", "arcanine", "beedrill", "chandelure", "chesnaught", "cobalion", "cresselia", "gengar", "nidoking", "nidoqueen", "sableye", "tyranitar", "venusaur", "weavile"],
-  "unlockable": ["miltank", "blissey", "raikou", "entei", "suicune", "larvitar", "pupitar", "tyranitar", "lugia", "ho-oh", "celebi", "treecko", "grovyle", "sceptile", "torchic", "combusken", "blaziken", "mudkip", "marshtomp", "swampert", "poochyena", "mightyena", "zigzagoon", "linoone"]
+  "unlockable": ["klingklang", "tynamo", "eelektrik", "eelektross", "elgyem", "beheeyem", "litwick", "lampent", "chandelure", "axew", "fraxure", "haxorus", "cubchoo", "beartic", "cryogonal", "shelmet", "accelgor", "stunfisk", "mienfoo", "mienshao", "druddigon", "golett", "golurk", "pawniard"]
 }
