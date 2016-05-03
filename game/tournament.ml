@@ -1,6 +1,6 @@
 open Info
 
-type enemy = RoughNeck | Beauty | BugCatcher | CampNerd | DragonTamer | Falkner | FatMan | Psychic | Youngster | ProfOak | Chancellor | Bob | Suzie | Freddrick | Michelle | RedRover | DarkNight | SpongeBoy | BeastBoy | SquidBoy | Jsean | Pope | Carrot | Freezer | Useless | Kyle | Dan | Jason | Angela
+type enemy = RoughNeck | Beauty | BugCatcher | CampNerd | DragonTamer | Falkner | FatMan | Psychic | Youngster | ProfOak | Chancellor | Bob | Suzie | Freddrick | Hinata | Sakura | DarkNight | SpongeBoy | BeastBoy | SquidBoy | Jsean | Pope | Carrot | Freezer | Useless | Kyle | Dan | Jason | Angela
 
 let enemy1 = ref Beauty
 let enemy2 = ref Falkner
@@ -91,16 +91,16 @@ let freddrickQuotes =
     "The only thing to fear, is fear himself!"
   ]
 
-let michelleQuotes =
+let hinataQuotes =
   ["They claim their labors are to build a heaven, yet their heaven is populated by horror.";
    "Perhaps the world is not made. Perhaps nothing is made.";
    "A clock without a craftsman. It's too late";
    "Always has been, always will be. Too late.";
   ]
 
-let redroverQuotes =
+let sakuraQuotes =
   ["W-were you expecting someone else.";
-  "I-its just me RedRover.";
+  "I-its just me Sakura.";
   "I-its not like I want to battle you or anything.";
   "B-baka.";
   ]
@@ -184,7 +184,7 @@ let angelaQuotes =
 
 let getRandomEnemy () =
   match Random.int 28 with
-  (*match 23 with*)
+  (*match 14 with*)
   | 0 -> RoughNeck
   | 1 -> Beauty
   | 2 -> BugCatcher
@@ -198,8 +198,8 @@ let getRandomEnemy () =
   | 10 -> Bob
   | 11 -> Suzie
   | 12 -> Freddrick
-  | 13 -> Michelle
-  | 14 -> RedRover
+  | 13 -> Hinata
+  | 14 -> Sakura
   | 15 -> DarkNight
   | 16 -> SpongeBoy
   | 17 -> BeastBoy
@@ -231,8 +231,8 @@ let getStringFromEnemy enm =
   | Bob -> "bob"
   | Suzie -> "suzie"
   | Freddrick -> "freddrick"
-  | Michelle -> "michelle"
-  | RedRover -> "moochelle"
+  | Hinata -> "hinata"
+  | Sakura -> "sakura"
   | DarkNight -> "batman"
   | SpongeBoy -> "spongebob"
   | BeastBoy -> "beastboy"
@@ -276,8 +276,8 @@ let getQuotes enm =
   | Bob -> bobQuotes
   | Suzie -> suzieQuotes
   | Freddrick -> freddrickQuotes
-  | Michelle -> michelleQuotes
-  | RedRover -> redroverQuotes
+  | Hinata -> hinataQuotes
+  | Sakura -> sakuraQuotes
   | DarkNight -> batmanQuotes
   | SpongeBoy -> spongeQuotes
   | BeastBoy -> beastQuotes
