@@ -233,6 +233,22 @@ In this example I am working with Paint.net in windows and I email these two ima
 
 #Adding Characters Using GIMP:
 
+First, open or copy your desired sprite sheet into GIMP. Then, use the Rectangle Select Tool from the toolbox on the left and select the trainer image that you want. Remember to crop an image as tightly as you can around the trainer without cutting out parts of the image.
+
+![Image](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/gimp_ex1.PNG)
+
+Next, in the toolbar on top, go into Images and select "Crop to Selection". This will crop out the single trainer that you selected. Then, in the layers panel on the right, right right click the first layer (which should have an eye symbol) and select "Add Alpha Channel". This will add transparency to the background of our trainer. Now click the magic wand tool from the toolbox (fourth tool on first row) and click anywhere in the white space of your image. Now you should see moving dotted lines around your image and trainer. Once you see that, press Delete (or fn + Backspace on Mac). This will remove the white spaces and replace them with transparencies. Your canvas should now look like:
+
+![Image](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/gimp_ex2.PNG)
+
+We can now export our image into a .gif file. Go to File->Export As and give the file any name you want the character's name to be and change the extension to .gif (ex. kyle.gif). 
+
+Next, we move on to the trainer's smaller sprite. Again, crop out the smaller sprite using the necessary tools and then selecting crop to selection (again, crop as closely to the sprite as possible!). Similarly, add the alpha channel and use the magic wand to remove the white spaces. Then, we will need to resize the image to a width of 32 px.
+
+In the toolbar under Image, choose "Scale Image..." and change the width field to 32 (the ratio to height should me maintained by default), then finish and press scale. Finally, we can export the sprite as a .png.
+
+![Image](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How-To-Add-NPC-Images/gimp_ex3.PNG)
+
 #Adding Files to the Game Folders:
 
 Now we will have to add these two files to the game folders. Place bob.gif into PokeSnowdown -> data->backgrounds->player_versus
