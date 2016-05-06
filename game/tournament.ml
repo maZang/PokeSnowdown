@@ -1,6 +1,6 @@
 open Info
 
-type enemy = RoughNeck | Beauty | BugCatcher | CampNerd | DragonTamer | Falkner | FatMan | Psychic | Youngster | ProfOak
+type enemy = RoughNeck | Beauty | BugCatcher | CampNerd | DragonTamer | Falkner | FatMan | Psychic | Youngster | ProfOak | Chancellor | Bob | Suzie | Freddrick | Hinata | Sakura | DarkNight | SpongeBoy | BeastBoy | SquidBoy | Jsean | Pope | Carrot | Freezer | Useless | Kyle | Dan | Jason | Angela
 
 let enemy1 = ref Beauty
 let enemy2 = ref Falkner
@@ -69,8 +69,122 @@ let youngsterQuotes =
   "You can't pick on someone your own size?";
   "But I guess I'll stand my ground."]
 
+let chancellorQuotes =
+  ["Save the Concord? There is no situation with the Concord.";
+    "It would be unwise to pursue this line of questioning.";
+    "Peaceful Protest? There is no such thing. Bring out the poice and arrest these agitators."]
+
+let bobQuotes =
+  ["Tread carefully.";
+    "Enforced equilibrium.";
+    "You're already dead, you just haven't caught up yet."
+  ]
+
+let suzieQuotes =
+  ["The most powerful thing in the universe... still just a puppet.";
+    "We are all puppets, Laurie. I'm just the puppet who can see the strings."
+  ]
+
+let freddrickQuotes =
+  ["I'm coming.";
+    "You can't hide.";
+    "The only thing to fear, is fear himself!"
+  ]
+
+let hinataQuotes =
+  ["They claim their labors are to build a heaven, yet their heaven is populated by horror.";
+   "Perhaps the world is not made. Perhaps nothing is made.";
+   "A clock without a craftsman. It's too late";
+   "Always has been, always will be. Too late.";
+  ]
+
+let sakuraQuotes =
+  ["W-were you expecting someone else.";
+  "I-its just me Sakura.";
+  "I-its not like I want to battle you or anything.";
+  "B-baka.";
+  ]
+
+let batmanQuotes =
+  ["Criminals, by nature, are a cowardly and superstitous lot.";
+  "To instill fear into their hearts I became a bat, a monster in the night.";
+  "And in doing so, have I become the very thing that all monsters become...";
+  "...Alone...?";
+  ]
+
+let spongeQuotes =
+  ["Swigity Swogity";
+  ]
+
+let beastQuotes =
+  ["I heard joke once: Man goes to doctor. Says he's depressed. Life seems harsh, and cruel.";
+  "Says he feels all alone in threatening world. Doctor says: 'Treatment is simple.'";
+  "The great clown - Pagliacci - is in town. Go see him. That should pick you up.";
+  "Man bursts into tears. 'But doctor...' he says 'I am Pagliacci.'";
+  "Good joke. Everybody laugh. Roll on snare drum. Curtains.";
+  ]
+
+let squidQuotes =
+  ["I wish for only the worst!";
+    "It hot outside, and I'm not talking about me.";
+    "Girls are mean!!";
+    "Why don't you join my oni-chan army, oni-chan?";
+    "*inaudible weaboo noises*";
+    "This is the wrong neighborhood.";
+  ]
+let jseanQuotes =
+  ["...";
+    "...";
+    "...";
+  ]
+
+let popeQuotes =
+  ["Glasses.";
+    "Jacket.";
+    "Shirt.";
+    "Call me Glasses, Jacket, Shirt man.";
+  ]
+let gokuQuotes =
+  ["I am the hope of the universe";
+   "I am the protector of the innocent";
+   "I am the light in the darkness";
+   "I am truth. Ally to good! Nightmare to you!";
+  ]
+let freizaQuotes =
+  ["I never imagined that there would be a fool who’d dare to challenge Freezer!";
+   "I applaud your overconfidence, sir!";
+   "I desire but one tiny little wish, for the one thing I don't already have:";
+   "The power of Eternal Life.";
+   "How? How did you get this incredible power?";
+  ]
+let yamchaQuotes =
+  ["Let me have a crack at 'em!";
+   "I've really gotten stronger, I swear!";
+  ]
+
+  let kyleQuotes =
+    ["Let the music flow through you...";
+    "To play music is my real quest, to master it is my cause!"
+    ]
+
+let danQuotes =
+  ["Dr. Dan here.";
+   "Prepare to be electrocuted!";
+  ]
+
+let jasonQuotes =
+  ["Ah, what are you gonna do?";
+  "I am, Jason. I am."
+  ]
+
+let angelaQuotes =
+  ["Let's go!";
+  "This is gonna be fun!"
+  ]
+
 let getRandomEnemy () =
-  match Random.int 9 with
+  match Random.int 28 with
+  (*match 14 with*)
   | 0 -> RoughNeck
   | 1 -> Beauty
   | 2 -> BugCatcher
@@ -80,6 +194,25 @@ let getRandomEnemy () =
   | 6 -> FatMan
   | 7 -> Psychic
   | 8 -> Youngster
+  | 9 -> Chancellor
+  | 10 -> Bob
+  | 11 -> Suzie
+  | 12 -> Freddrick
+  | 13 -> Hinata
+  | 14 -> Sakura
+  | 15 -> DarkNight
+  | 16 -> SpongeBoy
+  | 17 -> BeastBoy
+  | 18 -> SquidBoy
+  | 19 -> Jsean
+  | 20 -> Pope
+  | 21 -> Carrot
+  | 22 -> Freezer
+  | 23 -> Useless
+  | 24 -> Kyle
+  | 25 -> Dan
+  | 26 -> Jason
+  | 27 -> Angela
   | _ -> failwith "Does Not Happen"
 
 let getStringFromEnemy enm =
@@ -94,6 +227,25 @@ let getStringFromEnemy enm =
   | Psychic -> "psychic"
   | Youngster -> "youngster"
   | ProfOak -> "professoroak"
+  | Chancellor -> "honorable"
+  | Bob -> "bob"
+  | Suzie -> "suzie"
+  | Freddrick -> "freddrick"
+  | Hinata -> "hinata"
+  | Sakura -> "sakura"
+  | DarkNight -> "batman"
+  | SpongeBoy -> "spongebob"
+  | BeastBoy -> "beastboy"
+  | SquidBoy -> "squidward"
+  | Jsean -> "j-sean"
+  | Pope -> "pope"
+  | Carrot -> "goku"
+  | Freezer -> "freiza"
+  | Useless -> "yamcha"
+  | Kyle -> "kyle"
+  | Dan -> "dan"
+  | Jason -> "jason"
+  | Angela -> "angela"
 
 let getStringOfEnemy () =
   getStringFromEnemy !selectedEnemy
@@ -120,6 +272,25 @@ let getQuotes enm =
   | Psychic -> psychicQuotes
   | Youngster -> youngsterQuotes
   | ProfOak -> profOakBattleQuotes
+  | Chancellor -> chancellorQuotes
+  | Bob -> bobQuotes
+  | Suzie -> suzieQuotes
+  | Freddrick -> freddrickQuotes
+  | Hinata -> hinataQuotes
+  | Sakura -> sakuraQuotes
+  | DarkNight -> batmanQuotes
+  | SpongeBoy -> spongeQuotes
+  | BeastBoy -> beastQuotes
+  | SquidBoy -> squidQuotes
+  | Jsean -> jseanQuotes
+  | Pope -> popeQuotes
+  | Carrot -> gokuQuotes
+  | Freezer -> freizaQuotes
+  | Useless -> yamchaQuotes
+  | Kyle -> kyleQuotes
+  | Dan -> danQuotes
+  | Jason -> jasonQuotes
+  | Angela -> angelaQuotes
 
 let getProfOakQuotes () = selectedEnemy := ProfOak; profOakBattleQuotes
 

@@ -20,7 +20,7 @@ However, this version of Pokémon is different from the traditional ones in that
 
  - Single-player mode is the traditional fun. You can play a computer in a fight with 6 of the many Pokémon you have unlocked (initially, your selection is quite limited, but it will grow with time). If you feel up to the challenge, you can engage in Tournament mode, where you can fight several opponents in sequence, leading up to Professor Oak. This is a great way to unlock new Pokémon and arm yourself with stronger defences against future opponents. But be warned: Tournament mode is also quite challenging, and meant to pose a slight impediment for beginners as they try exploring their options with a limited subset of the Pokémon.
 
- - Double-player mode is much like what it sounds; you and your (only) friend can play each other! You can only use the Pokémon you've unlocked so far, though, so playing single-player for a while may be beneficial. 
+ - Double-player mode is much like what it sounds; you and your (only) friend can play each other! You can only use the Pokémon you've unlocked so far, though, so playing single-player for a while may be beneficial.
 
  - In no-player mode, you get to watch two overpowered AI battle it out (if you're bored and want to see what real fighting looks like while you're supposed to be studying for your CS final exams...).
 
@@ -44,7 +44,58 @@ We welcome any changes to the repository! Feel free to fork a branch and submit 
 The codebase is written mostly in `OCaml`, a functional programming language that supports imperative features. Some `Python` scripts that generate `JSON` files are also mixed in; the `JSON` files serve as the data hub that feeds into the gameplay and is modified as needed based on user input (i.e. statistics, unlocked Pokémon, etc.).
 
 Contributors since the original submission of the project include:
-  * None yet!
+  * [Adeet Phanse](https://github.com/phansa)
+  * [Alvin Leung](https://github.com/aleung013)
+  * [Jacob Arriola](https://github.com/Arrioj)
+  * [Matt Bu](https://github.com/mbu13)
+
+Image Sources
+
+Artist - http://rogue-lei.deviantart.com/
+
+http://rogue-lei.deviantart.com/art/Trainer-Sprites-for-my-Fanfic-347869729
+
+Artist - http://treeck0ia.deviantart.com/
+
+http://treeck0ia.deviantart.com/art/TrEEck0ia-s-Pokemon-Sprites-294127299
+
+Artist - http://marcani.deviantart.com/
+
+http://orig09.deviantart.net/0692/f/2008/008/1/7/naruto_sprites_by_marcani.png
+
+Artist - http://disneyfreak007.deviantart.com/
+
+http://orig10.deviantart.net/35f2/f/2006/352/9/a/naruto_sprites_by_disneyfreak007.jpg 
+
+Artist - http://gokou-sama.deviantart.com/
+
+http://gokou-sama.deviantart.com/art/Ultimate-Showdown-Sprites-12-119069989
+
+http://gokou-sama.deviantart.com/art/Ultimate-Showdown-Sprites-17-133636939
+
+http://gokou-sama.deviantart.com/art/Ultimate-Showdown-Sprites-34-200459922
+
+Arist - http://lizuka.deviantart.com/
+
+http://www.deviantart.com/art/Batman-Sprites-92996795
+
+Artist - http://gamebanana.com/members/1194681
+
+http://tf2.gamebanana.com/sprays/62919
+
+Artist - Fron84
+
+http://mugenmultiverse.fanbb.net/t6411-edits-beast-boy-and-hawkeye
+
+Artist - emilyosan
+
+http://ih1.redbubble.net/image.193615005.6278/flat,800x800,075,f.u2.jpg
+
+http://www.redbubble.com/people/emilyosman/works/20946278-squidward-dab?p=sticker
+
+Artist - BLZofOZZ
+
+http://blzofozz.deviantart.com/art/Microsoft-Paint-DBZ-354200771
 
 ----
 

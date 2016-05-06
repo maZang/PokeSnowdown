@@ -300,5 +300,5 @@
     }
   },
 	"pokemon": [ "abomasnow", "accelgor", "aggron", "alomomola", "ambipom", "amoonguss", "aromatisse", "banette", "conkeldurr", "lucario", "machamp", "medicham", "mienshao", "terrakion", "toxicroak" ],
-  "unlockable": ["primeape", "poliwrath", "machamp", "hitmonlee", "hitmonchan", "heracross", "hitmontop", "blaziken", "breloom", "hariyama", "medicham", "infernape", "lucario", "toxicroak", "gallade", "emboar", "conkeldurr", "throh", "sawk", "scrafty", "mienshao", "chesnaught", "pangoro", "hawlucha", "golem", "omastar", "kabutops", "aerodactyl", "sudowoodo", "shuckle", "magcargo", "corsola", "tyranitar", "aggron", "lunatone", "solrock", "cradily", "armaldo", "relicanth", "regirock", "rampardos", "bastiodon", "rhyperior", "probopass", "gigalith", "crustle", "carracosta", "archeops", "barbaracle", "tyrantrum", "aurorus", "carbink"]
+  "unlockable": ["zapdos", "moltres", "dratini", "dragonair", "dragonite", "mewtwo", "mew", "chikorita", "bayleef", "meganium", "cyndaquil", "quilava", "typhlosion", "totodile", "croconaw", "feraligatr", "sentret", "furret", "hoothoot", "noctowl", "ledyba", "ledian", "spinarak", "ariados"]
 }

@@ -1,0 +1,144 @@
+{
+  "crobat": {
+    "name": "crobat",
+    "moves": [
+      "cross-poison",
+      "aerial-ace",
+      "steel-wing",
+      "x-scissor"
+    ],
+    "ability": "inner-focus",
+    "nature": "adamant",
+    "item": "life orb",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "bisharp": {
+    "name": "bisharp",
+    "moves": [
+      "metal-claw",
+      "brick-break",
+      "rock-tomb",
+      "giga-impact"
+    ],
+    "ability": "defiant",
+    "nature": "adamant",
+    "item": "leftovers",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "umbreon": {
+    "name": "umbreon",
+    "moves": [
+      "psychic",
+      "dark-pulse",
+      "hyper-beam",
+      "hidden-power"
+    ],
+    "ability": "synchronize",
+    "nature": "rash",
+    "item": "leftovers",
+    "evs": {
+      "hp": "252",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "0"
+    }
+  },
+  "vaporeon": {
+    "name": "vaporeon",
+    "moves": [
+      "ice-beam",
+      "protect",
+      "toxic",
+      "brine"
+    ],
+    "ability": "water-absorb",
+    "nature": "sassy",
+    "item": "leftovers",
+    "evs": {
+      "hp": "252",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "0"
+    }
+  },
+  "mewtwo": {
+    "name": "mewtwo",
+    "moves": [
+      "shadow-ball",
+      "flamethrower",
+      "aura-sphere",
+      "psychic"
+    ],
+    "ability": "pressure",
+    "nature": "rash",
+    "item": "choice scarf",
+    "evs": {
+      "hp": "252",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "0"
+    }
+  },
+  "samurott": {
+    "name": "samurott",
+    "moves": [
+      "hydro-pump",
+      "x-scissor",
+      "water-pulse",
+      "revenge"
+    ],
+    "ability": "torrent",
+    "nature": "brave",
+    "item": "leftovers",
+    "evs": {
+      "hp": "252",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "0"
+    }
+  },
+  "lugia": {
+    "name": "lugia",
+    "moves": [
+      "hydro-pump",
+      "blizzard",
+      "toxic",
+      "thunder"
+    ],
+    "ability": "pressure",
+    "nature": "modest",
+    "item": "leftovers",
+    "evs": {
+      "hp": "252",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "4"
+    }
+  },
+  "pokemon": ["crobat", "bisharp", "umbreon", "vaporeon", "mewtwo", "samurott", "lugia"],
+  "unlockable": ["snorunt", "glalie", "spheal", "sealeo", "walrein", "clamperl", "huntail", "gorebyss", "relicanth", "luvdisc", "bagon", "shelgon", "salamence", "beldum", "metang", "metagross", "regirock", "regice", "registeel", "latias", "latios", "kyogre", "groudon", "rayquaza"]
+}

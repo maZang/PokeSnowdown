@@ -300,5 +300,5 @@
     }
   },
 	"pokemon": [ "azumarill", "clefable", "cloyster", "darmanitan", "diancie", "donphan", "forretress", "galvantula", "gardevoir", "heliolisk", "infernape", "klefki", "krookodile", "mamoswine", "sylveon" ],
-  "unlockable": ["clefable", "wigglytuff", "mrmime", "azumarill", "granbull", "gardevoir", "mawile", "togekiss", "whimsicott", "florges", "aromatisse", "slurpuff", "sylveon", "dedenne", "carbink", "klefki", "dewgong", "cloyster", "jynx", "lapras", "delibird", "glalie", "walrein", "abomasnow", "weavile", "glaceon", "mamoswine", "froslass", "vanilluxe", "beartic", "cryogonal", "aurorus", "avalugg"]
+  "unlockable": ["pikachu", "raichu", "sandshrew", "sandslash", "nidoran", "nidorina", "nidoqueen", "nidoran", "nidorino", "nidoking", "clefairy", "clefable", "vulpix", "ninetales", "jigglypuff", "wigglypuff", "zubat", "golbat", "oddish", "gloom", "vileplume", "paras", "parasect", "venonat"]
 }
