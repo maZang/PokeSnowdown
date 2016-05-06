@@ -2,7 +2,7 @@
 <center> <h1>By Adeet Phanse</h1> </center>
 
 Before anything, make sure you are running a virtual machine that can run the game. You can find instructions on how to do so in the "How to Install Pokémon Snowdown" guide located here
-https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/How%20to%20Install%20Pok%C3%A9mon%20Snowdown.md
+https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/CSCI-2963-01/How%20to%20Install%20Pok%C3%A9mon%20Snowdown.md
 
 NOTE: If at any point you get a Fatal:exception Out of Memory error just restart the virtual machine
 
