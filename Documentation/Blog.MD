@@ -7,8 +7,13 @@ and we have started looking at the basics of OCaml. We have identified things to
 the current project such as adding new moves, fixing the button graphics and adding new NPC's 
 to the tournament mode.
 
+4/11/16
 
-4/20/16
+It is taking some time to sort through their files and really understand what is going on
+in the game. We are still learning the OCaml, however it is starting to make more sense
+the more time we invest into it!
+
+4/18/16
 
 We have started to add a lot of NPCS to the game and work on adding more documentation to
 make how to install/play the game clearer. We have also added documentation on how anyone
