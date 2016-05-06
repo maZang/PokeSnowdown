@@ -14,6 +14,8 @@ _Note: For now, Pokémon Snowdown has only been ported to Linux-compatible syste
 
 ## Gameplay
 
+Here is a basic gameplay demo video - https://www.youtube.com/watch?v=ACxjcFc824A
+
 Pokémon Snowdown supports all of the newest-generation Pokémon (through X and Y), over 500 moves and abilities for these Pokémon, and various animations that try to stay true to the original.
 
 However, this version of Pokémon is different from the traditional ones in that there are not different gyms to travel to; rather, there are three different modes of gameplay: single-player mode (like in the original game), double-player mode, and even no-player mode!
