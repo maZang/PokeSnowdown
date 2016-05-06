@@ -1,6 +1,6 @@
 open Info
 
-type enemy = RoughNeck | Beauty | BugCatcher | CampNerd | DragonTamer | Falkner | FatMan | Psychic | Youngster | ProfOak | Chancellor | Bob | Suzie | Freddrick | Hinata | Sakura | DarkNight | SpongeBoy | BeastBoy | SquidBoy | Jsean | Pope | Carrot | Freezer | Useless | Kyle | Dan | Jason | Angela
+type enemy = RoughNeck | Beauty | BugCatcher | CampNerd | DragonTamer | Falkner | FatMan | Psychic | Youngster | ProfOak | Chancellor | Bob | Suzie | Freddrick | Hinata | Sakura | DarkNight | SpongeBoy | BeastBoy | SquidBoy | Jsean | Pope | Carrot | Freezer | Useless | Kyle | Dan | Jason | Angela | Neji
 
 let enemy1 = ref Beauty
 let enemy2 = ref Falkner
@@ -182,9 +182,15 @@ let angelaQuotes =
   "This is gonna be fun!"
   ]
 
+let nejiQuotes =
+  ["The curse represents a mark of the bird in a cage...";
+    "It is...";
+    "The symbol of being tied to an inescapable destiny.";
+  ]
+
 let getRandomEnemy () =
-  match Random.int 28 with
-  (*match 14 with*)
+  match Random.int 29 with
+  (*match 28 with*)
   | 0 -> RoughNeck
   | 1 -> Beauty
   | 2 -> BugCatcher
@@ -213,6 +219,7 @@ let getRandomEnemy () =
   | 25 -> Dan
   | 26 -> Jason
   | 27 -> Angela
+  | 28 -> Neji
   | _ -> failwith "Does Not Happen"
 
 let getStringFromEnemy enm =
@@ -246,6 +253,7 @@ let getStringFromEnemy enm =
   | Dan -> "dan"
   | Jason -> "jason"
   | Angela -> "angela"
+  | Neji -> "neji_hyuga"
 
 let getStringOfEnemy () =
   getStringFromEnemy !selectedEnemy
@@ -291,6 +299,7 @@ let getQuotes enm =
   | Dan -> danQuotes
   | Jason -> jasonQuotes
   | Angela -> angelaQuotes
+  | Neji -> nejiQuotes
 
 let getProfOakQuotes () = selectedEnemy := ProfOak; profOakBattleQuotes
 
