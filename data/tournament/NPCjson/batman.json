@@ -59,77 +59,37 @@
       "speed": "0"
     }
   },
-  "vaporeon": {
-    "name": "vaporeon",
+  "swoobat": {
+    "name": "swoobat",
     "moves": [
-      "ice-beam",
-      "protect",
-      "toxic",
-      "brine"
+      "air-cutter",
+      "psychic",
+      "hyper-beam",
+      "shadow-ball"
     ],
-    "ability": "water-absorb",
-    "nature": "sassy",
+    "ability": "unaware",
+    "nature": "hasty",
     "item": "leftovers",
     "evs": {
-      "hp": "252",
+      "hp": "0",
       "attack": "0",
       "special-attack": "252",
       "defense": "4",
       "special-defense": "0",
-      "speed": "0"
+      "speed": "252"
     }
   },
-  "mewtwo": {
-    "name": "mewtwo",
+  "noivern": {
+    "name": "noivern",
     "moves": [
-      "shadow-ball",
-      "flamethrower",
+      "dragon-pulse",
+      "hyper-beam",
       "aura-sphere",
       "psychic"
     ],
-    "ability": "pressure",
-    "nature": "rash",
-    "item": "choice scarf",
-    "evs": {
-      "hp": "252",
-      "attack": "0",
-      "special-attack": "252",
-      "defense": "4",
-      "special-defense": "0",
-      "speed": "0"
-    }
-  },
-  "samurott": {
-    "name": "samurott",
-    "moves": [
-      "hydro-pump",
-      "x-scissor",
-      "water-pulse",
-      "revenge"
-    ],
-    "ability": "torrent",
-    "nature": "brave",
-    "item": "leftovers",
-    "evs": {
-      "hp": "252",
-      "attack": "0",
-      "special-attack": "252",
-      "defense": "4",
-      "special-defense": "0",
-      "speed": "0"
-    }
-  },
-  "lugia": {
-    "name": "lugia",
-    "moves": [
-      "hydro-pump",
-      "blizzard",
-      "toxic",
-      "thunder"
-    ],
-    "ability": "pressure",
+    "ability": "frisk",
     "nature": "modest",
-    "item": "leftovers",
+    "item": "life orb",
     "evs": {
       "hp": "252",
       "attack": "0",
@@ -139,6 +99,27 @@
       "speed": "4"
     }
   },
-  "pokemon": ["crobat", "bisharp", "umbreon", "vaporeon", "mewtwo", "samurott", "lugia"],
+  "gliscor": {
+    "name": "gliscor",
+    "moves": [
+      "fire-fang",
+      "ice-fang",
+      "sky-uppercut",
+      "night-slash"
+    ],
+    "ability": "hyper-cutter",
+    "nature": "adamant",
+    "item": "life orb",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+
+  "pokemon": ["crobat", "bisharp", "umbreon", "swoobat", "noivern", "gliscor"],
   "unlockable": ["snorunt", "glalie", "spheal", "sealeo", "walrein", "clamperl", "huntail", "gorebyss", "relicanth", "luvdisc", "bagon", "shelgon", "salamence", "beldum", "metang", "metagross", "regirock", "regice", "registeel", "latias", "latios", "kyogre", "groudon", "rayquaza"]
 }
