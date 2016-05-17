@@ -13,3 +13,5 @@ Add more NPCS to the game(ongoing)
 Fix Beast Boy / Spongebob Trainer Portraits being out of place on the loading screen.
 
 Implement Primal Kyogre/Primal Groudon Evolutions
+
+Implement Shiny Sprites / Find Shiny Sprites
