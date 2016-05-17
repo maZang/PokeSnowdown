@@ -386,7 +386,8 @@ http://www.smogon.com/dex/xy/pokemon/
 
 Click on any Pokémon that interests you. For this example I will be using Zebstrika.
 
-Check the info.mli file for a list of current items. 
+Check the info.mli file for a list of current items. Please note that currently there are no items in game to trigger the primal
+evolution of Kyogre or Groudon.
 
 As of writing this guide (4/18/16), the current items are 
 
