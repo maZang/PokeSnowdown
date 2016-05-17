@@ -1,6 +1,6 @@
 ##To Do List
 
-Below you will find a list of current isues we are working on/could use help on.
+Below you will find a list of current isues we are working on/could use help on. If you feel like you can solve any of these, feel free to help as this is an open source project!
 
 Finish Implementing Abilities Listed Below -
 
