@@ -1,3 +1,7 @@
+##To Do List
+
+Below you will find a list of current isues we are working on/could use help on.
+
 Finish Implementing Abilities Listed Below -
 
 Sturdy
