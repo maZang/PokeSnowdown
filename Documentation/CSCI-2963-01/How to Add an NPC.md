@@ -1,3 +1,5 @@
+Please see https://github.com/Phansa/PokeSnowdown/wiki/How-to-Add-an-NPC for the most up to date version of this guide.
+
 <center> <h1>How to Add an NPC to Pokemon Snowdown </h1> </center>
 <center> <h1>By Adeet Phanse</h1> </center>
 
