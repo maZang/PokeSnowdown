@@ -300,5 +300,5 @@
     }
   },
 	"pokemon": [ "bisharp", "crawdaunt", "dragonite", "dragalge", "froslass", "garchomp", "haxorus", "kingdra", "kyurem", "moltres", "latias", "latios", "salamence", "skarmory", "victini" ],
-  "unlockable": ["hypno", "krabby", "kingler", "voltorb", "electrode", "exeggcute", "exeggutor", "cubone", "marowak", "hitmonlee", "hitmonchan", "lickitung", "koffing", "weesing", "rhyhorn", "rhydon", "chansey", "tangela", "kangaskhan", "horsea", "seadra", "goldeen", "seaking", "staryu"]
+  "unlockable": ["hypno", "krabby", "kingler", "voltorb", "electrode", "exeggcute", "exeggutor", "cubone", "marowak", "hitmonlee", "hitmonchan", "lickitung", "koffing", "weezing", "rhyhorn", "rhydon", "chansey", "tangela", "kangaskhan", "horsea", "seadra", "goldeen", "seaking", "staryu"]
 }
