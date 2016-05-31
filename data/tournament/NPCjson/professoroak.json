@@ -300,5 +300,5 @@
     }
   },
 	"pokemon": [ "arceus", "deoxys", "dialga", "genesect", "giratina-origin", "groudon", "hooh", "kyogre", "lugia", "mewtwo", "palkia", "rayquaza", "reshiram", "xerneas", "yveltal" ],
-  "unlockable": ["xerneas", "diancie", "kyurem", "regice", "articuno", "darkrai", "yveltal", "genesect"]
+  "unlockable": ["articuno", "regice", "darkrai", "kyurem", "genesect", "xerneas", "yveltal", "diancie"]
 }
