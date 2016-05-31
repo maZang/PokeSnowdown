@@ -1,0 +1,304 @@
+{
+	"blaziken": {
+    "name": "blaziken",
+    "moves": [
+      "protect",
+      "flare-blitz",
+      "low-kick",
+      "stone-edge"
+    ],
+    "ability": "speed-boost",
+    "nature": "adamant",
+    "item": "life orb",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "charizard": {
+    "name": "charizard",
+    "moves": [
+      "fire-blast",
+      "solar-beam",
+      "focus-blast",
+      "roost"
+    ],
+    "ability": "blaze",
+    "nature": "modest",
+    "item": "nothing",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "4",
+      "speed": "252"
+    }
+  },
+  "entei": {
+    "name": "entei",
+    "moves": [
+      "sacred-fire",
+      "flare-blitz",
+      "extreme-speed",
+      "stone-edge"
+    ],
+    "ability": "pressure",
+    "nature": "adamant",
+    "item": "choice band",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "magnezone": {
+    "name": "magnezone",
+    "moves": [
+      "volt-switch",
+      "hidden-power",
+      "flash-cannon",
+      "thunderbolt"
+    ],
+    "ability": "magnet-pull",
+    "nature": "modest",
+    "item": "choice specs",
+    "evs": {
+      "hp": "172",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "84"
+    }
+  },
+  "manectric": {
+    "name": "manectric",
+    "moves": [
+      "thunderbolt",
+      "volt-switch",
+      "overheat",
+      "hidden-power"
+    ],
+    "ability": "lightningrod",
+    "nature": "timid",
+    "item": "nothing",
+    "evs": {
+      "hp": "4",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "raikou": {
+    "name": "raikou",
+    "moves": [
+      "calm-mind",
+      "thunderbolt",
+      "hidden-power",
+      "volt-switch"
+    ],
+    "ability": "pressure",
+    "nature": "timid",
+    "item": "leftovers",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "242",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "snorlax": {
+    "name": "snorlax",
+    "moves": [
+      "body-slam",
+      "crunch",
+      "earthquake",
+      "fire-punch"
+    ],
+    "ability": "thick-fat",
+    "nature": "adamant",
+    "item": "choice band",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "88",
+      "special-defense": "168",
+      "speed": "0"
+    }
+  },
+  "suicune": {
+    "name": "suicune",
+    "moves": [
+      "roar",
+      "scald",
+      "rest",
+      "sleep-talk"
+    ],
+    "ability": "pressure",
+    "nature": "bold",
+    "item": "leftovers",
+    "evs": {
+      "hp": "252",
+      "attack": "0",
+      "special-attack": "0",
+      "defense": "252",
+      "special-defense": "4",
+      "speed": "0"
+    }
+  },
+  "swampert": {
+    "name": "swampert",
+    "moves": [
+      "stealth-rock",
+      "waterfall",
+      "earthquake",
+      "ice-punch"
+    ],
+    "ability": "damp",
+    "nature": "adamant",
+    "item": "nothing",
+    "evs": {
+      "hp": "212",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "44"
+    }
+  },
+  "talonflame": {
+    "name": "talonflame",
+    "moves": [
+      "brave-bird",
+      "flare-blitz",
+      "u-turn",
+      "tailwind"
+    ],
+    "ability": "gale-wings",
+    "nature": "jolly",
+    "item": "choice band",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "tentacruel": {
+    "name": "tentacruel",
+    "moves": [
+      "rapid-spin",
+      "toxic-spikes",
+      "scald",
+      "knock-off"
+    ],
+    "ability": "liquid-ooze",
+    "nature": "bold",
+    "item": "nothing",
+    "evs": {
+      "hp": "240",
+      "attack": "0",
+      "special-attack": "0",
+      "defense": "244",
+      "special-defense": "0",
+      "speed": "24"
+    }
+  },
+  "thundurus": {
+    "name": "thundurus",
+    "moves": [
+      "thunder-wave",
+      "thunderbolt",
+      "grass-knot",
+      "focus-blast"
+    ],
+    "ability": "prankster",
+    "nature": "timid",
+    "item": "life orb",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "umbreon": {
+    "name": "umbreon",
+    "moves": [
+      "wish",
+      "moonlight",
+      "baton-pass",
+      "foul-play"
+    ],
+    "ability": "synchronize",
+    "nature": "calm",
+    "item": "leftovers",
+    "evs": {
+      "hp": "252",
+      "attack": "0",
+      "special-attack": "0",
+      "defense": "4",
+      "special-defense": "252",
+      "speed": "0"
+    }
+  },
+  "whimsicott": {
+    "name": "whimsicott",
+    "moves": [
+      "moonblast",
+      "giga-drain",
+      "switcheroo",
+      "u-turn"
+    ],
+    "ability": "infiltrator",
+    "nature": "timid",
+    "item": "choice specs",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "zapdos": {
+    "name": "zapdos",
+    "moves": [
+      "volt-switch",
+      "roost",
+      "defog",
+      "heat-wave"
+    ],
+    "ability": "pressure",
+    "nature": "bold",
+    "item": "leftovers",
+    "evs": {
+      "hp": "248",
+      "attack": "0",
+      "special-attack": "68",
+      "defense": "176",
+      "special-defense": "0",
+      "speed": "16"
+    }
+  },
+	"pokemon": [ "blaziken", "charizard", "entei", "magnezone", "manectric", "raikou", "snorlax", "suicune", "swampert", "talonflame", "tentacruel", "thundurus", "umbreon", "whimsicott", "zapdos" ],
+  "unlockable": ["tentacruel", "geodude", "graveler", "golem", "ponyta", "rapidash", "slowpoke", "slowbro", "magnemite", "magneton", "farfetchd", "doduo", "dodrio", "seel", "dewgong", "grimer", "muk", "shellder", "cloyster", "gastly", "haunter", "gengar", "onix", "drowzee"]
+}
