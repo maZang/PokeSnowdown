@@ -173,8 +173,9 @@ let danQuotes =
   ]
 
 let reaperQuotes =
-  ["Ah, what are you gonna do?";
-  "I am, Jason. I am."
+  ["I am the angel of death.";
+  "Time to reaper.";
+  "Die, Die, Die."
   ]
 
 let angelaQuotes =
