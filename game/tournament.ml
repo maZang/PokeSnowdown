@@ -174,7 +174,8 @@ let danQuotes =
 
 let reaperQuotes =
   ["I am the angel of death.";
-  "Time to reaper.";
+  "Time to reap.";
+  "Like lambs to the slaughter.";
   "Die, Die, Die."
   ]
 
@@ -191,7 +192,7 @@ let nejiQuotes =
 
 let getRandomEnemy () =
   match Random.int 29 with
-  (*match 28 with*)
+  (*match 26 with*)
   | 0 -> RoughNeck
   | 1 -> Beauty
   | 2 -> BugCatcher
