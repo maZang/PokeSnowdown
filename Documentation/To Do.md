@@ -17,3 +17,5 @@ Implement Primal Kyogre/Primal Groudon Evolutions
 Implement Shiny Sprites / Find Shiny Sprites
 
 Crop some images in the instruction guide so they are easier to view without zooming in.
+
+Finish writing the wiki.
