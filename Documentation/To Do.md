@@ -16,7 +16,7 @@ Implement Primal Kyogre/Primal Groudon Evolutions
 
 Implement Griseous Orb/Giratina altered form
 
-Implement Shaymin Sky Forme
+Implement Shaymin Sky Forme / Gracidea flower
 
 Implement Shiny Sprites / Find Shiny Sprites
 
