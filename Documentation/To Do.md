@@ -14,8 +14,6 @@ Fix Beast Boy / Spongebob Trainer Portraits being out of place on the loading sc
 
 Implement Primal Kyogre/Primal Groudon Evolutions
 
-Implement Griseous Orb/Giratina altered form
-
 Implement Shaymin Sky Forme / Gracidea flower
 
 Implement Shiny Sprites / Find Shiny Sprites
