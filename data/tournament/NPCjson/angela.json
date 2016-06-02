@@ -300,5 +300,5 @@
     }
   },
 	"pokemon": [ "chansey", "diggersby", "drapion", "druddigon", "dugtrio", "durant", "eelektross", "emboar", "escavalier", "exploud", "excadrill", "hippowdon", "lopunny", "staraptor", "zygarde" ],
-  "unlockable": ["genesect", "chespin", "quilladin", "chesnaught", "fennekin", "braixin", "delphox", "froakle", "frogadier", "greninja", "bunnelby", "diggersby", "fletchling", "fletchinder", "talonflame", "scatterbug", "spewpa", "vivillon", "litleo", "pyroar", "labebe", "floette", "florges", "skiddo", "gogoat", "pancham", "pangoro"]
+  "unlockable": ["genesect", "chespin", "quilladin", "chesnaught", "fennekin", "braixin", "delphox", "froakle", "frogadier", "greninja", "bunnelby", "diggersby", "fletchling", "fletchinder", "talonflame", "scatterbug", "spewpa", "vivillon", "litleo", "pyroar", "flabebe", "floette", "florges", "skiddo", "gogoat", "pancham", "pangoro"]
 }
