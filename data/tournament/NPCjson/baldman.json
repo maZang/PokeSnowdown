@@ -249,7 +249,7 @@
     ],
     "ability": "sand-stream",
     "nature": "jolly",
-    "item": "MegaStoneX",
+    "item": "MegaStone",
     "evs": {
       "hp": "0",
       "attack": "252",
