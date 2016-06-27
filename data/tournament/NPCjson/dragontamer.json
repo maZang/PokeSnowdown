@@ -89,7 +89,7 @@
     ],
     "ability": "cursed body",
     "nature": "timid",
-    "item": "nothing",
+    "item": "leftovers",
     "evs": {
       "hp": "0",
       "attack": "0",
@@ -249,7 +249,7 @@
     ],
     "ability": "intimidate",
     "nature": "adamant",
-    "item": "nothing",
+    "item": "life orb",
     "evs": {
       "hp": "80",
       "attack": "252",
