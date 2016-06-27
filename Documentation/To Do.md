@@ -25,5 +25,3 @@ Finish writing the wiki.
 Remove Volt Switch from every pokemon until its fixed.
 
 Tyranitar is only mega evolving when holding the item MegaStoneX, it should only mega evolve while holding the item MegaStone.
-
-Only one mega evolution occurs if the enemy team has multiple pokemon that can mega-evolve.
