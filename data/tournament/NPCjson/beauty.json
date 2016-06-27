@@ -89,7 +89,7 @@
     ],
     "ability": "clear-body",
     "nature": "naive",
-    "item": "nothing",
+    "item": "MegaStone",
     "evs": {
       "hp": "0",
       "attack": "32",
