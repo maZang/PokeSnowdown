@@ -169,7 +169,7 @@
     ],
     "ability": "trace",
     "nature": "timid",
-    "item": "nothing",
+    "item": "MegaStone",
     "evs": {
       "hp": "248",
       "attack": "0",
