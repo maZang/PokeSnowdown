@@ -26,46 +26,4 @@ Remove Volt Switch from every pokemon until its fixed.
 
 Tyranitar is only mega evolving when holding the item MegaStoneX, it should only mega evolve while holding the item MegaStone.
 
-Medicham only mega evolves if it has the adamant ability as far as I know. The following medicham's do not mega evolve
-
-  "medicham": {
-    "name": "medicham",
-    "moves": [
-      "high-jump-kick",
-      "zen-headbutt",
-      "fake-out",
-      "ice-punch"
-    ],
-    "ability": "pure-power",
-    "nature": "hasty",
-    "item": "MegaStone",
-    "evs": {
-      "hp": "0",
-      "attack": "252",
-      "special-attack": "0",
-      "defense": "4",
-      "special-defense": "0",
-      "speed": "252"
-    }
-  },
-  
-    "medicham": {
-    "name": "medicham",
-    "moves": [
-      "high-jump-kick",
-      "zen-headbutt",
-      "fake-out",
-      "ice-punch"
-    ],
-    "ability": "pure-power",
-    "nature": "jolly",
-    "item": "MegaStone",
-    "evs": {
-      "hp": "0",
-      "attack": "252",
-      "special-attack": "0",
-      "defense": "4",
-      "special-defense": "0",
-      "speed": "252"
-    }
-  },
+Only one mega evolution occurs if the enemy team has multiple pokemon that can mega-evolve.
