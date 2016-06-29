@@ -113,7 +113,12 @@ let batmanQuotes =
   ]
 
 let spongeQuotes =
-  ["Swigity Swogity";
+  ["Have you heard of the...";
+   "The sash wringing...";
+   "The trash thinging...";
+   "Mash flinging...";
+   "The flash spring, bringing the the crash thinging the...";
+   "The hash-slinging slasher.";
   ]
 
 let beastQuotes =
