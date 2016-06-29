@@ -57,7 +57,7 @@ let fatManQuotes =
   "I will fight you to the death";
   "With some kung fu fighting";
   "Kicks fast as lightning";
-  "A little bit frightenning"]
+  "A little bit frightening"]
 
 let psychicQuotes =
   ["I knew you would choose me";
