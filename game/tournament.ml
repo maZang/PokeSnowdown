@@ -155,6 +155,7 @@ let gokuQuotes =
    "I am the light in the darkness";
    "I am truth. Ally to good! Nightmare to you!";
   ]
+
 let freizaQuotes =
   ["I never imagined that there would be a fool who’d dare to challenge Freezer!";
    "I applaud your overconfidence, sir!";
@@ -162,6 +163,7 @@ let freizaQuotes =
    "The power of Eternal Life.";
    "How? How did you get this incredible power?";
   ]
+
 let yamchaQuotes =
   ["Let me have a crack at 'em!";
    "I've really gotten stronger, I swear!";
