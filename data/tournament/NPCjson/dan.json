@@ -1,4 +1,24 @@
 {
+    "electivire":{
+    "name": "electivire",
+    "moves": [
+      "wild-charge",
+      "cross-chop",
+      "earthquake",
+      "ice-punch"
+    ],
+    "ability": "motor-drive",
+    "nature": "jolly",
+    "item": "life orb",
+    "evs": {
+      "hp": "4",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
   "galvantula": {
     "name": "galvantula",
     "moves": [
@@ -39,26 +59,6 @@
       "speed": "252"
     }
   },
-  "electivire":{
-    "name": "electivire",
-    "moves": [
-      "wild-charge",
-      "cross-chop",
-      "earthquake",
-      "ice-punch"
-    ],
-    "ability": "motor-drive",
-    "nature": "jolly",
-    "item": "life orb",
-    "evs": {
-      "hp": "4",
-      "attack": "252",
-      "special-attack": "0",
-      "defense": "0",
-      "special-defense": "0",
-      "speed": "252"
-    }
-  },
-  "pokemon": [ "galvantula", "manectric", "electivire"],
+  "pokemon": [ "electivire", "galvantula", "manectric"],
   "unlockable": ["klingklang", "tynamo", "eelektrik", "eelektross", "elgyem", "beheeyem", "litwick", "lampent", "chandelure", "axew", "fraxure", "haxorus", "cubchoo", "beartic", "cryogonal", "shelmet", "accelgor", "stunfisk", "mienfoo", "mienshao", "druddigon", "golett", "golurk", "pawniard"]
 }
