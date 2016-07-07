@@ -17,7 +17,8 @@
       "defense": "4",
       "special-defense": "0",
       "speed": "252"
-    },
+    }
+  },
   "psyduck": {
     "name": "psyduck",
     "moves": [
@@ -57,7 +58,6 @@
       "special-defense": "4",
       "speed": "0"
     }
-  }
   },
   "pokemon": ["blaziken", "psyduck", "wobbuffet"],
   "unlockable": ["rampardos", "shieldon", "bastiodon", "burmy", "wormadam-plant", "mothim", "combee", "vespiquen", "pachurisu", "buizel", "floatzel", "cherubi", "cherrim", "shellos", "gastrodon", "ambipom", "drifloon", "drifblim", "buneary", "lopunny", "mismagius", "honchkrow", "glameow", "purugly"]
