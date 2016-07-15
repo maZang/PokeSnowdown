@@ -1,15 +1,35 @@
 {
-  "persian": {
-    "name": "persian",
+   "elekid": {
+    "name": "elekid",
     "moves": [
-      "pay-day",
+      "thunder",
+      "rain-dance",
       "swift",
-      "night-slash",
-      "fake-out"
+      "fire-punch"
     ],
-    "ability": "limber",
-    "nature": "jolly",
+    "ability": "static",
+    "nature": "modest",
     "item": "life orb",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "jolteon": {
+    "name": "jolteon",
+    "moves": [
+      "thunder-fang",
+      "dig",
+      "strength",
+      "last-resort"
+    ],
+    "ability": "volt absorb",
+    "nature": "adamant",
+    "item": "leftovers",
     "evs": {
       "hp": "0",
       "attack": "252",
@@ -19,7 +39,106 @@
       "speed": "252"
     }
   },
-
-  "pokemon": ["persian"],
+    "minun": {
+    "name": "minun",
+    "moves": [
+      "nasty-plot",
+      "electro-ball",
+      "thunder",
+      "grass-knot"
+    ],
+    "ability": "minus",
+    "nature": "modest",
+    "item": "life orb",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "pichu": {
+    "name": "pichu",
+    "moves": [
+      "toxic",
+      "thunder",
+      "round",
+      "hidden-power"
+    ],
+    "ability": "static",
+    "nature": "modest",
+    "item": "choice specs",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+    "pikachu": {
+    "name": "pikachu",
+    "moves": [
+      "thunderbolt",
+      "agility",
+      "grass-knot",
+      "round"
+    ],
+    "ability": "static",
+    "nature": "modest",
+    "item": "life orb",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+    "plusle": {
+    "name": "plusle",
+    "moves": [
+      "agility",
+      "electro-ball",
+      "grass-knot",
+      "swift"
+    ],
+    "ability": "plus",
+    "nature": "modest",
+    "item": "life orb",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+    "zapdos": {
+    "name": "zapdos",
+    "moves": [
+      "hyper-beam",
+      "hidden-power",
+      "ancient-power",
+      "thunder"
+    ],
+    "ability": "pressure",
+    "nature": "modest",
+    "item": "life orb",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "pokemon": ["elekid", "jolteon", "minun", "pichu", "pikachu", "plusle", "zapdos"],
   "unlockable": ["jirachi", "deoxys-normal", "turtwig", "grotle", "torterra", "chimchar", "monferno", "infernape", "piplup", "prinplup", "empoleon", "starly", "staravia", "staraptor", "bidoof", "bibarel", "kricketot", "kricketune", "shinx", "luxio", "luxray", "budew", "roserade", "cranidos"]
 }
