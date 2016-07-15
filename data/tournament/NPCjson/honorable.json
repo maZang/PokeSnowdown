@@ -1,4 +1,24 @@
 {
+  "mew": {
+    "name": "mew",
+    "moves": [
+      "pay-day",
+      "shadow-ball",
+      "ice-beam",
+      "thunderbolt"
+    ],
+    "ability": "synchronize",
+    "nature": "modest",
+    "item": "life orb",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
   "persian": {
     "name": "persian",
     "moves": [
@@ -10,6 +30,26 @@
     "ability": "limber",
     "nature": "jolly",
     "item": "life orb",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+   "primeape": {
+    "name": "primeape",
+    "moves": [
+      "giga-impact",
+      "poison-jab",
+      "fire-punch",
+      "stone-edge"
+    ],
+    "ability": "vital-spirit",
+    "nature": "adamant",
+    "item": "leftovers",
     "evs": {
       "hp": "0",
       "attack": "252",
@@ -39,6 +79,6 @@
       "speed": "252"
     }
   },
-  "pokemon": ["persian", "zebstrika"],
+  "pokemon": ["mew", "persian", "primeape", "zebstrika"],
   "unlockable": ["ursaring", "slugma", "magcargo", "piloswine", "corsola", "remoraid", "octillery", "delibird", "mantine", "skarmory", "houndour", "houndoom", "kingdra", "phanpy", "donphan", "porygon2", "stantler", "smeargle", "tyrogue", "hitmontop", "smoochum", "elekid", "magby"]
 }
