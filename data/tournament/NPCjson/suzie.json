@@ -19,6 +19,46 @@
        "speed": "0"
      }
    },
+   "dialga": {
+     "name": "dialga",
+     "moves": [
+       "dragon-claw",
+       "earthquake",
+       "shadow-claw",
+       "rock-slide"
+     ],
+     "ability": "pressure",
+     "nature": "adamant",
+     "item": "leftovers",
+     "evs": {
+       "hp": "0",
+       "attack": "252",
+       "special-attack": "0",
+       "defense": "252",
+       "special-defense": "4",
+       "speed": "0"
+     }
+   },
+     "jirachi": {
+     "name": "jirachi",
+     "moves": [
+       "psychic",
+       "doom-desire",
+       "thunderbolt",
+       "shadow-ball"
+     ],
+     "ability": "serene grace",
+     "nature": "modest",
+     "item": "leftovers",
+     "evs": {
+       "hp": "0",
+       "attack": "0",
+       "special-attack": "252",
+       "defense": "0",
+       "special-defense": "4",
+       "speed": "252"
+     }
+   },
    "omastar": {
      "name": "omastar",
      "moves": [
@@ -39,6 +79,26 @@
        "speed": "252"
      }
    },
-   "pokemon": ["aggron", "omastar"],
+     "suicune": {
+     "name": "suicune",
+     "moves": [
+       "blizzard",
+       "hydro-pump",
+       "shadow-ball",
+       "hyper-beam"
+     ],
+     "ability": "pressure",
+     "nature": "modest",
+     "item": "life orb",
+     "evs": {
+       "hp": "0",
+       "attack": "0",
+       "special-attack": "252",
+       "defense": "4",
+       "special-defense": "0",
+       "speed": "252"
+     }
+   },
+   "pokemon": ["aggron", "dialga", "jirachi", "omastar", "suicune"],
    "unlockable": ["wurmple", "silcoon", "beautifly", "cascoon", "dustox", "lotad", "lombre", "ludicolo", "seedot", "nuzleaf", "shiftry", "taillow", "swellow", "wingull", "pelipper", "ralts", "kirlia", "gardevoir", "surskit", "masquerain", "shroomish", "breloom", "slakoth", "vigoroth"]
  }
