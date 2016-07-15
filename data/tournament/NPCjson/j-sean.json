@@ -1,4 +1,24 @@
 {
+    "kabutops": {
+    "name": "kabutops",
+    "moves": [
+      "endure",
+      "slash",
+      "hone-claws",
+      "night-slash"
+    ],
+    "ability": "no-guard",
+    "nature": "bold",
+    "item": "life orb",
+    "evs": {
+      "hp": "230",
+      "attack": "211",
+      "special-attack": "121",
+      "defense": "193",
+      "special-defense": "130",
+      "speed": "148"
+    }
+  },
   "scyther": {
     "name": "scyther",
     "moves": [
@@ -9,7 +29,7 @@
     ],
     "ability": "swarm",
     "nature": "bold",
-    "item": "nothing",
+    "item": "life orb",
     "evs": {
       "hp": "344",
       "attack": "220",
@@ -19,27 +39,7 @@
       "speed": "293"
     }
   },
-  "kabutops": {
-    "name": "kabutops",
-    "moves": [
-      "endure",
-      "slash",
-      "hone-claws",
-      "night-slash"
-    ],
-    "ability": "no-guard",
-    "nature": "bold",
-    "item": "nothing",
-    "evs": {
-      "hp": "230",
-      "attack": "211",
-      "special-attack": "121",
-      "defense": "193",
-      "special-defense": "130",
-      "speed": "148"
-    }
-  },
-  
-  "pokemon": [ "scyther", "kabutops"],
+
+  "pokemon": [ "kabutops", "scyther" ],
   "unlockable": ["lumineon", "mantyke", "snover", "abomasnow", "weaville", "magnezone", "lickilicky", "rhyperior", "tangrowth", "electivire", "magmortar", "togekiss", "yanmega", "leafeon", "glaceon", "gliscor", "mamoswine", "porygon-z", "gallade", "probopass", "dusknoir", "froslass", "rotom", "uxie"]
 }
