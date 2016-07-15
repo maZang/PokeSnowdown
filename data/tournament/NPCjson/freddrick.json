@@ -59,20 +59,20 @@
       "speed": "0"
     }
   },
-    "giratina": {
-    "name": "giratina",
+    "giratina-origin": {
+    "name": "giratina-origin",
     "moves": [
-      "hypnosis",
-      "nightmare",
-      "confuse-ray",
-      "dream-eater"
+      "shadow-claw",
+      "dragon-claw",
+      "facade",
+      "steel-wing"
     ],
     "ability": "pressure",
-    "nature": "modest",
+    "nature": "adamant",
     "item": "leftovers",
     "evs": {
-      "hp": "252",
-      "attack": "0",
+      "hp": "0",
+      "attack": "252",
       "special-attack": "4",
       "defense": "252",
       "special-defense": "0",
@@ -99,6 +99,6 @@
       "speed": "0"
     }
   },
-  "pokemon": ["banette", "dusknoir", "gengar", "giratina", "golurk"],
+  "pokemon": ["banette", "dusknoir", "gengar", "giratina-origin", "golurk"],
   "unlockable": ["slaking", "nincada", "ninjask", "shedinja", "whismur", "loudred", "exploud", "makuhita", "hariyama", "azurill", "nosepass", "skityy", "delcatty", "sableye", "mawile", "aron", "lauron", "aggron", "meditite", "medicham", "electrike", "manectric", "plusle", "minun"]
 }
