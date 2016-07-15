@@ -209,7 +209,7 @@
     ],
     "ability": "flash-fire",
     "nature": "bold",
-    "item": "nothing",
+    "item": "life orb",
     "evs": {
       "hp": "248",
       "attack": "0",
@@ -229,7 +229,7 @@
     ],
     "ability": "prankster",
     "nature": "careful",
-    "item": "nothing",
+    "item": "leftovers",
     "evs": {
       "hp": "252",
       "attack": "0",
@@ -249,7 +249,7 @@
     ],
     "ability": "sand-stream",
     "nature": "jolly",
-    "item": "nothing",
+    "item": "life orb",
     "evs": {
       "hp": "0",
       "attack": "252",
@@ -269,7 +269,7 @@
     ],
     "ability": "chlorophyll",
     "nature": "modest",
-    "item": "nothing",
+    "item": "leftovers",
     "evs": {
       "hp": "232",
       "attack": "0",
