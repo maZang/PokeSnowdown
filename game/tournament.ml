@@ -182,8 +182,6 @@ let danQuotes =
 let reaperQuotes =
   ["I am the angel of death.";
   "Time to reap.";
-  "Like lambs to the slaughter.";
-  "Die, Die, Die."
   ]
 
 let angelaQuotes =
