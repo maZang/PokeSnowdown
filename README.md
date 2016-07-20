@@ -125,6 +125,14 @@ Source - http://orig10.deviantart.net/35f2/f/2006/352/9/a/naruto_sprites_by_disn
 
 Artist - http://gokou-sama.deviantart.com/
 
+Sprites Used -
+
+![Sakura Sprite](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/sakura.png)
+
+![Hinata Sprite](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/hinata.png)
+
+![Neji Sprite](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/neji_hyuga.png)
+
 Sources - http://gokou-sama.deviantart.com/art/Ultimate-Showdown-Sprites-06-101760346
 
 http://gokou-sama.deviantart.com/art/Ultimate-Showdown-Sprites-12-119069989
