@@ -57,11 +57,32 @@ http://f.tqn.com/y/animatedtv/1/L/D/d/1/spongebob_wide.jpg
 
 Artist - http://rogue-lei.deviantart.com/
 
-Sprite - ![Spongebob](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/spongebob.gif)
+Sprite Used - ![Spongebob](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/spongebob.gif)
 
 http://rogue-lei.deviantart.com/art/Trainer-Sprites-for-my-Fanfic-347869729
 
 Artist - http://treeck0ia.deviantart.com/
+
+Sprites Used - ![Bob](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/bob.gif)
+
+![Bob Sprite](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/bob.png)
+
+![Suzie](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/suzie.gif)
+
+![Suzie Sprite](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/suzie.png)
+
+![Kyle](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/kyle.gif)
+
+![Kyle Sprite](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/kyle.png)
+
+![Dan](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/dan.gif)
+
+![Dan Sprite](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/dan.png)
+
+![Honorable](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/honorable.gif)
+
+![Honorable Sprite](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/honorable.png)
+
 
 http://treeck0ia.deviantart.com/art/TrEEck0ia-s-Pokemon-Sprites-294127299
 
@@ -109,7 +130,7 @@ Artist  - Coronis
 
 http://www.serebiiforums.com/showthread.php?275001-Coronis-s-PokeSpecial-Sprites-(DS-version)
 
-Sprite - ![Pokedex](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/Wiki-Guide-Images/Pokedex/pokedex_sprite.png)
+Sprite Used - ![Pokedex](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/Wiki-Guide-Images/Pokedex/pokedex_sprite.png)
 
 ----
 
