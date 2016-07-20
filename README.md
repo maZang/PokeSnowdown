@@ -113,6 +113,14 @@ Source - http://orig09.deviantart.net/0692/f/2008/008/1/7/naruto_sprites_by_marc
 
 Artist - http://disneyfreak007.deviantart.com/
 
+Sprites Used - 
+
+![Sakura](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/sakura.gif)
+
+![Hinata](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/hinata.gif)
+
+![Neji](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/neji_hyuga.gif)
+
 Source - http://orig10.deviantart.net/35f2/f/2006/352/9/a/naruto_sprites_by_disneyfreak007.jpg 
 
 Artist - http://gokou-sama.deviantart.com/
