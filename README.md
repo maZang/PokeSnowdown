@@ -53,7 +53,7 @@ Contributors since the original submission of the project include:
 
 Image Sources
 
-http://f.tqn.com/y/animatedtv/1/L/D/d/1/spongebob_wide.jpg
+Source - http://f.tqn.com/y/animatedtv/1/L/D/d/1/spongebob_wide.jpg
 
 Artist - http://rogue-lei.deviantart.com/
 
@@ -61,7 +61,7 @@ Sprite Used -
 
 ![Spongebob](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/spongebob.gif)
 
-http://rogue-lei.deviantart.com/art/Trainer-Sprites-for-my-Fanfic-347869729
+Source - http://rogue-lei.deviantart.com/art/Trainer-Sprites-for-my-Fanfic-347869729
 
 Artist - http://treeck0ia.deviantart.com/
 
@@ -87,10 +87,27 @@ Sprites Used -
 
 ![Honorable Sprite](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/honorable.png)
 
-
-http://treeck0ia.deviantart.com/art/TrEEck0ia-s-Pokemon-Sprites-294127299
+Source - http://treeck0ia.deviantart.com/art/TrEEck0ia-s-Pokemon-Sprites-294127299
 
 Artist - http://marcani.deviantart.com/
+
+Sprites Used - 
+
+![Angela](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/angela.gif)
+
+![Angela Sprite](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/angela.png)
+
+![Freddrick](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/freddrick.gif)
+
+![Freddrick Sprite](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/freddrick.png)
+
+![J-Sean](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/j-sean.gif)
+
+![J-Sean Sprite](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/j-sean.png)
+
+![Reaper](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/reaper.gif)
+
+![Reaper Sprite](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/reaper.png)
 
 http://orig09.deviantart.net/0692/f/2008/008/1/7/naruto_sprites_by_marcani.png
 
