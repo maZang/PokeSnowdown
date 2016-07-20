@@ -103,6 +103,12 @@ Artist - BLZofOZZ
 
 http://blzofozz.deviantart.com/art/Microsoft-Paint-DBZ-354200771
 
+Artist  - Coronis
+
+http://www.serebiiforums.com/showthread.php?275001-Coronis-s-PokeSpecial-Sprites-(DS-version)
+
+Sprite - https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/Wiki-Guide-Images/Pokedex/pokedex_sprite.png
+
 ----
 
 #### Copyright Notice
