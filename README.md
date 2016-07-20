@@ -57,13 +57,17 @@ http://f.tqn.com/y/animatedtv/1/L/D/d/1/spongebob_wide.jpg
 
 Artist - http://rogue-lei.deviantart.com/
 
-Sprite Used - ![Spongebob](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/spongebob.gif)
+Sprite Used - 
+
+![Spongebob](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/spongebob.gif)
 
 http://rogue-lei.deviantart.com/art/Trainer-Sprites-for-my-Fanfic-347869729
 
 Artist - http://treeck0ia.deviantart.com/
 
-Sprites Used - ![Bob](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/bob.gif)
+Sprites Used -
+
+![Bob](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/bob.gif)
 
 ![Bob Sprite](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/bob.png)
 
@@ -130,7 +134,9 @@ Artist  - Coronis
 
 http://www.serebiiforums.com/showthread.php?275001-Coronis-s-PokeSpecial-Sprites-(DS-version)
 
-Sprite Used - ![Pokedex](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/Wiki-Guide-Images/Pokedex/pokedex_sprite.png)
+Sprite Used - 
+
+![Pokedex](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/Wiki-Guide-Images/Pokedex/pokedex_sprite.png)
 
 ----
 
