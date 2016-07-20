@@ -39,21 +39,21 @@
       "speed": "252"
     }
   },
-   "ho-oh": {
-    "name": "ho-oh",
+   "houndoom": {
+    "name": "houndoom",
     "moves": [
-      "extrasensory",
-      "hyper-beam",
-      "thunderbolt",
-      "fire-blast"
+      "flame-charge",
+      "giga-impact",
+      "crunch",
+      "thunder-fang"
     ],
-    "ability": "pressure",
-    "nature": "modest",
-    "item": "life orb",
+    "ability": "flash-fire",
+    "nature": "adamant",
+    "item": "MegaStone",
     "evs": {
       "hp": "4",
-      "attack": "0",
-      "special-attack": "252",
+      "attack": "252",
+      "special-attack": "0",
       "defense": "0",
       "special-defense": "0",
       "speed": "252"
@@ -139,6 +139,6 @@
       "speed": "252"
     }
   },
-  "pokemon": [ "cofagrigus", "eelektross", "ho-oh", "hydreigon", "samurott", "seismitoad", "volcarona"],
+  "pokemon": [ "cofagrigus", "eelektross", "houndoom", "hydreigon", "samurott", "seismitoad", "volcarona"],
   "unlockable": ["krookodile", "darumaka", "darmanitan-standard", "maractus", "dwebble", "crustle", "scraggy", "sigilyph", "yamask", "cofagrigus", "tirtouga", "carracosta", "archen", "archeops", "trubbish", "garbodor", "zorua", "zoroark", "minccino", "cinccino", "gothita", "gothorita", "gothitelle"]
 }
