@@ -55,15 +55,13 @@ Image Sources
 
 Source - http://f.tqn.com/y/animatedtv/1/L/D/d/1/spongebob_wide.jpg
 
-Artist - http://rogue-lei.deviantart.com/
-
 Sprite Used - 
 
 ![Spongebob](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/spongebob.gif)
 
 Source - http://rogue-lei.deviantart.com/art/Trainer-Sprites-for-my-Fanfic-347869729
 
-Artist - http://treeck0ia.deviantart.com/
+Artist - http://rogue-lei.deviantart.com/
 
 Sprites Used -
 
@@ -89,7 +87,7 @@ Sprites Used -
 
 Source - http://treeck0ia.deviantart.com/art/TrEEck0ia-s-Pokemon-Sprites-294127299
 
-Artist - http://marcani.deviantart.com/
+Artist - http://treeck0ia.deviantart.com/
 
 Sprites Used - 
 
@@ -111,7 +109,7 @@ Sprites Used -
 
 Source - http://orig09.deviantart.net/0692/f/2008/008/1/7/naruto_sprites_by_marcani.png
 
-Artist - http://disneyfreak007.deviantart.com/
+Artist - http://marcani.deviantart.com/
 
 Sprites Used - 
 
@@ -123,7 +121,7 @@ Sprites Used -
 
 Source - http://orig10.deviantart.net/35f2/f/2006/352/9/a/naruto_sprites_by_disneyfreak007.jpg 
 
-Artist - http://gokou-sama.deviantart.com/
+Artist - http://disneyfreak007.deviantart.com/
 
 Sprites Used -
 
@@ -141,31 +139,44 @@ http://gokou-sama.deviantart.com/art/Ultimate-Showdown-Sprites-17-133636939
 
 http://gokou-sama.deviantart.com/art/Ultimate-Showdown-Sprites-34-200459922
 
-Artist - http://lizuka.deviantart.com/
+Artist - http://gokou-sama.deviantart.com/
 
 Source - http://www.deviantart.com/art/Batman-Sprites-92996795
 
-Artist - http://gamebanana.com/members/1194681
+Artist - http://lizuka.deviantart.com/
+
 
 Source - http://tf2.gamebanana.com/sprays/62919
 
-Artist - Fron84
+Artist - http://gamebanana.com/members/1194681
+
+
 
 Source - http://mugenmultiverse.fanbb.net/t6411-edits-beast-boy-and-hawkeye
 
-Artist - emilyosan
+Artist - Fron84
+
+
 
 Source - http://ih1.redbubble.net/image.193615005.6278/flat,800x800,075,f.u2.jpg
 
-http://www.redbubble.com/people/emilyosman/works/20946278-squidward-dab?p=sticker
 
-Artist - BLZofOZZ
+
+Source - http://www.redbubble.com/people/emilyosman/works/20946278-squidward-dab?p=sticker
+
+Artist - emilyosan
+
+
 
 Source - http://blzofozz.deviantart.com/art/Microsoft-Paint-DBZ-354200771
 
-Artist  - Coronis
+Artist - BLZofOZZ
+
+
 
 Source - http://www.serebiiforums.com/showthread.php?275001-Coronis-s-PokeSpecial-Sprites-(DS-version)
+
+Artist  - Coronis
 
 Sprite Used - 
 
