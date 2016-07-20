@@ -109,15 +109,15 @@ Sprites Used -
 
 ![Reaper Sprite](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/reaper.png)
 
-http://orig09.deviantart.net/0692/f/2008/008/1/7/naruto_sprites_by_marcani.png
+Source - http://orig09.deviantart.net/0692/f/2008/008/1/7/naruto_sprites_by_marcani.png
 
 Artist - http://disneyfreak007.deviantart.com/
 
-http://orig10.deviantart.net/35f2/f/2006/352/9/a/naruto_sprites_by_disneyfreak007.jpg 
+Source - http://orig10.deviantart.net/35f2/f/2006/352/9/a/naruto_sprites_by_disneyfreak007.jpg 
 
 Artist - http://gokou-sama.deviantart.com/
 
-http://gokou-sama.deviantart.com/art/Ultimate-Showdown-Sprites-06-101760346
+Sources - http://gokou-sama.deviantart.com/art/Ultimate-Showdown-Sprites-06-101760346
 
 http://gokou-sama.deviantart.com/art/Ultimate-Showdown-Sprites-12-119069989
 
@@ -127,29 +127,29 @@ http://gokou-sama.deviantart.com/art/Ultimate-Showdown-Sprites-34-200459922
 
 Arist - http://lizuka.deviantart.com/
 
-http://www.deviantart.com/art/Batman-Sprites-92996795
+Source - http://www.deviantart.com/art/Batman-Sprites-92996795
 
 Artist - http://gamebanana.com/members/1194681
 
-http://tf2.gamebanana.com/sprays/62919
+Source - http://tf2.gamebanana.com/sprays/62919
 
 Artist - Fron84
 
-http://mugenmultiverse.fanbb.net/t6411-edits-beast-boy-and-hawkeye
+Source - http://mugenmultiverse.fanbb.net/t6411-edits-beast-boy-and-hawkeye
 
 Artist - emilyosan
 
-http://ih1.redbubble.net/image.193615005.6278/flat,800x800,075,f.u2.jpg
+Source - http://ih1.redbubble.net/image.193615005.6278/flat,800x800,075,f.u2.jpg
 
 http://www.redbubble.com/people/emilyosman/works/20946278-squidward-dab?p=sticker
 
 Artist - BLZofOZZ
 
-http://blzofozz.deviantart.com/art/Microsoft-Paint-DBZ-354200771
+Source - http://blzofozz.deviantart.com/art/Microsoft-Paint-DBZ-354200771
 
 Artist  - Coronis
 
-http://www.serebiiforums.com/showthread.php?275001-Coronis-s-PokeSpecial-Sprites-(DS-version)
+Source - http://www.serebiiforums.com/showthread.php?275001-Coronis-s-PokeSpecial-Sprites-(DS-version)
 
 Sprite Used - 
 
