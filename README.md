@@ -141,6 +141,8 @@ http://gokou-sama.deviantart.com/art/Ultimate-Showdown-Sprites-34-200459922
 
 Artist - http://gokou-sama.deviantart.com/
 
+Sprites Used - 
+
 Source - http://www.deviantart.com/art/Batman-Sprites-92996795
 
 Artist - http://lizuka.deviantart.com/
