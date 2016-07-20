@@ -107,7 +107,7 @@ Artist  - Coronis
 
 http://www.serebiiforums.com/showthread.php?275001-Coronis-s-PokeSpecial-Sprites-(DS-version)
 
-Sprite - https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/Wiki-Guide-Images/Pokedex/pokedex_sprite.png
+Sprite - ![Pokedex](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/Wiki-Guide-Images/Pokedex/pokedex_sprite.png)
 
 ----
 
