@@ -105,8 +105,6 @@ Sprites Used -
 
 ![Reaper](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/reaper.gif)
 
-![Reaper Sprite](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/reaper.png)
-
 Source - http://orig09.deviantart.net/0692/f/2008/008/1/7/naruto_sprites_by_marcani.png
 
 Artist - http://marcani.deviantart.com/
