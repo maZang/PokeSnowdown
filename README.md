@@ -143,38 +143,60 @@ Artist - http://gokou-sama.deviantart.com/
 
 Sprites Used - 
 
+![Reaper](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/reaper.png)
+
+![Batman](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/batman.png)
+
+![Pope](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/pope.png) 
+
+![Spongebob](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/spongebob.png)
+
+![Squidward](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/squidward.png)
+
+![Beast Boy](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/beastboy.png)
+
+
 Source - http://www.deviantart.com/art/Batman-Sprites-92996795
 
 Artist - http://lizuka.deviantart.com/
 
+Sprite Used - 
+
+![Batman Sprite](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/batman.gif)
 
 Source - http://tf2.gamebanana.com/sprays/62919
 
 Artist - http://gamebanana.com/members/1194681
 
-
+Sprite No Longer in Use
 
 Source - http://mugenmultiverse.fanbb.net/t6411-edits-beast-boy-and-hawkeye
 
 Artist - Fron84
 
+Sprite Used -
 
+![Beast Boy Sprite](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/beastboy.gif)
 
 Source - http://ih1.redbubble.net/image.193615005.6278/flat,800x800,075,f.u2.jpg
-
-
 
 Source - http://www.redbubble.com/people/emilyosman/works/20946278-squidward-dab?p=sticker
 
 Artist - emilyosan
 
+Sprite Used - 
 
+![Squidward](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/squidward.gif)
 
 Source - http://blzofozz.deviantart.com/art/Microsoft-Paint-DBZ-354200771
 
 Artist - BLZofOZZ
 
+![Goku](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/goku.png)
 
+![Yamcha](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/yamcha.png)
+
+![Freiza](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/freiza.png)
 
 Source - http://www.serebiiforums.com/showthread.php?275001-Coronis-s-PokeSpecial-Sprites-(DS-version)
 
