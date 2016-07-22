@@ -10,7 +10,7 @@ Add more items/logic units to the game
 
 Add more NPCS to the game(ongoing)
 
-Fix Beast Boy / Spongebob Trainer Portraits being out of place on the loading screen.
+Fix Beast Boy  Trainer Portraits being out of place on the loading screen.
 
 Implement Primal Kyogre/Primal Groudon Evolutions
 
@@ -22,4 +22,4 @@ Crop some images in the instruction guide so they are easier to view without zoo
 
 Finish writing the wiki.
 
-Remove Volt Switch from every pokemon until its fixed.
+Remove Volt Switch from every enemy pokemon until its fixed.
