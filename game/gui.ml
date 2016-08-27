@@ -1363,6 +1363,7 @@ let rec getMoveStringEnd a =
   | BurnDmg -> `BurnDmg
   | PoisonDmg -> `PoisonDmg
   | LeftOversHeal  -> `HealStatus
+  | OranBerryHeal -> `HealStatus
   | LeechDmg s -> getMoveStringEnd s
   | LightScreenFade s -> getMoveStringEnd s
   | ReflectFade s -> getMoveStringEnd s
@@ -1514,6 +1515,7 @@ let rec getEndString starter s =
   | HailFade  -> "The hail has faded."
   | HailBuffet  -> starter ^" got hit by the hail."
   | LeftOversHeal -> starter ^ " has healed from the leftovers."
+  | OranBerryHeal -> starter ^ " has healed from the oran berry."
   | WishEnd s-> getEndString starter s ^ starter ^
       " has been healed by the wish."
   | SpeedBoost ->  starter ^
