@@ -7,7 +7,10 @@ type stat =
 
 type item =
   Nothing | Leftovers | ChoiceBand | LifeOrb | ChoiceSpecs | ChoiceScarf
-  | MegaStone | MegaStoneX | MegaStoneY | LightBall
+  | MegaStone | MegaStoneX | MegaStoneY | LightBall | OranBerry | DracoPlate |
+  DreadPlate | EarthPlate | FistPlate | FlamePlate | IciclePlate | InsectPlate |
+  IronPlate | MeadowPlate | MindPlate | PixiePlate | SkyPlate | SplashPlate |
+  SpookyPlate | StonePlate | ToxicPlate | ZapPlate
 
 type guiattack =
   NormMove of string | NormStatus of string | Crit of guiattack |SEff of guiattack | NoEff of guiattack
@@ -48,7 +51,7 @@ type endMove = BurnDmg | BreakBurn | BreakFreeze  | BreakPara  | BreakPoison
               | SandStormFade | SandBuffet
               | HailFade | HailBuffet
               | TauntFade of endMove | TrapDamage of string * endMove
-              | LeftOversHeal | WishEnd of endMove
+              | OranBerryHeal | LeftOversHeal | WishEnd of endMove
               | SpeedBoost | FaintpConvert | NoActionConvert | LoseGameConvert
 
 type switchdescript = SwitchedInto of string | Intimidate of switchdescript
