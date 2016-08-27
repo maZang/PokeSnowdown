@@ -1,0 +1,304 @@
+{
+	"chansey": {
+    "name": "chansey",
+    "moves": [
+      "thunder-wave",
+      "soft-boiled",
+      "seismic-toss",
+      "wish"
+    ],
+    "ability": "natural-cure",
+    "nature": "bold",
+    "item": "nothing",
+    "evs": {
+      "hp": "4",
+      "attack": "0",
+      "special-attack": "0",
+      "defense": "252",
+      "special-defense": "252",
+      "speed": "0"
+    }
+  },
+  "diggersby": {
+    "name": "diggersby",
+    "moves": [
+      "earthquake",
+      "return",
+      "wild-charge",
+      "u-turn"
+    ],
+    "ability": "huge-power",
+    "nature": "jolly",
+    "item": "choice scarf",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "drapion": {
+    "name": "drapion",
+    "moves": [
+      "knock-off",
+      "taunt",
+      "toxic-spikes",
+      "poison-jab"
+    ],
+    "ability": "battle-armor",
+    "nature": "careful",
+    "item": "nothing",
+    "evs": {
+      "hp": "248",
+      "attack": "0",
+      "special-attack": "0",
+      "defense": "0",
+      "special-defense": "216",
+      "speed": "44"
+    }
+  },
+  "druddigon": {
+    "name": "druddigon",
+    "moves": [
+      "outrage",
+      "dragon-claw",
+      "fire-punch",
+      "gunk-shot"
+    ],
+    "ability": "sheer-force",
+    "nature": "adamant",
+    "item": "choice band",
+    "evs": {
+      "hp": "236",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "20"
+    }
+  },
+  "dugtrio": {
+    "name": "dugtrio",
+    "moves": [
+      "earthquake",
+      "stone-edge",
+      "sucker-punch",
+      "memento"
+    ],
+    "ability": "arena-trap",
+    "nature": "jolly",
+    "item": "choice band",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "durant": {
+    "name": "durant",
+    "moves": [
+      "iron-head",
+      "x-scissor",
+      "superpower",
+      "baton-pass"
+    ],
+    "ability": "hustle",
+    "nature": "adamant",
+    "item": "choice scarf",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "eelektross": {
+    "name": "eelektross",
+    "moves": [
+      "volt-switch",
+      "flamethrower",
+      "giga-drain",
+      "thunderbolt"
+    ],
+    "ability": "levitate",
+    "nature": "quiet",
+    "item": "nothing",
+    "evs": {
+      "hp": "252",
+      "attack": "4",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "0"
+    }
+  },
+  "emboar": {
+    "name": "emboar",
+    "moves": [
+      "flare-blitz",
+      "superpower",
+      "wild-charge",
+      "sleep-talk"
+    ],
+    "ability": "reckless",
+    "nature": "adamant",
+    "item": "choice band",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "4",
+      "special-defense": "252",
+      "speed": "0"
+    }
+  },
+  "escavalier": {
+    "name": "escavalier",
+    "moves": [
+      "megahorn",
+      "iron-head",
+      "pursuit",
+      "drill-run"
+    ],
+    "ability": "overcoat",
+    "nature": "adamant",
+    "item": "choice band",
+    "evs": {
+      "hp": "172",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "84"
+    }
+  },
+  "exploud": {
+    "name": "exploud",
+    "moves": [
+      "boomburst",
+      "fire-blast",
+      "focus-blast",
+      "surf"
+    ],
+    "ability": "scrappy",
+    "nature": "modest",
+    "item": "choice specs",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "excadrill": {
+    "name": "excadrill",
+    "moves": [
+      "earthquake",
+      "iron-head",
+      "rock-slide",
+      "rapid-spin"
+    ],
+    "ability": "sand-rush",
+    "nature": "jolly",
+    "item": "life orb",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "hippowdon": {
+    "name": "hippowdon",
+    "moves": [
+      "earthquake",
+      "stealth-rock",
+      "slack-off",
+      "whirlwind"
+    ],
+    "ability": "sand-stream",
+    "nature": "impish",
+    "item": "leftovers",
+    "evs": {
+      "hp": "252",
+      "attack": "0",
+      "special-attack": "0",
+      "defense": "144",
+      "special-defense": "112",
+      "speed": "0"
+    }
+  },
+  "lopunny": {
+    "name": "lopunny",
+    "moves": [
+      "high-jump-kick",
+      "return",
+      "fake-out",
+      "ice-punch"
+    ],
+    "ability": "limber",
+    "nature": "jolly",
+    "item": "MegaStone",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "staraptor": {
+    "name": "staraptor",
+    "moves": [
+      "brave-bird",
+      "double-edge",
+      "final-gambit",
+      "u-turn"
+    ],
+    "ability": "reckless",
+    "nature": "jolly",
+    "item": "choice scarf",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "zygarde": {
+    "name": "zygarde",
+    "moves": [
+      "dragon-dance",
+      "earthquake",
+      "outrage",
+      "extreme-speed"
+    ],
+    "ability": "aura-break",
+    "nature": "adamant",
+    "item": "life orb",
+    "evs": {
+      "hp": "4",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+	"pokemon": [ "chansey", "diggersby", "drapion", "druddigon", "dugtrio", "durant", "eelektross", "emboar", "escavalier", "exploud", "excadrill", "hippowdon", "lopunny", "staraptor", "zygarde" ],
+  	"unlockable": ["bisharp", "bouffalant", "rufflet", "braviary", "vullaby", "mandibuzz", "heatmor", "durant", "deino", "zweilous", "hydreigon", "larvesta", "volcarona", "cobalion", "terrakion", "virizion", "tornadus-incarnate", "thundurus-incarnate", "reshiram", "zekrom", "landorus-incarnate", "kyurem", "keldeo-ordinary", "meloetta-aria"]
+}

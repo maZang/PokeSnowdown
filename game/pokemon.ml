@@ -27,7 +27,11 @@ let nature_list =  ["hardy"; "lonely";"adamant";"naughty";"brave";"bold";
   "serious"]
 
 let item_list = ["leftovers";"choice band";"life orb";"choice specs"
-  ;"choice scarf"; "MegaStone"; "MegaStoneX"; "MegaStoneY"; "nothing"]
+  ;"choice scarf"; "MegaStone"; "MegaStoneX"; "MegaStoneY"; "oran berry";
+  "draco plate"; "earth plate"; "first plate"; "flame plate"; "icicle plate";
+  "insect plate"; "iron plate"; "meadow plate"; "mind plate"; "pixie plate";
+  "sky plate" ; "splash plate"; "spooky plate"; "stone plate"; "toxic plate";
+  "zap plate"; "nothing"]
 
 (* Returns list of string names of all pokemon that have been unlocked. *)
 let unlocked_poke_string_list () =
@@ -136,6 +140,22 @@ let getItemFromString str =
   | "MegaStoneX" -> MegaStoneX
   | "MegaStoneY" -> MegaStoneY
   | "light ball" -> LightBall
+  | "oran berry" -> OranBerry
+  | "draco plate" -> DracoPlate
+  | "dread plate" -> DreadPlate
+  | "earth plate" -> EarthPlate
+  | "fist plate" -> FistPlate
+  | "flame plate" -> FlamePlate
+  | "icicle plate" -> IciclePlate
+  | "insect plate" -> InsectPlate
+  | "iron plate" -> IronPlate
+  | "meadow plate" -> MeadowPlate
+  | "mind plate" -> MindPlate
+  | "pixie plate" -> PixiePlate
+  | "sky plate" -> SkyPlate
+  | "splash plate" -> SplashPlate
+  | "spooky plate" -> SpookyPlate
+  | "stone plate" -> StonePlate
   | _ -> failwith "Does not occur"
 
 (* Returns a string from an item. *)
@@ -150,6 +170,24 @@ let string_of_item item =
   | MegaStoneX -> "MegaStoneX"
   | MegaStoneY -> "MegaStoneY"
   | LightBall -> "light ball"
+  | OranBerry -> "oran berry"
+  | DracoPlate -> "draco plate"
+  | DreadPlate -> "dread plate"
+  | EarthPlate -> "earth plate"
+  | FistPlate -> "fist plate"
+  | FlamePlate -> "flame plate"
+  | IciclePlate -> "icicle plate"
+  | InsectPlate -> "insect plate"
+  | IronPlate -> "iron plate"
+  | MeadowPlate -> "meadow plate"
+  | MindPlate -> "mind plate"
+  | PixiePlate -> "pixie plate"
+  | SkyPlate -> "sky plate"
+  | SplashPlate -> "splash plate"
+  | SpookyPlate -> "spooky plate"
+  | StonePlate -> "stone plate"
+  | ToxicPlate -> "toxic plate"
+  | ZapPlate -> "zap plate"
   | Nothing -> "nothing"
 
 (* Returns a random item. *)

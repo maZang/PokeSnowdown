@@ -1,6 +1,6 @@
 open Info
 
-type enemy = RoughNeck | Beauty | BugCatcher | CampNerd | DragonTamer | Falkner | FatMan | Psychic | Youngster | ProfOak | Chancellor | Bob | Suzie | Freddrick | Hinata | Sakura | DarkNight | SpongeBoy | BeastBoy | SquidBoy | Jsean | Pope | Carrot | Freezer | Useless | Kyle | Dan | Jason | Angela
+type enemy = RoughNeck | Beauty | BugCatcher | CampNerd | DragonTamer | Falkner | FatMan | Psychic | Youngster | ProfOak | Chancellor | Bob | Suzie | Freddrick | Hinata | Sakura | DarkNight | SpongeBoy | BeastBoy | SquidBoy | Jsean | Pope | Carrot | Freezer | Useless | Kyle | Dan | Reaper | Angela | Neji
 
 let enemy1 = ref Beauty
 let enemy2 = ref Falkner
@@ -57,7 +57,7 @@ let fatManQuotes =
   "I will fight you to the death";
   "With some kung fu fighting";
   "Kicks fast as lightning";
-  "A little bit frightenning"]
+  "A little bit frightening"]
 
 let psychicQuotes =
   ["I knew you would choose me";
@@ -113,7 +113,12 @@ let batmanQuotes =
   ]
 
 let spongeQuotes =
-  ["Swigity Swogity";
+  ["Have you heard of the...";
+   "The sash wringing...";
+   "The trash thinging...";
+   "Mash flinging...";
+   "The flash spring, bringing the the crash thinging the...";
+   "The hash-slinging slasher.";
   ]
 
 let beastQuotes =
@@ -150,6 +155,7 @@ let gokuQuotes =
    "I am the light in the darkness";
    "I am truth. Ally to good! Nightmare to you!";
   ]
+
 let freizaQuotes =
   ["I never imagined that there would be a fool who’d dare to challenge Freezer!";
    "I applaud your overconfidence, sir!";
@@ -157,6 +163,7 @@ let freizaQuotes =
    "The power of Eternal Life.";
    "How? How did you get this incredible power?";
   ]
+
 let yamchaQuotes =
   ["Let me have a crack at 'em!";
    "I've really gotten stronger, I swear!";
@@ -172,9 +179,9 @@ let danQuotes =
    "Prepare to be electrocuted!";
   ]
 
-let jasonQuotes =
-  ["Ah, what are you gonna do?";
-  "I am, Jason. I am."
+let reaperQuotes =
+  ["I am the angel of death.";
+  "Time to reap.";
   ]
 
 let angelaQuotes =
@@ -182,9 +189,15 @@ let angelaQuotes =
   "This is gonna be fun!"
   ]
 
+let nejiQuotes =
+  ["The curse represents a mark of the bird in a cage...";
+    "It is...";
+    "The symbol of being tied to an inescapable destiny.";
+  ]
+
 let getRandomEnemy () =
-  match Random.int 28 with
-  (*match 14 with*)
+  match Random.int 29 with
+  (*match 26 with*)
   | 0 -> RoughNeck
   | 1 -> Beauty
   | 2 -> BugCatcher
@@ -211,8 +224,9 @@ let getRandomEnemy () =
   | 23 -> Useless
   | 24 -> Kyle
   | 25 -> Dan
-  | 26 -> Jason
+  | 26 -> Reaper
   | 27 -> Angela
+  | 28 -> Neji
   | _ -> failwith "Does Not Happen"
 
 let getStringFromEnemy enm =
@@ -244,8 +258,9 @@ let getStringFromEnemy enm =
   | Useless -> "yamcha"
   | Kyle -> "kyle"
   | Dan -> "dan"
-  | Jason -> "jason"
+  | Reaper -> "reaper"
   | Angela -> "angela"
+  | Neji -> "neji_hyuga"
 
 let getStringOfEnemy () =
   getStringFromEnemy !selectedEnemy
@@ -289,8 +304,9 @@ let getQuotes enm =
   | Useless -> yamchaQuotes
   | Kyle -> kyleQuotes
   | Dan -> danQuotes
-  | Jason -> jasonQuotes
+  | Reaper -> reaperQuotes
   | Angela -> angelaQuotes
+  | Neji -> nejiQuotes
 
 let getProfOakQuotes () = selectedEnemy := ProfOak; profOakBattleQuotes
 

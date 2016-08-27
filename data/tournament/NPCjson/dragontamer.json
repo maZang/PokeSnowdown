@@ -89,7 +89,7 @@
     ],
     "ability": "cursed body",
     "nature": "timid",
-    "item": "nothing",
+    "item": "leftovers",
     "evs": {
       "hp": "0",
       "attack": "0",
@@ -249,7 +249,7 @@
     ],
     "ability": "intimidate",
     "nature": "adamant",
-    "item": "nothing",
+    "item": "life orb",
     "evs": {
       "hp": "80",
       "attack": "252",
@@ -300,5 +300,5 @@
     }
   },
 	"pokemon": [ "bisharp", "crawdaunt", "dragonite", "dragalge", "froslass", "garchomp", "haxorus", "kingdra", "kyurem", "moltres", "latias", "latios", "salamence", "skarmory", "victini" ],
-  "unlockable": ["hypno", "krabby", "kingler", "voltorb", "electrode", "exeggcute", "exeggutor", "cubone", "marowak", "hitmonlee", "hitmonchan", "lickitung", "koffing", "weesing", "rhyhorn", "rhydon", "chansey", "tangela", "kangaskhan", "horsea", "seadra", "goldeen", "seaking", "staryu"]
+  "unlockable": ["hypno", "krabby", "kingler", "voltorb", "electrode", "exeggcute", "exeggutor", "cubone", "marowak", "hitmonlee", "hitmonchan", "lickitung", "koffing", "weezing", "rhyhorn", "rhydon", "chansey", "tangela", "kangaskhan", "horsea", "seadra", "goldeen", "seaking", "staryu"]
 }

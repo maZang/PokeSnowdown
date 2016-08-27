@@ -29,7 +29,7 @@
     ],
     "ability": "blaze",
     "nature": "modest",
-    "item": "nothing",
+    "item": "MegaStoneX",
     "evs": {
       "hp": "0",
       "attack": "0",
@@ -89,7 +89,7 @@
     ],
     "ability": "lightningrod",
     "nature": "timid",
-    "item": "nothing",
+    "item": "MegaStone",
     "evs": {
       "hp": "4",
       "attack": "0",
@@ -169,7 +169,7 @@
     ],
     "ability": "damp",
     "nature": "adamant",
-    "item": "nothing",
+    "item": "MegaStone",
     "evs": {
       "hp": "212",
       "attack": "252",
