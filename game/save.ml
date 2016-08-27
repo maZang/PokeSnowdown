@@ -141,6 +141,46 @@ let getFileMessage () =
                                 |> string_of_int) ^ " times!\n" ^
                 "You beat youngster " ^ (List.assoc "youngster" l |> to_int
                                 |> string_of_int) ^ " times!\n" ^
+                "You beat honorable " ^ (List.assoc "honorable" l |> to_int
+                                |> string_of_int) ^ " times!\n" ^
+                "You beat bob " ^ (List.assoc "bob" l |> to_int
+                                |> string_of_int) ^ " times!\n" ^
+                "You beat suzie " ^ (List.assoc "suzie" l |> to_int
+                                |> string_of_int) ^ " times!\n" ^
+                "You beat freddrick " ^ (List.assoc "freddrick" l |> to_int
+                                |> string_of_int) ^ " times!\n" ^
+                "You beat hinata " ^ (List.assoc "hinata" l |> to_int
+                                |> string_of_int) ^ " times!\n" ^
+                "You beat sakura " ^ (List.assoc "sakura" l |> to_int
+                                |> string_of_int) ^ " times!\n" ^
+                "You beat batman " ^ (List.assoc "batman" l |> to_int
+                                |> string_of_int) ^ " times!\n" ^
+                "You beat spongebob " ^ (List.assoc "spongebob" l |> to_int
+                                |> string_of_int) ^ " times!\n" ^
+                "You beat beastboy " ^ (List.assoc "beastboy" l |> to_int
+                                |> string_of_int) ^ " times!\n" ^
+                "You beat squidward " ^ (List.assoc "squidward" l |> to_int
+                                |> string_of_int) ^ " times!\n" ^
+                "You beat j-sean " ^ (List.assoc "j-sean" l |> to_int
+                                |> string_of_int) ^ " times!\n" ^
+                "You beat pope " ^ (List.assoc "pope" l |> to_int
+                                |> string_of_int) ^ " times!\n" ^
+                "You beat goku " ^ (List.assoc "goku" l |> to_int
+                                |> string_of_int) ^ " times!\n" ^
+                "You beat freiza " ^ (List.assoc "freiza" l |> to_int
+                                |> string_of_int) ^ " times!\n" ^
+                "You beat yamcha " ^ (List.assoc "yamcha" l |> to_int
+                                |> string_of_int) ^ " times!\n" ^
+                "You beat kyle " ^ (List.assoc "kyle" l |> to_int
+                                |> string_of_int) ^ " times!\n" ^
+                "You beat dan " ^ (List.assoc "dan" l |> to_int
+                                |> string_of_int) ^ " times!\n" ^
+                "You beat reaper " ^ (List.assoc "reaper" l |> to_int
+                                |> string_of_int) ^ " times!\n" ^
+                "You beat angela " ^ (List.assoc "angela" l |> to_int
+                                |> string_of_int) ^ " times!\n" ^
+                "You beat neji_hyuga " ^ (List.assoc "neji_hyuga" l |> to_int
+                                |> string_of_int) ^ " times!\n" ^
                 (let times_beat_oak = List.assoc "professor oak" l
                                     |> to_int in if times_beat_oak > 0 then
                 "You beat Professor Oak " ^ string_of_int times_beat_oak
@@ -151,7 +191,8 @@ let getFileMessage () =
 let beat_game () =
   let open Yojson.Basic.Util in
   match unlocked_pokemon () with
-  | `Assoc l -> let beat_list = [(List.assoc "baldman" l |> to_int);
+  | `Assoc l -> let beat_list = [
+                  (List.assoc "baldman" l |> to_int);
                   (List.assoc "beauty" l |> to_int);
                   (List.assoc "bugcatcher" l |> to_int);
                   (List.assoc "campernerd" l |> to_int);
@@ -159,7 +200,28 @@ let beat_game () =
                   (List.assoc "falkner" l |> to_int);
                   (List.assoc "fatman" l |> to_int);
                   (List.assoc "psychic" l |> to_int);
-                  (List.assoc "youngster" l |> to_int)] in
+                  (List.assoc "youngster" l |> to_int);
+                  (List.assoc "honorable" l |> to_int);
+                  (List.assoc "bob" l |> to_int);
+                  (List.assoc "suzie" l |> to_int);
+                  (List.assoc "freddrick" l |> to_int);
+                  (List.assoc "hinata" l |> to_int);
+                  (List.assoc "sakura" l |> to_int);
+                  (List.assoc "batman" l |> to_int);
+                  (List.assoc "spongebob" l |> to_int);
+                  (List.assoc "beastboy" l |> to_int);
+                  (List.assoc "squidward" l |> to_int);
+                  (List.assoc "j-sean" l |> to_int);
+                  (List.assoc "pope" l |> to_int);
+                  (List.assoc "goku" l |> to_int);
+                  (List.assoc "freiza" l |> to_int);
+                  (List.assoc "yamcha" l |> to_int);
+                  (List.assoc "kyle" l |> to_int);
+                  (List.assoc "dan" l |> to_int);
+                  (List.assoc "reaper" l |> to_int);
+                  (List.assoc "angela" l |> to_int);
+                  (List.assoc "neji_hyuga" l |> to_int);
+                  ] in
                 let times_play_oak = List.assoc "play oak" l |> to_int in
                 List.fold_left (fun acc x -> (x > times_play_oak) && acc)
                 true beat_list
