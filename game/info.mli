@@ -10,7 +10,7 @@ type item =
   | MegaStone | MegaStoneX | MegaStoneY | LightBall | OranBerry | DracoPlate |
   DreadPlate | EarthPlate | FistPlate | FlamePlate | IciclePlate | InsectPlate |
   IronPlate | MeadowPlate | MindPlate | PixiePlate | SkyPlate | SplashPlate |
-  SpookyPlate | StonePlate | ToxicPlate | ZapPlate
+  SpookyPlate | StonePlate | ToxicPlate | ZapPlate | DampRock
 
 type guiattack =
   NormMove of string | NormStatus of string | Crit of guiattack |SEff of guiattack | NoEff of guiattack

@@ -197,7 +197,7 @@ let beat_game () =
                   (List.assoc "bugcatcher" l |> to_int);
                   (List.assoc "campernerd" l |> to_int);
                   (List.assoc "dragontamer" l |> to_int);
-                  (List.assoc "falkner" l |> to_int);-u
+                  (List.assoc "falkner" l |> to_int);
                   (List.assoc "fatman" l |> to_int);
                   (List.assoc "psychic" l |> to_int);
                   (List.assoc "youngster" l |> to_int);

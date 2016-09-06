@@ -31,7 +31,7 @@ let item_list = ["leftovers";"choice band";"life orb";"choice specs"
   "draco plate"; "earth plate"; "first plate"; "flame plate"; "icicle plate";
   "insect plate"; "iron plate"; "meadow plate"; "mind plate"; "pixie plate";
   "sky plate" ; "splash plate"; "spooky plate"; "stone plate"; "toxic plate";
-  "zap plate"; "nothing"]
+  "zap plate"; "damp rock"; "nothing"]
 
 (* Returns list of string names of all pokemon that have been unlocked. *)
 let unlocked_poke_string_list () =
@@ -156,6 +156,9 @@ let getItemFromString str =
   | "splash plate" -> SplashPlate
   | "spooky plate" -> SpookyPlate
   | "stone plate" -> StonePlate
+  | "toxic plate" -> ToxicPlate
+  | "zap plate" -> ZapPlate
+  | "damp rock" -> DampRock
   | _ -> failwith "Does not occur"
 
 (* Returns a string from an item. *)
@@ -188,6 +191,7 @@ let string_of_item item =
   | StonePlate -> "stone plate"
   | ToxicPlate -> "toxic plate"
   | ZapPlate -> "zap plate"
+  | DampRock -> "damp rock"
   | Nothing -> "nothing"
 
 (* Returns a random item. *)

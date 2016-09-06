@@ -1986,8 +1986,8 @@ let handle_process_items t =
   | Leftovers ->  (t.current.curr_hp <- min t.current.bhp (t.current.curr_hp + t.current.bhp/16);
                   LeftOversHeal)
   | OranBerry ->      Printf.printf "CURRENT HEALTH %d BASE HEALTH / 3 %d \n%!" t.current.curr_hp (t.current.bhp/3);
-  Print.printf "WE MADE IT %B" (t.current.curr_hp < (t.current.bhp/3));
-if (t.current.curr_hp < (t.current.bhp/3)) then t.current.curr_hp <- (t.current.curr_hp + 10); OranBerryHeal
+  Print.printf "Boolean %B \n" (t.current.curr_hp < (t.current.bhp/3));
+if t.current.curr_hp < (t.current.bhp/3) then (t.current.curr_hp <- (t.current.curr_hp + 10); t.current.curr_item <- Nothing); OranBerryHeal;
   | _ -> Base
 
 (* handles abilities -- fourth priority *)
