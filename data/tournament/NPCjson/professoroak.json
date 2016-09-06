@@ -300,5 +300,5 @@
     }
   },
 	"pokemon": [ "arceus", "deoxys", "dialga", "genesect", "giratina-origin", "groudon", "hooh", "kyogre", "lugia", "mewtwo", "palkia", "rayquaza", "reshiram", "xerneas", "yveltal" ],
-  "unlockable": ["xerneas", "diancie", "kyurem", "regice", "articuno", "darkrai", "yveltal", "genesect", "celebi", "shaymin", "virizion", "moltres", "entei", "hooh", "heatran", "victini", "reshiram", "volcanion", "zapdos", "raikou", "thundurus", "zekrom", "latias", "latios", "rayquaza", "dialga", "palkia", "giratina-origin", "reshiram", "zekrom", "kyurem", "zygarde", "registeel", "jirachi",  "cobalion", "genesect", "yveltal", "articuno", "zapdos", "moltres", "lugia", "hooh", "rayquaza", "tornadus", "thundurus", "landorus", "suicune", "kyogre", "palkia", "manaphy", "keldeo", "volcanion", "cobalion", "terrakion", "virizion", "keldeo", "diancie", "terrakion", "mewtwo", "mew", "lugia", "celebi", "latias", "latios", "jirachi", "deoxys", "uxie", "mesprit", "azelf", "cresselia", "victini", "meloetta", "hoopa", "rotom", "giratina", "arceus",  "meloetta",  "zygarde", "landorus", "groudon"]
+  "unlockable": ["articuno", "regice", "darkrai", "kyurem", "genesect", "xerneas", "yveltal", "diancie"]
 }

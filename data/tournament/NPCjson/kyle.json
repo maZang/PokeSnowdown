@@ -1,214 +1,74 @@
 {
-	"chansey": {
-    "name": "chansey",
+  "chimecho": {
+    "name": "chimecho",
     "moves": [
-      "thunder-wave",
-      "soft-boiled",
-      "seismic-toss",
-      "wish"
+      "psychic",
+      "shadow-ball",
+      "energy-ball",
+      "dazzling-gleam"
     ],
-    "ability": "natural-cure",
-    "nature": "bold",
-    "item": "nothing",
+    "ability": "levitate",
+    "nature": "modest",
+    "item": "life orb",
     "evs": {
       "hp": "4",
       "attack": "0",
-      "special-attack": "0",
-      "defense": "252",
-      "special-defense": "252",
-      "speed": "0"
-    }
-  },
-  "diggersby": {
-    "name": "diggersby",
-    "moves": [
-      "earthquake",
-      "return",
-      "wild-charge",
-      "u-turn"
-    ],
-    "ability": "huge-power",
-    "nature": "jolly",
-    "item": "choice scarf",
-    "evs": {
-      "hp": "0",
-      "attack": "252",
-      "special-attack": "0",
-      "defense": "4",
-      "special-defense": "0",
-      "speed": "252"
-    }
-  },
-  "drapion": {
-    "name": "drapion",
-    "moves": [
-      "knock-off",
-      "taunt",
-      "toxic-spikes",
-      "poison-jab"
-    ],
-    "ability": "battle-armor",
-    "nature": "careful",
-    "item": "nothing",
-    "evs": {
-      "hp": "248",
-      "attack": "0",
-      "special-attack": "0",
-      "defense": "0",
-      "special-defense": "216",
-      "speed": "44"
-    }
-  },
-  "druddigon": {
-    "name": "druddigon",
-    "moves": [
-      "outrage",
-      "dragon-claw",
-      "fire-punch",
-      "gunk-shot"
-    ],
-    "ability": "sheer-force",
-    "nature": "adamant",
-    "item": "choice band",
-    "evs": {
-      "hp": "236",
-      "attack": "252",
-      "special-attack": "0",
-      "defense": "0",
-      "special-defense": "0",
-      "speed": "20"
-    }
-  },
-  "dugtrio": {
-    "name": "dugtrio",
-    "moves": [
-      "earthquake",
-      "stone-edge",
-      "sucker-punch",
-      "memento"
-    ],
-    "ability": "arena-trap",
-    "nature": "jolly",
-    "item": "choice band",
-    "evs": {
-      "hp": "0",
-      "attack": "252",
-      "special-attack": "0",
-      "defense": "4",
-      "special-defense": "0",
-      "speed": "252"
-    }
-  },
-  "durant": {
-    "name": "durant",
-    "moves": [
-      "iron-head",
-      "x-scissor",
-      "superpower",
-      "baton-pass"
-    ],
-    "ability": "hustle",
-    "nature": "adamant",
-    "item": "choice scarf",
-    "evs": {
-      "hp": "0",
-      "attack": "252",
-      "special-attack": "0",
-      "defense": "4",
-      "special-defense": "0",
-      "speed": "252"
-    }
-  },
-  "eelektross": {
-    "name": "eelektross",
-    "moves": [
-      "volt-switch",
-      "flamethrower",
-      "giga-drain",
-      "thunderbolt"
-    ],
-    "ability": "levitate",
-    "nature": "quiet",
-    "item": "nothing",
-    "evs": {
-      "hp": "252",
-      "attack": "4",
       "special-attack": "252",
       "defense": "0",
       "special-defense": "0",
-      "speed": "0"
+      "speed": "252"
     }
   },
-  "emboar": {
-    "name": "emboar",
+    "cinccino": {
+    "name": "cinccino",
     "moves": [
-      "flare-blitz",
-      "superpower",
-      "wild-charge",
-      "sleep-talk"
+      "u-turn",
+      "thief",
+      "tail-slap",
+      "dig"
     ],
-    "ability": "reckless",
+    "ability": "cute-charm",
     "nature": "adamant",
-    "item": "choice band",
+    "item": "life orb",
     "evs": {
       "hp": "0",
       "attack": "252",
       "special-attack": "0",
       "defense": "4",
-      "special-defense": "252",
-      "speed": "0"
+      "special-defense": "0",
+      "speed": "252"
     }
   },
-  "escavalier": {
-    "name": "escavalier",
+   "clefable": {
+    "name": "clefable",
     "moves": [
-      "megahorn",
-      "iron-head",
-      "pursuit",
-      "drill-run"
+      "hyper-beam",
+      "ice-beam",
+      "thunderbolt",
+      "shadow-ball"
     ],
-    "ability": "overcoat",
-    "nature": "adamant",
-    "item": "choice band",
+    "ability": "cute-charm",
+    "nature": "modest",
+    "item": "life orb",
     "evs": {
-      "hp": "172",
-      "attack": "252",
-      "special-attack": "0",
+      "hp": "4",
+      "attack": "0",
+      "special-attack": "252",
       "defense": "0",
       "special-defense": "0",
-      "speed": "84"
+      "speed": "252"
     }
   },
   "exploud": {
     "name": "exploud",
     "moves": [
-      "boomburst",
-      "fire-blast",
-      "focus-blast",
-      "surf"
+      "ice-fang",
+      "fire-fang",
+      "thunder-fang",
+      "crunch"
     ],
-    "ability": "scrappy",
-    "nature": "modest",
-    "item": "choice specs",
-    "evs": {
-      "hp": "0",
-      "attack": "0",
-      "special-attack": "252",
-      "defense": "4",
-      "special-defense": "0",
-      "speed": "252"
-    }
-  },
-  "excadrill": {
-    "name": "excadrill",
-    "moves": [
-      "earthquake",
-      "iron-head",
-      "rock-slide",
-      "rapid-spin"
-    ],
-    "ability": "sand-rush",
-    "nature": "jolly",
+    "ability": "soundproof",
+    "nature": "adamant",
     "item": "life orb",
     "evs": {
       "hp": "0",
@@ -219,75 +79,15 @@
       "speed": "252"
     }
   },
-  "hippowdon": {
-    "name": "hippowdon",
+	"kricketune": {
+    "name": "kricketune",
     "moves": [
-      "earthquake",
-      "stealth-rock",
-      "slack-off",
-      "whirlwind"
+      "x-scissor",
+      "night-slash",
+      "aerial-ace",
+      "giga-impact"
     ],
-    "ability": "sand-stream",
-    "nature": "impish",
-    "item": "leftovers",
-    "evs": {
-      "hp": "252",
-      "attack": "0",
-      "special-attack": "0",
-      "defense": "144",
-      "special-defense": "112",
-      "speed": "0"
-    }
-  },
-  "lopunny": {
-    "name": "lopunny",
-    "moves": [
-      "high-jump-kick",
-      "return",
-      "fake-out",
-      "ice-punch"
-    ],
-    "ability": "limber",
-    "nature": "jolly",
-    "item": "MegaStone",
-    "evs": {
-      "hp": "0",
-      "attack": "252",
-      "special-attack": "0",
-      "defense": "4",
-      "special-defense": "0",
-      "speed": "252"
-    }
-  },
-  "staraptor": {
-    "name": "staraptor",
-    "moves": [
-      "brave-bird",
-      "double-edge",
-      "final-gambit",
-      "u-turn"
-    ],
-    "ability": "reckless",
-    "nature": "jolly",
-    "item": "choice scarf",
-    "evs": {
-      "hp": "0",
-      "attack": "252",
-      "special-attack": "0",
-      "defense": "4",
-      "special-defense": "0",
-      "speed": "252"
-    }
-  },
-  "zygarde": {
-    "name": "zygarde",
-    "moves": [
-      "dragon-dance",
-      "earthquake",
-      "outrage",
-      "extreme-speed"
-    ],
-    "ability": "aura-break",
+    "ability": "swarm",
     "nature": "adamant",
     "item": "life orb",
     "evs": {
@@ -299,6 +99,26 @@
       "speed": "252"
     }
   },
-	"pokemon": [ "chansey", "diggersby", "drapion", "druddigon", "dugtrio", "durant", "eelektross", "emboar", "escavalier", "exploud", "excadrill", "hippowdon", "lopunny", "staraptor", "zygarde" ],
+  "wigglytuff": {
+    "name": "wigglytuff",
+    "moves": [
+      "ice-beam",
+      "hyper-beam",
+      "psychic",
+      "shadow-ball"
+    ],
+    "ability": "cute-charm",
+    "nature": "modest",
+    "item": "life orb",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+	"pokemon": [ "chimecho", "cinccino", "clefable", "exploud", "kricketune", "wigglytuff"],
   "unlockable": ["solosis", "duosion", "reuniclus", "ducklett", "swanna", "vanillite", "vanillish", "vanilluxe", "deerling", "sawsbuck", "emolga", "karrablast", "escavalier", "foongus", "amoonguss", "frillish", "jellicent", "alomomola", "joltik", "galvantula", "ferroseed", "ferrothorn", "klink", "klang"]
 }

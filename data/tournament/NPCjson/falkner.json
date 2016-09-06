@@ -89,7 +89,7 @@
     ],
     "ability": "poison-heal",
     "nature": "careful",
-    "item": "nothing",
+    "item": "life orb",
     "evs": {
       "hp": "244",
       "attack": "0",
@@ -189,7 +189,7 @@
     ],
     "ability": "sturdy",
     "nature": "bold",
-    "item": "nothing",
+    "item": "leftovers",
     "evs": {
       "hp": "252",
       "attack": "0",
