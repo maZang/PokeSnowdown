@@ -138,9 +138,10 @@ let squidQuotes =
     "This is the wrong neighborhood.";
   ]
 let jseanQuotes =
-  ["...";
-    "...";
-    "...";
+  ["I am the one who knocks.";
+    "All work and no play makes Jsean a dull boy.";
+    "I'm like a dog chasing cars, I wouldn't know what to do with one if I caught it.";
+    "I'm Crazy! Got a doctor's note.";
   ]
 
 let popeQuotes =
@@ -197,7 +198,7 @@ let nejiQuotes =
 
 let getRandomEnemy () =
   match Random.int 29 with
-  (*match 26 with*)
+  (*match 19 with*)
   | 0 -> RoughNeck
   | 1 -> Beauty
   | 2 -> BugCatcher
