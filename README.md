@@ -51,7 +51,7 @@ Contributors since the original submission of the project include:
   * [Jacob Arriola](https://github.com/Arrioj)
   * [Matt Bu](https://github.com/mbu13)
   
- CSCI2963-01 Contributions - https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/CSCI-2963-01/PokeSnowdown_Presentation_FINAL.pdf
+CSCI2963-01(Intro to Open Source) Contributions - https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/CSCI-2963-01/PokeSnowdown_Presentation_FINAL.pdf
 
 Image Sources - Most Accurate Sources page - https://github.com/Phansa/PokeSnowdown/wiki/Artist-Sources
 
