@@ -50,8 +50,10 @@ Contributors since the original submission of the project include:
   * [Alvin Leung](https://github.com/aleung013)
   * [Jacob Arriola](https://github.com/Arrioj)
   * [Matt Bu](https://github.com/mbu13)
+  
+ CSCI2963-01 Contributions - https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/CSCI-2963-01/PokeSnowdown_Presentation_FINAL.pdf
 
-Image Sources
+Image Sources - Most Accurate Sources page - https://github.com/Phansa/PokeSnowdown/wiki/Artist-Sources
 
 Source - http://f.tqn.com/y/animatedtv/1/L/D/d/1/spongebob_wide.jpg
 
