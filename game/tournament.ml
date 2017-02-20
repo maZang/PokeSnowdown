@@ -6,199 +6,248 @@ let enemy1 = ref Beauty
 let enemy2 = ref Falkner
 let selectedEnemy = ref Falkner
 
-let profOakBattleQuotes = ["I see. You have beat everyone I've thrown at you.";
-                          "Team Rocket cannot have someone as strong as you";
-                          "interrupting our Hunger Games"; "...err Pokemon Snowdown";
-                          "Time to show you why they call me Professor."]
+let profOakBattleQuotes =
+[
+  "I see. You have beat everyone I've thrown at you.";
+  "Team Rocket cannot have someone as strong as you";
+  "interrupting our Hunger Games"; "...err Pokemon Snowdown";
+  "Time to show you why they call me Professor."
+]
 
-let profOakQuotes = ["Welcome to Pokemon Snowdown. Due to the stark winter";
-                    "we have held a recent Pokemon competition to maintain the population.";
-                    "You have the option to choose any of the two trainers to battle.";
-                    "Look at the enemy trainers closely to discern what type of Pokemon they use.";
-                    "You will have the option of choosing your Pokemon after you make your selection."]
+let profOakQuotes =
+[
+  "Welcome to Pokemon Snowdown. Due to the stark winter";
+  "we have held a recent Pokemon competition to maintain the population.";
+  "You have the option to choose any of the two trainers to battle.";
+  "Look at the enemy trainers closely to discern what type of Pokemon they use.";
+  "You will have the option of choosing your Pokemon after you make your selection."
+]
 
 let roughNeckQuotes =
-  ["I am Brutal Bill.";
+[
+  "I am Brutal Bill.";
   "I am a dark and twisted man.";
   "I've been reported in League of Legends for toxicity.";
   "But most of all, I am your father.";
-  "Sike."]
+  "Sike."
+]
 
 let beautyQuotes =
-  ["I am Chirag's Mother.";
+[
+  "I am Chirag's Mother.";
   "I will rekt you harder than Chirag rekts Piazza.";
   "My heart is ice cold.";
   "And I am fairy mean.";
-  "Prepare yourself mate."]
+  "Prepare yourself mate."
+]
 
 let bugCatcherQuotes =
-  ["I'm gonna bug you so hard.";
+[
+  "I'm gonna bug you so hard.";
   "But please don't flame me if I lose.";
-  "I'll probably lose if you flame me though."]
+  "I'll probably lose if you flame me though."
+]
 
 let campNerdQuotes =
-  ["What is this game?";
+[
+  "What is this game?";
   "What is life?";
   "Am I shocking?";
   "Am I hot?";
   "What am I?";
-  "What is life?"]
+  "What is life?"
+]
 
 let dragonTamerQuotes =
-  ["I am a Targaryen.";
-  "Prepare to be bathed in my Houses' Blood."]
+[
+  "I am a Targaryen.";
+  "Prepare to be bathed in my Houses' Blood."
+]
 
 let falknerQuotes =
-  ["Please don't interrupt me.";
-    "In bird culture that is considered a duck move."]
+[
+  "Please don't interrupt me.";
+  "In bird culture that is considered a duck move."
+]
 
 let fatManQuotes =
-  ["I'm not fat, I'm big boned.";
+[
+  "I'm not fat, I'm big boned.";
   "I will fight you to the death";
   "With some kung fu fighting";
   "Kicks fast as lightning";
-  "A little bit frightening"]
+  "A little bit frightening"
+]
 
 let psychicQuotes =
-  ["I knew you would choose me";
+[
+  "I knew you would choose me";
   "But what can I say, I'm psychic";
-  "Or crazy. Your pick."]
+  "Or crazy. Your pick."
+]
 
 let youngsterQuotes =
-  ["You do know I'm underage right.";
+[
+  "You do know I'm underage right.";
   "You can't pick on someone your own size?";
-  "But I guess I'll stand my ground."]
+  "But I guess I'll stand my ground."
+]
 
 let chancellorQuotes =
-  ["Save the Concord? There is no situation with the Concord.";
-    "It would be unwise to pursue this line of questioning.";
-    "Peaceful Protest? There is no such thing. Bring out the poice and arrest these agitators."]
+[
+  "Save the Concord? There is no situation with the Concord.";
+  "It would be unwise to pursue this line of questioning.";
+  "Peaceful Protest? There is no such thing.";
+  "Bring out Communal Safety and arrest these agitators.";
+  "Remember: the administration is timeless, you are but a speck in the cosmos."
+]
 
 let bobQuotes =
-  ["Tread carefully.";
-    "Enforced equilibrium.";
-    "You're already dead, you just haven't caught up yet."
-  ]
+[
+  "Tread carefully.";
+  "Enforced equilibrium.";
+  "You're already dead, you just haven't caught up yet."
+]
 
 let suzieQuotes =
-  ["The most powerful thing in the universe... still just a puppet.";
-    "We are all puppets, Laurie. I'm just the puppet who can see the strings."
-  ]
+[
+  "The most powerful thing in the universe... still just a puppet.";
+  "We are all puppets, Laurie. I'm just the puppet who can see the strings."
+]
 
 let freddrickQuotes =
-  ["I'm coming.";
-    "You can't hide.";
-    "The only thing to fear, is fear himself!"
-  ]
+[
+  "I'm coming.";
+  "You can't hide.";
+  "The only thing to fear, is fear himself!"
+]
 
 let hinataQuotes =
-  ["They claim their labors are to build a heaven, yet their heaven is populated by horror.";
-   "Perhaps the world is not made. Perhaps nothing is made.";
-   "A clock without a craftsman. It's too late";
-   "Always has been, always will be. Too late.";
-  ]
+[
+  "They claim their labors are to build a heaven, yet their heaven is populated by horror.";
+  "Perhaps the world is not made. Perhaps nothing is made.";
+  "A clock without a craftsman. It's too late";
+  "Always has been, always will be. Too late.";
+]
 
 let sakuraQuotes =
-  ["W-were you expecting someone else.";
+[
+  "O-Onii chan, w-were you expecting someone else.";
   "I-its just me Sakura.";
   "I-its not like I want to battle you or anything.";
   "B-baka.";
-  ]
+]
 
 let batmanQuotes =
-  ["Criminals, by nature, are a cowardly and superstitous lot.";
+[
+  "Criminals, by nature, are a cowardly and superstitous lot.";
   "To instill fear into their hearts I became a bat, a monster in the night.";
   "And in doing so, have I become the very thing that all monsters become...";
   "...Alone...?";
-  ]
+]
 
 let spongeQuotes =
-  ["Have you heard of the...";
-   "The sash wringing...";
-   "The trash thinging...";
-   "Mash flinging...";
-   "The flash spring, bringing the the crash thinging the...";
-   "The hash-slinging slasher.";
-  ]
+[
+  "Have you heard of the...";
+  "The sash wringing...";
+  "The trash thinging...";
+  "Mash flinging...";
+  "The flash spring, bringing the the crash thinging the...";
+  "The hash-slinging slasher.";
+]
 
 let beastQuotes =
-  ["I heard joke once: Man goes to doctor. Says he's depressed. Life seems harsh, and cruel.";
+[
+  "I heard joke once: Man goes to doctor. Says he's depressed. Life seems harsh, and cruel.";
   "Says he feels all alone in threatening world. Doctor says: 'Treatment is simple.'";
   "The great clown - Pagliacci - is in town. Go see him. That should pick you up.";
   "Man bursts into tears. 'But doctor...' he says 'I am Pagliacci.'";
   "Good joke. Everybody laugh. Roll on snare drum. Curtains.";
-  ]
+]
 
 let squidQuotes =
-  ["I wish for only the worst!";
-    "It hot outside, and I'm not talking about me.";
-    "Girls are mean!!";
-    "Why don't you join my oni-chan army, oni-chan?";
-    "*inaudible weaboo noises*";
-    "This is the wrong neighborhood.";
-  ]
+[
+  "I wish for only the worst!";
+  "It hot outside, and I'm not talking about me.";
+  "Girls are mean!!";
+  "Why don't you join my onii-chan army, onii-chan?";
+  "*inaudible weaboo noises*";
+  "This is the wrong neighborhood.";
+]
+
 let jseanQuotes =
-  ["I am the one who knocks.";
-    "All work and no play makes Jsean a dull boy.";
-    "I'm like a dog chasing cars, I wouldn't know what to do with one if I caught it.";
-    "I'm Crazy! Got a doctor's note.";
-  ]
+[
+  "I am the one who knocks.";
+  "All work and no play makes Jsean a dull boy.";
+  "I'm like a dog chasing cars, I wouldn't know what to do with one if I caught it.";
+  "I'm Crazy! Got a doctor's note.";
+]
 
 let popeQuotes =
-  ["Glasses.";
-    "Jacket.";
-    "Shirt.";
-    "Call me Glasses, Jacket, Shirt man.";
-  ]
+[
+  "Glasses.";
+  "Jacket.";
+  "Shirt.";
+  "Call me Glasses, Jacket, Shirt man.";
+]
+
 let gokuQuotes =
-  ["I am the hope of the universe";
-   "I am the protector of the innocent";
-   "I am the light in the darkness";
-   "I am truth. Ally to good! Nightmare to you!";
-  ]
+[
+  "I am the hope of the universe";
+  "I am the protector of the innocent";
+  "I am the light in the darkness";
+  "I am truth. Ally to good! Nightmare to you!";
+]
 
 let freizaQuotes =
-  ["I never imagined that there would be a fool who’d dare to challenge Freezer!";
-   "I applaud your overconfidence, sir!";
-   "I desire but one tiny little wish, for the one thing I don't already have:";
-   "The power of Eternal Life.";
-   "How? How did you get this incredible power?";
-  ]
+[
+  "I never imagined that there would be a fool who’d dare to challenge Freezer!";
+  "I applaud your overconfidence, sir!";
+  "I desire but one tiny little wish, for the one thing I don't already have:";
+  "The power of Eternal Life.";
+  "How? How did you get this incredible power?";
+]
 
 let yamchaQuotes =
-  ["Let me have a crack at 'em!";
-   "I've really gotten stronger, I swear!";
-  ]
+[
+  "Let me have a crack at 'em!";
+  "I've really gotten stronger, I swear!";
+]
 
-  let kyleQuotes =
-    ["Let the music flow through you...";
-    "To play music is my real quest, to master it is my cause!"
-    ]
+let kyleQuotes =
+[
+  "Let the music flow through you...";
+  "To play music is my real quest, to master it is my cause!"
+]
 
 let danQuotes =
-  ["Dr. Dan here.";
-   "Prepare to be electrocuted!";
-  ]
+[
+  "Dr. Dan here.";
+  "Prepare to be electrocuted!";
+]
 
 let reaperQuotes =
-  ["I am the angel of death.";
+[
+  "I am the angel of death.";
   "Time to reap.";
-  ]
+]
 
 let angelaQuotes =
-  ["Let's go!";
+[
+  "Let's go!";
   "This is gonna be fun!"
-  ]
+]
 
 let nejiQuotes =
-  ["The curse represents a mark of the bird in a cage...";
-    "It is...";
-    "The symbol of being tied to an inescapable destiny.";
-  ]
+[
+  "The curse represents a mark of the bird in a cage...";
+  "It is...";
+  "The symbol of being tied to an inescapable destiny.";
+]
 
 let getRandomEnemy () =
   match Random.int 29 with
-  (*match 19 with*)
+  (*match 9 with*)
   | 0 -> RoughNeck
   | 1 -> Beauty
   | 2 -> BugCatcher
