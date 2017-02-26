@@ -1,0 +1,304 @@
+{
+	"alakazam": {
+    "name": "alakazam",
+    "moves": [
+      "psychic",
+      "focus-blast",
+      "shadow-ball",
+      "encore"
+    ],
+    "ability": "magic-guard",
+    "nature": "timid",
+    "item": "MegaStone",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "azelf": {
+    "name": "azelf",
+    "moves": [
+      "nasty-plot",
+      "psyshock",
+      "fire-blast",
+      "dazzling-gleam"
+    ],
+    "ability": "levitate",
+    "nature": "timid",
+    "item": "life orb",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "4",
+      "speed": "252"
+    }
+  },
+  "braviary": {
+    "name": "braviary",
+    "moves": [
+      "brave-bird",
+      "return",
+      "superpower",
+      "u-turn"
+    ],
+    "ability": "defiant",
+    "nature": "adamant",
+    "item": "choice band",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "bronzong": {
+    "name": "bronzong",
+    "moves": [
+      "stealth-rock",
+      "gyro-ball",
+      "earthquake",
+      "toxic"
+    ],
+    "ability": "levitate",
+    "nature": "sassy",
+    "item": "leftovers",
+    "evs": {
+      "hp": "252",
+      "attack": "0",
+      "special-attack": "0",
+      "defense": "4",
+      "special-defense": "252",
+      "speed": "0"
+    }
+  },
+  "camerupt": {
+    "name": "camerupt",
+    "moves": [
+      "fire-blast",
+      "earth-power",
+      "stealth-rock",
+      "toxic"
+    ],
+    "ability": "solid-rock",
+    "nature": "modest",
+    "item": "nothing",
+    "evs": {
+      "hp": "248",
+      "attack": "0",
+      "special-attack": "176",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "84"
+    }
+  },
+  "cinccino": {
+    "name": "cinccino",
+    "moves": [
+      "tail-slap",
+      "bullet-seed",
+      "rock-blast",
+      "knock-off"
+    ],
+    "ability": "skill-link",
+    "nature": "jolly",
+    "item": "choice band",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "clawitzer": {
+    "name": "clawitzer",
+    "moves": [
+      "scald",
+      "ice-beam",
+      "dark-pulse",
+      "aura-sphere"
+    ],
+    "ability": "mega-launcher",
+    "nature": "modest",
+    "item": "life orb",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "4",
+      "speed": "252"
+    }
+  },
+  "cofagrigus": {
+    "name": "cofagrigus",
+    "moves": [
+      "will-o-wisp",
+      "shadow-ball",
+      "pain-split",
+      "haze"
+    ],
+    "ability": "mummy",
+    "nature": "relaxed",
+    "item": "leftovers",
+    "evs": {
+      "hp": "248",
+      "attack": "0",
+      "special-attack": "0",
+      "defense": "252",
+      "special-defense": "8",
+      "speed": "0"
+    }
+  },
+  "delphox": {
+    "name": "delphox",
+    "moves": [
+      "fire-blast",
+      "psyshock",
+      "dazzling-gleam",
+      "trick"
+    ],
+    "ability": "blaze",
+    "nature": "modest",
+    "item": "choice scarf",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "4",
+      "speed": "252"
+    }
+  },
+  "deoxys": {
+    "name": "deoxys",
+    "moves": [
+      "psycho-boost",
+      "stealth-rock",
+      "spikes",
+      "magic-coat"
+    ],
+    "ability": "pressure",
+    "nature": "timid",
+    "item": "nothing",
+    "evs": {
+      "hp": "4",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "doublade": {
+    "name": "doublade",
+    "moves": [
+      "swords-dance",
+      "shadow-sneak",
+      "iron-head",
+      "sacred-sword"
+    ],
+    "ability": "no-guard",
+    "nature": "brave",
+    "item": "nothing",
+    "evs": {
+      "hp": "240",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "0",
+      "special-defense": "16",
+      "speed": "0"
+    }
+  },
+  "espeon": {
+    "name": "espeon",
+    "moves": [
+      "baton-pass",
+      "calm-mind",
+      "psyshock",
+      "shadow-ball"
+    ],
+    "ability": "magic-bounce",
+    "nature": "timid",
+    "item": "leftovers",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "hoopa": {
+    "name": "hoopa",
+    "moves": [
+      "trick-room",
+      "hyperspace-hole",
+      "shadow-ball",
+      "focus-blast"
+    ],
+    "ability": "magician",
+    "nature": "modest",
+    "item": "life orb",
+    "evs": {
+      "hp": "252",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "0"
+    }
+  },
+  "mew": {
+    "name": "mew",
+    "moves": [
+      "defog",
+      "soft-boiled",
+      "will-o-wisp",
+      "psychic"
+    ],
+    "ability": "synchronize",
+    "nature": "calm",
+    "item": "leftovers",
+    "evs": {
+      "hp": "252",
+      "attack": "0",
+      "special-attack": "0",
+      "defense": "0",
+      "special-defense": "224",
+      "speed": "32"
+    }
+  },
+  "starmie": {
+    "name": "starmie",
+    "moves": [
+      "rapid-spin",
+      "hydro-pump",
+      "thunderbolt",
+      "ice-beam"
+    ],
+    "ability": "analytic",
+    "nature": "timid",
+    "item": "life orb",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "4",
+      "speed": "252"
+    }
+  },
+	"pokemon": [ "alakazam", "azelf", "braviary", "bronzong", "camerupt", "cinccino", "clawitzer", "cofagrigus", "delphox", "deoxys", "doublade", "espeon", "hoopa", "mew", "starmie" ],
+  "unlockable": ["crobat", "chinchou", "lanturn", "pichu", "cleffa", "igglybuff", "togepi", "togetic", "natu", "xatu", "mareep", "flaaffy", "ampharos", "bellossom", "marill", "azumarill", "sudowoodo", "politoed", "hoppip", "skiploom", "jumpluff", "aipom", "sunkern", "sunflora"]
+}

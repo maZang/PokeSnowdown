@@ -243,6 +243,23 @@ let damageCalculation t1 t2 (w,ter1, ter2) (move : move) =
     | _ -> 1.0 ) *.
     (match t1.current.curr_item with
     | LifeOrb -> 1.3
+    | DracoPlate -> if (move.element = Dragon) then 1.2 else 1.0
+    | DreadPlate -> if (move.element = Dark) then 1.2 else 1.0
+    | EarthPlate -> if (move.element = Ground) then 1.2 else 1.0
+    | FistPlate -> if (move.element = Fighting) then 1.2 else 1.0
+    | FlamePlate -> if (move.element = Fire) then 1.2 else 1.0
+    | IciclePlate -> if (move.element = Ice) then 1.2 else 1.0
+    | InsectPlate -> if (move.element = Bug) then 1.2 else 1.0
+    | IronPlate -> if (move.element = Steel) then 1.2 else 1.0
+    | MeadowPlate -> if (move.element = Grass) then 1.2 else 1.0
+    | MindPlate -> if (move.element = Psychic) then 1.2 else 1.0
+    | PixiePlate -> if (move.element = Fairy) then 1.2 else 1.0
+    | SkyPlate -> if (move.element = Flying) then 1.2 else 1.0
+    | SplashPlate -> if (move.element = Water) then 1.2 else 1.0
+    | SpookyPlate -> if (move.element = Ghost) then 1.2 else 1.0
+    | StonePlate -> if (move.element = Rock) then 1.2 else 1.0
+    | ToxicPlate -> if (move.element = Poison) then 1.2 else 1.0
+    | ZapPlate -> if (move.element = Electric) then 1.2 else 1.0
     | _ -> 1.0 ) *.
     (match move.dmg_class with
     | Physical ->
@@ -1968,6 +1985,9 @@ let handle_process_items t =
   match t.current.curr_item with
   | Leftovers ->  (t.current.curr_hp <- min t.current.bhp (t.current.curr_hp + t.current.bhp/16);
                   LeftOversHeal)
+  | OranBerry ->      Printf.printf "CURRENT HEALTH %d BASE HEALTH / 3 %d \n%!" t.current.curr_hp (t.current.bhp/3);
+  Print.printf "Boolean %B \n" (t.current.curr_hp < (t.current.bhp/3));
+if t.current.curr_hp < (t.current.bhp/3) then (t.current.curr_hp <- (t.current.curr_hp + 10); t.current.curr_item <- Nothing); OranBerryHeal;
   | _ -> Base
 
 (* handles abilities -- fourth priority *)

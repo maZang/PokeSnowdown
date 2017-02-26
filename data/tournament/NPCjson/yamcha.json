@@ -1,25 +1,144 @@
 {
-  "gengar": {
-    "name": "gengar",
+    "cofagrigus": {
+    "name": "cofagrigus",
     "moves": [
-      "hypnosis",
-      "nightmare",
-      "confuse-ray",
-      "dream-eater"
+      "energy-ball",
+      "shadow-ball",
+      "dark-pulse",
+      "hyper-beam"
     ],
-    "ability": "intimidate",
-    "nature": "bold",
-    "item": "nothing",
+    "ability": "mummy",
+    "nature": "modest",
+    "item": "life orb",
     "evs": {
-      "hp": "204",
+      "hp": "4",
       "attack": "0",
-      "special-attack": "4",
-      "defense": "252",
+      "special-attack": "252",
+      "defense": "0",
       "special-defense": "0",
-      "speed": "0"
+      "speed": "252"
     }
   },
-  
-  "pokemon": [ "gengar"],
+   "eelektross": {
+    "name": "eelektross",
+    "moves": [
+      "toxic",
+      "hyper-beam",
+      "thunderbolt",
+      "flash-cannon"
+    ],
+    "ability": "levitate",
+    "nature": "modest",
+    "item": "life orb",
+    "evs": {
+      "hp": "4",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+   "houndoom": {
+    "name": "houndoom",
+    "moves": [
+      "flame-charge",
+      "giga-impact",
+      "crunch",
+      "thunder-fang"
+    ],
+    "ability": "flash-fire",
+    "nature": "adamant",
+    "item": "MegaStone",
+    "evs": {
+      "hp": "4",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "hydreigon": {
+    "name": "hydreigon",
+    "moves": [
+      "dragon-pulse",
+      "hyper-beam",
+      "flamethrower",
+      "focus-blast"
+    ],
+    "ability": "levitate",
+    "nature": "modest",
+    "item": "life orb",
+    "evs": {
+      "hp": "4",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "samurott": {
+    "name": "samurott",
+    "moves": [
+      "x-scissor",
+      "giga-impact",
+      "dragon-tail",
+      "aerial-ace"
+    ],
+    "ability": "torrent",
+    "nature": "adamant",
+    "item": "life orb",
+    "evs": {
+      "hp": "4",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+    "seismitoad": {
+    "name": "seismitoad",
+    "moves": [
+      "hydro-pump",
+      "sludge-wave",
+      "focus-blast",
+      "grass-knot"
+    ],
+    "ability": "swift-swim",
+    "nature": "modest",
+    "item": "life orb",
+    "evs": {
+      "hp": "4",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "volcarona": {
+    "name": "volcarona",
+    "moves": [
+      "overheat",
+      "toxic",
+      "psychic",
+      "hurricane"
+    ],
+    "ability": "flame-body",
+    "nature": "modest",
+    "item": "life orb",
+    "evs": {
+      "hp": "4",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "pokemon": [ "cofagrigus", "eelektross", "houndoom", "hydreigon", "samurott", "seismitoad", "volcarona"],
   "unlockable": ["krookodile", "darumaka", "darmanitan-standard", "maractus", "dwebble", "crustle", "scraggy", "sigilyph", "yamask", "cofagrigus", "tirtouga", "carracosta", "archen", "archeops", "trubbish", "garbodor", "zorua", "zoroark", "minccino", "cinccino", "gothita", "gothorita", "gothitelle"]
 }

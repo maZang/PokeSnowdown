@@ -14,6 +14,8 @@ _Note: For now, Pokémon Snowdown has only been ported to Linux-compatible syste
 
 ## Gameplay
 
+Here is a basic gameplay demo video - https://www.youtube.com/watch?v=ACxjcFc824A
+
 Pokémon Snowdown supports all of the newest-generation Pokémon (through X and Y), over 500 moves and abilities for these Pokémon, and various animations that try to stay true to the original.
 
 However, this version of Pokémon is different from the traditional ones in that there are not different gyms to travel to; rather, there are three different modes of gameplay: single-player mode (like in the original game), double-player mode, and even no-player mode!
@@ -48,26 +50,88 @@ Contributors since the original submission of the project include:
   * [Alvin Leung](https://github.com/aleung013)
   * [Jacob Arriola](https://github.com/Arrioj)
   * [Matt Bu](https://github.com/mbu13)
+  
+CSCI2963-01(Intro to Open Source) Contributions - https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/CSCI-2963-01/PokeSnowdown_Presentation_FINAL.pdf
 
-Image Sources
+Image Sources - Most Accurate Sources page - https://github.com/Phansa/PokeSnowdown/wiki/Artist-Sources
+
+Source - http://f.tqn.com/y/animatedtv/1/L/D/d/1/spongebob_wide.jpg
+
+Sprite Used - 
+
+![Spongebob](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/spongebob.gif)
+
+Source - http://rogue-lei.deviantart.com/art/Trainer-Sprites-for-my-Fanfic-347869729
 
 Artist - http://rogue-lei.deviantart.com/
 
-http://rogue-lei.deviantart.com/art/Trainer-Sprites-for-my-Fanfic-347869729
+Sprites Used -
+
+![Bob](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/bob.gif)
+
+![Bob Sprite](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/bob.png)
+
+![Suzie](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/suzie.gif)
+
+![Suzie Sprite](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/suzie.png)
+
+![Kyle](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/kyle.gif)
+
+![Kyle Sprite](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/kyle.png)
+
+![Dan](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/dan.gif)
+
+![Dan Sprite](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/dan.png)
+
+![Honorable](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/honorable.gif)
+
+![Honorable Sprite](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/honorable.png)
+
+Source - http://treeck0ia.deviantart.com/art/TrEEck0ia-s-Pokemon-Sprites-294127299
 
 Artist - http://treeck0ia.deviantart.com/
 
-http://treeck0ia.deviantart.com/art/TrEEck0ia-s-Pokemon-Sprites-294127299
+Sprites Used - 
+
+![Angela](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/angela.gif)
+
+![Angela Sprite](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/angela.png)
+
+![Freddrick](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/freddrick.gif)
+
+![Freddrick Sprite](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/freddrick.png)
+
+![J-Sean](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/j-sean.gif)
+
+![J-Sean Sprite](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/j-sean.png)
+
+![Reaper](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/reaper.gif)
+
+Source - http://orig09.deviantart.net/0692/f/2008/008/1/7/naruto_sprites_by_marcani.png
 
 Artist - http://marcani.deviantart.com/
 
-http://orig09.deviantart.net/0692/f/2008/008/1/7/naruto_sprites_by_marcani.png
+Sprites Used - 
+
+![Sakura](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/sakura.gif)
+
+![Hinata](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/hinata.gif)
+
+![Neji](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/neji_hyuga.gif)
+
+Source - http://orig10.deviantart.net/35f2/f/2006/352/9/a/naruto_sprites_by_disneyfreak007.jpg 
 
 Artist - http://disneyfreak007.deviantart.com/
 
-http://orig10.deviantart.net/35f2/f/2006/352/9/a/naruto_sprites_by_disneyfreak007.jpg 
+Sprites Used -
 
-Artist - http://gokou-sama.deviantart.com/
+![Sakura Sprite](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/sakura.png)
+
+![Hinata Sprite](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/hinata.png)
+
+![Neji Sprite](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/neji_hyuga.png)
+
+Sources - http://gokou-sama.deviantart.com/art/Ultimate-Showdown-Sprites-06-101760346
 
 http://gokou-sama.deviantart.com/art/Ultimate-Showdown-Sprites-12-119069989
 
@@ -75,27 +139,72 @@ http://gokou-sama.deviantart.com/art/Ultimate-Showdown-Sprites-17-133636939
 
 http://gokou-sama.deviantart.com/art/Ultimate-Showdown-Sprites-34-200459922
 
-Arist - http://lizuka.deviantart.com/
+Artist - http://gokou-sama.deviantart.com/
 
-http://www.deviantart.com/art/Batman-Sprites-92996795
+Sprites Used - 
+
+![Reaper](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/reaper.png)
+
+![Batman](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/batman.png)
+
+![Pope](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/pope.png) 
+
+![Spongebob](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/spongebob.png)
+
+![Squidward](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/squidward.png)
+
+![Beast Boy](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/beastboy.png)
+
+
+Source - http://www.deviantart.com/art/Batman-Sprites-92996795
+
+Artist - http://lizuka.deviantart.com/
+
+Sprite Used - 
+
+![Batman Sprite](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/batman.gif)
+
+Source - http://tf2.gamebanana.com/sprays/62919
 
 Artist - http://gamebanana.com/members/1194681
 
-http://tf2.gamebanana.com/sprays/62919
+Sprite No Longer in Use
+
+Source - http://mugenmultiverse.fanbb.net/t6411-edits-beast-boy-and-hawkeye
 
 Artist - Fron84
 
-http://mugenmultiverse.fanbb.net/t6411-edits-beast-boy-and-hawkeye
+Sprite Used -
+
+![Beast Boy Sprite](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/beastboy.gif)
+
+Source - http://ih1.redbubble.net/image.193615005.6278/flat,800x800,075,f.u2.jpg
+
+Source - http://www.redbubble.com/people/emilyosman/works/20946278-squidward-dab?p=sticker
 
 Artist - emilyosan
 
-http://ih1.redbubble.net/image.193615005.6278/flat,800x800,075,f.u2.jpg
+Sprite Used - 
 
-http://www.redbubble.com/people/emilyosman/works/20946278-squidward-dab?p=sticker
+![Squidward](https://github.com/Phansa/PokeSnowdown/blob/master/data/backgrounds/player_versus/squidward.gif)
+
+Source - http://blzofozz.deviantart.com/art/Microsoft-Paint-DBZ-354200771
 
 Artist - BLZofOZZ
 
-http://blzofozz.deviantart.com/art/Microsoft-Paint-DBZ-354200771
+![Goku](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/goku.png)
+
+![Yamcha](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/yamcha.png)
+
+![Freiza](https://github.com/Phansa/PokeSnowdown/blob/master/data/tournament/NPC/freiza.png)
+
+Source - http://www.serebiiforums.com/showthread.php?275001-Coronis-s-PokeSpecial-Sprites-(DS-version)
+
+Artist  - Coronis
+
+Sprite Used - 
+
+![Pokedex](https://github.com/Phansa/PokeSnowdown/blob/master/Documentation/Wiki-Guide-Images/Pokedex/pokedex_sprite.png)
 
 ----
 

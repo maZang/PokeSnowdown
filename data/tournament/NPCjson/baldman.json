@@ -7,9 +7,9 @@
       "pursuit",
       "superpower"
     ],
-    "ability": "justified",
+    "ability": "magic-bounce",
     "nature": "jolly",
-    "item": "nothing",
+    "item": "MegaStone",
     "evs": {
       "hp": "0",
       "attack": "252",
@@ -24,12 +24,12 @@
     "moves": [
       "rest",
       "sleep-talk",
-      "volt-switch",
+      "thunder",
       "dragon-pulse"
     ],
-    "ability": "static",
+    "ability": "mold-breaker",
     "nature": "bold",
-    "item": "nothing",
+    "item": "MegaStone",
     "evs": {
       "hp": "252",
       "attack": "0",
@@ -67,9 +67,9 @@
       "poison-jab",
       "drill-run"
     ],
-    "ability": "swarm",
+    "ability": "adaptability",
     "nature": "jolly",
-    "item": "nothing",
+    "item": "MegaStone",
     "evs": {
       "hp": "0",
       "attack": "252",
@@ -169,7 +169,7 @@
     ],
     "ability": "shadow-tag",
     "nature": "adamant",
-    "item": "nothing",
+    "item": "MegaStone",
     "evs": {
       "hp": "0",
       "attack": "0",
@@ -227,9 +227,9 @@
       "recover",
       "foul-play"
     ],
-    "ability": "prankster",
+    "ability": "magic-bounce",
     "nature": "careful",
-    "item": "nothing",
+    "item": "MegaStone",
     "evs": {
       "hp": "252",
       "attack": "0",
@@ -239,7 +239,7 @@
       "speed": "0"
     }
   },
-  "tyranitar": {
+ "tyranitar": {
     "name": "tyranitar",
     "moves": [
       "stone-edge",
@@ -249,7 +249,7 @@
     ],
     "ability": "sand-stream",
     "nature": "jolly",
-    "item": "nothing",
+    "item": "MegaStone",
     "evs": {
       "hp": "0",
       "attack": "252",
@@ -267,9 +267,9 @@
       "hidden-power",
       "synthesis"
     ],
-    "ability": "chlorophyll",
+    "ability": "thick-fat",
     "nature": "modest",
-    "item": "nothing",
+    "item": "MegaStone",
     "evs": {
       "hp": "232",
       "attack": "0",

@@ -109,7 +109,7 @@
     ],
     "ability": "hyper-cutter",
     "nature": "jolly",
-    "item": "nothing",
+    "item": "MegaStone",
     "evs": {
       "hp": "0",
       "attack": "252",

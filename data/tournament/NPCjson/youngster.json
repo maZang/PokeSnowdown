@@ -9,7 +9,7 @@
     ],
     "ability": "natural-cure",
     "nature": "bold",
-    "item": "nothing",
+    "item": "leftovers",
     "evs": {
       "hp": "4",
       "attack": "0",
@@ -49,7 +49,7 @@
     ],
     "ability": "battle-armor",
     "nature": "careful",
-    "item": "nothing",
+    "item": "life orb",
     "evs": {
       "hp": "248",
       "attack": "0",
@@ -129,7 +129,7 @@
     ],
     "ability": "levitate",
     "nature": "quiet",
-    "item": "nothing",
+    "item": "leftovers",
     "evs": {
       "hp": "252",
       "attack": "4",

@@ -1,0 +1,104 @@
+{
+   "banette": {
+    "name": "banette",
+    "moves": [
+      "shadow-ball",
+      "hyper-beam",
+      "dazzling-gleam",
+      "psychic"
+    ],
+    "ability": "insomnia",
+    "nature": "modest",
+    "item": "life orb",
+    "evs": {
+      "hp": "4",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "darkrai": {
+    "name": "darkrai",
+    "moves": [
+      "ice-beam",
+      "dark-pulse",
+      "thunderbolt",
+      "focus-blast"
+    ],
+    "ability": "bad-dreams",
+    "nature": "modest",
+    "item": "life orb",
+    "evs": {
+      "hp": "4",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+    "dusclops": {
+    "name": "dusclops",
+    "moves": [
+      "ice-beam",
+      "shadow-ball",
+      "charge-beam",
+      "curse"
+    ],
+    "ability": "pressure",
+    "nature": "modest",
+    "item": "life orb",
+    "evs": {
+      "hp": "4",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+	"gengar": {
+    "name": "gengar",
+    "moves": [
+      "shadow-ball",
+      "dark-pulse",
+      "hyper-beam",
+      "sludge-bomb"
+    ],
+    "ability": "levitate",
+    "nature": "modest",
+    "item": "MegaStone",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+  "trevenant": {
+    "name": "trevenant",
+    "moves": [
+      "phantom-force",
+      "wood-hammer",
+      "shadow-claw",
+      "earthquake"
+    ],
+    "ability": "natural-cure",
+    "nature": "adamant",
+    "item": "life orb",
+    "evs": {
+      "hp": "0",
+      "attack": "252",
+      "special-attack": "0",
+      "defense": "0",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+	"pokemon": ["banette", "darkrai", "dusclops", "gengar", "trevenant"],
+  	"unlockable": ["bisharp", "bouffalant", "rufflet", "braviary", "vullaby", "mandibuzz", "heatmor", "durant", "deino", "zweilous", "hydreigon", "larvesta", "volcarona", "cobalion", "terrakion", "virizion", "tornadus-incarnate", "thundurus-incarnate", "reshiram", "zekrom", "landorus-incarnate", "kyurem", "keldeo-ordinary", "meloetta-aria"]
+}

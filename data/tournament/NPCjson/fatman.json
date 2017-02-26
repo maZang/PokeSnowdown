@@ -49,7 +49,7 @@
     ],
     "ability": "sturdy",
     "nature": "impish",
-    "item": "nothing",
+    "item": "MegaStone",
     "evs": {
       "hp": "252",
       "attack": "0",
@@ -109,7 +109,7 @@
     ],
     "ability": "regenerator",
     "nature": "bold",
-    "item": "nothing",
+    "item": "leftovers",
     "evs": {
       "hp": "252",
       "attack": "0",
@@ -149,7 +149,7 @@
     ],
     "ability": "insomnia",
     "nature": "adamant",
-    "item": "nothing",
+    "item": "leftovers",
     "evs": {
       "hp": "252",
       "attack": "252",
@@ -169,7 +169,7 @@
     ],
     "ability": "guts",
     "nature": "adamant",
-    "item": "nothing",
+    "item": "life orb",
     "evs": {
       "hp": "0",
       "attack": "252",
@@ -189,7 +189,7 @@
     ],
     "ability": "justified",
     "nature": "jolly",
-    "item": "nothing",
+    "item": "life orb",
     "evs": {
       "hp": "0",
       "attack": "252",
@@ -229,7 +229,7 @@
     ],
     "ability": "pure-power",
     "nature": "jolly",
-    "item": "nothing",
+    "item": "MegaStone",
     "evs": {
       "hp": "0",
       "attack": "252",

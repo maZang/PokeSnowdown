@@ -1,4 +1,24 @@
 {
+   "charizard": {
+    "name": "charizard",
+    "moves": [
+      "flamethrower",
+      "blast-burn",
+      "dragon-pulse",
+      "air-slash"
+    ],
+    "ability": "blaze",
+    "nature": "hasty",
+    "item": "leftovers",
+    "evs": {
+      "hp": "252",
+      "attack": "4",
+      "special-attack": "252",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "0"
+    }
+  },
   "garchomp": {
     "name": "garchomp",
     "moves": [
@@ -19,66 +39,6 @@
       "speed": "252"
     }
   },
-  "charizard": {
-    "name": "charizard",
-    "moves": [
-      "flamethrower",
-      "blast-burn",
-      "dragon-pulse",
-      "air-slash"
-    ],
-    "ability": "blaze",
-    "nature": "hasty",
-    "item": "leftovers",
-    "evs": {
-      "hp": "252",
-      "attack": "4",
-      "special-attack": "252",
-      "defense": "4",
-      "special-defense": "0",
-      "speed": "0"
-    }
-  },
-  "rayquaza": {
-    "name": "rayquaza",
-    "moves": [
-      "hyper-beam",
-      "thunderbolt",
-      "outrage",
-      "aerial-ace"
-    ],
-    "ability": "air-lock",
-    "nature": "sassy",
-    "item": "choice specs",
-    "evs": {
-      "hp": "0",
-      "attack": "0",
-      "special-attack": "252",
-      "defense": "4",
-      "special-defense": "0",
-      "speed": "252"
-    }
-  },
-  "vaporeon": {
-    "name": "vaporeon",
-    "moves": [
-      "ice-beam",
-      "protect",
-      "toxic",
-      "brine"
-    ],
-    "ability": "water-absorb",
-    "nature": "sassy",
-    "item": "leftovers",
-    "evs": {
-      "hp": "252",
-      "attack": "0",
-      "special-attack": "252",
-      "defense": "4",
-      "special-defense": "0",
-      "speed": "0"
-    }
-  },
   "mewtwo": {
     "name": "mewtwo",
     "moves": [
@@ -90,26 +50,6 @@
     "ability": "pressure",
     "nature": "rash",
     "item": "MegaStoneX",
-    "evs": {
-      "hp": "252",
-      "attack": "0",
-      "special-attack": "252",
-      "defense": "4",
-      "special-defense": "0",
-      "speed": "0"
-    }
-  },
-  "samurott": {
-    "name": "samurott",
-    "moves": [
-      "hydro-pump",
-      "x-scissor",
-      "water-pulse",
-      "revenge"
-    ],
-    "ability": "torrent",
-    "nature": "brave",
-    "item": "leftovers",
     "evs": {
       "hp": "252",
       "attack": "0",
@@ -139,6 +79,66 @@
       "speed": "252"
     }
   },
+    "rayquaza": {
+    "name": "rayquaza",
+    "moves": [
+      "hyper-beam",
+      "thunderbolt",
+      "outrage",
+      "aerial-ace"
+    ],
+    "ability": "air-lock",
+    "nature": "sassy",
+    "item": "choice specs",
+    "evs": {
+      "hp": "0",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "252"
+    }
+  },
+    "samurott": {
+    "name": "samurott",
+    "moves": [
+      "hydro-pump",
+      "x-scissor",
+      "water-pulse",
+      "revenge"
+    ],
+    "ability": "torrent",
+    "nature": "brave",
+    "item": "leftovers",
+    "evs": {
+      "hp": "252",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "0"
+    }
+  },
+  "vaporeon": {
+    "name": "vaporeon",
+    "moves": [
+      "ice-beam",
+      "protect",
+      "toxic",
+      "brine"
+    ],
+    "ability": "water-absorb",
+    "nature": "sassy",
+    "item": "leftovers",
+    "evs": {
+      "hp": "252",
+      "attack": "0",
+      "special-attack": "252",
+      "defense": "4",
+      "special-defense": "0",
+      "speed": "0"
+    }
+  },
   "zebstrika": {
     "name": "zebstrika",
     "moves": [
@@ -159,6 +159,6 @@
       "speed": "252"
     }
   },
-  "pokemon": ["garchomp", "charizard", "rayquaza", "vaporeon", "mewtwo", "samurott", "pikachu", "zebstrika"],
-  "unlockable": ["volbeat", "illumise", "roselia", "gulpin", "swalot", "carvanha", "sharpedo", "wailmer", "numel", "camerupt", "torkoal", "spoink", "grumpig", "spinda", "trapinch", "vibrave", "flygon", "cacnea", "cacturne", "swablu", "altaria", "zangoose", "seviper"]
+  "pokemon": ["charizard", "garchomp", "mewtwo", "pikachu", "rayquaza", "samurott", "vaporeon", "zebstrika"],
+  "unlockable": ["lunatone", "solrock", "barboach", "whiscash", "corphish", "crawdaunt", "baltoy", "claydol", "lileep", "cradily", "anorith", "armaldo", "feebas", "milotic", "castform", "kecleon", "shuppet", "banette", "duskull", "dusclops", "tropius", "chimecho", "absol", "wynaut"]
 }
